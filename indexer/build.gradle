@@ -24,6 +24,7 @@ dependencies {
 
     // This dependency is used internally, and not exposed to consumers on their own compile classpath.
     implementation 'com.google.guava:guava:26.0-jre'
+    implementation 'org.jooq:joox-java-6:1.6.0'
     implementation 'org.metafacture:metafacture-runner:master-SNAPSHOT'
     implementation 'org.metafacture:metafacture-json:master-SNAPSHOT'
     implementation 'org.metafacture:metafacture-html:master-SNAPSHOT'

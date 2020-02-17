@@ -13,9 +13,9 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 
 @RunWith(Parameterized.class)
-public class IndexerTest {
+public class IndexerTestSingleResource {
 
-    @Parameterized.Parameters
+    @Parameterized.Parameters(name = "{0} -> {1}")
     public static Collection<Object[]> singleResources() {
         return Arrays.asList(new Object[][] { //
                 { "https://www.hoou.de/materials/tutorial-lernen-lernen",
@@ -40,7 +40,7 @@ public class IndexerTest {
     private String description;
     private String license;
 
-    public IndexerTest(String url, String title, String description, String license) {
+    public IndexerTestSingleResource(String url, String title, String description, String license) {
         this.url = url;
         this.title = title;
         this.description = description;
