@@ -60,7 +60,8 @@ public class IndexerTestSingleResource {
                 + "|open-http"//
                 + "|decode-html"//
                 + "|org.metafacture.metamorph.Metafix(\"%s\")"//
-                + "|encode-json(prettyPrinting=\"true\")" + "|write(\"%s\");", url, fix, out);
+                + "|encode-json(prettyPrinting=\"false\")"//
+                + "|write(\"%s\");", url, fix, out);
         System.out.println("Running Flux: " + flux);
         String json = indexer.convertSingleResource(url, flux, out);
         assertThat(json, containsString(title));
