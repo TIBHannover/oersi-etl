@@ -30,9 +30,10 @@ public class Indexer {
                 + "map(html.body.div.div.div.div.div.div.div.p.value, description)\n"//
                 + "map(html.body.div.div.div.div.div.div.div.div.div.div.div.div.div.div.div.div.p.a.href, license)"
                 + "\n";
-        int num = args.length > 0 ? Integer.parseInt(args[0]) : 3;
         File resultFile = new File("elasticsearch-bulk.ndjson");
-        List<String> urls = indexer.readSiteMap(siteMapUrl, prefix).subList(0, num);
+        List<String> allUrls = indexer.readSiteMap(siteMapUrl, prefix);
+        int num = args.length > 0 ? Math.min(Integer.parseInt(args[0]), allUrls.size()) : 3;
+        List<String> urls = allUrls.subList(0, num);
         System.out.printf("Processing %s resources from %s: %s, writing to %s\n", num, siteMapUrl, urls, resultFile);
         try (FileWriter out = new FileWriter(resultFile)) {
             urls.forEach(url -> {
