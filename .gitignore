@@ -5,3 +5,10 @@
 # Ignore Gradle build output directory
 build
 bin
+
+# Ignore generated Eclipse config files
+.classpath
+.project
+
+# Ignore checked out dependency repos
+metafacture-*

@@ -9,6 +9,5 @@ variables:
 
 build:
   script:
-    - cd indexer
     - sh install_snapshots.sh
     - ./gradlew check
