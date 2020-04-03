@@ -6,6 +6,8 @@ import static org.junit.Assert.assertThat;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import org.antlr.runtime.RecognitionException;
 import org.junit.Test;
@@ -15,24 +17,28 @@ import org.junit.runners.Parameterized;
 @RunWith(Parameterized.class)
 public class IndexerTestSingleResource {
 
+    private static final Logger LOG = Logger.getLogger(IndexerTestSingleResource.class.getName());
+
+    private static final Object[][] PARAMS = new Object[][] { //
+            { "https://www.hoou.de/materials/tutorial-lernen-lernen",
+                    // ->
+                    "Tutorial: Lernen lernen - HOOU", //
+                    "Das Bewusstsein und die Kenntnis über Ihren Lernstil kann Ihnen helfen, ", //
+                    "https://creativecommons.org/licenses/by-nc-nd/4.0/" }, //
+            { "https://www.hoou.de/materials/online-punkteabfrage",
+                    // ->
+                    "Online Punkteabfrage - HOOU", //
+                    "Die Punktabfrage ist in Papierform (Poster / Klebepunkte) ein bewährtes Feedbackinstrument ", //
+                    "http://creativecommons.org/licenses/by-sa/4.0/" }, //
+            { "https://www.hoou.de/materials/ifm-erzahlung-wie",
+                    // ->
+                    "IFM - Erzählung. Wie? - HOOU", //
+                    "In diesem Kapitel zeigt Professor Bramkamp anhand der Videoinstallation „Angels in Chains“ ", //
+                    "https://creativecommons.org/licenses/by-nc-sa/4.0/" } };
+
     @Parameterized.Parameters(name = "{0} -> {1}")
     public static Collection<Object[]> singleResources() {
-        return Arrays.asList(new Object[][] { //
-                { "https://www.hoou.de/materials/tutorial-lernen-lernen",
-                        // ->
-                        "Tutorial: Lernen lernen - HOOU", //
-                        "Das Bewusstsein und die Kenntnis über Ihren Lernstil kann Ihnen helfen, ", //
-                        "https://creativecommons.org/licenses/by-nc-nd/4.0/" }, //
-                { "https://www.hoou.de/materials/online-punkteabfrage",
-                        // ->
-                        "Online Punkteabfrage - HOOU", //
-                        "Die Punktabfrage ist in Papierform (Poster / Klebepunkte) ein bewährtes Feedbackinstrument ", //
-                        "http://creativecommons.org/licenses/by-sa/4.0/" }, //
-                { "https://www.hoou.de/materials/ifm-erzahlung-wie",
-                        // ->
-                        "IFM - Erzählung. Wie? - HOOU", //
-                        "In diesem Kapitel zeigt Professor Bramkamp anhand der Videoinstallation „Angels in Chains“ ", //
-                        "https://creativecommons.org/licenses/by-nc-sa/4.0/" } });
+        return Arrays.asList(PARAMS);
     }
 
     private String url;
@@ -62,7 +68,7 @@ public class IndexerTestSingleResource {
                 + "|org.metafacture.metamorph.Metafix(\"%s\")"//
                 + "|encode-json(prettyPrinting=\"false\")"//
                 + "|write(\"%s\");", url, fix, out);
-        System.out.println("Running Flux: " + flux);
+        LOG.log(Level.INFO, "Running Flux: {0}", flux);
         String json = indexer.convertSingleResource(url, flux, out);
         assertThat(json, containsString(title));
         assertThat(json, containsString(description));

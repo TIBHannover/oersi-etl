@@ -1,0 +1,8 @@
+autoEnabled=true
+eclipse.preferences.version=1
+extraProperties=
+fileExclusions=DIRECTORY\:bin\r\nDIRECTORY\:build\r\nDIRECTORY\:gradle
+idePrefixKey=
+projectKey=oersi_oersi-etl
+serverId=SonarCloud/oersi
+sqPrefixKey=

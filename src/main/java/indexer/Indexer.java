@@ -11,6 +11,8 @@ import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 import java.util.List;
 import java.util.UUID;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 import org.antlr.runtime.RecognitionException;
@@ -20,6 +22,8 @@ import org.metafacture.runner.Flux;
 import org.xml.sax.SAXException;
 
 public class Indexer {
+
+    private static final Logger LOG = Logger.getLogger(Indexer.class.getName());
 
     public static void main(String[] args) throws IOException, SAXException {
         String siteMapUrl = "https://www.hoou.de/sitemap.xml";
@@ -34,7 +38,8 @@ public class Indexer {
         List<String> allUrls = indexer.readSiteMap(siteMapUrl, prefix);
         int num = args.length > 0 ? Math.min(Integer.parseInt(args[0]), allUrls.size()) : 3;
         List<String> urls = allUrls.subList(0, num);
-        System.out.printf("Processing %s resources from %s: %s, writing to %s\n", num, siteMapUrl, urls, resultFile);
+        LOG.log(Level.INFO, "Processing {0} resources from {1}: {2}, writing to {3}",
+                new Object[] { num, siteMapUrl, urls, resultFile });
         try (FileWriter out = new FileWriter(resultFile)) {
             urls.forEach(url -> {
                 try {
@@ -52,8 +57,11 @@ public class Indexer {
                     out.write(indexer.convertSingleResource(url, flux, singleResult));
                     out.write("\n");
                     Thread.sleep(1000);
-                } catch (IOException | RecognitionException | InterruptedException e) {
-                    e.printStackTrace();
+                } catch (IOException | RecognitionException e) {
+                    LOG.log(Level.SEVERE, e.getMessage(), e);
+                } catch (InterruptedException e) {
+                    LOG.log(Level.SEVERE, e.getMessage(), e);
+                    Thread.currentThread().interrupt();
                 }
             });
         }
