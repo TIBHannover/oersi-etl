@@ -6,8 +6,24 @@ image: gradle:latest
 # isolated from any previous builds.
 variables:
   GRADLE_OPTS: "-Dorg.gradle.daemon=false"
+  SONAR_USER_HOME: "${CI_PROJECT_DIR}/.sonar"  # Defines the location of the analysis task cache
+  GIT_DEPTH: "0"  # Tells git to fetch all the branches of the project, required by the analysis task
 
 build:
   script:
     - sh install_snapshots.sh
     - ./gradlew check
+
+sonar:
+  image: gradle:latest
+  cache:
+    key: "${CI_JOB_NAME}"
+    paths:
+      - .sonar/cache
+  script:
+    - sh install_snapshots.sh
+    - gradle sonarqube
+  only:
+    - merge_requests
+    - master
+    - sonar

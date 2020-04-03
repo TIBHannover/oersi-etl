@@ -10,6 +10,7 @@ plugins {
     // Apply the java-library plugin to add support for Java Library
     id 'java-library'
     id 'application'
+    id "org.sonarqube" version "2.8"
 }
 
 repositories {
@@ -42,4 +43,11 @@ ext {
 
 application {
     mainClassName = javaMainClass
+}
+
+sonarqube {
+  properties {
+    property "sonar.projectKey", "oersi_oersi-etl"
+    property "sonar.organization", "oersi"
+  }
 }
