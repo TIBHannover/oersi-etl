@@ -23,6 +23,7 @@ import org.xml.sax.SAXException;
 
 public class Indexer {
 
+    static final File OUT_FILE = new File("elasticsearch-bulk.ndjson");
     private static final Logger LOG = Logger.getLogger(Indexer.class.getName());
 
     public static void main(String[] args) throws IOException, SAXException {
@@ -34,13 +35,12 @@ public class Indexer {
                 + "map(html.body.div.div.div.div.div.div.div.p.value, description)\n"//
                 + "map(html.body.div.div.div.div.div.div.div.div.div.div.div.div.div.div.div.div.p.a.href, license)"
                 + "\n";
-        File resultFile = new File("elasticsearch-bulk.ndjson");
         List<String> allUrls = indexer.readSiteMap(siteMapUrl, prefix);
         int num = args.length > 0 ? Math.min(Integer.parseInt(args[0]), allUrls.size()) : 3;
         List<String> urls = allUrls.subList(0, num);
         LOG.log(Level.INFO, "Processing {0} resources from {1}: {2}, writing to {3}",
-                new Object[] { num, siteMapUrl, urls, resultFile });
-        try (FileWriter out = new FileWriter(resultFile)) {
+                new Object[] { num, siteMapUrl, urls, OUT_FILE });
+        try (FileWriter out = new FileWriter(OUT_FILE)) {
             urls.forEach(url -> {
                 try {
                     String singleResult = indexer.absPathToTempFile("", ".json");
