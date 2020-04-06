@@ -22,7 +22,7 @@ sonar:
       - .sonar/cache
   script:
     - sh install_snapshots.sh
-    - gradle sonarqube
+    - ./gradlew check jacocoTestReport sonarqube
   only:
     - merge_requests
     - master

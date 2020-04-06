@@ -9,12 +9,8 @@ Set up project
 
 `sh install_snapshots.sh`
 
-Run tests
----------
-
-Tests in `src/test/java`:
-
-`./gradlew check`
+User documentation
+==================
 
 Create data
 -----------
@@ -45,3 +41,38 @@ Delete index
 Delete the index:
 
 `curl -X DELETE http://localhost:9200/oerindex; echo`
+
+Developer documentation
+=======================
+
+Run tests
+---------
+
+Tests in `src/test/java`:
+
+`./gradlew check`
+
+Coverage
+--------
+
+Generate coverage report in `build/reports/jacoco/`:
+
+`./gradlew jacocoTestReport`
+
+SonarQube
+---------
+
+Generate SONARCLOUD_TOKEN at [https://sonarcloud.io/account/security](https://sonarcloud.io/account/security)
+
+Set up a `~/.gradle/gradle.properties` file:
+
+```
+systemProp.sonar.host.url=https://sonarcloud.io
+systemProp.sonar.login=<SONARCLOUD_TOKEN>
+```
+
+Run SonarQube analysis on sonarcloud.io:
+
+`./gradlew sonarqube`
+
+See results at [https://sonarcloud.io/dashboard?id=oersi_oersi-etl](https://sonarcloud.io/dashboard?id=oersi_oersi-etl)
