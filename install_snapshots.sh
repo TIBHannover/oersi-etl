@@ -3,6 +3,6 @@ cd metafacture-core
 ./gradlew install
 cd ..
 git clone https://github.com/metafacture/metafacture-fix.git
-cd metafacture-fix/org.metafacture.fix.parent
+cd metafacture-fix
 ./gradlew install
-cd ../..
+cd ..
