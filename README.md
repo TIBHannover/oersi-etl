@@ -15,16 +15,16 @@ User documentation
 Create data
 -----------
 
-Setup in `Indexer.main`, process 2 resources, write Elasticsearch bulk file:
+Setup in `Indexer.main`: run all `*.flux` workflows in `data/`, write Elasticsearch bulk file:
 
-`./gradlew run --args='2'`
+`./gradlew run`
 
 Index data
 ----------
 
 Index the Elasticsearch bulk file:
 
-`curl -s -H "Content-Type: application/x-ndjson" -X POST localhost:9200/_bulk --data-binary "@elasticsearch-bulk.ndjson"; echo`
+`curl -s -H "Content-Type: application/x-ndjson" -X POST localhost:9200/_bulk --data-binary "@data/oersi.ndjson"; echo`
 
 Query data
 ----------
@@ -33,14 +33,14 @@ Query the index:
 
 [http://localhost:9200/oerindex/_search](http://localhost:9200/oerindex/_search)
 
-`curl http://localhost:9200/oerindex/_search | jq`
+`curl http://localhost:9200/oersi/_search | jq`
 
 Delete index
 ------------
 
 Delete the index:
 
-`curl -X DELETE http://localhost:9200/oerindex; echo`
+`curl -X DELETE http://localhost:9200/oersi; echo`
 
 Developer documentation
 =======================

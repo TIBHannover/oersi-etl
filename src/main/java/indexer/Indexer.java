@@ -10,7 +10,6 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 import java.util.List;
-import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
@@ -23,47 +22,31 @@ import org.xml.sax.SAXException;
 
 public class Indexer {
 
-    static final File OUT_FILE = new File("elasticsearch-bulk.ndjson");
+    static final File DATA_DIR = new File("data");
+    static final File OUT_FILE = new File(DATA_DIR, "oersi.ndjson");
+
     private static final Logger LOG = Logger.getLogger(Indexer.class.getName());
 
-    public static void main(String[] args) throws IOException, SAXException {
-        String siteMapUrl = "https://www.hoou.de/sitemap.xml";
-        String prefix = "https://www.hoou.de/materials/";
-        Indexer indexer = new Indexer();
-        String fix = "\n"//
-                + "map(html.head.title.value, title)\n"//
-                + "map(html.body.div.div.div.div.div.div.div.p.value, description)\n"//
-                + "map(html.body.div.div.div.div.div.div.div.div.div.div.div.div.div.div.div.div.p.a.href, license)"
-                + "\n";
-        List<String> allUrls = indexer.readSiteMap(siteMapUrl, prefix);
-        int num = args.length > 0 ? Math.min(Integer.parseInt(args[0]), allUrls.size()) : 3;
-        List<String> urls = allUrls.subList(0, num);
-        LOG.log(Level.INFO, "Processing {0} resources from {1}: {2}, writing to {3}",
-                new Object[] { num, siteMapUrl, urls, OUT_FILE });
-        try (FileWriter out = new FileWriter(OUT_FILE)) {
-            urls.forEach(url -> {
-                try {
-                    String singleResult = indexer.absPathToTempFile("", ".json");
-                    String flux = String.format("\"%s\""//
-                            + "|open-http"//
-                            + "|decode-html"//
-                            + "|org.metafacture.metamorph.Metafix(\"%s\")"//
-                            + "|encode-json(prettyPrinting=\"false\")"//
-                            + "|write(\"%s\");", url, fix, singleResult);
-                    out.write(String.format("{\"index\":{\"_id\":\"%s\",\"_type\":\"%s\",\"_index\":\"%s\"}}",
-                            // _id, _type, _index:
-                            UUID.randomUUID(), "oer", "oerindex"));
-                    out.write("\n");
-                    out.write(indexer.convertSingleResource(url, flux, singleResult));
-                    out.write("\n");
-                    Thread.sleep(1000);
-                } catch (IOException | RecognitionException e) {
-                    LOG.log(Level.SEVERE, e.getMessage(), e);
-                } catch (InterruptedException e) {
-                    LOG.log(Level.SEVERE, e.getMessage(), e);
-                    Thread.currentThread().interrupt();
+    public static void main(String[] args) throws IOException {
+        try {
+            for (File flux : DATA_DIR.listFiles((d, f) -> f.toLowerCase().endsWith(".flux"))) {
+                String fluxText = Files.readAllLines(Paths.get(flux.toURI())).stream()
+                        .collect(Collectors.joining("\n"));
+                LOG.log(Level.INFO, "Running {0}: \n{1}", new Object[] { flux, fluxText });
+                Flux.main(new String[] { flux.getAbsolutePath() });
+            }
+            try (FileWriter w = new FileWriter(OUT_FILE)) {
+                for (File json : DATA_DIR.listFiles(
+                        (d, f) -> f.toLowerCase().endsWith(".ndjson") && !f.equalsIgnoreCase(OUT_FILE.getName()))) {
+                    LOG.log(Level.INFO, "Writing {0} to {1}", new Object[] { json, OUT_FILE });
+                    String bulk = Files.readAllLines(Paths.get(json.toURI())).stream()
+                            .collect(Collectors.joining("\n"));
+                    w.write(bulk);
+                    w.write("\n");
                 }
-            });
+            }
+        } catch (Exception e) {
+            LOG.log(Level.SEVERE, e.getMessage(), e);
         }
     }
 

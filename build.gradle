@@ -31,6 +31,7 @@ dependencies {
     implementation 'org.metafacture:metafacture-runner:master-SNAPSHOT'
     implementation 'org.metafacture:metafacture-json:master-SNAPSHOT'
     implementation 'org.metafacture:metafacture-html:master-SNAPSHOT'
+    implementation 'org.metafacture:metafacture-elasticsearch:master-SNAPSHOT'
     implementation 'org.metafacture.fix:org.metafacture.fix:1.0.0-SNAPSHOT'
 
     // Use JUnit test framework
