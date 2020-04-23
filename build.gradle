@@ -32,7 +32,11 @@ dependencies {
     implementation 'org.metafacture:metafacture-json:master-SNAPSHOT'
     implementation 'org.metafacture:metafacture-html:master-SNAPSHOT'
     implementation 'org.metafacture:metafacture-elasticsearch:master-SNAPSHOT'
+    implementation 'org.metafacture:metafacture-xml:master-SNAPSHOT'
     implementation 'org.metafacture.fix:org.metafacture.fix:1.0.0-SNAPSHOT'
+    implementation('org.metafacture:metafacture-biblio:master-SNAPSHOT') {
+        exclude group: 'xml-apis', module: 'xml-apis'
+    }
 
     // Use JUnit test framework
     testImplementation 'junit:junit:4.12'
