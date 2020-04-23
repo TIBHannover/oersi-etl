@@ -1,4 +1,4 @@
-package indexer;
+package oersi;
 
 import static org.hamcrest.CoreMatchers.containsString;
 import static org.junit.Assert.assertThat;
@@ -15,9 +15,9 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 
 @RunWith(Parameterized.class)
-public class IndexerTestSingleResource {
+public class EtlTestSingleResource {
 
-    private static final Logger LOG = Logger.getLogger(IndexerTestSingleResource.class.getName());
+    private static final Logger LOG = Logger.getLogger(EtlTestSingleResource.class.getName());
 
     private static final Object[][] PARAMS = new Object[][] { //
             { "https://www.hoou.de/materials/tutorial-lernen-lernen",
@@ -46,7 +46,7 @@ public class IndexerTestSingleResource {
     private String description;
     private String license;
 
-    public IndexerTestSingleResource(String url, String title, String description, String license) {
+    public EtlTestSingleResource(String url, String title, String description, String license) {
         this.url = url;
         this.title = title;
         this.description = description;
@@ -55,13 +55,13 @@ public class IndexerTestSingleResource {
 
     @Test
     public void testConvertSingleResource() throws IOException, RecognitionException {
-        Indexer indexer = new Indexer();
+        ETL etl = new ETL();
         String fix = "\n"//
                 + "map(html.head.title.value, title)\n"//
                 + "map(html.body.div.div.div.div.div.div.div.p.value, description)\n"//
                 + "map(html.body.div.div.div.div.div.div.div.div.div.div.div.div.div.div.div.div.p.a.href, license)"
                 + "\n";
-        String out = indexer.absPathToTempFile("", ".json");
+        String out = etl.absPathToTempFile("", ".json");
         String flux = String.format("\"%s\""//
                 + "|open-http"//
                 + "|decode-html"//
@@ -69,7 +69,7 @@ public class IndexerTestSingleResource {
                 + "|encode-json(prettyPrinting=\"false\")"//
                 + "|write(\"%s\");", url, fix, out);
         LOG.log(Level.INFO, "Running Flux: {0}", flux);
-        String json = indexer.convertSingleResource(url, flux, out);
+        String json = etl.convertSingleResource(url, flux, out);
         assertThat(json, containsString(title));
         assertThat(json, containsString(description));
         assertThat(json, containsString(license));

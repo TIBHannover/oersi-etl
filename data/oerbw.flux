@@ -1,6 +1,6 @@
 "https://www.oerbw.de/edu-sharing/eduservlet/sitemap?from=0"
 | open-http
-| indexer.SitemapReader(wait="1000",limit="2",urlPattern=".*/components/.*")
+| oersi.SitemapReader(wait="1000",limit="2",urlPattern=".*/components/.*")
 | open-http
 | extract-script
 | decode-json

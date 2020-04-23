@@ -1,4 +1,4 @@
-package indexer;
+package oersi;
 
 import static org.joox.JOOX.matchText;
 
@@ -20,12 +20,12 @@ import org.joox.Match;
 import org.metafacture.runner.Flux;
 import org.xml.sax.SAXException;
 
-public class Indexer {
+public class ETL {
 
     static final File DATA_DIR = new File("data");
     static final File OUT_FILE = new File(DATA_DIR, "oersi.ndjson");
 
-    private static final Logger LOG = Logger.getLogger(Indexer.class.getName());
+    private static final Logger LOG = Logger.getLogger(ETL.class.getName());
 
     public static void main(String[] args) throws IOException {
         try {

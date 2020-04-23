@@ -1,4 +1,4 @@
-package indexer;
+package oersi;
 
 import static org.joox.JOOX.matchText;
 

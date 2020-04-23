@@ -15,7 +15,7 @@ User documentation
 Create data
 -----------
 
-Setup in `Indexer.main`: run all `*.flux` workflows in `data/`, write Elasticsearch bulk file:
+Setup in `ETL.main`: run all `*.flux` workflows in `data/`, write Elasticsearch bulk file:
 
 `./gradlew run`
 

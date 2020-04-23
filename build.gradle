@@ -40,7 +40,7 @@ dependencies {
 
 apply plugin : "java"
 ext {
-   javaMainClass = "indexer.Indexer"
+   javaMainClass = "oersi.ETL"
 }
 
 application {
