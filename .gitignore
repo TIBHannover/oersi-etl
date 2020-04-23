@@ -1,6 +1,5 @@
 # Ignore Gradle project-specific cache directory
 .gradle
-*.ndjson
 
 # Ignore Gradle build output directory
 build
@@ -12,3 +11,6 @@ bin
 
 # Ignore checked out dependency repos
 metafacture-*
+
+# Ignore generated output data
+*.ndjson

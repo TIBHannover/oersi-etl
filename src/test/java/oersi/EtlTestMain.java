@@ -1,4 +1,4 @@
-package indexer;
+package oersi;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
@@ -16,8 +16,10 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.xml.sax.SAXException;
 
+import oersi.ETL;
+
 @RunWith(Parameterized.class)
-public class IndexerTestMain {
+public class EtlTestMain {
 
     private static final Object[][] PARAMS = new Object[][] { //
             new Object[] { Arrays.asList() }, //
@@ -31,19 +33,19 @@ public class IndexerTestMain {
 
     private List<String> args;
 
-    public IndexerTestMain(List<String> args) {
+    public EtlTestMain(List<String> args) {
         this.args = args;
     }
 
     @Before
     public void setUp() throws IOException {
-        Files.deleteIfExists(Paths.get(Indexer.OUT_FILE.toURI()));
+        Files.deleteIfExists(Paths.get(ETL.OUT_FILE.toURI()));
     }
 
     @Test
     public void testConvertMain() throws IOException, SAXException {
-        assertFalse(Indexer.OUT_FILE.exists());
-        Indexer.main(args.toArray(new String[0]));
-        assertTrue(Indexer.OUT_FILE.exists());
+        assertFalse(ETL.OUT_FILE.exists());
+        ETL.main(args.toArray(new String[0]));
+        assertTrue(ETL.OUT_FILE.exists());
     }
 }

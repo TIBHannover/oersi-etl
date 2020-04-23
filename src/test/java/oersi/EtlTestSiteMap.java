@@ -1,4 +1,4 @@
-package indexer;
+package oersi;
 
 import static org.hamcrest.CoreMatchers.hasItem;
 import static org.junit.Assert.assertFalse;
@@ -14,8 +14,10 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.xml.sax.SAXException;
 
+import oersi.ETL;
+
 @RunWith(Parameterized.class)
-public class IndexerTestSiteMap {
+public class EtlTestSiteMap {
 
     private static final Object[][] PARAMS = new Object[][] { //
             { "https://www.hoou.de/sitemap.xml", "https://www.hoou.de/materials/", Arrays.asList( // -->
@@ -37,7 +39,7 @@ public class IndexerTestSiteMap {
     private String prefix;
     private List<String> urls;
 
-    public IndexerTestSiteMap(String siteMapUrl, String prefix, List<String> titles) {
+    public EtlTestSiteMap(String siteMapUrl, String prefix, List<String> titles) {
         this.siteMapUrl = siteMapUrl;
         this.prefix = prefix;
         this.urls = titles;
@@ -45,8 +47,8 @@ public class IndexerTestSiteMap {
 
     @Test
     public void testConvertSitemap() throws IOException, SAXException {
-        Indexer indexer = new Indexer();
-        List<String> resultUrls = indexer.readSiteMap(siteMapUrl, prefix);
+        ETL etl = new ETL();
+        List<String> resultUrls = etl.readSiteMap(siteMapUrl, prefix);
         assertFalse("Result URLs should not be empty", resultUrls.isEmpty());
         urls.forEach(url -> assertThat(resultUrls, hasItem(url)));
     }
