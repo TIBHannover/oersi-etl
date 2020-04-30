@@ -1,20 +1,22 @@
 package oersi;
 
 import static org.hamcrest.CoreMatchers.hasItem;
+import static org.joox.JOOX.matchText;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertThat;
 
 import java.io.IOException;
+import java.net.URL;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
+import org.joox.JOOX;
+import org.joox.Match;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.xml.sax.SAXException;
-
-import oersi.ETL;
 
 @RunWith(Parameterized.class)
 public class EtlTestSiteMap {
@@ -47,9 +49,14 @@ public class EtlTestSiteMap {
 
     @Test
     public void testConvertSitemap() throws IOException, SAXException {
-        ETL etl = new ETL();
-        List<String> resultUrls = etl.readSiteMap(siteMapUrl, prefix);
+        List<String> resultUrls = readSiteMap(siteMapUrl, prefix);
         assertFalse("Result URLs should not be empty", resultUrls.isEmpty());
         urls.forEach(url -> assertThat(resultUrls, hasItem(url)));
     }
+
+    private List<String> readSiteMap(String sitemapUrl, String prefix) throws SAXException, IOException {
+        Match siteMapXml = JOOX.$(new URL(sitemapUrl).openStream());
+        return siteMapXml.find("loc").filter(matchText("^" + prefix + ".*")).texts();
+    }
+
 }
