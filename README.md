@@ -31,7 +31,7 @@ Query data
 
 Query the index:
 
-[http://localhost:9200/oerindex/_search](http://localhost:9200/oerindex/_search)
+[http://localhost:9200/oersi/_search](http://localhost:9200/oersi/_search)
 
 `curl http://localhost:9200/oersi/_search | jq`
 
