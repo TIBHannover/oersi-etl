@@ -20,7 +20,7 @@ import org.metafacture.runner.Flux;
  */
 public class ETL {
 
-    static final String DATA_DIR = "data";
+    static final String DATA_DIR = "data/to-elasticsearch";
     static final File OUT_FILE = new File(DATA_DIR, "oersi.ndjson");
 
     private static final Logger LOG = Logger.getLogger(ETL.class.getName());
@@ -39,8 +39,8 @@ public class ETL {
                     Flux.main(new String[] { flux.getAbsolutePath() });
                 }
                 try (FileWriter w = new FileWriter(OUT_FILE)) {
-                    for (File json : file.listFiles(
-                            (d, f) -> f.toLowerCase().endsWith(".ndjson") && !f.equalsIgnoreCase(OUT_FILE.getName()))) {
+                    for (File json : file.listFiles((d, f) -> f.toLowerCase().endsWith(".ndjson")
+                            && !f.equalsIgnoreCase(OUT_FILE.getName()))) {
                         LOG.log(Level.INFO, "Writing {0} to {1}", new Object[] { json, OUT_FILE });
                         String bulk = Files.readAllLines(Paths.get(json.toURI())).stream()
                                 .collect(Collectors.joining("\n"));

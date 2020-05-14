@@ -80,7 +80,7 @@ public final class OersiWriter implements ObjectReceiver<String> {
 
     @Override
     public void closeStream() {
-        try (FileWriter r = new FileWriter("data/test/responses.json")) {
+        try (FileWriter r = new FileWriter("data/to-oersibackend/responses.json")) {
             r.write("[\n");
             r.write(responses.stream().map(HttpResponse::body).collect(joining(",\n")));
             r.write("\n]");
