@@ -1,4 +1,4 @@
-"https://www.oernds.de/edu-sharing/eduservlet/sitemap?from=0"
+"https://www.oerbw.de/edu-sharing/eduservlet/sitemap?from=0"
 | open-http
 | oersi.SitemapReader(wait="1000",limit="2",urlPattern=".*/components/.*")
 | open-http
@@ -22,13 +22,13 @@ add_field(        educationalResource.subject,'')
 add_field(        educationalResource.learningResourceType,'')
 
 /* Add constant data for this specific workflow: (TODO: extract other to edu-sharing.fix) */
-add_field(source, 'https://www.oernds.de')
+add_field(source, 'https://www.oerbw.de')
 ")
 | encode-json
 | oersi.FieldMerger
 | object-tee | {
-    write(FLUX_DIR + "oernds-metadata.json", header="[\n", footer="\n]", separator=",\n")
+    write(FLUX_DIR + "oerbw-metadata.json", header="[\n", footer="\n]", separator=",\n")
   }{
     oersi.OersiWriter("http://192.168.98.115:8080/oersi/api/metadata",
-      user="test", pass="test", log=FLUX_DIR + "oernds-responses.json")
+      user="test", pass="test", log=FLUX_DIR + "oerbw-responses.json")
 };

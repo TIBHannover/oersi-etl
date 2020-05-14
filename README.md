@@ -32,6 +32,10 @@ Run the workflows in `data/to-oersibackend`:
 
 `./gradlew run --args 'data/to-oersibackend'`
 
+Check the responses in `*-response.json`, access by ID in the backend, e.g.:
+
+[http://192.168.98.115:8080/oersi/api/metadata/1](http://192.168.98.115:8080/oersi/api/metadata/1)
+
 Write to elasticsearch
 ----------------------
 

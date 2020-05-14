@@ -32,6 +32,7 @@ public final class OersiWriter implements ObjectReceiver<String> {
     private String url;
     private String user;
     private String pass;
+    private String log;
 
     private HttpClient client;
     private List<HttpResponse<String>> responses = new ArrayList<>();
@@ -53,6 +54,10 @@ public final class OersiWriter implements ObjectReceiver<String> {
 
     public void setPass(String pass) {
         this.pass = pass;
+    }
+
+    public void setLog(String log) {
+        this.log = log;
     }
 
     @Override
@@ -80,7 +85,7 @@ public final class OersiWriter implements ObjectReceiver<String> {
 
     @Override
     public void closeStream() {
-        try (FileWriter r = new FileWriter("data/to-oersibackend/responses.json")) {
+        try (FileWriter r = new FileWriter(log)) {
             r.write("[\n");
             r.write(responses.stream().map(HttpResponse::body).collect(joining(",\n")));
             r.write("\n]");
