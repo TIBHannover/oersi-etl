@@ -38,6 +38,7 @@ dependencies {
     implementation('org.metafacture:metafacture-biblio:master-SNAPSHOT') {
         exclude group: 'xml-apis', module: 'xml-apis'
     }
+    implementation 'com.fasterxml.jackson.core:jackson-databind:2.9.10.4'
 
     // Use JUnit test framework
     testImplementation 'junit:junit:4.12'
