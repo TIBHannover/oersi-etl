@@ -24,7 +24,7 @@ This will run all `*.flux` workflows in `data/to-elasticsearch`.
 Write to backend API
 --------------------
 
-By dafault a local `oersi-setup` with `vagrant up` is expected:
+By default a local `oersi-setup` with `vagrant up` is expected:
 
 `cd ../oersi-setup ; vagrant up ; cd ../oersi-etl`
 
