@@ -28,6 +28,7 @@ dependencies {
     // This dependency is used internally, and not exposed to consumers on their own compile classpath.
     implementation 'com.google.guava:guava:26.0-jre'
     implementation 'org.jooq:joox-java-6:1.6.0'
+    implementation 'org.metafacture:metafacture-plumbing:master-SNAPSHOT'
     implementation 'org.metafacture:metafacture-runner:master-SNAPSHOT'
     implementation 'org.metafacture:metafacture-json:master-SNAPSHOT'
     implementation 'org.metafacture:metafacture-html:master-SNAPSHOT'
@@ -37,12 +38,15 @@ dependencies {
     implementation('org.metafacture:metafacture-biblio:master-SNAPSHOT') {
         exclude group: 'xml-apis', module: 'xml-apis'
     }
+    implementation 'com.fasterxml.jackson.core:jackson-databind:2.9.10.4'
 
     // Use JUnit test framework
     testImplementation 'junit:junit:4.12'
 }
 
 apply plugin : "java"
+sourceCompatibility = JavaVersion.VERSION_11
+
 ext {
    javaMainClass = "oersi.ETL"
 }

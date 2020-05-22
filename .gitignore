@@ -14,3 +14,4 @@ metafacture-*
 
 # Ignore generated output data
 *.ndjson
+*.json

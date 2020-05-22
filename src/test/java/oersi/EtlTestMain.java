@@ -16,15 +16,13 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.xml.sax.SAXException;
 
-import oersi.ETL;
-
 @RunWith(Parameterized.class)
 public class EtlTestMain {
 
     private static final Object[][] PARAMS = new Object[][] { //
             new Object[] { Arrays.asList() }, //
-            new Object[] { Arrays.asList("1") }, //
-            new Object[] { Arrays.asList("1", "2") } };
+            new Object[] { Arrays.asList("data/to-elasticsearch", "data/to-oersibackend") }, //
+            new Object[] { Arrays.asList("data/to-oersibackend") } };
 
     @Parameterized.Parameters
     public static Collection<Object[]> args() {

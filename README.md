@@ -12,22 +12,46 @@ Set up project
 User documentation
 ==================
 
-Create data
------------
+Run workflows
+-------------
 
-Setup in `ETL.main`: run all `*.flux` workflows in `data/`, write Elasticsearch bulk file:
+Pass a directory name to run all `*.flux` workflows in that directory, e.g.:
 
-`./gradlew run`
+`./gradlew run --args 'data/to-elasticsearch'`
 
-Index data
-----------
+This will run all `*.flux` workflows in `data/to-elasticsearch`.
+
+Write to backend API
+--------------------
+
+By default a local `oersi-setup` with `vagrant up` is expected:
+
+`cd ../oersi-setup ; vagrant up ; cd ../oersi-etl`
+
+Run the workflows in `data/to-oersibackend`:
+
+`./gradlew run --args 'data/to-oersibackend'`
+
+Check the responses in `*-response.json`, access by ID in the backend, e.g.:
+
+[http://192.168.98.115:8080/oersi/api/metadata/1](http://192.168.98.115:8080/oersi/api/metadata/1)
+
+Write to elasticsearch
+----------------------
+
+### Create data
+
+Run the workflows that write an Elasticsearch bulk file:
+
+`./gradlew run --args 'data/to-elasticsearch'`
+
+### Index data
 
 Index the Elasticsearch bulk file:
 
 `curl -s -H "Content-Type: application/x-ndjson" -X POST localhost:9200/_bulk --data-binary "@data/oersi.ndjson"; echo`
 
-Query data
-----------
+### Query data
 
 Query the index:
 
@@ -35,8 +59,7 @@ Query the index:
 
 `curl http://localhost:9200/oersi/_search | jq`
 
-Delete index
-------------
+### Delete index
 
 Delete the index:
 
