@@ -3,29 +3,27 @@
 | decode-xml
 | handle-generic-xml
 | org.metafacture.metamorph.Metafix("
-/* Map some of the data we have to the oersi model: */
-map(metadata.mods.titleInfo.title.value, educationalResource.name)
-map(metadata.mods.abstract.value,        educationalResource.description)
-map(header.identifier.value,             educationalResource.identifier)
 
-/* TODO: pick a specific URL */
-map(metadata.mods.location.url.value,    educationalResource.url)
+/* Set up the context, TODO: include from separate file */
+add_field('@context.id','@id')
+add_field('@context.type','@type')
+add_field('@context.@vocab','http://schema.org/')
+
+/* Map some of the data we have to the oersi model: */
+map(metadata.mods.titleInfo.title.value, name)
+map(metadata.mods.abstract.value, description)
+/* TODO: pick a specific URL: */
+map(metadata.mods.location.url.value, id)
 
 /* Dont use the actual license, API accepts only creativecommons.org URLs */
-/* map(metadata.mods.accessCondition.href,educationalResource.license) */
+/* map(metadata.mods.accessCondition.href, license) */
 /* TODO: change constraint or use mapping of duepublico to creativecommons URLs */
-add_field(educationalResource.license, 'https://creativecommons.org/licenses/unknown')
+add_field(license, 'https://creativecommons.org/licenses/unknown')
 
-/* Add some fields required in the oersi model: */
-add_field(educationalResource.inLanguage, 'de')
-add_field(educationalResource.subject,'')
-add_field(educationalResource.learningResourceType,'')
-
-/* Add constant data for this specific workflow: */
-add_field(source, 'https://duepublico2.uni-due.de')
 ")
 | encode-json
 | oersi.FieldMerger
+| oersi.JsonValidator("https://dini-ag-kim.github.io/lrmi-profile/draft/schemas/schema.json")
 | object-tee | {
     write(FLUX_DIR + "duepub-metadata.json", header="[\n", footer="\n]", separator=",\n")
   }{
