@@ -4,24 +4,24 @@
 | open-http
 | decode-html
 | org.metafacture.metamorph.Metafix("
+
+/* Set up the context, TODO: include from separate file */
+add_field('@context.id','@id')
+add_field('@context.type','@type')
+add_field('@context.@vocab','http://schema.org/')
+
 /* Map some of the data we have to the oersi model: */
-map(html.head.title.value, educationalResource.name)
-map(html.body.div.div.div.div.div.div.div.p.value, educationalResource.description)
-map(html.body.div.div.div.div.div.div.div.div.div.div.div.div.div.div.div.div.p.a.href, educationalResource.license)
+map(html.head.title.value, name)
+map(html.body.div.div.div.div.div.div.div.p.value, description)
+map(html.body.div.div.div.div.div.div.div.div.div.div.div.div.div.div.div.div.p.a.href, license)
 
 /* TODO: pick out correct html.head.meta.content or html.head.script.value for URL*/
-map(html.body.div.div.div.div.div.div.div.div.div.div.p.a.href, educationalResource.url)
+map(html.body.div.div.div.div.div.div.div.div.div.div.p.a.href, id)
 
-/* Add some fields required in the oersi model: */
-add_field(educationalResource.inLanguage, 'de')
-add_field(educationalResource.subject,'')
-add_field(educationalResource.learningResourceType,'')
-
-/* Add constant data for this specific workflow: */
-add_field(source,'https://www.hoou.de')
 ")
 | encode-json
 | oersi.FieldMerger
+| oersi.JsonValidator("https://dini-ag-kim.github.io/lrmi-profile/draft/schemas/schema.json")
 | object-tee | {
     write(FLUX_DIR + "hoou-metadata.json", header="[\n", footer="\n]", separator=",\n")
   }{

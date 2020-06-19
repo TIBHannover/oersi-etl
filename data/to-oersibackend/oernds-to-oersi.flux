@@ -5,27 +5,23 @@
 | extract-script
 | decode-json
 | org.metafacture.metamorph.Metafix("
-/* Map some of the data we have to the oersi model: */
-map(name,         educationalResource.name)
-map(description,  educationalResource.description)
-map(url,          educationalResource.url)
-map(identifier,   educationalResource.identifier)
-map(license,      educationalResource.license)
-map(thumbnailUrl, educationalResource.thumbnailUrl)
 
-/* We have some 'unknown' inLanguge, hard code for now: */
-/* TODO: override actual value only for 'unknown' */
-add_field(        educationalResource.inLanguage, 'de')
+/* Set up the context, TODO: include from separate file */
+add_field('@context.id','@id')
+add_field('@context.type','@type')
+add_field('@context.@vocab','http://schema.org/')
 
-/* Add some empty fields required in the oersi model: */
-add_field(        educationalResource.subject,'')
-add_field(        educationalResource.learningResourceType,'')
+/* Map/pick standard edu-sharing fields, TODO: include from separate file */
+map(name, name)
+map(description, description)
+map(url, id)
+map(license, license)
+map(thumbnailUrl, thumbnailUrl)
 
-/* Add constant data for this specific workflow: (TODO: extract other to edu-sharing.fix) */
-add_field(source, 'https://www.oernds.de')
 ")
 | encode-json
 | oersi.FieldMerger
+| oersi.JsonValidator("https://dini-ag-kim.github.io/lrmi-profile/draft/schemas/schema.json")
 | object-tee | {
     write(FLUX_DIR + "oernds-metadata.json", header="[\n", footer="\n]", separator=",\n")
   }{
