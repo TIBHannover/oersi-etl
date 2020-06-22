@@ -28,14 +28,14 @@ dependencies {
     // This dependency is used internally, and not exposed to consumers on their own compile classpath.
     implementation 'com.google.guava:guava:26.0-jre'
     implementation 'org.jooq:joox-java-6:1.6.0'
-    implementation 'org.metafacture:metafacture-plumbing:master-SNAPSHOT'
-    implementation 'org.metafacture:metafacture-runner:master-SNAPSHOT'
-    implementation 'org.metafacture:metafacture-json:master-SNAPSHOT'
-    implementation 'org.metafacture:metafacture-html:master-SNAPSHOT'
-    implementation 'org.metafacture:metafacture-elasticsearch:master-SNAPSHOT'
-    implementation 'org.metafacture:metafacture-xml:master-SNAPSHOT'
+    implementation 'org.metafacture:metafacture-plumbing:feature-oersi-SNAPSHOT'
+    implementation 'org.metafacture:metafacture-runner:feature-oersi-SNAPSHOT'
+    implementation 'org.metafacture:metafacture-json:feature-oersi-SNAPSHOT'
+    implementation 'org.metafacture:metafacture-html:feature-oersi-SNAPSHOT'
+    implementation 'org.metafacture:metafacture-elasticsearch:feature-oersi-SNAPSHOT'
+    implementation 'org.metafacture:metafacture-xml:feature-oersi-SNAPSHOT'
     implementation 'org.metafacture.fix:org.metafacture.fix:1.0.0-SNAPSHOT'
-    implementation('org.metafacture:metafacture-biblio:master-SNAPSHOT') {
+    implementation('org.metafacture:metafacture-biblio:feature-oersi-SNAPSHOT') {
         exclude group: 'xml-apis', module: 'xml-apis'
     }
     implementation 'com.fasterxml.jackson.core:jackson-databind:2.9.10.4'
