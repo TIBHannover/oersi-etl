@@ -15,6 +15,15 @@ build:
     - ./gradlew --version
     - ./gradlew check
 
+deploy:
+  stage: deploy
+  script:
+    - sh install_snapshots.sh
+    - ./gradlew assemble
+  artifacts:
+    paths:
+     - build/distributions/*.zip
+
 sonar:
   image: gradle:jdk11
   cache:
