@@ -19,10 +19,11 @@ deploy:
   stage: deploy
   script:
     - sh install_snapshots.sh
-    - ./gradlew assemble
+    - ./gradlew installDist
   artifacts:
     paths:
-     - build/distributions/*.zip
+     - build/install/oersi-etl/bin/*
+     - build/install/oersi-etl/lib/*
 
 sonar:
   image: gradle:jdk11
