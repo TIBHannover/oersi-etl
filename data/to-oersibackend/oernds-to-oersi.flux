@@ -15,8 +15,22 @@ add_field('@context.@vocab','http://schema.org/')
 map(name, name)
 map(description, description)
 map(url, id)
-map(license, license)
-map(thumbnailUrl, thumbnailUrl)
+map(url, mainEntityOfPage.id)
+map(thumbnailUrl, image)
+
+/* TODO: support `combine` in Fix for first and last name */
+map(creator.familyName,'creator[]..name')
+map(creator.legalName,'creator[]..name')
+map('creator.@type','creator[]..type')
+
+replace_all(license, '/deed.*$', '')
+map('@license', license)
+
+replace_all(learningResourceType, '^.*$', 'type://$0')
+map('@learningResourceType', learningResourceType.id)
+
+replace_all(inLanguage, 'unknown', 'de')
+map('@inLanguage', inLanguage)
 
 ")
 | encode-json
