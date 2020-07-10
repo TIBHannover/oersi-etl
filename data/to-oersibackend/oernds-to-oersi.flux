@@ -24,14 +24,10 @@ map(creator.legalName,'creator[]..name')
 map('creator.@type','creator[]..type')
 
 replace_all(license, '/deed.*$', '')
-map('@license', license)
-
-replace_all(learningResourceType, '^.*$', 'type://$0')
-map('@learningResourceType', learningResourceType.id)
-
 replace_all(inLanguage, 'unknown', 'de')
-map('@inLanguage', inLanguage)
 
+prepend(learningResourceType, 'type://')
+map('@learningResourceType', learningResourceType.id)
 ")
 | encode-json
 | oersi.FieldMerger
