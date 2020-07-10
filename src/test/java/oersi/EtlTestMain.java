@@ -20,9 +20,10 @@ import org.xml.sax.SAXException;
 public class EtlTestMain {
 
     private static final Object[][] PARAMS = new Object[][] { //
-            new Object[] { Arrays.asList() }, //
-            new Object[] { Arrays.asList("data/to-elasticsearch", "data/to-oersibackend") }, //
-            new Object[] { Arrays.asList("data/to-oersibackend") } };
+//          new Object[] { Arrays.asList("data/test") }, //
+//          new Object[] { Arrays.asList("data/to-elasticsearch", "data/to-oersibackend") }, //
+            new Object[] { Arrays.asList("data/to-oersibackend") } //
+    };
 
     @Parameterized.Parameters
     public static Collection<Object[]> args() {
