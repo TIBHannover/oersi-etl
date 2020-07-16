@@ -30,7 +30,19 @@ map('creator.@type','creator[]..type')
 replace_all(license, '/deed.*$', '')
 replace_all(inLanguage, 'unknown', 'de')
 
-prepend(learningResourceType, 'type://')
+lookup(learningResourceType,
+/* TODO: support lookup in CSV file */
+Kurs: 'https://w3id.org/kim/hcrt/course',
+course: 'https://w3id.org/kim/hcrt/course',
+image: 'https://w3id.org/kim/hcrt/image',
+video: 'https://w3id.org/kim/hcrt/video',
+reference: 'https://w3id.org/kim/hcrt/index',
+presentation: 'https://w3id.org/kim/hcrt/slide',
+schoolbook: 'https://w3id.org/kim/hcrt/text',
+script: 'https://w3id.org/kim/hcrt/script',
+worksheet: 'https://w3id.org/kim/hcrt/worksheet',
+__default: 'https://w3id.org/kim/hcrt/other')
+
 map('@learningResourceType', learningResourceType.id)
 ")
 | encode-json
