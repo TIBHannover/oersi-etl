@@ -27,12 +27,18 @@ public final class SitemapReader extends DefaultObjectPipe<Reader, ObjectReceive
     private int limit = 10;
     private int wait = 5000;
 
+    private String findAndReplace;
+
     public void setUrlPattern(final String urlPattern) {
         this.urlPattern = urlPattern;
     }
 
     public void setLimit(final int limit) {
         this.limit = limit;
+    }
+
+    public void setFindAndReplace(final String findAndReplace) {
+        this.findAndReplace = findAndReplace;
     }
 
     public void setWait(final int wait) {
@@ -46,7 +52,7 @@ public final class SitemapReader extends DefaultObjectPipe<Reader, ObjectReceive
             List<String> texts = siteMapXml.find("loc").filter(matchText(urlPattern)).texts();
             for (String url : texts.subList(0, Math.min(limit, texts.size()))) {
                 LOG.log(Level.INFO, "Processing URL {0}", new Object[] { url });
-                getReceiver().process(url);
+                getReceiver().process(findAndReplace(url));
                 Thread.sleep(wait);
             }
         } catch (SAXException | IOException e) {
@@ -55,5 +61,13 @@ public final class SitemapReader extends DefaultObjectPipe<Reader, ObjectReceive
             LOG.log(Level.SEVERE, e.getMessage(), e);
             Thread.currentThread().interrupt();
         }
+    }
+
+    private String findAndReplace(String url) {
+        if (findAndReplace != null) {
+            String[] split = findAndReplace.split("`");
+            return url.replaceAll(split[0], split[1]);
+        }
+        return url;
     }
 }

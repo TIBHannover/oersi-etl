@@ -18,17 +18,20 @@ map(url, id)
 map(url, mainEntityOfPage.id)
 map(thumbnailUrl, image)
 
-do combine('@fullCreator', '${last}, ${first}')
+do combine('@fullName', '${first} ${last}')
   map(creator.givenName,first)
   map(creator.familyName,last)
 end
 
-map('@fullCreator','creator[]..name')
+map('@fullName','creator[]..name')
 map(creator.legalName,'creator[]..name')
 map('creator.@type','creator[]..type')
 
 replace_all(license, '/deed.*$', '')
+map('@license', license)
+
 replace_all(inLanguage, 'unknown', 'de')
+map('@inLanguage', inLanguage)
 
 lookup(learningResourceType,
 /* TODO: support lookup in CSV file */
