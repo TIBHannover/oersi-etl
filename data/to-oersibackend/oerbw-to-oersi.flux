@@ -24,6 +24,12 @@ map(node.contentUrl, mainEntityOfPage.id)
 /* But overwrite with ID (contentUrl has session ID, expires). TODO: node.downloadUrl or node.properties.ccm:wwwurl[].1, but without session ID? */
 map('@node.properties.cclom:location[].1', mainEntityOfPage.id)
 
+/* Build pseudo hochschulfaechersystematik URIs, TODO: implement mapping to hochschulfaechersystematik */
+replace_all('node.properties.ccm:taxonid[].1', '(^$)|(\\\\d+)', 'https://w3id.org/kim/hochschulfaechersystematik/$0')
+map('@node.properties.ccm:taxonid[].1', 'about[]..id')
+/* TODO: with mapping mentioned above, use labels from hochschulfaechersystematik */
+map('node.properties.ccm:taxonid_DISPLAYNAME[].1', 'about[]..preflabel.de')
+
 do combine('@fullName', '${first} ${last}')
   map(node.createdBy.firstName,first)
   map(node.createdBy.lastName,last)
