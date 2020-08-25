@@ -14,7 +14,7 @@ add_field('@context.@vocab','http://schema.org/')
 /* Map/pick standard edu-sharing fields, TODO: include from separate file */
 map(node.title, name)
 map(node.description, description)
-map(node.iconURL, image)
+map(node.preview.url, image)
 
 replace_all('node.properties.cclom:location[].1','ccrep://oerbw.uni-tuebingen.de/(.+)', 'https://www.oerbw.de/edu-sharing/components/render/$1')
 map('@node.properties.cclom:location[].1', id)
