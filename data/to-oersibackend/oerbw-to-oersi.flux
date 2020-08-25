@@ -16,12 +16,12 @@ map(node.title, name)
 map(node.description, description)
 map(node.preview.url, image)
 
-replace_all('node.properties.cclom:location[].1','ccrep://oerbw.uni-tuebingen.de/(.+)', 'https://www.oerbw.de/edu-sharing/components/render/$1')
+replace_all('node.properties.cclom:location[].1','ccrep://.*?de/(.+)', 'https://www.oerbw.de/edu-sharing/components/render/$1')
 map('@node.properties.cclom:location[].1', id)
 
-/* Take the contentUrl as default, overwrite with wwwurl if found: */
+/* Take the contentUrl as default: */
 map(node.contentUrl, mainEntityOfPage.id)
-/* TODO: node.downloadUrl or node.properties.ccm:wwwurl[].1, but without session ID? */
+/* But overwrite with ID (contentUrl has session ID, expires). TODO: node.downloadUrl or node.properties.ccm:wwwurl[].1, but without session ID? */
 map('@node.properties.cclom:location[].1', mainEntityOfPage.id)
 
 do combine('@fullName', '${first} ${last}')
