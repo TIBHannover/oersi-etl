@@ -30,8 +30,9 @@ do combine('@fullName', '${first} ${last}')
 end
 map('@fullName','creator[]..name')
 
-/* What about organisations, how/where stored in the API? */
-add_field('creator[]..type', 'Person')
+/* Use institution information available via the API for testing. TODO: support both Person and Organization */
+add_field('creator[]..type', 'Organization')
+map('node.properties.ccm:university[].1', 'creator[]..name')
 
 replace_all('node.properties.virtual:licenseurl[].1', '/deed.*$', '')
 map('@node.properties.virtual:licenseurl[].1', license)
