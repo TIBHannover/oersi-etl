@@ -16,51 +16,67 @@ map(node.title, name)
 map(node.description, description)
 map(node.preview.url, image)
 
-replace_all('node.properties.cclom:location[].1','ccrep://.*?de/(.+)', 'https://www.oerbw.de/edu-sharing/components/render/$1')
-map('@node.properties.cclom:location[].1', id)
-
-/* Take the contentUrl as default: */
-map(node.contentUrl, mainEntityOfPage.id)
-/* But overwrite with ID (contentUrl has session ID, expires). TODO: node.downloadUrl or node.properties.ccm:wwwurl[].1, but without session ID? */
-map('@node.properties.cclom:location[].1', mainEntityOfPage.id)
-
-/* Build pseudo hochschulfaechersystematik URIs, TODO: implement mapping to hochschulfaechersystematik */
-replace_all('node.properties.ccm:taxonid[].1', '(^$)|(\\\\d+)', 'https://w3id.org/kim/hochschulfaechersystematik/$0')
-map('@node.properties.ccm:taxonid[].1', 'about[]..id')
-/* TODO: with mapping mentioned above, use labels from hochschulfaechersystematik */
-map('node.properties.ccm:taxonid_DISPLAYNAME[].1', 'about[]..preflabel.de')
-
-do combine('@fullName', '${first} ${last}')
-  map(node.createdBy.firstName,first)
-  map(node.createdBy.lastName,last)
+do map('node.properties.cclom:location[].1', id)
+  replace_all('ccrep://.*?de/(.+)', 'https://www.oerbw.de/edu-sharing/components/render/$1')
 end
-map('@fullName','creator[]..name')
 
-/* Use institution information available via the API for testing. TODO: support both Person and Organization */
-add_field('creator[]..type', 'Organization')
-map('node.properties.ccm:university[].1', 'creator[]..name')
+do entity('mainEntityOfPage')
+  /* Take the node.properties.ccm:wwwurl[].1 as default: */
+  map('node.properties.ccm:wwwurl[].1', id)
+  /* But overwrite with ID (node.properties.ccm:wwwurl[].1 has session ID, expires). */
+  do map('node.properties.cclom:location[].1', id)
+    replace_all('ccrep://.*?de/(.+)', 'https://www.oerbw.de/edu-sharing/components/render/$1')
+  end
+end
 
-replace_all('node.properties.virtual:licenseurl[].1', '/deed.*$', '')
-map('@node.properties.virtual:licenseurl[].1', license)
+do array('about')
+ do entity('')
+  /* Build pseudo hochschulfaechersystematik URIs, TODO: implement mapping to hochschulfaechersystematik */
+  do map('node.properties.ccm:taxonid[].1', 'id')
+    replace_all('(^$)|(\\\\d+)', 'https://w3id.org/kim/hochschulfaechersystematik/$0')
+  end
+  /* TODO: with mapping mentioned above, use labels from hochschulfaechersystematik */
+  map('node.properties.ccm:taxonid_DISPLAYNAME[].1', 'prefLabel.de')
+ end
+end
 
-/* TODO: also handle empty language field, currently skips records */
-replace_all('node.properties.cclom:general_language[].1', '_..$', '')
-map('@node.properties.cclom:general_language[].1', inLanguage)
+do array('creator')
+ do entity('')
+  add_field('type', 'Person')
+  do combine('name', '${first} ${last}')
+    map(node.createdBy.firstName,first)
+    map(node.createdBy.lastName,last)
+  end
+ end
+ do entity('')
+  add_field('type', 'Organization')
+  map('node.properties.ccm:university[].1', 'name')
+ end
+end
 
-lookup('node.properties.ccm:educationallearningresourcetype[].1',
-/* TODO: support lookup in CSV file */
-Kurs: 'https://w3id.org/kim/hcrt/course',
-course: 'https://w3id.org/kim/hcrt/course',
-image: 'https://w3id.org/kim/hcrt/image',
-video: 'https://w3id.org/kim/hcrt/video',
-reference: 'https://w3id.org/kim/hcrt/index',
-presentation: 'https://w3id.org/kim/hcrt/slide',
-schoolbook: 'https://w3id.org/kim/hcrt/text',
-script: 'https://w3id.org/kim/hcrt/script',
-worksheet: 'https://w3id.org/kim/hcrt/worksheet',
-__default: 'https://w3id.org/kim/hcrt/other')
+do map('node.properties.virtual:licenseurl[].1', license)
+  replace_all('/deed.*$', '')
+end
 
-map('@node.properties.ccm:educationallearningresourcetype[].1', learningResourceType.id)
+do map('node.properties.cclom:general_language[].1', inLanguage)
+  replace_all('_..$', '') /* remove country suffixes eg. _DE */
+  replace_all('^$', 'de') /* empty strings default to 'de' */
+end
+
+do map('node.properties.ccm:educationallearningresourcetype[].1', learningResourceType.id)
+  lookup(
+  /* TODO: support lookup in CSV file */
+  Kurs: 'https://w3id.org/kim/hcrt/course',
+  course: 'https://w3id.org/kim/hcrt/course',
+  image: 'https://w3id.org/kim/hcrt/image',
+  video: 'https://w3id.org/kim/hcrt/video',
+  reference: 'https://w3id.org/kim/hcrt/index',
+  presentation: 'https://w3id.org/kim/hcrt/slide',
+  schoolbook: 'https://w3id.org/kim/hcrt/text',
+  script: 'https://w3id.org/kim/hcrt/script',
+  worksheet: 'https://w3id.org/kim/hcrt/worksheet',
+  __default: 'https://w3id.org/kim/hcrt/other')
+end
 
 /* Enable to see what is available via the API: */
 /* map(_else) */
