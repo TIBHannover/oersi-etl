@@ -13,18 +13,22 @@ add_field('@context.@vocab','http://schema.org/')
 
 /* Map/pick standard edu-sharing fields, TODO: include from separate file */
 map(node.title, name)
-map(node.description, description)
 map(node.preview.url, image)
 
+do map(node.description, description)
+  not_equals('')
+end
+
+/* Default ID: */
 do map('node.properties.cclom:location[].1', id)
   replace_all('ccrep://.*?de/(.+)', 'https://www.oerbw.de/edu-sharing/components/render/$1')
 end
 
+/* Replace default ID if we have a ccm:wwwurl */
 map('node.properties.ccm:wwwurl[].1', id)
 
 do array('mainEntityOfPage')
   do entity('')
-    /* node.properties.ccm:wwwurl[].1 has session ID, expires */
     do map('node.properties.cclom:location[].1', id)
       replace_all('ccrep://.*?de/(.+)', 'https://www.oerbw.de/edu-sharing/components/render/$1')
     end
@@ -39,10 +43,13 @@ do array('about')
  do entity('')
   /* Build pseudo hochschulfaechersystematik URIs, TODO: implement mapping to hochschulfaechersystematik */
   do map('node.properties.ccm:taxonid[].1', 'id')
+    not_equals('')
     replace_all('(^$)|(\\\\d+)', 'https://w3id.org/kim/hochschulfaechersystematik/$0')
   end
   /* TODO: with mapping mentioned above, use labels from hochschulfaechersystematik */
-  map('node.properties.ccm:taxonid_DISPLAYNAME[].1', 'prefLabel.de')
+  do map('node.properties.ccm:taxonid_DISPLAYNAME[].1', 'prefLabel.de')
+    not_equals('')
+  end
  end
 end
 
@@ -56,7 +63,7 @@ do array('creator')
  end
  do entity('')
   add_field('type', 'Organization')
-  map('node.properties.ccm:university[].1', 'name')
+  map('node.properties.ccm:university_DISPLAYNAME[].1', 'name')
  end
 end
 
