@@ -20,6 +20,8 @@ do map('node.properties.cclom:location[].1', id)
   replace_all('ccrep://.*?de/(.+)', 'https://www.oerbw.de/edu-sharing/components/render/$1')
 end
 
+map('node.properties.ccm:wwwurl[].1', id)
+
 do entity('mainEntityOfPage')
   /* Take the node.properties.ccm:wwwurl[].1 as default: */
   map('node.properties.ccm:wwwurl[].1', id)
