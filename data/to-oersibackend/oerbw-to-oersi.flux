@@ -22,12 +22,16 @@ end
 
 map('node.properties.ccm:wwwurl[].1', id)
 
-do entity('mainEntityOfPage')
-  /* Take the node.properties.ccm:wwwurl[].1 as default: */
-  map('node.properties.ccm:wwwurl[].1', id)
-  /* But overwrite with ID (node.properties.ccm:wwwurl[].1 has session ID, expires). */
-  do map('node.properties.cclom:location[].1', id)
-    replace_all('ccrep://.*?de/(.+)', 'https://www.oerbw.de/edu-sharing/components/render/$1')
+do array('mainEntityOfPage')
+  do entity('')
+    /* node.properties.ccm:wwwurl[].1 has session ID, expires */
+    do map('node.properties.cclom:location[].1', id)
+      replace_all('ccrep://.*?de/(.+)', 'https://www.oerbw.de/edu-sharing/components/render/$1')
+    end
+    do entity('provider')
+      add_field('id','https://oerworldmap.org/resource/urn:uuid:4062c64d-b0ac-4941-95c2-8116f137326d')
+      add_field('name','OERBW')
+    end
   end
 end
 
@@ -86,7 +90,7 @@ end
 ")
 | encode-json
 | oersi.FieldMerger
-| oersi.JsonValidator("https://dini-ag-kim.github.io/lrmi-profile/draft/schemas/schema.json")
+| oersi.JsonValidator("https://raw.githubusercontent.com/dini-ag-kim/lrmi-profile/10-mainEntityOfPage/draft/schemas/schema.json")
 | object-tee | {
     write(FLUX_DIR + "oerbw-metadata.json", header="[\n", footer="\n]", separator=",\n")
   }{
