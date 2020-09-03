@@ -32,9 +32,18 @@ do array('mainEntityOfPage')
     do map('node.properties.cclom:location[].1', id)
       replace_all('ccrep://.*?de/(.+)', 'https://www.oerbw.de/edu-sharing/components/render/$1')
     end
+    /* Add creation/modification date, converting dateTime (e.g. 2019-07-23T09:26:00Z) to date (2019-07-23) */
+    do map('node.modifiedAt', 'dateModified')
+      replace_all('T.+Z', '')
+    end
+    do map('node.createdAt', 'dateCreated')
+      replace_all('T.+Z', '')
+    end
+    /* Add provider/source information to each resource description */
     do entity('provider')
       add_field('id','https://oerworldmap.org/resource/urn:uuid:4062c64d-b0ac-4941-95c2-8116f137326d')
-      add_field('name','OERBW')
+      add_field('type','Service')
+      add_field('name','ZOERR')
     end
   end
 end
@@ -97,7 +106,7 @@ end
 ")
 | encode-json
 | oersi.FieldMerger
-| oersi.JsonValidator("https://raw.githubusercontent.com/dini-ag-kim/lrmi-profile/10-mainEntityOfPage/draft/schemas/schema.json")
+| oersi.JsonValidator("https://dini-ag-kim.github.io/lrmi-profile/draft/schemas/schema.json")
 | object-tee | {
     write(FLUX_DIR + "oerbw-metadata.json", header="[\n", footer="\n]", separator=",\n")
   }{
