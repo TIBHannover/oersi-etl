@@ -24,8 +24,8 @@ public final class SitemapReader extends DefaultObjectPipe<Reader, ObjectReceive
     private static final Logger LOG = Logger.getLogger(SitemapReader.class.getName());
 
     private String urlPattern = ".*";
-    private int limit = 10;
-    private int wait = 5000;
+    private int limit = Integer.MAX_VALUE;
+    private int wait = 1000;
 
     private String findAndReplace;
 
