@@ -12,15 +12,15 @@ import java.util.stream.Collectors;
 import org.metafacture.runner.Flux;
 
 /**
- * Run all *.flux workflows in the given directories (or in data/, if none are
- * given), collect *.ndjson output in oersi.ndjson
+ * Run all *.flux workflows in the given directories (or in DATA_DIR, if none
+ * are given), collect *.ndjson output in oersi.ndjson
  *
  * @author Fabian Steeg (fsteeg)
  *
  */
 public class ETL {
 
-    static final String DATA_DIR = "data/to-elasticsearch";
+    static final String DATA_DIR = "data/experimental";
     static final File OUT_FILE = new File(DATA_DIR, "oersi.ndjson");
 
     private static final Logger LOG = Logger.getLogger(ETL.class.getName());
