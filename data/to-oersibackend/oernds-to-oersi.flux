@@ -1,6 +1,6 @@
 "https://www.oernds.de/edu-sharing/eduservlet/sitemap?from=0"
 | open-http
-| oersi.SitemapReader(wait="1000",limit="2",urlPattern=".*/components/.*",findAndReplace="https://www.oernds.de/edu-sharing/components/render/(.*)`https://www.oernds.de/edu-sharing/rest/node/v1/nodes/-home-/$1/metadata?propertyFilter=-all-")
+| oersi.SitemapReader(wait="500",limit="2",urlPattern=".*/components/.*",findAndReplace="https://www.oernds.de/edu-sharing/components/render/(.*)`https://www.oernds.de/edu-sharing/rest/node/v1/nodes/-home-/$1/metadata?propertyFilter=-all-")
 | open-http(accept="application/json")
 | as-lines
 | decode-json
@@ -64,10 +64,7 @@ end
 do array('creator')
  do entity('')
   add_field('type', 'Person')
-  do combine('name', '${first} ${last}')
-    map(node.createdBy.firstName,first)
-    map(node.createdBy.lastName,last)
-  end
+  map('node.properties.ccm:lifecyclecontributer_authorFN[].1', 'name')
  end
  do entity('')
   add_field('type', 'Organization')
