@@ -67,9 +67,14 @@ do array('creator')
   add_field('type', 'Person')
   map('node.properties.ccm:lifecyclecontributer_authorFN[].1',name)
  end
+end
+
+do array('sourceOrganization')
  do entity('')
   add_field('type', 'Organization')
-  map('node.properties.ccm:university_DISPLAYNAME[].1', 'name')
+  do map('node.properties.ccm:university_DISPLAYNAME[].1', 'name')
+    not_equals('')
+  end
  end
 end
 
@@ -80,6 +85,7 @@ end
 do map('node.properties.cclom:general_language[].1', inLanguage)
   replace_all('_..$', '') /* remove country suffixes eg. _DE */
   replace_all('^$', 'de') /* empty strings default to 'de' */
+  replace_all('unknown', 'de')
 end
 
 do map('node.properties.ccm:educationallearningresourcetype[].1', learningResourceType.id)
@@ -110,4 +116,3 @@ end
     oersi.OersiWriter("http://192.168.98.115:8080/oersi/api/metadata",
       user="test", pass="test", log=FLUX_DIR + "oerbw-responses.json")
 };
-;

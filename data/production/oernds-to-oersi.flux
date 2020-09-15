@@ -32,6 +32,7 @@ do array('mainEntityOfPage')
     do map('node.properties.cclom:location[].1', id)
       replace_all('ccrep://.*/(.+)', 'https://www.oernds.de/edu-sharing/components/render/$1')
     end
+    /* Add creation/modification date, converting dateTime (e.g. 2019-07-23T09:26:00Z) to date (2019-07-23) */
     do map('node.modifiedAt', 'dateModified')
       replace_all('T.+Z', '')
     end
@@ -66,9 +67,14 @@ do array('creator')
   add_field('type', 'Person')
   map('node.properties.ccm:lifecyclecontributer_authorFN[].1', 'name')
  end
+end
+
+do array('sourceOrganization')
  do entity('')
   add_field('type', 'Organization')
-  map('node.properties.ccm:university_DISPLAYNAME[].1', 'name')
+  do map('node.properties.ccm:university_DISPLAYNAME[].1', 'name')
+    not_equals('')
+  end
  end
 end
 
