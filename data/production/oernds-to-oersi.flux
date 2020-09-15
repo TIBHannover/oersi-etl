@@ -7,9 +7,12 @@
 | org.metafacture.metamorph.Metafix("
 
 /* Set up the context, TODO: include from separate file */
-add_field('@context.id','@id')
-add_field('@context.type','@type')
-add_field('@context.@vocab','http://schema.org/')
+do array('@context')
+ add_field('','https://w3id.org/kim/lrmi-profile/draft/context.jsonld')
+ do entity('')
+  add_field('@language', 'de')
+ end
+end
 
 /* Map/pick standard edu-sharing fields, TODO: include from separate file */
 map(node.title, name)
