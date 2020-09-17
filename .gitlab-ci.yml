@@ -24,6 +24,8 @@ deploy:
     paths:
      - build/install/oersi-etl/bin/*
      - build/install/oersi-etl/lib/*
+     - data/maps/*
+     - data/production/*
 
 sonar:
   image: gradle:jdk11
