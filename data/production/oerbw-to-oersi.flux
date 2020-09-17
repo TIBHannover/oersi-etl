@@ -1,6 +1,6 @@
 "https://www.oerbw.de/edu-sharing/eduservlet/sitemap?from=0"
 | open-http
-| oersi.SitemapReader(wait="500",limit="2",urlPattern=".*/components/.*",findAndReplace="https://uni-tuebingen.oerbw.de/edu-sharing/components/render/(.*)`https://uni-tuebingen.oerbw.de/edu-sharing/rest/node/v1/nodes/-home-/$1/metadata?propertyFilter=-all-")
+| oersi.SitemapReader(wait="500",limit="5",urlPattern=".*/components/.*",findAndReplace="https://uni-tuebingen.oerbw.de/edu-sharing/components/render/(.*)`https://uni-tuebingen.oerbw.de/edu-sharing/rest/node/v1/nodes/-home-/$1/metadata?propertyFilter=-all-")
 | open-http(accept="application/json")
 | as-lines
 | decode-json
@@ -51,16 +51,15 @@ do array('mainEntityOfPage')
   end
 end
 
+do map('node.properties.ccm:taxonid[].1', '@hochschulfaechersystematik')
+  lookup(in: 'data/maps/edusharing-subject-mapping.tsv')
+end
+
 do array('about')
  do entity('')
-  /* Build pseudo hochschulfaechersystematik URIs, TODO: implement mapping to hochschulfaechersystematik */
-  do map('node.properties.ccm:taxonid[].1', 'id')
-    not_equals('')
-    replace_all('(^$)|(\\\\d+)', 'https://w3id.org/kim/hochschulfaechersystematik/$0')
-  end
-  /* TODO: with mapping mentioned above, use labels from hochschulfaechersystematik */
-  do map('node.properties.ccm:taxonid_DISPLAYNAME[].1', 'prefLabel.de')
-    not_equals('')
+  map('@hochschulfaechersystematik', 'id')
+  do map('@hochschulfaechersystematik', 'prefLabel.de')
+    lookup(in: 'data/maps/subject-labels.tsv')
   end
  end
 end
