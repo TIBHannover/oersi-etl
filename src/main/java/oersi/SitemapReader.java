@@ -34,7 +34,7 @@ public final class SitemapReader extends DefaultObjectPipe<Reader, ObjectReceive
     }
 
     public void setLimit(final int limit) {
-        this.limit = limit;
+        this.limit = limit < 0 ? Integer.MAX_VALUE : limit;
     }
 
     public void setFindAndReplace(final String findAndReplace) {

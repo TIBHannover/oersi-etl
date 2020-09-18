@@ -21,7 +21,12 @@ public class EtlTestMain {
 
     private static final Object[][] PARAMS = new Object[][] { //
             new Object[] { Arrays.asList("data/experimental") }, //
-            new Object[] { Arrays.asList("data/production") } //
+            new Object[] { Arrays.asList(//
+                    "data/production", //
+                    "input_limit=2", //
+                    "backend_api=http://192.168.98.115:8080/oersi/api/metadata", //
+                    "backend_user=test", //
+                    "backend_pass=test") } //
     };
 
     @Parameterized.Parameters

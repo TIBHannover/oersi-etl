@@ -5,6 +5,9 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
@@ -29,28 +32,30 @@ public class ETL {
         if (args.length == 0) {
             args = new String[] { DATA_DIR };
         }
-        for (String arg : args) {
-            File file = new File(arg);
-            try {
-                for (File flux : file.listFiles((d, f) -> f.toLowerCase().endsWith(".flux"))) {
-                    String fluxText = Files.readAllLines(Paths.get(flux.toURI())).stream()
-                            .collect(Collectors.joining("\n"));
-                    LOG.log(Level.INFO, "Running {0}: \n{1}", new Object[] { flux, fluxText });
-                    Flux.main(new String[] { flux.getAbsolutePath() });
+        File file = new File(args[0]);
+        try {
+            for (File flux : file.listFiles((d, f) -> f.toLowerCase().endsWith(".flux"))) {
+                String fluxText = Files.readAllLines(Paths.get(flux.toURI())).stream()
+                        .collect(Collectors.joining("\n"));
+                List<String> fullArgs = new ArrayList<>(Arrays.asList(flux.getAbsolutePath()));
+                if (args.length > 1) {
+                    fullArgs.addAll(Arrays.asList(args).subList(1, args.length));
                 }
-                try (FileWriter w = new FileWriter(OUT_FILE)) {
-                    for (File json : file.listFiles((d, f) -> f.toLowerCase().endsWith(".ndjson")
-                            && !f.equalsIgnoreCase(OUT_FILE.getName()))) {
-                        LOG.log(Level.INFO, "Writing {0} to {1}", new Object[] { json, OUT_FILE });
-                        String bulk = Files.readAllLines(Paths.get(json.toURI())).stream()
-                                .collect(Collectors.joining("\n"));
-                        w.write(bulk);
-                        w.write("\n");
-                    }
-                }
-            } catch (Exception e) {
-                LOG.log(Level.SEVERE, e.getMessage(), e);
+                LOG.log(Level.INFO, "Running {0}: \n{1}", new Object[] { fullArgs, fluxText });
+                Flux.main(fullArgs.toArray(new String[] {}));
             }
+            try (FileWriter w = new FileWriter(OUT_FILE)) {
+                for (File json : file.listFiles((d, f) -> f.toLowerCase().endsWith(".ndjson")
+                        && !f.equalsIgnoreCase(OUT_FILE.getName()))) {
+                    LOG.log(Level.INFO, "Writing {0} to {1}", new Object[] { json, OUT_FILE });
+                    String bulk = Files.readAllLines(Paths.get(json.toURI())).stream()
+                            .collect(Collectors.joining("\n"));
+                    w.write(bulk);
+                    w.write("\n");
+                }
+            }
+        } catch (Exception e) {
+            LOG.log(Level.SEVERE, e.getMessage(), e);
         }
     }
 

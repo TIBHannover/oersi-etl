@@ -1,6 +1,6 @@
 "https://www.oerbw.de/edu-sharing/eduservlet/sitemap?from=0"
 | open-http
-| oersi.SitemapReader(wait="500",limit="5",urlPattern=".*/components/.*",findAndReplace="https://uni-tuebingen.oerbw.de/edu-sharing/components/render/(.*)`https://uni-tuebingen.oerbw.de/edu-sharing/rest/node/v1/nodes/-home-/$1/metadata?propertyFilter=-all-")
+| oersi.SitemapReader(wait="500",limit=input_limit,urlPattern=".*/components/.*",findAndReplace="https://uni-tuebingen.oerbw.de/edu-sharing/components/render/(.*)`https://uni-tuebingen.oerbw.de/edu-sharing/rest/node/v1/nodes/-home-/$1/metadata?propertyFilter=-all-")
 | open-http(accept="application/json")
 | as-lines
 | decode-json
@@ -115,6 +115,6 @@ end
 | object-tee | {
     write(FLUX_DIR + "oerbw-metadata.json", header="[\n", footer="\n]", separator=",\n")
   }{
-    oersi.OersiWriter("http://192.168.98.115:8080/oersi/api/metadata",
-      user="test", pass="test", log=FLUX_DIR + "oerbw-responses.json")
+    oersi.OersiWriter(backend_api,
+      user=backend_user, pass=backend_pass, log=FLUX_DIR + "oerbw-responses.json")
 };
