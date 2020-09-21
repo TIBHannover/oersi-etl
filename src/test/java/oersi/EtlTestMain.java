@@ -20,13 +20,21 @@ import org.xml.sax.SAXException;
 public class EtlTestMain {
 
     private static final Object[][] PARAMS = new Object[][] { //
+            // run all *.flux in a given directory:
             new Object[] { Arrays.asList("data/experimental") }, //
+            // run a single *.flux file:
+            new Object[] { Arrays.asList("data/production/oernds-to-oersi.flux") }, //
+            // pass variables as command line arguments:
             new Object[] { Arrays.asList(//
                     "data/production", //
                     "input_limit=2", //
                     "backend_api=http://192.168.98.115:8080/oersi/api/metadata", //
                     "backend_user=test", //
-                    "backend_pass=test") } //
+                    "backend_pass=test") }, //
+            // pass variables as *.properties file:
+            new Object[] { Arrays.asList(//
+                    "data/production/oernds-to-oersi.flux", //
+                    "data/production/oersi.properties") } //
     };
 
     @Parameterized.Parameters
@@ -49,6 +57,6 @@ public class EtlTestMain {
     public void testConvertMain() throws IOException, SAXException {
         assertFalse(ETL.OUT_FILE.exists());
         ETL.main(args.toArray(new String[0]));
-        assertTrue(ETL.OUT_FILE.exists());
+        assertTrue("Output file must exist", ETL.OUT_FILE.exists());
     }
 }
