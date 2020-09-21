@@ -21,7 +21,7 @@ map(html.body.div.div.div.div.div.div.div.div.div.div.p.a.href, id)
 ")
 | encode-json
 | oersi.FieldMerger
-| oersi.JsonValidator("https://dini-ag-kim.github.io/lrmi-profile/draft/schemas/schema.json")
+//| oersi.JsonValidator("https://dini-ag-kim.github.io/lrmi-profile/draft/schemas/schema.json")
 | object-tee | {
     write(FLUX_DIR + "hoou-metadata.json", header="[\n", footer="\n]", separator=",\n")
   }{
