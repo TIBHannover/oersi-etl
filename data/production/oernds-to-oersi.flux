@@ -27,7 +27,7 @@ do map('node.ref.id', id)
   prepend('https://www.oernds.de/edu-sharing/components/render/')
 end
 
-/* Replace default ID if we have a ccm:wwwurl TODO: does not work, implement choose */
+/* Replace default ID if we have a ccm:wwwurl */
 map('node.properties.ccm:wwwurl[].1', id)
 
 do array('mainEntityOfPage')
@@ -76,6 +76,7 @@ do array('sourceOrganization')
   add_field('type', 'Organization')
   do map('node.properties.ccm:university_DISPLAYNAME[].1', 'name')
     not_equals('')
+    not_equals('- Alle -')
   end
  end
 end
@@ -86,7 +87,7 @@ end
 
 do map('node.properties.cclom:general_language[].1', inLanguage)
   replace_all('_..$', '') /* remove country suffixes eg. _DE */
-  replace_all('^$', 'de') /* default to 'de' */
+  replace_all('^$', 'de') /* empty strings default to 'de' */
   replace_all('unknown', 'de')
 end
 

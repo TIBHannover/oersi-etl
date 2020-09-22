@@ -67,7 +67,7 @@ end
 do array('creator')
  do entity('')
   add_field('type', 'Person')
-  map('node.properties.ccm:lifecyclecontributer_authorFN[].1',name)
+  map('node.properties.ccm:lifecyclecontributer_authorFN[].1', 'name')
  end
 end
 
