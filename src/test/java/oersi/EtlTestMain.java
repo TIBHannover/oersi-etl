@@ -37,7 +37,7 @@ public class EtlTestMain {
                     "data/production/oersi.properties") } //
     };
 
-    @Parameterized.Parameters
+    @Parameterized.Parameters(name = "{0}")
     public static Collection<Object[]> args() {
         return Arrays.asList(PARAMS);
     }

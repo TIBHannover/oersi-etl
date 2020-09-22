@@ -76,6 +76,7 @@ do array('sourceOrganization')
   add_field('type', 'Organization')
   do map('node.properties.ccm:university_DISPLAYNAME[].1', 'name')
     not_equals('')
+    not_equals('- Alle -')
   end
  end
 end
