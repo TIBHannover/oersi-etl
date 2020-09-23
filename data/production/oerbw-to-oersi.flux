@@ -67,7 +67,7 @@ end
 do array('creator')
  do entity('')
   add_field('type', 'Person')
-  map('node.properties.ccm:lifecyclecontributer_authorFN[].1',name)
+  map('node.properties.ccm:lifecyclecontributer_authorFN[].1', 'name')
  end
 end
 
@@ -91,19 +91,15 @@ do map('node.properties.cclom:general_language[].1', inLanguage)
   replace_all('unknown', 'de')
 end
 
-do map('node.properties.ccm:educationallearningresourcetype[].1', learningResourceType.id)
-  lookup(
-  /* TODO: support lookup in CSV file */
-  Kurs: 'https://w3id.org/kim/hcrt/course',
-  course: 'https://w3id.org/kim/hcrt/course',
-  image: 'https://w3id.org/kim/hcrt/image',
-  video: 'https://w3id.org/kim/hcrt/video',
-  reference: 'https://w3id.org/kim/hcrt/index',
-  presentation: 'https://w3id.org/kim/hcrt/slide',
-  schoolbook: 'https://w3id.org/kim/hcrt/text',
-  script: 'https://w3id.org/kim/hcrt/script',
-  worksheet: 'https://w3id.org/kim/hcrt/worksheet',
-  __default: 'https://w3id.org/kim/hcrt/other')
+do map('node.properties.ccm:educationallearningresourcetype[].1', '@hcrt')
+  lookup(in: 'data/maps/edusharing-hcrt-mapping.tsv')
+end
+
+do entity('learningResourceType')
+  map('@hcrt', 'id')
+  do map('@hcrt', 'prefLabel.de')
+    lookup(in: 'data/maps/hcrt-labels.tsv')
+  end
 end
 
 /* Enable to see what is available via the API: */
