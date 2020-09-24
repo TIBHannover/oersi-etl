@@ -4,7 +4,7 @@
 | open-http
 | extract-script
 | decode-json
-| org.metafacture.metamorph.Metafix(fixFile=FLUX_DIR+"edu-sharing.fix")
+| fix(FLUX_DIR+"edu-sharing.fix")
 | encode-json(prettyPrinting="false")
 | json-to-elasticsearch-bulk(idKey="id",type="oerbw",index="oersi")
 | write(FLUX_DIR + "oerbw.ndjson");

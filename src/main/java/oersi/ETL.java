@@ -14,6 +14,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
+import org.antlr.runtime.RecognitionException;
 import org.metafacture.runner.Flux;
 
 /**
@@ -70,13 +71,13 @@ public class ETL {
         try (FileInputStream in = new FileInputStream(file)) {
             properties.load(in);
         } catch (IOException e) {
-            e.printStackTrace();
+            LOG.log(Level.SEVERE, e.getMessage(), e);
         }
         return properties.entrySet().stream().map(e -> e.getKey() + "=" + e.getValue())
                 .collect(Collectors.toList());
     }
 
-    private static void run(File flux, List<String> vars) throws Exception {
+    private static void run(File flux, List<String> vars) throws IOException, RecognitionException {
         List<String> args = new ArrayList<>(vars);
         File defaultProperties = new File(flux.getParent(), DEFAULT_PROPERTIES);
         if (args.isEmpty() && defaultProperties.exists()) {
