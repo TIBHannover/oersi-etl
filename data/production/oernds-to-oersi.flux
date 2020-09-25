@@ -6,7 +6,6 @@ default input_limit = "-1"; // 'default': is overridden by command-line/properti
 default input_from = "0";
 
 "https://www.oernds.de/edu-sharing/eduservlet/sitemap?from=" + input_from
-| open-http
 | oersi.SitemapReader(wait="500",limit=input_limit,urlPattern=".*/components/.*",findAndReplace="https://www.oernds.de/edu-sharing/components/render/(.*)`https://www.oernds.de/edu-sharing/rest/node/v1/nodes/-home-/$1/metadata?propertyFilter=-all-")
 | open-http(accept="application/json")
 | as-lines

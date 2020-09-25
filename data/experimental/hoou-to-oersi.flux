@@ -1,5 +1,4 @@
 "https://www.hoou.de/sitemap.xml" // FLUX_DIR + "hoou-sitemap.xml"
-| open-http                       // open-file
 | oersi.SitemapReader(wait="1000",limit="2",urlPattern=".*/materials/.*")
 | open-http
 | decode-html

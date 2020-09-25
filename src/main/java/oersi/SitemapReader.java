@@ -3,7 +3,8 @@ package oersi;
 import static org.joox.JOOX.matchText;
 
 import java.io.IOException;
-import java.io.Reader;
+import java.net.URL;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -19,7 +20,10 @@ import org.xml.sax.SAXException;
  *
  * @author Fabian Steeg (fsteeg)
  */
-public final class SitemapReader extends DefaultObjectPipe<Reader, ObjectReceiver<String>> {
+public final class SitemapReader extends DefaultObjectPipe<String, ObjectReceiver<String>> {
+
+    private static final String REP_START = "{";
+    private static final String REP_END = "}";
 
     private static final Logger LOG = Logger.getLogger(SitemapReader.class.getName());
 
@@ -46,14 +50,18 @@ public final class SitemapReader extends DefaultObjectPipe<Reader, ObjectReceive
     }
 
     @Override
-    public void process(final Reader sitemap) {
+    public void process(final String input) {
+        List<String> urls = getSitemaps(input);
         try {
-            Match siteMapXml = JOOX.$(sitemap);
-            List<String> texts = siteMapXml.find("loc").filter(matchText(urlPattern)).texts();
-            for (String url : texts.subList(0, Math.min(limit, texts.size()))) {
-                LOG.log(Level.INFO, "Processing URL {0}", new Object[] { url });
-                getReceiver().process(findAndReplace(url));
-                Thread.sleep(wait);
+            for (String sitemap : urls) {
+                LOG.log(Level.INFO, "Processing sitemap URL {0}", new Object[] { sitemap });
+                Match siteMapXml = JOOX.$(new URL(sitemap));
+                List<String> texts = siteMapXml.find("loc").filter(matchText(urlPattern)).texts();
+                for (String url : texts.subList(0, Math.min(limit, texts.size()))) {
+                    LOG.log(Level.INFO, "Processing resource URL {0}", new Object[] { url });
+                    getReceiver().process(findAndReplace(url));
+                    Thread.sleep(wait);
+                }
             }
         } catch (SAXException | IOException e) {
             LOG.log(Level.SEVERE, e.getMessage(), e);
@@ -61,6 +69,21 @@ public final class SitemapReader extends DefaultObjectPipe<Reader, ObjectReceive
             LOG.log(Level.SEVERE, e.getMessage(), e);
             Thread.currentThread().interrupt();
         }
+    }
+
+    // http://a.com/{b,c} -> [http://a.com/b, http://a.com/c]
+    private List<String> getSitemaps(String sitemap) {
+        List<String> urls = new ArrayList<String>();
+        if (sitemap.contains(REP_START) && sitemap.contains(REP_END)) {
+            String rep = sitemap.substring(sitemap.indexOf(REP_START) + 1,
+                    sitemap.indexOf(REP_END));
+            for (String elem : rep.split(",")) {
+                urls.add(sitemap.replace(REP_START + rep + REP_END, elem.trim()));
+            }
+        } else {
+            urls.add(sitemap);
+        }
+        return urls;
     }
 
     private String findAndReplace(String url) {
