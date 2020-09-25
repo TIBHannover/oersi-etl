@@ -42,12 +42,12 @@ do map(node.description, description)
   not_equals('')
 end
 
-do map('node.properties.ccm:taxonid[].1', '@hochschulfaechersystematik')
+do map('node.properties.ccm:taxonid[].*', '@hochschulfaechersystematik')
   lookup(in: 'data/maps/edusharing-subject-mapping.tsv')
 end
 
-do array('about')
- do entity('')
+do array('about', flushWith: record)
+ do entity('', flushWith: '@hochschulfaechersystematik')
   map('@hochschulfaechersystematik', 'id')
   do map('@hochschulfaechersystematik', 'prefLabel.de')
     lookup(in: 'data/maps/subject-labels.tsv')
@@ -55,10 +55,10 @@ do array('about')
  end
 end
 
-do array('creator')
+do array('creator', flushWith: record)
  do entity('')
   add_field('type', 'Person')
-  map('node.properties.ccm:lifecyclecontributer_authorFN[].1', 'name')
+  map('node.properties.ccm:lifecyclecontributer_authorFN[].*', 'name')
  end
 end
 
