@@ -15,7 +15,9 @@ do map('node.ref.id', id)
 end
 
 /* Replace default ID if we have a ccm:wwwurl */
-map('node.properties.ccm:wwwurl[].1', id)
+do map('node.properties.ccm:wwwurl[].1', id)
+  trim()
+end
 
 do array('mainEntityOfPage')
   do entity('')
