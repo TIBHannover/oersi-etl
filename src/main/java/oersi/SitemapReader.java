@@ -4,8 +4,8 @@ import static org.joox.JOOX.matchText;
 
 import java.io.IOException;
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -21,9 +21,6 @@ import org.xml.sax.SAXException;
  * @author Fabian Steeg (fsteeg)
  */
 public final class SitemapReader extends DefaultObjectPipe<String, ObjectReceiver<String>> {
-
-    private static final String REP_START = "{";
-    private static final String REP_END = "}";
 
     private static final Logger LOG = Logger.getLogger(SitemapReader.class.getName());
 
@@ -50,19 +47,17 @@ public final class SitemapReader extends DefaultObjectPipe<String, ObjectReceive
     }
 
     @Override
-    public void process(final String input) {
-        List<String> urls = getSitemaps(input);
+    public void process(final String sitemap) {
+        LOG.log(Level.INFO, "Processing sitemap URL {0}", new Object[] { sitemap });
         try {
-            for (String sitemap : urls) {
-                LOG.log(Level.INFO, "Processing sitemap URL {0}", new Object[] { sitemap });
-                Match siteMapXml = JOOX.$(new URL(sitemap));
-                List<String> texts = siteMapXml.find("loc").filter(matchText(urlPattern)).texts();
-                for (String url : texts.subList(0, Math.min(limit, texts.size()))) {
-                    LOG.log(Level.INFO, "Processing resource URL {0}", new Object[] { url });
-                    getReceiver().process(findAndReplace(url));
-                    Thread.sleep(wait);
-                }
+            Match siteMapXml = JOOX.$(new URL(sitemap));
+            List<String> texts = siteMapXml.find("loc").filter(matchText(urlPattern)).texts();
+            for (String url : texts.subList(0, Math.min(limit, texts.size()))) {
+                LOG.log(Level.FINE, "Processing resource URL {0}", new Object[] { url });
+                getReceiver().process(findAndReplace(url));
+                Thread.sleep(wait);
             }
+            tryNextPage(sitemap, texts.size());
         } catch (SAXException | IOException e) {
             LOG.log(Level.SEVERE, e.getMessage(), e);
         } catch (InterruptedException e) {
@@ -71,19 +66,20 @@ public final class SitemapReader extends DefaultObjectPipe<String, ObjectReceive
         }
     }
 
-    // http://a.com/{b,c} -> [http://a.com/b, http://a.com/c]
-    private List<String> getSitemaps(String sitemap) {
-        List<String> urls = new ArrayList<String>();
-        if (sitemap.contains(REP_START) && sitemap.contains(REP_END)) {
-            String rep = sitemap.substring(sitemap.indexOf(REP_START) + 1,
-                    sitemap.indexOf(REP_END));
-            for (String elem : rep.split(",")) {
-                urls.add(sitemap.replace(REP_START + rep + REP_END, elem.trim()));
+    private void tryNextPage(final String sitemap, int currentPageSize) {
+        String fromParam = "from=";
+        boolean pagingIsSupported = sitemap.contains(fromParam);
+        boolean isDone = currentPageSize == 0 || limit <= currentPageSize;
+        if (pagingIsSupported && !isDone) {
+            try (Scanner scanner = new Scanner(
+                    sitemap.substring(sitemap.indexOf(fromParam) + fromParam.length()))) {
+                if (scanner.hasNextInt()) {
+                    int lastFrom = scanner.nextInt();
+                    int nextFrom = lastFrom + currentPageSize;
+                    process(sitemap.replace(fromParam + lastFrom, fromParam + nextFrom));
+                }
             }
-        } else {
-            urls.add(sitemap);
         }
-        return urls;
     }
 
     private String findAndReplace(String url) {
