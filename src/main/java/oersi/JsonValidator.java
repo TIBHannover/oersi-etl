@@ -44,7 +44,7 @@ public final class JsonValidator extends DefaultObjectPipe<String, ObjectReceive
             if (errors.isEmpty()) {
                 getReceiver().process(json);
             } else {
-                throw new IllegalArgumentException("Invalid JSON: " + errors);
+                LOG.log(Level.SEVERE, "Invalid JSON: {0} in:\n{1}", new Object[] { errors, json });
             }
         } catch (Exception e) {
             LOG.log(Level.SEVERE, e.getMessage(), e);
