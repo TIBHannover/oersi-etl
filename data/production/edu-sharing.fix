@@ -11,7 +11,7 @@ map(node.preview.url, image)
 
 /* Default ID: */
 do map('node.ref.id', id)
-  prepend('https://$[service_domain]/edu-sharing/components/render/')
+  compose(prefix: 'https://$[service_domain]/edu-sharing/components/render/')
 end
 
 /* Replace default ID if we have a ccm:wwwurl */
@@ -22,14 +22,14 @@ end
 do array('mainEntityOfPage')
   do entity('')
     do map('node.ref.id', id)
-      prepend('https://$[service_domain]/edu-sharing/components/render/')
+      compose(prefix: 'https://$[service_domain]/edu-sharing/components/render/')
     end
     /* Add creation/modification date, converting dateTime (e.g. 2019-07-23T09:26:00Z) to date (2019-07-23) */
     do map('node.modifiedAt', 'dateModified')
-      replace_all('T.+Z', '')
+      replace_all(pattern: 'T.+Z', with: '')
     end
     do map('node.createdAt', 'dateCreated')
-      replace_all('T.+Z', '')
+      replace_all(pattern: 'T.+Z', with: '')
     end
     /* Add provider/source information to each resource description */
     do entity('provider')
@@ -41,7 +41,7 @@ do array('mainEntityOfPage')
 end
 
 do map(node.description, description)
-  not_equals('')
+  not_equals(string: '')
 end
 
 do map('node.properties.ccm:taxonid[].*', '@hochschulfaechersystematik')
@@ -68,20 +68,20 @@ do array('sourceOrganization')
  do entity('')
   add_field('type', 'Organization')
   do map('node.properties.ccm:university_DISPLAYNAME[].1', 'name')
-    not_equals('')
-    not_equals('- Alle -')
+    not_equals(string: '')
+    not_equals(string: '- Alle -')
   end
  end
 end
 
 do map('node.properties.virtual:licenseurl[].1', license)
-  replace_all('/deed.*$', '')
+  replace_all(pattern: '/deed.*$', with: '')
 end
 
 do map('node.properties.cclom:general_language[].1', inLanguage)
-  replace_all('_..$', '') /* remove country suffixes eg. _DE */
-  replace_all('^$', 'de') /* empty strings default to 'de' */
-  replace_all('unknown', 'de')
+  replace_all(pattern: '_..$', with: '') /* remove country suffixes eg. _DE */
+  replace_all(pattern: '^$', with: 'de') /* empty strings default to 'de' */
+  replace_all(pattern: 'unknown', with: 'de')
 end
 
 do map('node.properties.ccm:educationallearningresourcetype[].1', '@hcrt')
