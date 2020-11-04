@@ -4,13 +4,19 @@
 | handle-generic-xml
 | org.metafacture.metamorph.Metafix("
 
+/* Set up the context */
+do array('@context')
+ add_field('','https://w3id.org/kim/lrmi-profile/draft/context.jsonld')
+ do entity('')
+  add_field('@language', 'de')
+ end
+end
 
-
+/* Mapping the data to element level */
 map(metadata.mods.identifier.value, id)
 map(metadata.mods.location.url.value, image) 
 /* hier scheint das Attribut Access preview noch benötigt werden */
 map(metadata.mods.titleInfo.title.value, name)
-map(metadata.mods.relatedItem.typeOfResource.value, type)
 map(metadata.mods.name.displayForm.value, creator)
 /* bisher gibt es keine Mods Auslese, ob Person oder Institution, wenn ich das richtig lese */
 map(metadata.mods.abstract.value, description)
@@ -20,13 +26,14 @@ map(metadata.mods.accessCondition.href, license)
 map(metadata.mods.originInfo.dateIssued.value, dataCreated)
 map(metadata.mods.relatedItem.language.languageTerm.value, inLanguage)
 map(metadata.mods.genre.value, learningResourceType) 
-/* hier eventuell type? */
+/* hier eventuell doch type? */
 map(metadata.mods.subject.topic.value, keywords) 
 /* hier wird in der XML nur ein Wert ausgelesen, obwohl es mehrere gibt */
 /* map(_else) */
 
 /* Fehlen noch: */
 /* map(metadata.mods. , @context) */
+/* map(metadata.mods.typeOfResource.value, type) das passt nicht zur Werteliste */
 /* map(metadata.mods. , about) */
 /* map(metadata.mods. , publisher) Muss hier standardmäßig Duepublico 2 oder ein realer Verlag hin? */
 /* map(metadata.mods. , audience) gibts bei duepublico2 nicht */
