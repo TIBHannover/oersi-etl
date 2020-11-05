@@ -38,7 +38,7 @@ map(metadata.mods.genre.value, learningResourceType)
 /* Maps only a single keyword */
 map(metadata.mods.subject.topic.value, keywords) 
 
-/* map(_else) */
+map(_else)
 
 /* Fehlen noch: */
 /* map(metadata.mods. , @context) */
