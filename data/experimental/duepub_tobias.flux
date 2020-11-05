@@ -1,6 +1,5 @@
+// Query should only ask for collection OER but DuePublico does not offer this via its OAI: // 
 "https://duepublico2.uni-due.de/servlets/OAIDataProvider"
-
-/* Query should only ask for collection OER but DuePublico does not offer this via its OAI */ 
 | open-oaipmh(metadataPrefix="mods",dateFrom="2020-05-14",dateUntil="2020-05-14")
 | decode-xml
 | handle-generic-xml
@@ -39,7 +38,7 @@ map(metadata.mods.genre.value, learningResourceType)
 /* Maps only a single keyword */
 map(metadata.mods.subject.topic.value, keywords) 
 
-map(_else)
+/* map(_else) */
 
 /* Fehlen noch: */
 /* map(metadata.mods. , @context) */
