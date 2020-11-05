@@ -1,4 +1,6 @@
 "https://duepublico2.uni-due.de/servlets/OAIDataProvider"
+
+/* Query should only ask for collection OER but DuePublico does not offer this via its OAI */ 
 | open-oaipmh(metadataPrefix="mods",dateFrom="2020-05-14",dateUntil="2020-05-14")
 | decode-xml
 | handle-generic-xml
@@ -12,31 +14,39 @@ do array('@context')
  end
 end
 
-/* Mapping the data to element level */
+/* Mapping the data to element level: */
 map(metadata.mods.identifier.value, id)
-map(metadata.mods.location.url.value, image) 
-/* hier scheint das Attribut Access preview noch benötigt werden */
+
+/* To map the image the location.url needs to carry the attribute access preview. Could creat confusion:*/
+map(metadata.mods.location.url.value, image)
+
+
 map(metadata.mods.titleInfo.title.value, name)
+
+/* name does not specify if creator type is person or institution: */
 map(metadata.mods.name.displayForm.value, creator)
-/* bisher gibt es keine Mods Auslese, ob Person oder Institution, wenn ich das richtig lese */
+
+/* Do we additionally need the language of the abstract?: */
 map(metadata.mods.abstract.value, description)
-/* Sprache relevant? metadata.mods.abstract.lang */
+
+/* License Values need to be mapped to CC-Liscence */
 map(metadata.mods.accessCondition.href, license) 
-/* hier muss noch nachträglich gemappt werden */
+
 map(metadata.mods.originInfo.dateIssued.value, dataCreated)
 map(metadata.mods.relatedItem.language.languageTerm.value, inLanguage)
 map(metadata.mods.genre.value, learningResourceType) 
-/* hier eventuell doch type? */
+
+/* Maps only a single keyword */
 map(metadata.mods.subject.topic.value, keywords) 
-/* hier wird in der XML nur ein Wert ausgelesen, obwohl es mehrere gibt */
-/* map(_else) */
+
+map(_else)
 
 /* Fehlen noch: */
 /* map(metadata.mods. , @context) */
-/* map(metadata.mods.typeOfResource.value, type) das passt nicht zur Werteliste */
+/* map(metadata.mods.typeOfResource.value, type) vocab does not match */
 /* map(metadata.mods. , about) */
-/* map(metadata.mods. , publisher) Muss hier standardmäßig Duepublico 2 oder ein realer Verlag hin? */
-/* map(metadata.mods. , audience) gibts bei duepublico2 nicht */
+/* map(metadata.mods. , publisher) Who is the publisher? The Resource or only the real publisher? */
+/* map(metadata.mods. , audience) DuePublico is missing audience */
 /* map(metadata.mods. , isBasedOn) */
 /* map(metadata.mods. , mainEntityOfPage) */
 
