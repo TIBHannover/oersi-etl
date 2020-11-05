@@ -23,13 +23,19 @@ map(metadata.mods.location.url.value, image)
 map(metadata.mods.titleInfo.title.value, name)
 
 /* name does not specify if creator type is person or institution: */
-map(metadata.mods.name.displayForm.value, creator)
+/*  map(metadata.mods.name.displayForm.value, creator) */
+do combine('name', '${first} ${last}')
+    map(node.createdBy.firstName,first)
+    map(node.createdBy.lastName,last)
+end
 
 /* Do we additionally need the language of the abstract?: */
 map(metadata.mods.abstract.value, description)
 
-/* License Values need to be mapped to CC-Liscence */
-map(metadata.mods.accessCondition.href, license) 
+/* Map has to be updated, when Duepublico2 Updates their links  */
+do map(metadata.mods.accessCondition.href, license)
+  lookup(in: 'data/maps/DuePub-Licence.tsv')
+end
 
 map(metadata.mods.originInfo.dateIssued.value, dataCreated)
 map(metadata.mods.relatedItem.language.languageTerm.value, inLanguage)
@@ -38,7 +44,7 @@ map(metadata.mods.genre.value, learningResourceType)
 /* Maps only a single keyword */
 map(metadata.mods.subject.topic.value, keywords) 
 
-map(_else)
+/* map(_else) */
 
 /* Fehlen noch: */
 /* map(metadata.mods. , @context) */
@@ -53,5 +59,5 @@ map(_else)
 ")
 | encode-json
 | oersi.FieldMerger
-//| oersi.JsonValidator("https://dini-ag-kim.github.io/lrmi-profile/draft/schemas/schema.json")
+// | oersi.JsonValidator("https://dini-ag-kim.github.io/lrmi-profile/draft/schemas/schema.json")
 |  write(FLUX_DIR + "duepub-metadata-tobias-neu.json", header="[\n", footer="\n]", separator=",\n");
