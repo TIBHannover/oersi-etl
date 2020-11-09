@@ -96,10 +96,8 @@ do entity('learningResourceType')
 end
 
 do array('keywords')
-  map('node.properties.cclom:general_keyword[].*', )
+  map('node.properties.cclom:general_keyword[].*',)
 end
-
-
 
 /* Enable to see what else is coming in from the source: */
 /* map(_else) */
