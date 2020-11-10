@@ -85,7 +85,7 @@ do map('node.properties.cclom:general_language[].1', inLanguage)
 end
 
 do array('type')
- add_field('','LearningResource')
+  add_field('','LearningResource')
 end
 
 do map('node.properties.ccm:educationallearningresourcetype[].1', '@hcrt')
