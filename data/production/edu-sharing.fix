@@ -95,5 +95,9 @@ do entity('learningResourceType')
   end
 end
 
+do array('keywords')
+  map('node.properties.cclom:general_keyword[].*')
+end
+
 /* Enable to see what else is coming in from the source: */
 /* map(_else) */
