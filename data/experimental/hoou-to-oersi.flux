@@ -1,7 +1,7 @@
 "https://www.hoou.de/sitemap.xml" // FLUX_DIR + "hoou-sitemap.xml"
 | oersi.SitemapReader(wait="1000",limit="2",urlPattern=".*/materials/.*")
 | open-http
-| extract-script
+| extract-element ("script[data-test='model-linked-data']") 
 | decode-json
 | org.metafacture.metamorph.Metafix("
 map(_else)")
