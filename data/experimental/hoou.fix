@@ -1,0 +1,31 @@
+/* Set up the context */
+do array('@context')
+ add_field('','https://w3id.org/kim/lrmi-profile/draft/context.jsonld')
+ do entity('')
+  add_field('@language', 'de')
+ end
+end
+
+map(node.name, name)
+map(node.hasPart[].1.thumbnailUrl, image)
+map(node.description, description)
+map(node.license, liscense)
+map(node.audience, audience)
+map(node.learningResourceType, learningResourceType)
+map(node.dateCreated, dateCreated)
+map(node.dateModified, dateModified)
+
+do array('creator', flushWith: record)
+ do entity('')
+  map(node.author[].*.@type, type)
+  map('node.author[].*.name', 'name')
+ end
+end
+
+do array('keywords')
+  map('node.keywords')
+end
+
+do array('type')
+  add_field('','LearningResource')
+end

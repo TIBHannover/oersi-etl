@@ -3,14 +3,10 @@
 | open-http
 | extract-element ("script[data-test='model-linked-data']") 
 | decode-json
-| org.metafacture.metamorph.Metafix("
-map(_else)")
-| encode-json(prettyPrinting="false")
+| fix(FLUX_DIR + "hoou.fix", *) 
+| encode-json
 | oersi.FieldMerger
 //| oersi.JsonValidator("https://dini-ag-kim.github.io/lrmi-profile/draft/schemas/schema.json")
 | object-tee | {
     write(FLUX_DIR + "hoou-metadata.json", header="[\n", footer="\n]", separator=",\n")
-  }{
-    oersi.OersiWriter("http://192.168.98.115:8080/oersi/api/metadata", 
-      user="test", pass="test", log=FLUX_DIR + "hoou-responses.json")
-};
+  };
