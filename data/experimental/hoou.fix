@@ -7,6 +7,12 @@ do array('@context')
 end
 
 map('name', 'name')
+
+/* Create pseudo id - links to json of the picture*/
+do map ('image', 'id')
+  replace_all (pattern: "preview_500x", with:"")
+end
+
 map('hasPart[].1.thumbnailUrl', 'image')
 map('description', 'description')
 map('license', 'liscense')
@@ -22,6 +28,7 @@ do array('creator', flushWith: record)
  end
 end
 
+/* Create array, split provided keyword string and trim blanks */
 do array('keywords')
   do map('keywords')
     split(delimiter: ',')
