@@ -1,5 +1,5 @@
 "https://www.hoou.de/sitemap.xml" // FLUX_DIR + "hoou-sitemap.xml"
-| oersi.SitemapReader(wait="10",limit="2",urlPattern=".*/materials/.*")
+| oersi.SitemapReader(wait="10",limit="10",urlPattern=".*/materials/.*")
 | open-http
 | extract-element("script[data-test=model-linked-data]")
 <<<<<<< HEAD

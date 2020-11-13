@@ -23,7 +23,10 @@ do array('creator', flushWith: record)
 end
 
 do array('keywords')
-  map('keywords')
+  do map('keywords')
+    split(delimiter: ',')
+    trim()
+  end
 end
 
 do array('type')
