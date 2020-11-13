@@ -17,9 +17,9 @@ Run workflows
 
 Pass a directory name to run all `*.flux` workflows in that directory, e.g.:
 
-`./gradlew run --args 'data/to-elasticsearch'`
+`./gradlew run --args 'data/production'`
 
-This will run all `*.flux` workflows in `data/to-elasticsearch`.
+This will run all `*.flux` workflows in `data/production`.
 
 Write to backend API
 --------------------
@@ -28,9 +28,9 @@ By default a local `oersi-setup` with `vagrant up` is expected:
 
 `cd ../oersi-setup ; vagrant up ; cd ../oersi-etl`
 
-Run the workflows in `data/to-oersibackend`:
+Run the workflows in `data/production`:
 
-`./gradlew run --args 'data/to-oersibackend'`
+`./gradlew run --args 'data/production'`
 
 Check the responses in `*-response.json`, access by ID in the backend, e.g.:
 
@@ -43,7 +43,7 @@ Write to elasticsearch
 
 Run the workflows that write an Elasticsearch bulk file:
 
-`./gradlew run --args 'data/to-elasticsearch'`
+`./gradlew run --args 'data/experimental'`
 
 ### Index data
 

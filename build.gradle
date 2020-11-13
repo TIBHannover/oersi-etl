@@ -41,8 +41,9 @@ dependencies {
     implementation 'com.fasterxml.jackson.core:jackson-databind:2.9.10.4'
     implementation 'com.networknt:json-schema-validator:1.0.40'
 
-    // Use JUnit test framework
+    // Test frameworks:
     testImplementation 'junit:junit:4.12'
+    testCompile "org.mockito:mockito-core:2.+"
 }
 
 apply plugin : "java"

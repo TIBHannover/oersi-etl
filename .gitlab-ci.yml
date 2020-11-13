@@ -15,6 +15,18 @@ build:
     - ./gradlew --version
     - ./gradlew check
 
+deploy:
+  stage: deploy
+  script:
+    - sh install_snapshots.sh
+    - ./gradlew installDist
+  artifacts:
+    paths:
+     - build/install/oersi-etl/bin/*
+     - build/install/oersi-etl/lib/*
+     - data/maps/*
+     - data/production/*
+
 sonar:
   image: gradle:jdk11
   cache:

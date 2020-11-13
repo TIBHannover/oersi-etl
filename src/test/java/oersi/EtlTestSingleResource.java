@@ -28,17 +28,17 @@ public class EtlTestSingleResource {
     private static final Object[][] PARAMS = new Object[][] { //
             { "https://www.hoou.de/materials/tutorial-lernen-lernen",
                     // ->
-                    "Tutorial: Lernen lernen - HOOU", //
+                    "Tutorial: Lernen lernen", //
                     "Das Bewusstsein und die Kenntnis über Ihren Lernstil kann Ihnen helfen, ", //
                     "https://creativecommons.org/licenses/by-nc-nd/4.0/" }, //
             { "https://www.hoou.de/materials/online-punkteabfrage",
                     // ->
-                    "Online Punkteabfrage - HOOU", //
+                    "Online Punkteabfrage", //
                     "Die Punktabfrage ist in Papierform (Poster / Klebepunkte) ein bewährtes Feedbackinstrument ", //
                     "http://creativecommons.org/licenses/by-sa/4.0/" }, //
             { "https://www.hoou.de/materials/ifm-erzahlung-wie",
                     // ->
-                    "IFM - Erzählung. Wie? - HOOU", //
+                    "IFM - Erzählung. Wie?", //
                     "In diesem Kapitel zeigt Professor Bramkamp anhand der Videoinstallation „Angels in Chains“ ", //
                     "https://creativecommons.org/licenses/by-nc-sa/4.0/" } };
 
@@ -84,7 +84,8 @@ public class EtlTestSingleResource {
     private String convertSingleResource(String sourceUrl, String flux, String outFile)
             throws IOException, RecognitionException {
         Flux.main(new String[] { absPathToTempFile(flux, ".flux") });
-        String json = Files.readAllLines(Paths.get(outFile)).stream().collect(Collectors.joining("\n"));
+        String json = Files.readAllLines(Paths.get(outFile)).stream()
+                .collect(Collectors.joining("\n"));
         // workaround until we can pick out a specific head.meta.content
         // (see https://github.com/metafacture/metafacture-fix/issues/10)
         return json.trim().replaceAll("\"}$", "\",\"url\" : \"" + sourceUrl + "\"}");

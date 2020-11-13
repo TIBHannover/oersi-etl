@@ -1,5 +1,4 @@
 "https://www.hoou.de/sitemap.xml" // FLUX_DIR + "hoou-sitemap.xml"
-| open-http                       // open-file
 | oersi.SitemapReader(wait="1000",limit="2",urlPattern=".*/materials/.*")
 | open-http
 | decode-html
@@ -21,7 +20,7 @@ map(html.body.div.div.div.div.div.div.div.div.div.div.p.a.href, id)
 ")
 | encode-json
 | oersi.FieldMerger
-| oersi.JsonValidator("https://dini-ag-kim.github.io/lrmi-profile/draft/schemas/schema.json")
+//| oersi.JsonValidator("https://dini-ag-kim.github.io/lrmi-profile/draft/schemas/schema.json")
 | object-tee | {
     write(FLUX_DIR + "hoou-metadata.json", header="[\n", footer="\n]", separator=",\n")
   }{

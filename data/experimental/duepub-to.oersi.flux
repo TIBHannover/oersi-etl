@@ -23,7 +23,7 @@ add_field(license, 'https://creativecommons.org/licenses/unknown')
 ")
 | encode-json
 | oersi.FieldMerger
-| oersi.JsonValidator("https://dini-ag-kim.github.io/lrmi-profile/draft/schemas/schema.json")
+//| oersi.JsonValidator("https://dini-ag-kim.github.io/lrmi-profile/draft/schemas/schema.json")
 | object-tee | {
     write(FLUX_DIR + "duepub-metadata.json", header="[\n", footer="\n]", separator=",\n")
   }{

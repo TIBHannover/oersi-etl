@@ -20,11 +20,25 @@ import org.xml.sax.SAXException;
 public class EtlTestMain {
 
     private static final Object[][] PARAMS = new Object[][] { //
-            new Object[] { Arrays.asList() }, //
-            new Object[] { Arrays.asList("data/to-elasticsearch", "data/to-oersibackend") }, //
-            new Object[] { Arrays.asList("data/to-oersibackend") } };
+            // run all *.flux in a given directory:
+            new Object[] { Arrays.asList("data/experimental") }, //
+            // run a single *.flux file:
+            new Object[] { Arrays.asList("data/production/oernds-to-oersi.flux") }, //
+            // pass variables as command line arguments:
+            new Object[] { Arrays.asList(//
+                    "data/production/oernds-to-oersi.flux", //
+                    "input_limit=2", //
+                    "input_from=5", //
+                    "backend_api=http://192.168.98.115:8080/oersi/api/metadata", //
+                    "backend_user=test", //
+                    "backend_pass=test") }, //
+            // pass variables as *.properties file:
+            new Object[] { Arrays.asList(//
+                    "data/production/oerbw-to-oersi.flux", //
+                    "data/production/oersi.properties") } //
+    };
 
-    @Parameterized.Parameters
+    @Parameterized.Parameters(name = "{0}")
     public static Collection<Object[]> args() {
         return Arrays.asList(PARAMS);
     }
@@ -44,6 +58,6 @@ public class EtlTestMain {
     public void testConvertMain() throws IOException, SAXException {
         assertFalse(ETL.OUT_FILE.exists());
         ETL.main(args.toArray(new String[0]));
-        assertTrue(ETL.OUT_FILE.exists());
+        assertTrue("Output file must exist", ETL.OUT_FILE.exists());
     }
 }
