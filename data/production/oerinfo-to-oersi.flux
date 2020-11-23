@@ -1,4 +1,4 @@
-service_domain = "https://open-educational-resources.de";
+service_domain = "oer-contentbuffet.info";
 service_id = "https://oerworldmap.org/resource/urn:uuid:efed6ca2-b228-480f-be03-090a19de7b42";
 service_name = "OERinfo";
 
