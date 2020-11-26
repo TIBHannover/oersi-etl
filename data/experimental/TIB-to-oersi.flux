@@ -1,5 +1,8 @@
 "https://www.tib.eu/oai/public/repository/av-portal"
-| open-oaipmh(metadataPrefix="rdf_jsonld",dateFrom="2020-05-01",dateUntil="2020-05-14")
+| open-oaipmh(metadataPrefix="rdf_jsonld",dateFrom="2020-01-01",dateUntil="2020-08-14")
+| log-object("as-lines: ")
+| as-lines
+| log-object("decode-json: ")
 | decode-json
 | fix(FLUX_DIR + "TIB.fix")
 | encode-json
