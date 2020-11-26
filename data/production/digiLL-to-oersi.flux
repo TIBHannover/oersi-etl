@@ -17,4 +17,4 @@ service_name = "digiLL";
   }{
     oersi.OersiWriter(backend_api,
       user=backend_user, pass=backend_pass, log=FLUX_DIR + "digiLL-responses.json")
-};
+  };

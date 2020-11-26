@@ -13,10 +13,12 @@ do map( "@graph[].3.name", "name")
 end
 
 map("@graph[].2.url", "image")
-map("@graph[].3.datePublished", "dateCreated")
+do map("@graph[].3.datePublished", "dateCreated")
+  replace_all(pattern: 'T.*', with: '')
+end
 
 do map("@graph[].3.inLanguage", "inLanguage")
-  substring(start: '0',  end: '2')
+  replace_all(pattern: '-.*', with: '')
 end
 
 do array("type")
