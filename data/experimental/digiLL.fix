@@ -1,0 +1,40 @@
+/* Set up the context */
+do array("@context")
+ add_field("","https://w3id.org/kim/lrmi-profile/draft/context.jsonld")
+ do entity("")
+  add_field("@language", "de")
+ end
+end
+
+/* Delete the plattform name in the title of the resource */
+map("@graph[].3.url", "id")
+do map( "@graph[].3.name", "name")
+  replace_all(pattern: " - Universitätsverbund digiLL",  with: "")
+end
+
+map("@graph[].2.url", "image")
+map("@graph[].3.datePublished", "dateCreated")
+
+do map("@graph[].3.inLanguage", "inLanguage")
+  substring(start: '0',  end: '2')
+end
+
+do array("type")
+  add_field("","LearningResource")
+end
+
+do array("publisher")
+ do entity("")
+  add_field("type", "Organization")
+  map("@graph[].1.@id","id")
+  map("@graph[].1.name", "name")
+ end
+end
+
+/* Add BY-SA 4.0 license as digiLL is saying usual license is CC BY SA) */
+add_field("license","https://creativecommons.org/licenses/by-sa/4.0/")
+
+do entity('learningResourceType')
+  add_field("id", "https://w3id.org/kim/hcrt/course")
+  add_field("prefLabel.de", "Kurs")
+end
