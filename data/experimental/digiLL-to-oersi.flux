@@ -5,16 +5,11 @@ service_name = "digiLL";
 
 "https://digill.de/course-sitemap.xml" // FLUX_DIR + "digiLL-sitemap.xml"
 | oersi.SitemapReader(wait="10",limit="2",urlPattern=".*/course/.*")
-| log-object("Open: ")
 | open-http
 | extract-element("script[class=yoast-schema-graph]")
-//| log-object("JSON in: ")
 | decode-json
-//| log-stream("Event in: ")
 | fix(FLUX_DIR + "digiLL.fix")
-//| log-stream("Event out: ")
 | encode-json
-| log-object("JSON out: ")
 | oersi.FieldMerger
 | oersi.JsonValidator("https://dini-ag-kim.github.io/lrmi-profile/draft/schemas/schema.json")
 | object-tee | {
