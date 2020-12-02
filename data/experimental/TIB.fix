@@ -13,7 +13,15 @@ end
 
 
 map("@graph[].1.title", "name")
+map("@graph[].1.issued", "dateCreated")
 map("@graph[].1.license","license")
+
+do array('creator', flushWith: record)
+ do entity('')
+  /* add_field('type', 'Person') */
+  map("@graph[].1.creator[].", "name")
+ end
+end
 
 do map("@graph[].1.inLanguage", "inLanguage")
   replace_all(pattern: "http://id.loc.gov/vocabulary/iso639-1/", with: "")
@@ -26,7 +34,7 @@ end
 
 map("@graph[].1.publisher","publisher")
 
-do array("keywords")
+do array("keywords", flushWith: record)
   map("@graph[].1.subject[].*")
 end
 
