@@ -6,10 +6,11 @@ do array("@context")
  end
 end
 
-/* Multiple idenfitier but not always the same position, does not work yet */
-do map("@graph[].1.identifier[].*","id")
-  equals(string:"https://av.tib.eu/media/*")
+/* Construct actual ID from @id */
+do map("@graph[].1.@id","id")
+    replace_all(pattern: "https://www.tib.eu/de/suchen/id/kmo-av%3Asid%7E", with: "https://av.tib.eu/media/")
 end
+
 
 map("@graph[].1.title", "name")
 map("@graph[].1.license","license")
