@@ -11,7 +11,6 @@ do map("@graph[].1.@id","id")
     replace_all(pattern: "https://www.tib.eu/de/suchen/id/kmo-av%3Asid%7E", with: "https://av.tib.eu/media/")
 end
 
-
 map("@graph[].1.title", "name")
 map("@graph[].1.issued", "dateCreated")
 map("@graph[].1.license","license")
@@ -19,11 +18,11 @@ map("@graph[].1.license","license")
 do array('creator', flushWith: record)
  do entity('')
   /* add_field('type', 'Person') */
-  map("@graph[].1.creator[].", "name")
+  map("@graph[].1.creator[].*", "name")
  end
 end
 
-do map("@graph[].1.inLanguage", "inLanguage")
+do map("@graph[].1.language", "inLanguage")
   replace_all(pattern: "http://id.loc.gov/vocabulary/iso639-1/", with: "")
 end
 
