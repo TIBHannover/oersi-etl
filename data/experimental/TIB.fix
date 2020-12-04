@@ -18,7 +18,9 @@ map("@graph[].1.license","license")
 do array('creator', flushWith: record)
  do entity('')
   /* add_field('type', 'Person') */
-  map("@graph[].1.creator[].*", "name")
+  do map("@graph[].1.creator[].*", "name")
+    replace(pattern: "(.+), (.+)", with: "$2 $1")
+  end
  end
 end
 
@@ -37,4 +39,4 @@ do array("keywords", flushWith: record)
   map("@graph[].1.subject[].*")
 end
 
-map(_else)
+/* map(_else) */

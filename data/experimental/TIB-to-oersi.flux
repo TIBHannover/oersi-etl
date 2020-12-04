@@ -8,7 +8,7 @@
 | fix(FLUX_DIR + "TIB.fix")
 | encode-json
 | oersi.FieldMerger
-//| oersi.JsonValidator("https://dini-ag-kim.github.io/lrmi-profile/draft/schemas/schema.json")
+| oersi.JsonValidator("https://dini-ag-kim.github.io/lrmi-profile/draft/schemas/schema.json")
 | object-tee | {
     write(FLUX_DIR + "TIB-metadata.json", header="[\n", footer="\n]", separator=",\n")
   };
