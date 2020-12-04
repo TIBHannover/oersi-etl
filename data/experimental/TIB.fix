@@ -11,7 +11,10 @@ do map("@graph[].1.@id","id")
     replace_all(pattern: "https://www.tib.eu/de/suchen/id/kmo-av%3Asid%7E", with: "https://av.tib.eu/media/")
 end
 
-map("@graph[].1.title", "name")
+do map("@graph[].1.title*", "name")
+  not_equals(string: '')
+end
+
 map("@graph[].1.issued", "dateCreated")
 map("@graph[].1.license","license")
 
@@ -33,7 +36,9 @@ do array("type")
   add_field("","VideoObject")
 end
 
-map("@graph[].1.publisher","publisher")
+do array("keywords", flushWith: record)
+  map("@graph[].1.publisher","publisher")
+end
 
 do array("keywords", flushWith: record)
   map("@graph[].1.subject[].*")
