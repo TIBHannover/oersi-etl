@@ -11,17 +11,22 @@ do map("@graph[].1.@id","id")
     replace_all(pattern: "https://www.tib.eu/de/suchen/id/kmo-av%3Asid%7E", with: "https://av.tib.eu/media/")
 end
 
-do map("@graph[].1.title*", "name")
-  not_equals(string: '')
+do map("@graph[].1.title[].*|@graph[].1.title", "name")
+  not_equals(string: "")
 end
 
+/* At the moment only CC-licenses will be recognised */
 map("@graph[].1.issued", "dateCreated")
-map("@graph[].1.license","license")
+do map("@graph[].1.license","license")
+  regexp(match: "https://creativecommons.org/(licenses|licences|publicdomain)/.*")
+end
+
 
 do array('creator', flushWith: record)
  do entity('')
-  /* add_field('type', 'Person') */
-  do map("@graph[].1.creator[].*", "name")
+ /* At the moment FIX does not support conditionals so that we only can recognise creators as Person */
+  add_field('type', 'Person')
+  do map("@graph[].1.creator[].*|@graph[].1.creator", "name")
     replace(pattern: "(.+), (.+)", with: "$2 $1")
   end
  end
@@ -31,9 +36,14 @@ do map("@graph[].1.language", "inLanguage")
   replace_all(pattern: "http://id.loc.gov/vocabulary/iso639-1/", with: "")
 end
 
-do array("type")
+do array ("type")
   add_field("","LearningResource")
   add_field("","VideoObject")
+end
+
+do entity('learningResourceType')
+  add_field("id","https://w3id.org/kim/hcrt/video")
+  add_field("prefLabel.de","Video")
 end
 
 do array("keywords", flushWith: record)
@@ -44,4 +54,16 @@ do array("keywords", flushWith: record)
   map("@graph[].1.subject[].*")
 end
 
-/* map(_else) */
+do array('mainEntityOfPage')
+  do entity('')
+    do map("@graph[].1.@id","id")
+      replace_all(pattern: "https://www.tib.eu/de/suchen/id/kmo-av%3Asid%7E", with: "https://av.tib.eu/media/")
+    end
+    /* Add provider/source information to each resource description */
+    do entity('provider')
+      add_field('id','$[service_id]')
+      add_field('type','Service')
+      add_field('name','$[service_name]')
+    end
+  end
+end
