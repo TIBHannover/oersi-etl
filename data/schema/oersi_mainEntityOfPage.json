@@ -1,5 +1,5 @@
 {
-    "$id": "https://dini-ag-kim.github.io/lrmi-profile/draft/schemas/mainEntityOfPage.json",
+    "$id": "[OERSI URL]/schemas/oersi_mainEntityOfPage.json",
     "$schema": "http://json-schema.org/draft-07/schema#",
     "title": "Metadata/Structured descriptions",
     "description": "This object contains metametadata, i.e. information about the structured description(s) of the OER and its source(s).",
@@ -14,6 +14,7 @@
           "title": "URL of the metadata",
           "type": "string",
           "format": "uri"
+          "description": "If resource is only referenced take the URL the metadata-set that is refering to the resource. If resource is hosted by metadata provider oersi_mainEntityOfPage.id is identical to resource id."
         },
         "type": {
           "type": "string"
@@ -38,7 +39,10 @@
             }
           },
           "required": [
-            "id"
+            "id",
+            "type",
+            "name"
+
           ]
         },
         "dateCreated": {
@@ -51,7 +55,8 @@
         }
       },
       "required": [
-        "id"
+        "id",
+        "provider"
       ]
     }
   }
