@@ -22,9 +22,8 @@
       "id": {
         "$ref": "https://dini-ag-kim.github.io/lrmi-profile/draft/schemas/id.json"
       },
-      # needs to be OERSI specific
       "type": {
-        "$ref": "https://dini-ag-kim.github.io/lrmi-profile/draft/schemas/type.json"
+        "$ref": "OERSI_URL/schemas/oersi_type.json"
       },
       "name": {
         "$ref": "https://dini-ag-kim.github.io/lrmi-profile/draft/schemas/name.json"
@@ -38,7 +37,6 @@
       "about": {
         "$ref": "https://dini-ag-kim.github.io/lrmi-profile/draft/schemas/about.json"
       },
-      # needs to be OERSI specific since not only CC licences should be validate
       "license": {
         "$ref": "https://dini-ag-kim.github.io/lrmi-profile/draft/schemas/license.json"
       },
@@ -63,9 +61,8 @@
       "isBasedOn": {
         "$ref": "https://dini-ag-kim.github.io/lrmi-profile/draft/schemas/isBasedOn.json"
       },
-      # needs to be OERSI specific 
       "mainEntityOfPage": {
-        "$ref": "https://dini-ag-kim.github.io/lrmi-profile/draft/schemas/mainEntityOfPage.json"
+        "$ref": "OERSI_URL/schemas/oersi_mainEntityOfPage.json"
       },
       "keywords": {
         "$ref": "https://dini-ag-kim.github.io/lrmi-profile/draft/schemas/keywords.json"
