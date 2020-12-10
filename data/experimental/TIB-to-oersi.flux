@@ -15,4 +15,7 @@ service_name = "TIB AV-Portal";
 | oersi.JsonValidator("https://dini-ag-kim.github.io/lrmi-profile/draft/schemas/schema.json")
 | object-tee | {
     write(FLUX_DIR + "TIB-metadata.json", header="[\n", footer="\n]", separator=",\n")
-  };
+  }{
+    oersi.OersiWriter(backend_api,
+      user=backend_user, pass=backend_pass, log=FLUX_DIR + "TIB-responses.json")
+};
