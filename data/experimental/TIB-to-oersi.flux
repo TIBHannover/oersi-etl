@@ -6,10 +6,10 @@ service_name = "TIB AV-Portal";
 | open-oaipmh(metadataPrefix="rdf_jsonld",dateFrom="2020-03-01",dateUntil="2020-03-31")
 | decode-xml
 | handle-generic-xml
-| fix("map(metadata.value)")
+| fix("map(metadata.value)", *)
 | literal-to-object
 | decode-json
-| fix(FLUX_DIR + "TIB.fix")
+| fix(FLUX_DIR + "TIB.fix", *)
 | encode-json
 | oersi.FieldMerger
 | oersi.JsonValidator("https://dini-ag-kim.github.io/lrmi-profile/draft/schemas/schema.json")
