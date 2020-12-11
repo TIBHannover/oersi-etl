@@ -58,6 +58,6 @@ public class EtlTestMain {
     public void testConvertMain() throws IOException, SAXException {
         assertFalse(ETL.OUT_FILE.exists());
         ETL.main(args.toArray(new String[0]));
-        assertTrue("Output file must exist", ETL.OUT_FILE.exists());
+        assertTrue("Output file must exist: " + ETL.OUT_FILE, ETL.OUT_FILE.exists());
     }
 }

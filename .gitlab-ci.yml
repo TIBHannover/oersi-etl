@@ -13,7 +13,7 @@ build:
   script:
     - sh install_snapshots.sh
     - ./gradlew --version
-    - ./gradlew check
+    - ./gradlew check --info
 
 deploy:
   stage: deploy
@@ -35,7 +35,7 @@ sonar:
       - .sonar/cache
   script:
     - sh install_snapshots.sh
-    - ./gradlew check jacocoTestReport sonarqube
+    - ./gradlew check jacocoTestReport sonarqube --info
   only:
     - merge_requests
     - develop
