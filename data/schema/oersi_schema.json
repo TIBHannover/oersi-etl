@@ -23,7 +23,7 @@
         "$ref": "https://dini-ag-kim.github.io/lrmi-profile/draft/schemas/id.json"
       },
       "type": {
-        "$ref": "OERSI_URL/schemas/oersi_type.json"
+        "$ref": "oersi_type.json"
       },
       "name": {
         "$ref": "https://dini-ag-kim.github.io/lrmi-profile/draft/schemas/name.json"
@@ -62,7 +62,7 @@
         "$ref": "https://dini-ag-kim.github.io/lrmi-profile/draft/schemas/isBasedOn.json"
       },
       "mainEntityOfPage": {
-        "$ref": "OERSI_URL/schemas/oersi_mainEntityOfPage.json"
+        "$ref": "oersi_mainEntityOfPage.json"
       },
       "keywords": {
         "$ref": "https://dini-ag-kim.github.io/lrmi-profile/draft/schemas/keywords.json"
