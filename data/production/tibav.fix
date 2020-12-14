@@ -38,7 +38,6 @@ end
 
 do array ("type")
   add_field("","LearningResource")
-  add_field("","VideoObject")
 end
 
 do entity("learningResourceType")
@@ -69,4 +68,8 @@ do array("mainEntityOfPage")
       add_field("name","$[service_name]")
     end
   end
+end
+
+do map('@graph[].1.identifier[].*', image)
+  contains(string: '.jpg')
 end
