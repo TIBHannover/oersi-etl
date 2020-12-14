@@ -13,7 +13,7 @@
         "id": {
           "title": "URL of the metadata",
           "type": "string",
-          "format": "uri"
+          "format": "uri",
           "description": "If resource is only referenced take the URL the metadata-set that is refering to the resource. If resource is hosted by metadata provider oersi_mainEntityOfPage.id is identical to resource id."
         },
         "type": {

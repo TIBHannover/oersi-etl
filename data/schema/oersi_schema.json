@@ -23,7 +23,7 @@
         "$ref": "https://dini-ag-kim.github.io/lrmi-profile/draft/schemas/id.json"
       },
       "type": {
-        "$ref": "oersi_type.json"
+        "$ref": "https://dini-ag-kim.github.io/lrmi-profile/draft/schemas/type.json"
       },
       "name": {
         "$ref": "https://dini-ag-kim.github.io/lrmi-profile/draft/schemas/name.json"
