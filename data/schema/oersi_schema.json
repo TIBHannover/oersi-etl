@@ -62,7 +62,7 @@
         "$ref": "https://dini-ag-kim.github.io/lrmi-profile/draft/schemas/isBasedOn.json"
       },
       "mainEntityOfPage": {
-        "$ref": "oersi_mainEntityOfPage.json"
+        "$ref": "file:///data/schema//oersi_mainEntityOfPage.json"
       },
       "keywords": {
         "$ref": "https://dini-ag-kim.github.io/lrmi-profile/draft/schemas/keywords.json"
