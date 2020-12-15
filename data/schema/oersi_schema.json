@@ -1,8 +1,7 @@
 {
     "$schema": "http://json-schema.org/draft-07/schema#",
     "title": "OERSI",
-    "description": "This is a specific JSON schema for OERSI based on 
-    'LRMI-Profil für Hochschul-OER im deutschsprachigen Raum' (https://dini-ag-kim.github.io/lrmi-profile/draft/schemas/schema.json)",
+    "description": "This is a specific JSON schema for OERSI based on 'LRMI-Profil für Hochschul-OER im deutschsprachigen Raum' (https://dini-ag-kim.github.io/lrmi-profile/draft/schemas/schema.json)",
     "type": "object",
     "default": {
       "@context": [
