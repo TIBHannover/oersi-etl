@@ -3,7 +3,7 @@ service_id = "https://oerworldmap.org/resource/urn:uuid:10c5092a-152d-4cc9-a823-
 service_name = "TIB AV-Portal";
 
 "https://www.tib.eu/oai/public/repository/av-portal"
-| open-oaipmh(metadataPrefix="rdf_jsonld",dateFrom="2020-03-01",dateUntil="2020-03-31")
+| open-oaipmh(metadataPrefix="rdf_jsonld")
 | decode-xml
 | handle-generic-xml
 | fix("map(metadata.value)", *)
