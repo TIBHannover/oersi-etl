@@ -13,37 +13,13 @@
         "id": {
           "title": "URL of the metadata",
           "type": "string",
-          "format": "uri",
-          "description": "If resource is only referenced take the URL the metadata-set that is refering to the resource. If resource is hosted by metadata provider oersi_mainEntityOfPage.id is identical to resource id."
-        },
-        "type": {
-          "type": "string"
-        },
-        "provider": {
-          "title": "Metadata provider",
-          "description": "Quelle, von der die strukturierte Beschreibung (=Metadaten) zu dieser Ressource zur Verfügung gestellt werden.",
-          "type": "object",
-          "properties": {
-            "id": {
-              "title": "URI für den Provider",
-              "type": "string",
               "format": "uri"
             },
             "type": {
-              "title": "Typ",
               "type": "string"
             },
-            "name": {
-              "title": "Name",
-              "type": "string"
-            }
-          },
-          "required": [
-            "id",
-            "type",
-            "name"
-
-          ]
+            "provider": {
+              "$ref": "https://dini-ag-kim.github.io/lrmi-profile/draft/schemas/provider.json"
         },
         "dateCreated": {
           "$ref": "https://dini-ag-kim.github.io/lrmi-profile/draft/schemas/dateCreated.json"
