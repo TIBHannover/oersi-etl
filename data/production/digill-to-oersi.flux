@@ -13,7 +13,7 @@ default input_wait = "50";
 | fix(FLUX_DIR + "digill.fix", *)
 | encode-json
 | oersi.FieldMerger
-| oersi.JsonValidator("https://dini-ag-kim.github.io/lrmi-profile/draft/schemas/schema.json")
+| oersi.JsonValidator("https://gitlab.com/oersi/oersi-etl/-/raw/36-OERSI_Schema/data/schema/oersi_schema.json")
 | object-tee | {
     write(FLUX_DIR + "digill-metadata.json", header="[\n", footer="\n]", separator=",\n")
   }{

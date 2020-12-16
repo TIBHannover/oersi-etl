@@ -61,7 +61,7 @@
         "$ref": "https://dini-ag-kim.github.io/lrmi-profile/draft/schemas/isBasedOn.json"
       },
       "mainEntityOfPage": {
-        "$ref": "file:///data/schema//oersi_mainEntityOfPage.json"
+        "$ref": "https://gitlab.com/oersi/oersi-etl/-/raw/36-OERSI_Schema/data/schema/oersi_mainEntityOfPage.json"
       },
       "keywords": {
         "$ref": "https://dini-ag-kim.github.io/lrmi-profile/draft/schemas/keywords.json"
