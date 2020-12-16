@@ -1,0 +1,20 @@
+# Ignore Gradle project-specific cache directory
+.gradle
+
+# Ignore Gradle build output directory
+build
+bin
+
+# Ignore generated Eclipse config files
+.classpath
+.project
+
+# Ignore checked out dependency repos
+metafacture-*
+
+# Ignore generated output data
+*.ndjson
+*.txt
+
+# Ignore local test data
+data/test
