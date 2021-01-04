@@ -95,10 +95,12 @@ end
 do entity('learningResourceType')
   map('@hcrt', 'id')
   do entity('prefLabel')
-  do map('@hcrt', 'de')
-    lookup(in: 'data/maps/hcrt-labels.tsv')
-  do map('@hcrt', 'en')
-    lookup(in: 'data/maps/hcrt_en_labels.tsv')
+    do map('@hcrt', 'de')
+      lookup(in: 'data/maps/hcrt-de-labels.tsv')
+    end  
+    do map('@hcrt', 'en')
+      lookup(in: 'data/maps/hcrt-en-labels.tsv')
+    end
   end
 end
 
