@@ -29,12 +29,25 @@
       },
       "prefLabel": {
         "title": "The preferred label of the concept",
-        "description": "A localized string for prefLabel of a SKOS concept",
-        "$ref": "https://dini-ag-kim.github.io/lrmi-profile/draft/schemas/LocalizedString.json"
+        "description": "OERSI needs englisch and german labels.",
+        "type": "object",
+        "properties": {
+          "de": {
+            "type": "string"
+          },
+          "en": {
+            "type": "string"
+          }
+        }, 
+        "required": [
+          "de",
+          "en" 
+        ]
       }
     },
     "required": [
-      "id"
+      "id",
+      "prefLabel"
     ],
     "_widget": "SkohubLookup"
   }
