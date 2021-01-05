@@ -52,7 +52,7 @@
         "$ref": "https://dini-ag-kim.github.io/lrmi-profile/draft/schemas/publisher.json"
       },
       "learningResourceType": {
-        "$ref": "https://dini-ag-kim.github.io/lrmi-profile/draft/schemas/learningResourceType.json"
+        "$ref": "https://gitlab.com/oersi/oersi-etl/-/raw/36-OERSI_Schema/data/schema/oersi_learningResourceType.json"
       },
       "audience": {
         "$ref": "https://dini-ag-kim.github.io/lrmi-profile/draft/schemas/audience.json"
