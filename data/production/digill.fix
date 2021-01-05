@@ -39,7 +39,10 @@ add_field("license","https://creativecommons.org/licenses/by-sa/4.0/")
 
 do entity('learningResourceType')
   add_field("id", "https://w3id.org/kim/hcrt/course")
-  add_field("prefLabel.de", "Kurs")
+  do entity('prefLabel')
+    add_field('de', 'Kurs')
+    add_field('en', 'Course')
+  end
 end
 
 do array('mainEntityOfPage')
