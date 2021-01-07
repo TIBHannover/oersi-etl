@@ -13,6 +13,7 @@ map("html.head.meta.content","image")
 
 /* Creation-Date comes in as "- recorded at 9/19/2012" */
 do map("html.body.form.div.div.div.div.div.div.div.div.div.div.div.span.value", "dateCreated")
+  regexp(match: "- recorded at \\d{1,2}}/\\d{1,2}}/\\d{4}")
   replace(pattern: "(\\d)/(\\d+)/(\\d\\d\\d\\d)", with: "0$1/$2/$3")
   replace(pattern: "(\\d+)/(\\d)/(\\d\\d\\d\\d)", with: "$1/0$2/$3")
   replace(pattern: "- recorded at (\\d\\d)/(\\d\\d)/(\\d\\d\\d\\d)", with: "$3-$1-$2")
@@ -20,7 +21,7 @@ end
 
 /*rel = "liscence" cant be directly mapped */
 do map("html.body.form.div.div.div.div.div.div.div.div.div.div.div.div.p.a.href", "license")
-  replace(pattern: "http", with: "https")
+  replace(pattern: "http:", with: "https:")
 end
 
 do array("creator", flushWith: record)
