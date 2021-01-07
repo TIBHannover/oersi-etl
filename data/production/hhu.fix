@@ -1,0 +1,66 @@
+/* Set up the context */
+do array("@context")
+ add_field("","https://w3id.org/kim/lrmi-profile/draft/context.jsonld")
+ do entity("")
+  add_field("@language", "de")
+ end
+end
+
+/* Map some of the data we have to the oersi model: */
+map("html.body.form.div.div.div.div.div.div.div.h1.span.title", "name")
+map("html.body.form.div.div.div.div.div.div.div.div.div.div.div.p.value", "description")
+map("html.head.meta.content","image")
+
+/* Creation-Date comes in as "- recorded at 9/19/2012" */
+do map("html.body.form.div.div.div.div.div.div.div.div.div.div.div.span.value", "dateCreated")
+  regexp(match: "- recorded at \\d{1,2}}/\\d{1,2}}/\\d{4}")
+  replace(pattern: "(\\d)/(\\d+)/(\\d\\d\\d\\d)", with: "0$1/$2/$3")
+  replace(pattern: "(\\d+)/(\\d)/(\\d\\d\\d\\d)", with: "$1/0$2/$3")
+  replace(pattern: "- recorded at (\\d\\d)/(\\d\\d)/(\\d\\d\\d\\d)", with: "$3-$1-$2")
+end
+
+/*rel = "liscence" cant be directly mapped */
+do map("html.body.form.div.div.div.div.div.div.div.div.div.div.div.div.p.a.href", "license")
+  replace(pattern: "http:", with: "https:")
+end
+
+do array("creator", flushWith: record)
+ do entity("")
+  add_field("type", "Person")
+  map("html.body.form.div.div.div.div.div.div.div.div.span.value", "name")
+ end
+end
+
+do map("html.body.form.action", "id")
+  replace(pattern: "./", with: "https://mediathek.hhu.de/watch/")
+end
+
+do array ("type")
+  add_field("","LearningResource")
+end
+
+do entity("learningResourceType")
+  add_field("id","https://w3id.org/kim/hcrt/video")
+  do entity("prefLabel")
+    add_field("de","Video")
+    add_field("en","Video")
+  end
+end
+
+do array("keywords", flushWith: record)
+  map("html.body.form.div.div.div.div.div.div.div.div.div.div.div.ul.li.a.value")
+end
+
+do array("mainEntityOfPage")
+  do entity("")
+    do map("html.body.form.action", "id")
+      replace(pattern: "./", with: "https://mediathek.hhu.de/watch/")
+    end
+    /* Add provider/source information to each resource description */
+    do entity("provider")
+      add_field("id","$[service_id]")
+      add_field("type","Service")
+      add_field("name","$[service_name]")
+    end
+  end
+end
