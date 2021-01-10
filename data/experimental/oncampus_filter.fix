@@ -1,0 +1,3 @@
+do map("html.body.div.div.div.div.section.div.div.div.h3.value","filter-match")
+    equals(string: "free|kostenlos")
+end
