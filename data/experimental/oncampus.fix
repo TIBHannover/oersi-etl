@@ -10,12 +10,10 @@ end
 map("html.body.div.div.div.div.section.div.h1.value", "name")
 map("html.body.div.div.div.div.section.section.section.div.p.span.value", "description")
 
-
-/* do map("html.body.div.div.div.div.section.div.div.style","image") */
-/*  replace(pattern: "background-image: url(", with: "") */
-/*  replace(pattern: ")", with: "") */
-/* end */
-
+do map("html.body.div.div.div.div.section.div.div.style","image")
+  replace(pattern: "background-image: url\\(", with: "")
+  replace(pattern: "\\);", with: "")
+end
 
 /*rel = "liscence" cant be directly mapped */
 map("html.body.div.div.div.div.section.section.section.div.section.p.a.href", "license")
@@ -33,11 +31,9 @@ do map('node.properties.cclom:general_language[].1', inLanguage)
   replace(pattern: "Englisch", with: "en")
 end
 
-/* commands crash flux */
-/* do map("html.body.nav.div.div.ul.li.ul.li.a.href", "id") */
-/*  replace(pattern: "?lang=fa", with: "") */
-/* end */
-
+do map("html.body.nav.div.div.ul.li.ul.li.a.href", "id")
+  replace(pattern: "\\?lang=fa", with: "")
+end
 
 do array ("type")
   add_field("","LearningResource")
