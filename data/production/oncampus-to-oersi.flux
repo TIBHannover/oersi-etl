@@ -9,7 +9,10 @@ default input_wait = "50";
 | oersi.SitemapReader(wait=input_wait,limit=input_limit)
 | open-http
 | decode-html
-| filter(FLUX_DIR + "oncampus_filter.xml") // we need only matching "kostenlos" or "free", but filter-module is crashing
+| fix-filter("
+do map('html.body.div.div.div.div.section.div.div.div.h3.value')
+    regexp(match: 'free|kostenlos')
+end")
 | fix(FLUX_DIR + "oncampus.fix", *)
 | encode-json
 | oersi.FieldMerger
