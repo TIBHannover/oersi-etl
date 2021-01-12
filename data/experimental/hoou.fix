@@ -8,11 +8,6 @@ end
 
 map('name', 'name')
 
-/* Create pseudo id - links to json of the picture*/
-do map ('image', 'id')
-  replace_all (pattern: "preview_500x", with:"")
-end
-
 map('hasPart[].1.thumbnailUrl', 'image')
 map('description', 'description')
 map('license', 'liscense')
