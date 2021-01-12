@@ -8,7 +8,8 @@ end
 
 /* Map some of the data we have to the oersi model: */
 map("html.body.div.div.div.div.section.div.h1.value", "name")
-map("html.body.div.div.div.div.section.section.section.div.p.span.value", "description")
+
+map("html.body.div.div.div.div.section.section.section.div.p.span.value|html.body.div.div.div.div.section.section.section.div.p.value", "description")
 
 do map("html.body.div.div.div.div.section.div.div.style","image")
   replace(pattern: "background-image: url\\(", with: "")
@@ -56,10 +57,9 @@ end
 
 do array("mainEntityOfPage")
   do entity("")
-    /* do map("html.body.nav.div.div.ul.li.ul.li.a.href", "id") */
-    /*  replace(pattern: "?lang=fa", with: "") */
-    /* end */
-    /* Add provider/source information to each resource description */
+    do map("html.body.nav.div.div.ul.li.ul.li.a.href", "id")
+      replace(pattern: "\\?lang=fa", with: "")
+    end
     do entity("provider")
       add_field("id","$[service_id]")
       add_field("type","Service")
