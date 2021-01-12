@@ -16,7 +16,10 @@ do map("html.body.div.div.div.div.section.div.div.style","image")
 end
 
 /*rel = "liscence" cant be directly mapped */
-map("html.body.div.div.div.div.section.section.section.div.section.p.a.href", "license")
+do map("html.body.div.div.div.div.section.section.section.div.section.p.a.href", "license")
+  regexp(match: "https://creativecommons.org/licenses/.*")
+end
+
 
 do array("creator", flushWith: record)
  do entity("")
