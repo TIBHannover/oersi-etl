@@ -7,17 +7,16 @@ default input_wait = "20";
 
 // the embedded json is missing the URL as id-metadata.
 // following approach handles the URL form SitemapReader as a separate data source 
-// and merge it with one embedded JSON document.
+// and merges it with one embedded JSON document.
 
 "https://www.hoou.de/sitemap.xml" // FLUX_DIR + "hoou-sitemap.xml"
 | oersi.SitemapReader(wait=input_wait, limit=input_limit, urlPattern=".*/(materials|projects)/.*")
-| object-to-literal
+| object-to-literal(literalname="id")
 // by encode- and decode-json records receives an internal record id (not above mentioned URL)
 // which is needed for merging the seperate json-files.
-// straigt stream-to-triple does not generate record id's
+// straight stream-to-triple does not generate record ids
 | encode-json
 | decode-json
-| fix(FLUX_DIR + "hoou-id.fix", *)
 | stream-to-triples
 | @X;
 
