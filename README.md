@@ -12,6 +12,8 @@ Set up project
 User documentation
 ==================
 
+The ETL workflows are based on Metafacture, see https://metafacture.org
+
 Run workflows
 -------------
 
