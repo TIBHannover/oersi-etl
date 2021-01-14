@@ -1,5 +1,6 @@
 {
-    "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://gitlab.com/oersi/oersi-etl/-/raw/develop/data/schema/oersi_schema.json",  
+  "$schema": "http://json-schema.org/draft-07/schema#",
     "title": "OERSI",
     "description": "This is a specific JSON schema for OERSI based on 'LRMI-Profil für Hochschul-OER im deutschsprachigen Raum' (https://dini-ag-kim.github.io/lrmi-profile/draft/schemas/schema.json)",
     "type": "object",
@@ -52,7 +53,7 @@
         "$ref": "https://dini-ag-kim.github.io/lrmi-profile/draft/schemas/publisher.json"
       },
       "learningResourceType": {
-        "$ref": "https://gitlab.com/oersi/oersi-etl/-/raw/36-OERSI_Schema/data/schema/oersi_learningResourceType.json"
+        "$ref": "https://gitlab.com/oersi/oersi-etl/-/raw/develop/data/schema/oersi_learningResourceType.json"
       },
       "audience": {
         "$ref": "https://dini-ag-kim.github.io/lrmi-profile/draft/schemas/audience.json"
@@ -61,7 +62,7 @@
         "$ref": "https://dini-ag-kim.github.io/lrmi-profile/draft/schemas/isBasedOn.json"
       },
       "mainEntityOfPage": {
-        "$ref": "https://gitlab.com/oersi/oersi-etl/-/raw/36-OERSI_Schema/data/schema/oersi_mainEntityOfPage.json"
+        "$ref": "https://gitlab.com/oersi/oersi-etl/-/raw/develop/data/schema/oersi_mainEntityOfPage.json"
       },
       "keywords": {
         "$ref": "https://dini-ag-kim.github.io/lrmi-profile/draft/schemas/keywords.json"

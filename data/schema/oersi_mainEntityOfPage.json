@@ -1,5 +1,5 @@
 {
-    "$id": "https://gitlab.com/oersi/oersi-etl/-/raw/36-OERSI_Schema/data/schema/oersi_mainEntityOfPage.json",
+    "$id": "https://gitlab.com/oersi/oersi-etl/-/raw/develop/data/schema/oersi_mainEntityOfPage.json",
     "$schema": "http://json-schema.org/draft-07/schema#",
     "title": "Metadata/Structured descriptions",
     "description": "This object contains metametadata, i.e. information about the structured description(s) of the OER and its source(s).",

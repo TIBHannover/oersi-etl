@@ -12,7 +12,7 @@ service_name = "TIB AV-Portal";
 | fix(FLUX_DIR + "tibav.fix", *)
 | encode-json
 | oersi.FieldMerger
-| oersi.JsonValidator("https://dini-ag-kim.github.io/lrmi-profile/draft/schemas/schema.json")
+| oersi.JsonValidator("file:///home/tobias/Dokumente/git/oersi-etl/data/schema/oersi_schema.json")
 | object-tee | {
     write(FLUX_DIR + "tibav-metadata.json", header="[\n", footer="\n]", separator=",\n")
   }{

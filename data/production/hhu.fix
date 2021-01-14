@@ -39,11 +39,13 @@ do array ("type")
   add_field("","LearningResource")
 end
 
-do entity("learningResourceType")
-  add_field("id","https://w3id.org/kim/hcrt/video")
-  do entity("prefLabel")
-    add_field("de","Video")
-    add_field("en","Video")
+do array("learningResourceType")
+  do entity('')
+    add_field("id","https://w3id.org/kim/hcrt/video")
+    do entity("prefLabel")
+      add_field("de","Video")
+      add_field("en","Video")
+    end
   end
 end
 
