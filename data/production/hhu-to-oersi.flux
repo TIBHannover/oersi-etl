@@ -12,7 +12,7 @@ default input_wait = "50";
 | fix(FLUX_DIR + "hhu.fix", *)
 | encode-json
 | oersi.FieldMerger
-| oersi.JsonValidator("file:///home/tobias/Dokumente/git/oersi-etl/data/schema/oersi_schema.json")
+| oersi.JsonValidator("https://gitlab.com/oersi/oersi-etl/-/raw/develop/data/schema/oersi_schema.json ")
 | object-tee | {
     write(FLUX_DIR + "hhu-metadata.json", header="[\n", footer="\n]", separator=",\n")
   }{
