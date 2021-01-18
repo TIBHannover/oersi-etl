@@ -1,38 +1,38 @@
 {
-    "$id": "https://gitlab.com/oersi/oersi-etl/-/raw/develop/data/schema/oersi_mainEntityOfPage.json",
-    "$schema": "http://json-schema.org/draft-07/schema#",
-    "title": "Metadata/Structured descriptions",
-    "description": "This object contains metametadata, i.e. information about the structured description(s) of the OER and its source(s).",
-    "type": "array",
-    "_display": {
-      "className": "hidden"
-    },
-    "items": {
-      "type": "object",
-      "properties": {
-        "id": {
-          "title": "URL of the metadata",
-          "type": "string",
-              "format": "uri"
-            },
-            "type": {
-              "type": "string"
-            },
-            "provider": {
-              "$ref": "https://dini-ag-kim.github.io/lrmi-profile/draft/schemas/provider.json"
-        },
-        "dateCreated": {
-          "$ref": "https://dini-ag-kim.github.io/lrmi-profile/draft/schemas/dateCreated.json"
-        },
-        "dateModified": {
-          "title": "Date of last modification of the metadata",
-          "type": "string",
-          "format": "date"
-        }
+  "$id": "https://gitlab.com/oersi/oersi-etl/-/raw/develop/data/schema/oersi_mainEntityOfPage.json",
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Metadata/Structured descriptions",
+  "description": "This object contains metametadata, i.e. information about the structured description(s) of the OER and its source(s).",
+  "type": "array",
+  "_display": {
+    "className": "hidden"
+  },
+  "items": {
+    "type": "object",
+    "properties": {
+      "id": {
+        "title": "URL of the metadata",
+        "type": "string",
+        "format": "uri"
       },
-      "required": [
-        "id",
-        "provider"
-      ]
-    }
+      "type": {
+        "type": "string"
+      },
+      "provider": {
+        "$ref": "https://dini-ag-kim.github.io/lrmi-profile/draft/schemas/provider.json"
+      },
+      "dateCreated": {
+        "$ref": "https://dini-ag-kim.github.io/lrmi-profile/draft/schemas/dateCreated.json"
+      },
+      "dateModified": {
+        "title": "Date of last modification of the metadata",
+        "type": "string",
+        "format": "date"
+      }
+    },
+    "required": [
+      "id",
+      "provider"
+    ]
   }
+}

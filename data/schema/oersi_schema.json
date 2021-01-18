@@ -1,78 +1,78 @@
 {
-  "$id": "https://gitlab.com/oersi/oersi-etl/-/raw/develop/data/schema/oersi_schema.json",  
+  "$id": "https://gitlab.com/oersi/oersi-etl/-/raw/develop/data/schema/oersi_schema.json",
   "$schema": "http://json-schema.org/draft-07/schema#",
-    "title": "OERSI",
-    "description": "This is a specific JSON schema for OERSI based on 'LRMI-Profil für Hochschul-OER im deutschsprachigen Raum' (https://dini-ag-kim.github.io/lrmi-profile/draft/schemas/schema.json)",
-    "type": "object",
-    "default": {
-      "@context": [
-        "https://w3id.org/kim/lrmi-profile/draft/context.jsonld",
-        {
-          "@language": "de"
-        }
-      ],
-      "type": [
-        "LearningResource"
-      ]
-    },
-    "properties": {
-      "@context": {
-        "$ref": "https://dini-ag-kim.github.io/lrmi-profile/draft/schemas/context-schema.json"
-      },
-      "id": {
-        "$ref": "https://dini-ag-kim.github.io/lrmi-profile/draft/schemas/id.json"
-      },
-      "type": {
-        "$ref": "https://dini-ag-kim.github.io/lrmi-profile/draft/schemas/type.json"
-      },
-      "name": {
-        "$ref": "https://dini-ag-kim.github.io/lrmi-profile/draft/schemas/name.json"
-      },
-      "creator": {
-        "$ref": "https://dini-ag-kim.github.io/lrmi-profile/draft/schemas/creator.json"
-      },
-      "description": {
-        "$ref": "https://dini-ag-kim.github.io/lrmi-profile/draft/schemas/description.json"
-      },
-      "about": {
-        "$ref": "https://dini-ag-kim.github.io/lrmi-profile/draft/schemas/about.json"
-      },
-      "license": {
-        "$ref": "https://dini-ag-kim.github.io/lrmi-profile/draft/schemas/license.json"
-      },
-      "image": {
-        "$ref": "https://dini-ag-kim.github.io/lrmi-profile/draft/schemas/image.json"
-      },
-      "dateCreated": {
-        "$ref": "https://dini-ag-kim.github.io/lrmi-profile/draft/schemas/dateCreated.json"
-      },
-      "inLanguage": {
-        "$ref": "https://dini-ag-kim.github.io/lrmi-profile/draft/schemas/inLanguage.json"
-      },
-      "publisher": {
-        "$ref": "https://dini-ag-kim.github.io/lrmi-profile/draft/schemas/publisher.json"
-      },
-      "learningResourceType": {
-        "$ref": "https://gitlab.com/oersi/oersi-etl/-/raw/develop/data/schema/oersi_learningResourceType.json"
-      },
-      "audience": {
-        "$ref": "https://dini-ag-kim.github.io/lrmi-profile/draft/schemas/audience.json"
-      },
-      "isBasedOn": {
-        "$ref": "https://dini-ag-kim.github.io/lrmi-profile/draft/schemas/isBasedOn.json"
-      },
-      "mainEntityOfPage": {
-        "$ref": "https://gitlab.com/oersi/oersi-etl/-/raw/develop/data/schema/oersi_mainEntityOfPage.json"
-      },
-      "keywords": {
-        "$ref": "https://dini-ag-kim.github.io/lrmi-profile/draft/schemas/keywords.json"
+  "title": "OERSI",
+  "description": "This is a specific JSON schema for OERSI based on 'LRMI-Profil für Hochschul-OER im deutschsprachigen Raum' (https://dini-ag-kim.github.io/lrmi-profile/draft/schemas/schema.json)",
+  "type": "object",
+  "default": {
+    "@context": [
+      "https://w3id.org/kim/lrmi-profile/draft/context.jsonld",
+      {
+        "@language": "de"
       }
-    },
-    "required": [
-      "@context",
-      "id",
-      "name",
-      "type",
-      "mainEntityOfPage"
+    ],
+    "type": [
+      "LearningResource"
     ]
-  }
+  },
+  "properties": {
+    "@context": {
+      "$ref": "https://dini-ag-kim.github.io/lrmi-profile/draft/schemas/context-schema.json"
+    },
+    "id": {
+      "$ref": "https://dini-ag-kim.github.io/lrmi-profile/draft/schemas/id.json"
+    },
+    "type": {
+      "$ref": "https://dini-ag-kim.github.io/lrmi-profile/draft/schemas/type.json"
+    },
+    "name": {
+      "$ref": "https://dini-ag-kim.github.io/lrmi-profile/draft/schemas/name.json"
+    },
+    "creator": {
+      "$ref": "https://dini-ag-kim.github.io/lrmi-profile/draft/schemas/creator.json"
+    },
+    "description": {
+      "$ref": "https://dini-ag-kim.github.io/lrmi-profile/draft/schemas/description.json"
+    },
+    "about": {
+      "$ref": "https://dini-ag-kim.github.io/lrmi-profile/draft/schemas/about.json"
+    },
+    "license": {
+      "$ref": "https://dini-ag-kim.github.io/lrmi-profile/draft/schemas/license.json"
+    },
+    "image": {
+      "$ref": "https://dini-ag-kim.github.io/lrmi-profile/draft/schemas/image.json"
+    },
+    "dateCreated": {
+      "$ref": "https://dini-ag-kim.github.io/lrmi-profile/draft/schemas/dateCreated.json"
+    },
+    "inLanguage": {
+      "$ref": "https://dini-ag-kim.github.io/lrmi-profile/draft/schemas/inLanguage.json"
+    },
+    "publisher": {
+      "$ref": "https://dini-ag-kim.github.io/lrmi-profile/draft/schemas/publisher.json"
+    },
+    "learningResourceType": {
+      "$ref": "https://gitlab.com/oersi/oersi-etl/-/raw/develop/data/schema/oersi_learningResourceType.json"
+    },
+    "audience": {
+      "$ref": "https://dini-ag-kim.github.io/lrmi-profile/draft/schemas/audience.json"
+    },
+    "isBasedOn": {
+      "$ref": "https://dini-ag-kim.github.io/lrmi-profile/draft/schemas/isBasedOn.json"
+    },
+    "mainEntityOfPage": {
+      "$ref": "https://gitlab.com/oersi/oersi-etl/-/raw/develop/data/schema/oersi_mainEntityOfPage.json"
+    },
+    "keywords": {
+      "$ref": "https://dini-ag-kim.github.io/lrmi-profile/draft/schemas/keywords.json"
+    }
+  },
+  "required": [
+    "@context",
+    "id",
+    "name",
+    "type",
+    "mainEntityOfPage"
+  ]
+}

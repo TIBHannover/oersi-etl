@@ -43,10 +43,10 @@
           "en": {
             "type": "string"
           }
-        }, 
+        },
         "required": [
           "de",
-          "en" 
+          "en"
         ]
       }
     },
