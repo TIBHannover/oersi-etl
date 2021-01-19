@@ -37,11 +37,13 @@ end
 /* Add BY-SA 4.0 license as digiLL is saying usual license is CC BY SA) */
 add_field("license","https://creativecommons.org/licenses/by-sa/4.0/")
 
-do entity('learningResourceType')
-  add_field("id", "https://w3id.org/kim/hcrt/course")
-  do entity('prefLabel')
-    add_field('de', 'Kurs')
-    add_field('en', 'Course')
+do array('learningResourceType')
+  do entity('')
+    add_field("id", "https://w3id.org/kim/hcrt/course")
+    do entity('prefLabel')
+      add_field('de', 'Kurs')
+      add_field('en', 'Course')
+    end
   end
 end
 
