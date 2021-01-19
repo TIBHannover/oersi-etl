@@ -1,0 +1,13 @@
+map("id", "id")
+
+do array("mainEntityOfPage")
+  do entity("")
+    map("id", "id")
+    /* Add provider/source information to each resource description */
+    do entity("provider")
+      add_field("id","$[service_id]")
+      add_field("type","Service")
+      add_field("name","$[service_name]")
+    end
+  end
+end

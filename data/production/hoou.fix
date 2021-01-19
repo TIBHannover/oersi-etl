@@ -1,0 +1,45 @@
+/* Set up the context */
+do array("@context")
+ add_field("","https://w3id.org/kim/lrmi-profile/draft/context.jsonld")
+ do entity("")
+  add_field("@language", "de")
+ end
+end
+
+map("name", "name")
+
+map("hasPart[].1.thumbnailUrl", "image")
+map("description", "description")
+map("license", "liscense")
+map("audience", "audience")
+
+do array("learningResourceType")
+  map("learningResourceType", "")
+end
+
+do map("dateCreated", "dateCreated")
+  replace_all(pattern: "T.*", with: "")
+end
+
+do map("dateModified", "dateModified")
+  replace_all(pattern: "T.*", with: "")
+end
+
+do array("creator", flushWith: record)
+ do entity("")
+  map("author[].*.@type", "type")
+  map("author[].*.name", "name")
+ end
+end
+
+/* Create array, split provided keyword string and trim blanks */
+do array("keywords")
+  do map("keywords")
+    split(delimiter: ",")
+    trim()
+  end
+end
+
+do array("type")
+  add_field("","LearningResource")
+end

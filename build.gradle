@@ -30,6 +30,8 @@ dependencies {
     implementation 'org.jooq:joox-java-6:1.6.0'
     implementation 'org.metafacture:metafacture-strings:feature-oersi-SNAPSHOT'
     implementation 'org.metafacture:metafacture-plumbing:feature-oersi-SNAPSHOT'
+    implementation 'org.metafacture:metafacture-strings:feature-oersi-SNAPSHOT'
+    implementation 'org.metafacture:metafacture-triples:feature-oersi-SNAPSHOT'
     implementation 'org.metafacture:metafacture-formatting:feature-oersi-SNAPSHOT'
     implementation 'org.metafacture:metafacture-monitoring:feature-oersi-SNAPSHOT'
     implementation 'org.metafacture:metafacture-runner:feature-oersi-SNAPSHOT'
