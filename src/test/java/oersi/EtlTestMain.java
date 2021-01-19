@@ -34,7 +34,7 @@ public class EtlTestMain {
                     "backend_pass=test") }, //
             // pass variables as *.properties file:
             new Object[] { Arrays.asList(//
-                    "data/production/oerbw-to-oersi.flux", //
+                    "data/production/zoerr-to-oersi.flux", //
                     "data/production/oersi.properties") } //
     };
 
