@@ -11,12 +11,7 @@ default input_wait = "50";
 
 "https://www.hoou.de/sitemap.xml" // FLUX_DIR + "hoou-sitemap.xml"
 | oersi.SitemapReader(wait=input_wait, limit=input_limit, urlPattern=".*/(materials|projects)/.*")
-| object-to-literal(literalname="id")
-// by encode- and decode-json records receives an internal record id (not above mentioned URL)
-// which is needed for merging the seperate json-files.
-// straight stream-to-triple does not generate record ids
-| encode-json
-| decode-json
+| object-to-literal(literalName="id", recordId="%d")
 | fix(FLUX_DIR + "hoou-id.fix", *)
 | stream-to-triples
 | @X;
