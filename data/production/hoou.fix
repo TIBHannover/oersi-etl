@@ -12,7 +12,10 @@ map("hasPart[].1.thumbnailUrl", "image")
 map("description", "description")
 map("license", "liscense")
 map("audience", "audience")
-map("learningResourceType", "learningResourceType")
+
+do array("learningResourceType")
+  map("learningResourceType", "")
+end
 
 do map("dateCreated", "dateCreated")
   replace_all(pattern: "T.*", with: "")
