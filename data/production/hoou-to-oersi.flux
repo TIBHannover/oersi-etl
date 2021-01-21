@@ -9,19 +9,21 @@ default input_wait = "50";
 // following approach handles the URL form SitemapReader as a separate data source 
 // and merges it with one embedded JSON document.
 
-"https://www.hoou.de/sitemap.xml" // FLUX_DIR + "hoou-sitemap.xml"
+"https://www.hoou.de/sitemap.xml" // for local testing: "file://" + FLUX_DIR + "hoou-sitemap.xml"
 | oersi.SitemapReader(wait=input_wait, limit=input_limit, urlPattern=".*/(materials|projects)/.*")
 | object-to-literal(literalName="id", recordId="%d")
 | fix(FLUX_DIR + "hoou-id.fix", *)
 | stream-to-triples
 | @X;
 
-"https://www.hoou.de/sitemap.xml" // FLUX_DIR + "hoou-sitemap.xml"
+"https://www.hoou.de/sitemap.xml" // for local testing: "file://" + FLUX_DIR + "hoou-sitemap.xml"
 | oersi.SitemapReader(wait=input_wait, limit=input_limit, urlPattern=".*/(materials|projects)/.*")
+| catch-object-exception
 | open-http
 | extract-element("script[data-test=model-linked-data]")
 | decode-json
 | fix(FLUX_DIR + "hoou.fix", *)
+| filter-null-values
 | stream-to-triples
 | @X;
 
