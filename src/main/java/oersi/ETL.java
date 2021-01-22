@@ -84,11 +84,20 @@ public class ETL {
             args = varsFromProperties(defaultProperties);
         }
         args.add(0, flux.getAbsolutePath());
-        LOG.log(Level.INFO, "Running {0}", new Object[] { args });
+        LOG.log(Level.INFO, "Running {0}", maskCredentials(args));
         Flux.main(args.toArray(new String[] {}));
     }
 
+    private static Object[] maskCredentials(List<String> args) {
+        return new Object[] {
+                args.stream().map(arg -> arg.replaceAll("_(user|pass)=.*", "_$1=<masked>"))
+                        .collect(Collectors.toList()) };
+    }
+
     private static void writeTestOutput(File fileOrDir) throws IOException {
+        if (!new File(OUT_FILE.getParent()).exists()) {
+            return;
+        }
         try (FileWriter w = new FileWriter(OUT_FILE)) {
             if (fileOrDir.isDirectory()) {
                 for (File json : fileOrDir.listFiles((d, f) -> f.toLowerCase().endsWith(".ndjson")
