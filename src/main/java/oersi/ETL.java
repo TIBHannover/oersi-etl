@@ -95,6 +95,9 @@ public class ETL {
     }
 
     private static void writeTestOutput(File fileOrDir) throws IOException {
+        if (!new File(OUT_FILE.getParent()).exists()) {
+            return;
+        }
         try (FileWriter w = new FileWriter(OUT_FILE)) {
             if (fileOrDir.isDirectory()) {
                 for (File json : fileOrDir.listFiles((d, f) -> f.toLowerCase().endsWith(".ndjson")
