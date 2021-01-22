@@ -45,7 +45,7 @@ end
 
 do array("learningResourceType")
   do entity('')
-    add_field("id","https://w3id.org/kim/hcrt/video")
+    add_field("id","https://w3id.org/kim/hcrt/course")
     do entity("prefLabel")
       add_field("de","Kurs")
       add_field("en","Course")
