@@ -40,12 +40,20 @@ do array ("type")
   add_field("","LearningResource")
 end
 
-do array("learningResourceType")
+/* Add Video always as lRT */
+
+add_field("@hcrt","https://w3id.org/kim/hcrt/video")
+
+do array('learningResourceType')
   do entity('')
-    add_field("id","https://w3id.org/kim/hcrt/video")
+    map('@hcrt', 'id')
     do entity('prefLabel')
-      add_field("de","Video")
-      add_field("en","Video")
+      do map('@hcrt', 'de')
+        lookup(in: 'data/maps/hcrt-de-labels.tsv')
+      end  
+      do map('@hcrt', 'en')
+        lookup(in: 'data/maps/hcrt-en-labels.tsv')
+      end
     end
   end
 end
