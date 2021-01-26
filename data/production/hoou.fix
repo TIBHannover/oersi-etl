@@ -13,10 +13,6 @@ map("description", "description")
 map("license", "liscense")
 map("audience", "audience")
 
-do array("learningResourceType")
-  map("learningResourceType", "")
-end
-
 do map("dateCreated", "dateCreated")
   replace_all(pattern: "T.*", with: "")
 end
