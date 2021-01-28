@@ -15,6 +15,9 @@
  */
 package oersi;
 
+import java.io.IOException;
+import java.net.URL;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -24,6 +27,8 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 
+import com.google.common.base.Charsets;
+
 /**
  * Tests for {@link JsonValidator}.
  *
@@ -31,14 +36,10 @@ import org.mockito.MockitoAnnotations;
  *
  */
 public final class TestJsonValidator {
-
-    private static final String SCHEMA = "https://dini-ag-kim.github.io/lrmi-profile/draft/schemas/schema.json";
+    private static final String SCHEMA = "https://raw.githubusercontent.com/oersi/lrmi-profile/master/draft/schemas/schema.json";
     private static final String JSON_INVALID = "{\"key\":\"val\"}";
-    private static final String JSON_VALID = "{\"id\":\"https://example.org/oer\","
-            + "\"name\": \"Beispielkurs\", "
-            + "\"@context\": [\"https://w3id.org/kim/lrmi-profile/draft/context.jsonld\", {\"@language\": \"de\"}],"
-            + "\"type\": [\"LearningResource\"]}";
-
+    private static final String JSON_VALID = fromUrl(
+            "https://raw.githubusercontent.com/oersi/lrmi-profile/develop/draft/examples/valid/mainEntityOf.json");
     private JsonValidator validator;
 
     @Mock
@@ -63,6 +64,15 @@ public final class TestJsonValidator {
     public void testShouldInvalidate() {
         validator.process(JSON_INVALID);
         inOrder.verifyNoMoreInteractions();
+    }
+
+    private static String fromUrl(String url) {
+        try {
+            return new String(new URL(url).openStream().readAllBytes(), Charsets.UTF_8);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return url;
     }
 
     @After
