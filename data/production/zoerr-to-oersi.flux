@@ -16,8 +16,8 @@ default input_wait = "50";
 | oersi.FieldMerger
 | oersi.JsonValidator("https://dini-ag-kim.github.io/lrmi-profile/draft/schemas/schema.json")
 | object-tee | {
-    write(FLUX_DIR + "oerbw-metadata.json", header="[\n", footer="\n]", separator=",\n")
+    write(FLUX_DIR + "zoerr-metadata.json", header="[\n", footer="\n]", separator=",\n")
   }{
     oersi.OersiWriter(backend_api,
-      user=backend_user, pass=backend_pass, log=FLUX_DIR + "oerbw-responses.json")
+      user=backend_user, pass=backend_pass, log=FLUX_DIR + "zoerr-responses.json")
 };
