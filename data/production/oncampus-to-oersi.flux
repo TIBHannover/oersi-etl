@@ -16,7 +16,7 @@ end")
 | fix(FLUX_DIR + "oncampus.fix", *)
 | encode-json
 | oersi.FieldMerger
-| oersi.JsonValidator("https://dini-ag-kim.github.io/lrmi-profile/draft/schemas/schema.json")
+| oersi.JsonValidator(output_schema)
 | object-tee | {
     write(FLUX_DIR + "oncampus-metadata.json", header="[\n", footer="\n]", separator=",\n")
   }{

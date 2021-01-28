@@ -33,7 +33,7 @@ default input_wait = "50";
 | collect-triples
 | encode-json
 | oersi.FieldMerger
-| oersi.JsonValidator("https://dini-ag-kim.github.io/lrmi-profile/draft/schemas/schema.json")
+| oersi.JsonValidator(output_schema)
 | object-tee | {
     write(FLUX_DIR + "hoou-metadata.json", header="[\n", footer="\n]", separator=",\n")
   }{
