@@ -7,17 +7,14 @@ do array("@context")
 end
 
 /* Map some of the data we have to the oersi model: */
-map("html.body.div.div.div.div.section.div.h1.value", "name")
+map("html.head.meta.og:title", "name")
 
-map("html.body.div.div.div.div.section.section.section.div.p.span.value|html.body.div.div.div.div.section.section.section.div.p.value", "description")
+map("html.head.meta.og:description", "description")
 
-do map("html.body.div.div.div.div.section.div.div.style","image")
-  replace(pattern: "background-image: url\\(", with: "")
-  replace(pattern: "\\);", with: "")
-end
+map("html.head.meta.og:image","image")
 
 /*rel = "liscence" cant be directly mapped */
-do map("html.body.div.div.div.div.section.section.section.div.section.p.a.href", "license")
+do map("*.a.license", "license")
   regexp(match: "https://creativecommons.org/licenses/.*")
 end
 
@@ -35,9 +32,7 @@ do map('html.body.div.div.div.div.section.div.div.div.div.div.div.span.value', i
   replace(pattern: "English", with: "en")
 end
 
-do map("html.body.nav.div.div.ul.li.ul.li.a.href", "id")
-  replace(pattern: "\\?lang=fa", with: "")
-end
+map("html.head.meta.og:url", "id")
 
 do array ("type")
   add_field("","LearningResource")

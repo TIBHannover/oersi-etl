@@ -8,9 +8,9 @@ default input_wait = "50";
 "https://www.oncampus.de/sitemap.xml" // FLUX_DIR + "oncampus-sitemap.xml"
 | oersi.SitemapReader(wait=input_wait,limit=input_limit)
 | open-http
-| decode-html
+| decode-html(attrValsAsSubfields="&h3.class")
 | fix-filter("
-do map('html.body.div.div.div.div.section.div.div.div.h3.value')
+do map('*.h3.productcost')
     regexp(match: 'free|kostenlos')
 end")
 | fix(FLUX_DIR + "oncampus.fix", *)
