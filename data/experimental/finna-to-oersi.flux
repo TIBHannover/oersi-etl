@@ -5,9 +5,10 @@
 | fix("map('records[].*.fullRecord')")
 | literal-to-object
 | read-string
-| decode-xml
-| handle-generic-xml(recordTagName="dc")
-| fix("map('_else')")
+| decode-html(attrValsAsSubfields="title.lang&description.lang")
+| fix("
+map('*.title.en', 'name')
+map('*.description.en', 'description')")
 | encode-json
 | write(FLUX_DIR + "finna-metadata.json", header="[\n", footer="\n]", separator=",\n")
 ;
