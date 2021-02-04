@@ -15,8 +15,8 @@
  */
 package oersi;
 
-import java.io.IOException;
-import java.net.URL;
+import java.util.Arrays;
+import java.util.Map;
 
 import org.junit.After;
 import org.junit.Before;
@@ -27,7 +27,9 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 
-import com.google.common.base.Charsets;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.common.collect.ImmutableMap;
 
 /**
  * Tests for {@link JsonValidator}.
@@ -36,10 +38,23 @@ import com.google.common.base.Charsets;
  *
  */
 public final class TestJsonValidator {
-    private static final String SCHEMA = "https://raw.githubusercontent.com/oersi/lrmi-profile/master/draft/schemas/schema.json";
-    private static final String JSON_INVALID = "{\"key\":\"val\"}";
-    private static final String JSON_VALID = fromUrl(
-            "https://raw.githubusercontent.com/oersi/lrmi-profile/develop/draft/examples/valid/mainEntityOf.json");
+
+    private static final String SCHEMA = "resource:/schemas/schema.json";
+    private static final Map<String, Object> JSON_INVALID = ImmutableMap.of("key", "val");
+    private static final Map<String, Object> JSON_VALID = ImmutableMap.of(//
+            "id", "https://example.org/oer", //
+            "name", "Beispielkurs", //
+            "@context", Arrays.asList( //
+                    "https://w3id.org/kim/lrmi-profile/draft/context.jsonld", //
+                    ImmutableMap.of("@language", "de")),
+            "type", Arrays.asList("LearningResource"), //
+            "mainEntityOfPage", Arrays.asList(ImmutableMap.of( //
+                    "id", "https://example.org/oer-description.html", //
+                    "provider", ImmutableMap.of(//
+                            "id", "https://example.org/oer-provider.html", //
+                            "name", "example"))));
+    private static final ObjectMapper MAPPER = new ObjectMapper();
+
     private JsonValidator validator;
 
     @Mock
@@ -55,24 +70,16 @@ public final class TestJsonValidator {
     }
 
     @Test
-    public void testShouldValidate() {
-        validator.process(JSON_VALID);
-        inOrder.verify(receiver, Mockito.calls(1)).process(JSON_VALID);
+    public void testShouldValidate() throws JsonProcessingException {
+        String valid = MAPPER.writeValueAsString(JSON_VALID);
+        validator.process(valid);
+        inOrder.verify(receiver, Mockito.calls(1)).process(valid);
     }
 
     @Test
-    public void testShouldInvalidate() {
-        validator.process(JSON_INVALID);
+    public void testShouldInvalidate() throws JsonProcessingException {
+        validator.process(MAPPER.writeValueAsString(JSON_INVALID));
         inOrder.verifyNoMoreInteractions();
-    }
-
-    private static String fromUrl(String url) {
-        try {
-            return new String(new URL(url).openStream().readAllBytes(), Charsets.UTF_8);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return url;
     }
 
     @After
