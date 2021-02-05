@@ -24,6 +24,8 @@ public final class JsonValidator extends DefaultObjectPipe<String, ObjectReceive
     private static final Logger LOG = LoggerFactory.getLogger(JsonValidator.class);
     private final ObjectMapper mapper = new ObjectMapper();
     private JsonSchema schema;
+    private long fail = 0;
+    private long success = 0;
 
     public JsonValidator(final String url) {
         try {
@@ -40,11 +42,19 @@ public final class JsonValidator extends DefaultObjectPipe<String, ObjectReceive
             ProcessingReport report = schema.validate(node);
             if (report.isSuccess()) {
                 getReceiver().process(json);
+                success++;
             } else {
+                fail++;
                 LOG.error("Invalid JSON: {}:\n{}", report, json);
             }
         } catch (IOException | ProcessingException e) {
             LOG.error(e.getMessage(), e);
         }
+    }
+
+    @Override
+    protected void onCloseStream() {
+        LOG.info("Success: {}, Fail: {}", success, fail);
+        super.onCloseStream();
     }
 }
