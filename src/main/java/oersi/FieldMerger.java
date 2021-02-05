@@ -4,11 +4,11 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import org.metafacture.framework.ObjectReceiver;
 import org.metafacture.framework.helpers.DefaultObjectPipe;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -19,7 +19,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
  */
 public final class FieldMerger extends DefaultObjectPipe<String, ObjectReceiver<String>> {
 
-    private static final Logger LOG = Logger.getLogger(FieldMerger.class.getName());
+    private static final Logger LOG = LoggerFactory.getLogger(FieldMerger.class);
 
     private final ObjectMapper mapper = new ObjectMapper();
 
@@ -59,7 +59,7 @@ public final class FieldMerger extends DefaultObjectPipe<String, ObjectReceiver<
             Map<String, Object> json = mapper.readValue(s, MultiMap.class);
             getReceiver().process(mapper.writeValueAsString(json));
         } catch (IOException e) {
-            LOG.log(Level.SEVERE, e.getMessage(), e);
+            LOG.error(e.getMessage(), e);
         }
     }
 }

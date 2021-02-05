@@ -1,11 +1,11 @@
 package oersi;
 
 import java.io.IOException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import org.metafacture.framework.ObjectReceiver;
 import org.metafacture.framework.helpers.DefaultObjectPipe;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -21,7 +21,7 @@ import com.github.fge.jsonschema.main.JsonSchemaFactory;
  */
 public final class JsonValidator extends DefaultObjectPipe<String, ObjectReceiver<String>> {
 
-    private static final Logger LOG = Logger.getLogger(JsonValidator.class.getName());
+    private static final Logger LOG = LoggerFactory.getLogger(JsonValidator.class);
     private final ObjectMapper mapper = new ObjectMapper();
     private JsonSchema schema;
 
@@ -29,7 +29,7 @@ public final class JsonValidator extends DefaultObjectPipe<String, ObjectReceive
         try {
             schema = JsonSchemaFactory.byDefault().getJsonSchema(url);
         } catch (ProcessingException e) {
-            LOG.log(Level.SEVERE, e.getMessage(), e);
+            LOG.error(e.getMessage(), e);
         }
     }
 
@@ -41,10 +41,10 @@ public final class JsonValidator extends DefaultObjectPipe<String, ObjectReceive
             if (report.isSuccess()) {
                 getReceiver().process(json);
             } else {
-                LOG.log(Level.SEVERE, "Invalid JSON: {0} in:\n{1}", new Object[] { report, json });
+                LOG.error("Invalid JSON: {}:\n{}", report, json);
             }
         } catch (IOException | ProcessingException e) {
-            LOG.log(Level.SEVERE, e.getMessage(), e);
+            LOG.error(e.getMessage(), e);
         }
     }
 }

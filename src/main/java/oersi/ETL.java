@@ -10,12 +10,12 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Properties;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 import org.antlr.runtime.RecognitionException;
 import org.metafacture.runner.Flux;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Run given *.flux file or all *.flux files in the given directory (or in
@@ -33,7 +33,7 @@ public class ETL {
     static final File OUT_FILE = new File(DATA_DIR, "oersi.ndjson");
     private static final String DEFAULT_PROPERTIES = "oersi.properties";
 
-    private static final Logger LOG = Logger.getLogger(ETL.class.getName());
+    private static final Logger LOG = LoggerFactory.getLogger(ETL.class);
 
     public static void main(String[] args) throws IOException {
         if (args.length == 0) {
@@ -50,7 +50,7 @@ public class ETL {
             }
             writeTestOutput(fileOrDir);
         } catch (Exception e) {
-            LOG.log(Level.SEVERE, e.getMessage(), e);
+            LOG.error(e.getMessage(), e);
         }
     }
 
@@ -71,7 +71,7 @@ public class ETL {
         try (FileInputStream in = new FileInputStream(file)) {
             properties.load(in);
         } catch (IOException e) {
-            LOG.log(Level.SEVERE, e.getMessage(), e);
+            LOG.error(e.getMessage(), e);
         }
         return properties.entrySet().stream().map(e -> e.getKey() + "=" + e.getValue())
                 .collect(Collectors.toList());
@@ -84,7 +84,7 @@ public class ETL {
             args = varsFromProperties(defaultProperties);
         }
         args.add(0, flux.getAbsolutePath());
-        LOG.log(Level.INFO, "Running {0}", maskCredentials(args));
+        LOG.info("Running {}", maskCredentials(args));
         Flux.main(args.toArray(new String[] {}));
     }
 
@@ -115,7 +115,7 @@ public class ETL {
     }
 
     private static void writeSingleFile(FileWriter w, File json) throws IOException {
-        LOG.log(Level.INFO, "Writing {0} to {1}", new Object[] { json, OUT_FILE });
+        LOG.info("Writing {} to {}", json, OUT_FILE);
         String bulk = Files.readAllLines(Paths.get(json.toURI())).stream()
                 .collect(Collectors.joining("\n"));
         w.write(bulk);
