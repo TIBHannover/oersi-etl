@@ -6,10 +6,14 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 import java.util.Properties;
+import java.util.TimeZone;
 import java.util.stream.Collectors;
 
 import org.antlr.runtime.RecognitionException;
@@ -46,12 +50,21 @@ public class ETL {
                 : Arrays.asList(fileOrDir);
         try {
             for (File flux : files) {
+                long start = System.currentTimeMillis();
                 run(flux, vars);
+                long end = System.currentTimeMillis() - start;
+                LOG.info("Import channel {}, duration: {}", flux.getName(), formatTime(end));
             }
             writeTestOutput(fileOrDir);
         } catch (Exception e) {
             LOG.error(e.getMessage(), e);
         }
+    }
+
+    private static Object formatTime(long time) {
+        DateFormat formatter = new SimpleDateFormat("HH:mm:ss.SSS");
+        formatter.setTimeZone(TimeZone.getTimeZone("UTC"));
+        return formatter.format(new Date(time));
     }
 
     private static List<String> varsFromCliParams(String[] args) {
