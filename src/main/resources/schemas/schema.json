@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "https://gitlab.com/oersi/oersi-etl/-/raw/master/src/main/resources/schemas/schema.json",
+  "$id": "resource:/schemas/schema.json",
   "title": "OER",
   "description": "This is a generic JSON schema for describing an Open Educational Resource with schema.org",
   "type": "object",

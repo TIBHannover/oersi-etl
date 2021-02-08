@@ -1,5 +1,5 @@
 {
-    "$id": "https://gitlab.com/oersi/oersi-etl/-/raw/master/src/main/resources/schemas/hasPart.json",
+    "$id": "resource:/schemas/hasPart.json",
     "$schema": "http://json-schema.org/draft-07/schema#",
     "title": "Has part",
     "description": "Resources that are part of the described learning resource",
@@ -8,13 +8,13 @@
         "type": "object",
         "properties": {
             "id": {
-                "$ref": "https://dini-ag-kim.github.io/lrmi-profile/draft/schemas/id.json"
+                "$ref": "resource:/schemas/id.json"
             },
             "type": {
-                "$ref": "https://dini-ag-kim.github.io/lrmi-profile/draft/schemas/type.json"
+                "$ref": "resource:/schemas/type.json"
             },
             "name": {
-                "$ref": "https://dini-ag-kim.github.io/lrmi-profile/draft/schemas/name.json"
+                "$ref": "resource:/schemas/name.json"
             }
         },
         "required": [

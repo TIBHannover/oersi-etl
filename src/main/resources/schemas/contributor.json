@@ -1,5 +1,5 @@
 {
-    "$id": "https://gitlab.com/oersi/oersi-etl/-/raw/master/src/main/resources/schemas/contributor.json",
+    "$id": "resource:/schemas/contributor.json",
     "$schema": "http://json-schema.org/draft-07/schema#",
     "title": "Contributor",
     "description": "Contributor(s) to the creation of the learning resource",

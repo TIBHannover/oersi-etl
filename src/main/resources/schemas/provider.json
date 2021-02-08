@@ -1,5 +1,5 @@
 {
-    "$id": "https://gitlab.com/oersi/oersi-etl/-/raw/master/src/main/resources/schemas/provider.json",
+    "$id": "resource:/schemas/provider.json",
     "$schema": "http://json-schema.org/draft-07/schema#",
     "title": "Provider",
     "description": "Quelle, von der eine Bildungsressource oder deren Metadaten zur Verfügung gestellt werden.",

@@ -1,5 +1,5 @@
 {
-    "$id": "https://gitlab.com/oersi/oersi-etl/-/raw/master/src/main/resources/schemas/dateCreated.json",
+    "$id": "resource:/schemas/dateCreated.json",
     "$schema": "http://json-schema.org/draft-07/schema#",
     "title": "Creation Date",
     "description": "The creation date",

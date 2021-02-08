@@ -1,5 +1,5 @@
 {
-    "$id": "https://gitlab.com/oersi/oersi-etl/-/raw/master/src/main/resources/schemas/publisher.json",
+    "$id": "resource:/schemas/publisher.json",
     "$schema": "http://json-schema.org/draft-07/schema#",
     "title": "Publisher",
     "description": "The publisher of the educational resource",

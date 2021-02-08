@@ -1,5 +1,5 @@
 {
-    "$id": "https://gitlab.com/oersi/oersi-etl/-/raw/master/src/main/resources/schemas/id.json",
+    "$id": "resource:/schemas/id.json",
     "$schema": "http://json-schema.org/draft-07/schema#",
     "title": "URL",
     "description": "The URL/URI of the resource",

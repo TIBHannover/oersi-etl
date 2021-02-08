@@ -1,5 +1,5 @@
 {
-    "$id": "https://gitlab.com/oersi/oersi-etl/-/raw/master/src/main/resources/schemas/audience.json",
+    "$id": "resource:/schemas/audience.json",
     "$schema": "http://json-schema.org/draft-07/schema#",
     "title": "Intended Audience",
     "description": "The audience the educational resource is intended for.",
@@ -37,7 +37,7 @@
         "prefLabel": {
           "title": "The preferred label of the concept",
           "description": "A localized string for prefLabel of a SKOS concept",
-          "$ref": "https://dini-ag-kim.github.io/lrmi-profile/draft/schemas/LocalizedString.json"
+          "$ref": "resource:/schemas/LocalizedString.json"
         }
       },
       "required": [

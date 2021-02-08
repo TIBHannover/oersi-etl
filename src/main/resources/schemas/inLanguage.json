@@ -1,9 +1,9 @@
 {
-    "$id": "https://gitlab.com/oersi/oersi-etl/-/raw/master/src/main/resources/schemas/inLanguage.json",
+    "$id": "resource:/schemas/inLanguage.json",
     "$schema": "http://json-schema.org/draft-07/schema#",
     "title": "Language",
     "description": "The language of the learning resource",
-    "$ref": "https://dini-ag-kim.github.io/lrmi-profile/draft/schemas/Language.json",
+    "$ref": "resource:/schemas/Language.json",
     "_display": {
       "placeholder": "The language of the resource"
     }
