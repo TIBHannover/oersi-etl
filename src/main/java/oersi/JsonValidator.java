@@ -1,8 +1,6 @@
 package oersi;
 
 import java.io.IOException;
-import java.net.URL;
-import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -11,10 +9,10 @@ import org.metafacture.framework.helpers.DefaultObjectPipe;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.networknt.schema.JsonSchema;
-import com.networknt.schema.JsonSchemaFactory;
-import com.networknt.schema.SpecVersion.VersionFlag;
-import com.networknt.schema.ValidationMessage;
+import com.github.fge.jsonschema.core.exceptions.ProcessingException;
+import com.github.fge.jsonschema.core.report.ProcessingReport;
+import com.github.fge.jsonschema.main.JsonSchema;
+import com.github.fge.jsonschema.main.JsonSchemaFactory;
 
 /**
  * Validate JSON against a given schema, pass only valid input to the receiver.
@@ -28,10 +26,9 @@ public final class JsonValidator extends DefaultObjectPipe<String, ObjectReceive
     private JsonSchema schema;
 
     public JsonValidator(final String url) {
-        JsonSchemaFactory factory = JsonSchemaFactory.getInstance(VersionFlag.V7);
         try {
-            schema = factory.getSchema(new URL(url).openStream());
-        } catch (IOException e) {
+            schema = JsonSchemaFactory.byDefault().getJsonSchema(url);
+        } catch (ProcessingException e) {
             LOG.log(Level.SEVERE, e.getMessage(), e);
         }
     }
@@ -40,13 +37,13 @@ public final class JsonValidator extends DefaultObjectPipe<String, ObjectReceive
     public void process(final String json) {
         try {
             JsonNode node = mapper.readTree(json);
-            Set<ValidationMessage> errors = schema.validate(node);
-            if (errors.isEmpty()) {
+            ProcessingReport report = schema.validate(node);
+            if (report.isSuccess()) {
                 getReceiver().process(json);
             } else {
-                LOG.log(Level.SEVERE, "Invalid JSON: {0} in:\n{1}", new Object[] { errors, json });
+                LOG.log(Level.SEVERE, "Invalid JSON: {0} in:\n{1}", new Object[] { report, json });
             }
-        } catch (Exception e) {
+        } catch (IOException | ProcessingException e) {
             LOG.log(Level.SEVERE, e.getMessage(), e);
         }
     }

@@ -29,6 +29,7 @@ public class EtlTestMain {
                     "data/production/oernds-to-oersi.flux", //
                     "input_limit=2", //
                     "input_from=5", //
+                    "output_schema=https://raw.githubusercontent.com/oersi/lrmi-profile/master/draft/schemas/schema.json", //
                     "backend_api=http://192.168.98.115:8080/oersi/api/metadata", //
                     "backend_user=test", //
                     "backend_pass=test") }, //
