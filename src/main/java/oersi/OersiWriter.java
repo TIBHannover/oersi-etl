@@ -1,7 +1,5 @@
 package oersi;
 
-import static java.util.stream.Collectors.joining;
-
 import java.io.FileWriter;
 import java.io.IOException;
 import java.net.Authenticator;
@@ -10,8 +8,6 @@ import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
-import java.util.ArrayList;
-import java.util.List;
 
 import org.metafacture.framework.ObjectReceiver;
 import org.slf4j.Logger;
@@ -32,10 +28,11 @@ public final class OersiWriter implements ObjectReceiver<String> {
     private String url;
     private String user;
     private String pass;
-    private String log;
+    private FileWriter log = null;
 
     private HttpClient client;
-    private List<HttpResponse<String>> responses = new ArrayList<>();
+    private long fail = 0;
+    private long success = 0;
 
     public OersiWriter(final String url) {
         Authenticator auth = new Authenticator() {
@@ -57,7 +54,16 @@ public final class OersiWriter implements ObjectReceiver<String> {
     }
 
     public void setLog(String log) {
-        this.log = log;
+        this.log = init(log);
+    }
+
+    private FileWriter init(String to) {
+        try {
+            return new FileWriter(to);
+        } catch (IOException e) {
+            LOG.error(to, e);
+        }
+        return null;
     }
 
     @Override
@@ -69,7 +75,13 @@ public final class OersiWriter implements ObjectReceiver<String> {
         try {
             HttpResponse<String> response = client.send(request,
                     HttpResponse.BodyHandlers.ofString());
-            responses.add(response);
+            log.append(response.body());
+            log.append("\n");
+            if (response.statusCode() == 200) {
+                success++;
+            } else {
+                fail++;
+            }
         } catch (IOException e) {
             LOG.error(e.getMessage(), e);
         } catch (InterruptedException e) {
@@ -80,20 +92,19 @@ public final class OersiWriter implements ObjectReceiver<String> {
 
     @Override
     public void resetStream() {
-        responses = new ArrayList<>();
+        fail = 0;
+        success = 0;
     }
 
     @Override
     public void closeStream() {
-        try (FileWriter r = new FileWriter(log)) {
-            r.write("[\n");
-            r.write(responses.stream().map(HttpResponse::body).collect(joining(",\n")));
-            r.write("\n]");
-        } catch (IOException e) {
-            LOG.error(e.getMessage(), e);
+        if (log != null) {
+            try {
+                log.close();
+            } catch (IOException e) {
+                LOG.error(e.getMessage(), e);
+            }
         }
-        long success = responses.stream().filter(r -> r.statusCode() == 200).count();
-        long fail = responses.stream().filter(r -> r.statusCode() != 200).count();
         LOG.info("Success: {}, Fail: {}", success, fail);
     }
 

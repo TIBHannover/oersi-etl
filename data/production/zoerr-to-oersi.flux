@@ -14,10 +14,6 @@ default input_wait = "50";
 | fix(FLUX_DIR + "edu-sharing.fix", *) // '*': pass all flux variables to the fix
 | encode-json
 | oersi.FieldMerger
-| oersi.JsonValidator(output_schema)
-| object-tee | {
-    write(FLUX_DIR + "zoerr-metadata.json", header="[\n", footer="\n]", separator=",\n")
-  }{
-    oersi.OersiWriter(backend_api,
-      user=backend_user, pass=backend_pass, log=FLUX_DIR + "zoerr-responses.json")
-};
+| oersi.JsonValidator(output_schema, writeValid = FLUX_DIR + "zoerr-metadata.json", writeInvalid = FLUX_DIR + "zoerr-invalid.json")
+| oersi.OersiWriter(backend_api,user=backend_user, pass=backend_pass, log = FLUX_DIR + "zoerr-responses.json")
+;
