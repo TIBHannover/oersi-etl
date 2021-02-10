@@ -16,10 +16,6 @@ end")
 | fix(FLUX_DIR + "oncampus.fix", *)
 | encode-json
 | oersi.FieldMerger
-| oersi.JsonValidator(output_schema)
-| object-tee | {
-    write(FLUX_DIR + "oncampus-metadata.json", header="[\n", footer="\n]", separator=",\n")
-  }{
-    oersi.OersiWriter(backend_api,
-      user=backend_user, pass=backend_pass, log=FLUX_DIR + "oncampus-responses.json")
-};
+| oersi.JsonValidator(output_schema, writeValid=metadata_valid, writeInvalid=metadata_invalid)
+| oersi.OersiWriter(backend_api, user=backend_user, pass=backend_pass, log=metadata_responses)
+;

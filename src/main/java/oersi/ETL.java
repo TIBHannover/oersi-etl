@@ -12,9 +12,11 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.Properties;
 import java.util.TimeZone;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import org.antlr.runtime.RecognitionException;
 import org.metafacture.runner.Flux;
@@ -50,10 +52,7 @@ public class ETL {
                 : Arrays.asList(fileOrDir);
         try {
             for (File flux : files) {
-                long start = System.currentTimeMillis();
                 run(flux, vars);
-                long end = System.currentTimeMillis() - start;
-                LOG.info("Import channel {}, duration: {}", flux.getName(), formatTime(end));
             }
             writeTestOutput(fileOrDir);
         } catch (Exception e) {
@@ -91,14 +90,53 @@ public class ETL {
     }
 
     private static void run(File flux, List<String> vars) throws IOException, RecognitionException {
+        String name = flux.getName().split("-")[0];
+        File fluxDir = flux.getParentFile();
+        File fileInvalid = new File(fluxDir, name + "-invalid.json");
+        File fileValid = new File(fluxDir, name + "-metadata.json");
+        File fileResponses = new File(fluxDir, name + "-responses.json");
+        List<String> fullVars = setUpVars(flux, vars, fileInvalid, fileValid, fileResponses);
+        long start = System.currentTimeMillis();
+        Flux.main(fullVars.toArray(new String[] {}));
+        long end = System.currentTimeMillis() - start;
+        logSummary(flux, fileInvalid, fileResponses, end);
+    }
+
+    private static List<String> setUpVars(File flux, List<String> vars, File fileInvalid,
+            File fileValid, File fileResponses) {
         List<String> args = new ArrayList<>(vars);
         File defaultProperties = new File(flux.getParent(), DEFAULT_PROPERTIES);
         if (args.isEmpty() && defaultProperties.exists()) {
             args = varsFromProperties(defaultProperties);
         }
         args.add(0, flux.getAbsolutePath());
+        List<String> debuggingOutputLocations = Arrays.asList(//
+                "metadata_invalid=" + fileInvalid.getAbsolutePath(), //
+                "metadata_valid=" + fileValid.getAbsolutePath(), //
+                "metadata_responses=" + fileResponses.getAbsolutePath());
+        args.addAll(debuggingOutputLocations);
         LOG.info("Running {}", maskCredentials(args));
-        Flux.main(args.toArray(new String[] {}));
+        return args;
+    }
+
+    private static void logSummary(File flux, File invalid, File responses, long end)
+            throws IOException {
+        String notAvailable = "n/a";
+        String countInvalid = //
+                invalid.exists() ? Files.lines(invalid.toPath()).count() + "" : notAvailable;
+        String countSuccess = notAvailable;
+        String countError = notAvailable;
+        if (responses.exists()) {
+            try (Stream<String> allResponses = Files.lines(responses.toPath())) {
+                Map<Boolean, List<String>> errored = allResponses
+                        .collect(Collectors.partitioningBy(s -> s.contains("\"error\"")));
+                countError = errored.get(true).size() + "";
+                countSuccess = errored.get(false).size() + "";
+            }
+        }
+        LOG.info(
+                "Import channel {}, SUCCESS: {}, FAIL-VALIDATION: {}, FAIL-WRITE: {}, DURATION: {}",
+                flux.getName(), countSuccess, countInvalid, countError, formatTime(end));
     }
 
     private static Object[] maskCredentials(List<String> args) {
