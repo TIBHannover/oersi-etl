@@ -105,7 +105,7 @@ public final class OersiWriter implements ObjectReceiver<String> {
                 LOG.error(e.getMessage(), e);
             }
         }
-        LOG.info("Success: {}, Fail: {}", success, fail);
+        LOG.debug("Success: {}, Fail: {}", success, fail);
     }
 
 }

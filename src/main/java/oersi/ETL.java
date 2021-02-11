@@ -61,7 +61,7 @@ public class ETL {
     }
 
     private static Object formatTime(long time) {
-        DateFormat formatter = new SimpleDateFormat("HH:mm:ss.SSS");
+        DateFormat formatter = new SimpleDateFormat("HH:mm:ss");
         formatter.setTimeZone(TimeZone.getTimeZone("UTC"));
         return formatter.format(new Date(time));
     }
@@ -115,7 +115,9 @@ public class ETL {
                 "metadata_valid=" + fileValid.getAbsolutePath(), //
                 "metadata_responses=" + fileResponses.getAbsolutePath());
         args.addAll(debuggingOutputLocations);
-        LOG.info("Running {}", maskCredentials(args));
+        LOG.info("Running {} with {} arguments (configure output details in log4j.properties)",
+                flux, args.size());
+        LOG.debug("Full arguments: {}", maskCredentials(args));
         return args;
     }
 

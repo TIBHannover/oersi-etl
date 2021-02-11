@@ -48,12 +48,12 @@ public final class SitemapReader extends DefaultObjectPipe<String, ObjectReceive
 
     @Override
     public void process(final String sitemap) {
-        LOG.info("Processing sitemap URL {}", sitemap);
+        LOG.debug("Processing sitemap URL {}", sitemap);
         try {
             Match siteMapXml = JOOX.$(new URL(sitemap));
             List<String> texts = siteMapXml.find("loc").filter(matchText(urlPattern)).texts();
             for (String url : texts.subList(0, Math.min(limit, texts.size()))) {
-                LOG.debug("Processing resource URL {}", url);
+                LOG.trace("Processing resource URL {}", url);
                 getReceiver().process(findAndReplace(url));
                 Thread.sleep(wait);
             }

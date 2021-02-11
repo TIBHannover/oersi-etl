@@ -85,7 +85,7 @@ public final class JsonValidator extends DefaultObjectPipe<String, ObjectReceive
     protected void onCloseStream() {
         close(writeInvalid);
         close(writeValid);
-        LOG.info("Success: {}, Fail: {}", success, fail);
+        LOG.debug("Success: {}, Fail: {}", success, fail);
         super.onCloseStream();
     }
 
