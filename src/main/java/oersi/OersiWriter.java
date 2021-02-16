@@ -28,11 +28,11 @@ public final class OersiWriter implements ObjectReceiver<String> {
     private String url;
     private String user;
     private String pass;
-    private FileWriter log = null;
+    FileWriter log = null;
 
     private HttpClient client;
-    private long fail = 0;
-    private long success = 0;
+    long fail = 0;
+    long success = 0;
 
     public OersiWriter(final String url) {
         Authenticator auth = new Authenticator() {
@@ -75,8 +75,10 @@ public final class OersiWriter implements ObjectReceiver<String> {
         try {
             HttpResponse<String> response = client.send(request,
                     HttpResponse.BodyHandlers.ofString());
-            log.append(response.body());
-            log.append("\n");
+            if (log != null) {
+                log.append(response.body());
+                log.append("\n");
+            }
             if (response.statusCode() == 200) {
                 success++;
             } else {
