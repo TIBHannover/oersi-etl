@@ -124,10 +124,14 @@ public class ETL {
     private static void logSummary(File flux, File invalid, File responses, long end)
             throws IOException {
         String notAvailable = "n/a";
-        String countInvalid = //
-                invalid.exists() ? Files.lines(invalid.toPath()).count() + "" : notAvailable;
+        String countInvalid = notAvailable;
         String countSuccess = notAvailable;
         String countError = notAvailable;
+        if (invalid.exists()) {
+            try (Stream<String> invalids = Files.lines(invalid.toPath())) {
+                countInvalid = invalids.count() + "";
+            }
+        }
         if (responses.exists()) {
             try (Stream<String> allResponses = Files.lines(responses.toPath())) {
                 Map<Boolean, List<String>> errored = allResponses
