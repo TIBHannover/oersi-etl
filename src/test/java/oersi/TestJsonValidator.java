@@ -82,6 +82,19 @@ public final class TestJsonValidator {
         inOrder.verifyNoMoreInteractions();
     }
 
+    @Test
+    public void testShouldLogMissingSchemaFile() throws JsonProcessingException {
+        new JsonValidator("");
+        inOrder.verifyNoMoreInteractions();
+    }
+
+    @Test
+    public void testShouldLogMissingOutputFile() throws JsonProcessingException {
+        validator.setWriteValid("");
+        validator.process(MAPPER.writeValueAsString(JSON_INVALID));
+        inOrder.verifyNoMoreInteractions();
+    }
+
     @After
     public void cleanup() {
         validator.closeStream();

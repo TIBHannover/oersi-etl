@@ -6,16 +6,22 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.Properties;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.util.TimeZone;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import org.antlr.runtime.RecognitionException;
 import org.metafacture.runner.Flux;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Run given *.flux file or all *.flux files in the given directory (or in
@@ -33,7 +39,7 @@ public class ETL {
     static final File OUT_FILE = new File(DATA_DIR, "oersi.ndjson");
     private static final String DEFAULT_PROPERTIES = "oersi.properties";
 
-    private static final Logger LOG = Logger.getLogger(ETL.class.getName());
+    private static final Logger LOG = LoggerFactory.getLogger(ETL.class);
 
     public static void main(String[] args) throws IOException {
         if (args.length == 0) {
@@ -50,8 +56,14 @@ public class ETL {
             }
             writeTestOutput(fileOrDir);
         } catch (Exception e) {
-            LOG.log(Level.SEVERE, e.getMessage(), e);
+            LOG.error(e.getMessage(), e);
         }
+    }
+
+    private static Object formatTime(long time) {
+        DateFormat formatter = new SimpleDateFormat("HH:mm:ss");
+        formatter.setTimeZone(TimeZone.getTimeZone("UTC"));
+        return formatter.format(new Date(time));
     }
 
     private static List<String> varsFromCliParams(String[] args) {
@@ -71,21 +83,66 @@ public class ETL {
         try (FileInputStream in = new FileInputStream(file)) {
             properties.load(in);
         } catch (IOException e) {
-            LOG.log(Level.SEVERE, e.getMessage(), e);
+            LOG.error(e.getMessage(), e);
         }
         return properties.entrySet().stream().map(e -> e.getKey() + "=" + e.getValue())
                 .collect(Collectors.toList());
     }
 
     private static void run(File flux, List<String> vars) throws IOException, RecognitionException {
+        String name = flux.getName().split("-")[0];
+        File fluxDir = flux.getParentFile();
+        File fileInvalid = new File(fluxDir, name + "-invalid.json");
+        File fileValid = new File(fluxDir, name + "-metadata.json");
+        File fileResponses = new File(fluxDir, name + "-responses.json");
+        List<String> fullVars = setUpVars(flux, vars, fileInvalid, fileValid, fileResponses);
+        long start = System.currentTimeMillis();
+        Flux.main(fullVars.toArray(new String[] {}));
+        long end = System.currentTimeMillis() - start;
+        logSummary(flux, fileInvalid, fileResponses, end);
+    }
+
+    private static List<String> setUpVars(File flux, List<String> vars, File fileInvalid,
+            File fileValid, File fileResponses) {
         List<String> args = new ArrayList<>(vars);
         File defaultProperties = new File(flux.getParent(), DEFAULT_PROPERTIES);
         if (args.isEmpty() && defaultProperties.exists()) {
             args = varsFromProperties(defaultProperties);
         }
         args.add(0, flux.getAbsolutePath());
-        LOG.log(Level.INFO, "Running {0}", maskCredentials(args));
-        Flux.main(args.toArray(new String[] {}));
+        List<String> debuggingOutputLocations = Arrays.asList(//
+                "metadata_invalid=" + fileInvalid.getAbsolutePath(), //
+                "metadata_valid=" + fileValid.getAbsolutePath(), //
+                "metadata_responses=" + fileResponses.getAbsolutePath());
+        args.addAll(debuggingOutputLocations);
+        LOG.info("Running {} with {} arguments (configure output details in log4j.properties)",
+                flux, args.size());
+        LOG.debug("Full arguments: {}", maskCredentials(args));
+        return args;
+    }
+
+    private static void logSummary(File flux, File invalid, File responses, long end)
+            throws IOException {
+        String notAvailable = "n/a";
+        String countInvalid = notAvailable;
+        String countSuccess = notAvailable;
+        String countError = notAvailable;
+        if (invalid.exists()) {
+            try (Stream<String> invalids = Files.lines(invalid.toPath())) {
+                countInvalid = invalids.count() + "";
+            }
+        }
+        if (responses.exists()) {
+            try (Stream<String> allResponses = Files.lines(responses.toPath())) {
+                Map<Boolean, List<String>> errored = allResponses
+                        .collect(Collectors.partitioningBy(s -> s.contains("\"error\"")));
+                countError = errored.get(true).size() + "";
+                countSuccess = errored.get(false).size() + "";
+            }
+        }
+        LOG.info(
+                "Import channel {}, SUCCESS: {}, FAIL-VALIDATION: {}, FAIL-WRITE: {}, DURATION: {}",
+                flux.getName(), countSuccess, countInvalid, countError, formatTime(end));
     }
 
     private static Object[] maskCredentials(List<String> args) {
@@ -115,7 +172,7 @@ public class ETL {
     }
 
     private static void writeSingleFile(FileWriter w, File json) throws IOException {
-        LOG.log(Level.INFO, "Writing {0} to {1}", new Object[] { json, OUT_FILE });
+        LOG.info("Writing {} to {}", json, OUT_FILE);
         String bulk = Files.readAllLines(Paths.get(json.toURI())).stream()
                 .collect(Collectors.joining("\n"));
         w.write(bulk);

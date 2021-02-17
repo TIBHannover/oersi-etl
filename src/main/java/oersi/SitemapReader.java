@@ -6,13 +6,13 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.List;
 import java.util.Scanner;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import org.joox.JOOX;
 import org.joox.Match;
 import org.metafacture.framework.ObjectReceiver;
 import org.metafacture.framework.helpers.DefaultObjectPipe;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.xml.sax.SAXException;
 
 /**
@@ -22,7 +22,7 @@ import org.xml.sax.SAXException;
  */
 public final class SitemapReader extends DefaultObjectPipe<String, ObjectReceiver<String>> {
 
-    private static final Logger LOG = Logger.getLogger(SitemapReader.class.getName());
+    private static final Logger LOG = LoggerFactory.getLogger(SitemapReader.class);
 
     private String urlPattern = ".*";
     private int limit = Integer.MAX_VALUE;
@@ -48,20 +48,20 @@ public final class SitemapReader extends DefaultObjectPipe<String, ObjectReceive
 
     @Override
     public void process(final String sitemap) {
-        LOG.log(Level.INFO, "Processing sitemap URL {0}", new Object[] { sitemap });
+        LOG.debug("Processing sitemap URL {}", sitemap);
         try {
             Match siteMapXml = JOOX.$(new URL(sitemap));
             List<String> texts = siteMapXml.find("loc").filter(matchText(urlPattern)).texts();
             for (String url : texts.subList(0, Math.min(limit, texts.size()))) {
-                LOG.log(Level.FINE, "Processing resource URL {0}", new Object[] { url });
+                LOG.trace("Processing resource URL {}", url);
                 getReceiver().process(findAndReplace(url));
                 Thread.sleep(wait);
             }
             tryNextPage(sitemap, texts.size());
         } catch (SAXException | IOException e) {
-            LOG.log(Level.SEVERE, e.getMessage(), e);
+            LOG.error(e.getMessage(), e);
         } catch (InterruptedException e) {
-            LOG.log(Level.SEVERE, e.getMessage(), e);
+            LOG.error(e.getMessage(), e);
             Thread.currentThread().interrupt();
         }
     }

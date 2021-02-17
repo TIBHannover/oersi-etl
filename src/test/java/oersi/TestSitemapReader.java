@@ -51,17 +51,24 @@ public final class TestSitemapReader {
         sitemapReader.setWait(0);
         sitemapReader.setReceiver(receiver);
         inOrder = Mockito.inOrder(receiver);
-        sitemapReader.process(SITEMAP_URL);
     }
 
     @Test
     public void testShouldProcessPage1() {
+        sitemapReader.process(SITEMAP_URL);
         inOrder.verify(receiver, Mockito.calls(1)).process(ON_PAGE_1);
     }
 
     @Test
     public void testShouldProcessPage2() {
+        sitemapReader.process(SITEMAP_URL);
         inOrder.verify(receiver, Mockito.calls(1)).process(ON_PAGE_2);
+    }
+
+    @Test
+    public void testShouldLogInvalidUrl() {
+        sitemapReader.process("");
+        inOrder.verifyNoMoreInteractions();
     }
 
     @After

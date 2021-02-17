@@ -12,10 +12,6 @@ service_name = "TIB AV-Portal";
 | fix(FLUX_DIR + "tibav.fix", *)
 | encode-json
 | oersi.FieldMerger
-| oersi.JsonValidator(output_schema)
-| object-tee | {
-    write(FLUX_DIR + "tibav-metadata.json", header="[\n", footer="\n]", separator=",\n")
-  }{
-    oersi.OersiWriter(backend_api,
-      user=backend_user, pass=backend_pass, log=FLUX_DIR + "tibav-responses.json")
-};
+| oersi.JsonValidator(output_schema, writeValid=metadata_valid, writeInvalid=metadata_invalid)
+| oersi.OersiWriter(backend_api, user=backend_user, pass=backend_pass, log=metadata_responses)
+;
