@@ -7,12 +7,12 @@ do array("@context")
 end
 
 /* Map some of the data we have to the oersi model: */
-map("html.body.form.div.div.div.div.div.div.div.h1.span.title", "name")
-map("html.body.form.div.div.div.div.div.div.div.div.div.div.div.p.value", "description")
-map("html.head.meta.content","image")
+map("html.head.meta.og:title", "name")
+map("html.head.meta.og:description", "description")
+map("html.head.meta.og:image","image")
 
 /* Creation-Date comes in as "- recorded at 9/19/2012" */
-do map("html.body.form.div.div.div.div.div.div.div.div.div.div.div.span.value", "dateCreated")
+do map("*.span.watch-information-date produced", "dateCreated")
   regexp(match: "- recorded at \\d{1,2}}/\\d{1,2}}/\\d{4}")
   replace(pattern: "(\\d)/(\\d+)/(\\d\\d\\d\\d)", with: "0$1/$2/$3")
   replace(pattern: "(\\d+)/(\\d)/(\\d\\d\\d\\d)", with: "$1/0$2/$3")
@@ -20,20 +20,18 @@ do map("html.body.form.div.div.div.div.div.div.div.div.div.div.div.span.value", 
 end
 
 /*rel = "liscence" cant be directly mapped */
-do map("html.body.form.div.div.div.div.div.div.div.div.div.div.div.div.p.a.href", "license")
+do map("*.a.license", "license")
   replace(pattern: "http:", with: "https:")
 end
 
 do array("creator", flushWith: record)
  do entity("")
   add_field("type", "Person")
-  map("html.body.form.div.div.div.div.div.div.div.div.span.value", "name")
+  map("*.p.watch-speaker", "name")
  end
 end
 
-do map("html.body.form.action", "id")
-  replace(pattern: "./", with: "https://mediathek.hhu.de/watch/")
-end
+map("html.head.meta.og:url", "id")
 
 do array ("type")
   add_field("","LearningResource")
