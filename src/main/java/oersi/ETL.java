@@ -19,8 +19,6 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import org.antlr.runtime.RecognitionException;
-import org.apache.log4j.BasicConfigurator;
-import org.apache.log4j.PropertyConfigurator;
 import org.metafacture.framework.MetafactureException;
 import org.metafacture.runner.Flux;
 import org.slf4j.Logger;
@@ -149,11 +147,6 @@ public class ETL {
                 countSuccess = errored.get(false).size() + "";
             }
         }
-        // Workaround for issue in transitive dependency (org.dspace:oclc-harvester2 in
-        // metafacture-biblio), which calls BasicConfigurator.configure() internally,
-        // resulting in duplicate log messages:
-        BasicConfigurator.resetConfiguration();
-        PropertyConfigurator.configure(ETL.class.getResourceAsStream("/log4j.properties"));
         LOG.info(
                 "Import channel {}, SUCCESS: {}, FAIL-VALIDATION: {}, FAIL-WRITE: {}, DURATION: {}",
                 flux.getName(), countSuccess, countInvalid, countError, formatTime(end));
