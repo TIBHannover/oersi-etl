@@ -18,10 +18,15 @@ build:
 deploy:
   stage: deploy
   script:
+    - echo BUILDNUMBER=${CI_JOB_ID} > build.info
+    - echo COMMIT_SHA=${CI_COMMIT_SHORT_SHA} >> build.info
+    - date +'TIMESTAMP=%Y%m%d%H%M%S' >> build.info
+    - cat build.info
     - sh install_snapshots.sh
     - ./gradlew installDist
   artifacts:
     paths:
+     - build.info
      - build/install/oersi-etl/bin/*
      - build/install/oersi-etl/lib/*
      - data/maps/*
