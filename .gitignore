@@ -15,9 +15,9 @@ metafacture-*
 # Ignore generated output data
 *.ndjson
 *.json
-!src/**/*.json
 *.txt
 *.xml
+!src/**
 
 # Ignore local test data
 data/test
