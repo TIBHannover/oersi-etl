@@ -60,10 +60,10 @@ public final class SitemapReader extends DefaultObjectPipe<String, ObjectReceive
             }
             tryNextPage(sitemap, texts.size());
         } catch (SAXException | IOException e) {
-            throw new MetafactureException(sitemap, e);
+            throw new MetafactureException(e.getMessage(), e);
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
-            throw new MetafactureException(sitemap, e);
+            throw new MetafactureException(e.getMessage(), e);
         }
     }
 
