@@ -22,6 +22,7 @@ import java.nio.file.Files;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import org.metafacture.framework.MetafactureException;
 import org.mockito.MockitoAnnotations;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -61,9 +62,8 @@ public final class TestOersiWriter {
         Assert.assertEquals(0, oersiWriter.fail);
     }
 
-    @Test
-    public void testShouldLogMissingFile() throws JsonProcessingException {
+    @Test(expected = MetafactureException.class)
+    public void testShouldCatchMissingFile() throws JsonProcessingException {
         oersiWriter.setLog("");
-        Assert.assertNull(oersiWriter.log);
     }
 }

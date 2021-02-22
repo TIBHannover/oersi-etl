@@ -21,6 +21,7 @@ import java.util.stream.Stream;
 import org.antlr.runtime.RecognitionException;
 import org.apache.log4j.BasicConfigurator;
 import org.apache.log4j.PropertyConfigurator;
+import org.metafacture.framework.MetafactureException;
 import org.metafacture.runner.Flux;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -98,10 +99,16 @@ public class ETL {
         File fileValid = new File(fluxDir, name + "-metadata.json");
         File fileResponses = new File(fluxDir, name + "-responses.json");
         List<String> fullVars = setUpVars(flux, vars, fileInvalid, fileValid, fileResponses);
-        long start = System.currentTimeMillis();
-        Flux.main(fullVars.toArray(new String[] {}));
-        long end = System.currentTimeMillis() - start;
-        logSummary(flux, fileInvalid, fileResponses, end);
+        try {
+            long start = System.currentTimeMillis();
+            Flux.main(fullVars.toArray(new String[] {}));
+            long end = System.currentTimeMillis() - start;
+            logSummary(flux, fileInvalid, fileResponses, end);
+        } catch (MetafactureException e) {
+            LOG.error(flux.getName(), e);
+            LOG.info("Import channel {} FAILED: {} ({})", flux.getName(), e.getMessage(),
+                    e.getCause() != null ? e.getCause().getClass().getSimpleName() : "<no cause>");
+        }
     }
 
     private static List<String> setUpVars(File flux, List<String> vars, File fileInvalid,

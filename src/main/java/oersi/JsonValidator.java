@@ -3,6 +3,7 @@ package oersi;
 import java.io.FileWriter;
 import java.io.IOException;
 
+import org.metafacture.framework.MetafactureException;
 import org.metafacture.framework.ObjectReceiver;
 import org.metafacture.framework.helpers.DefaultObjectPipe;
 import org.slf4j.Logger;
@@ -34,7 +35,7 @@ public final class JsonValidator extends DefaultObjectPipe<String, ObjectReceive
         try {
             schema = JsonSchemaFactory.byDefault().getJsonSchema(url);
         } catch (ProcessingException e) {
-            LOG.error(url, e);
+            throw new MetafactureException(e.getMessage(), e);
         }
     }
 
@@ -50,9 +51,8 @@ public final class JsonValidator extends DefaultObjectPipe<String, ObjectReceive
         try {
             return new FileWriter(to);
         } catch (IOException e) {
-            LOG.error(to, e);
+            throw new MetafactureException(e.getMessage(), e);
         }
-        return null;
     }
 
     @Override
@@ -70,7 +70,7 @@ public final class JsonValidator extends DefaultObjectPipe<String, ObjectReceive
                 write(json, writeInvalid);
             }
         } catch (IOException | ProcessingException e) {
-            LOG.error(e.getMessage(), e);
+            throw new MetafactureException(e.getMessage(), e);
         }
     }
 
@@ -94,7 +94,7 @@ public final class JsonValidator extends DefaultObjectPipe<String, ObjectReceive
             try {
                 fw.close();
             } catch (IOException e) {
-                LOG.error(e.getMessage(), e);
+                throw new MetafactureException(e.getMessage(), e);
             }
         }
     }

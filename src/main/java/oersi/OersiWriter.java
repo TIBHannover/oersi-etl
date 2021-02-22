@@ -9,6 +9,7 @@ import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 
+import org.metafacture.framework.MetafactureException;
 import org.metafacture.framework.ObjectReceiver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -61,9 +62,8 @@ public final class OersiWriter implements ObjectReceiver<String> {
         try {
             return new FileWriter(to);
         } catch (IOException e) {
-            LOG.error(to, e);
+            throw new MetafactureException(to, e);
         }
-        return null;
     }
 
     @Override
@@ -85,10 +85,10 @@ public final class OersiWriter implements ObjectReceiver<String> {
                 fail++;
             }
         } catch (IOException e) {
-            LOG.error(e.getMessage(), e);
+            throw new MetafactureException(e.getMessage(), e);
         } catch (InterruptedException e) {
-            LOG.error(e.getMessage(), e);
             Thread.currentThread().interrupt();
+            throw new MetafactureException(e.getMessage(), e);
         }
     }
 
@@ -104,7 +104,7 @@ public final class OersiWriter implements ObjectReceiver<String> {
             try {
                 log.close();
             } catch (IOException e) {
-                LOG.error(e.getMessage(), e);
+                throw new MetafactureException(e.getMessage(), e);
             }
         }
         LOG.debug("Success: {}, Fail: {}", success, fail);

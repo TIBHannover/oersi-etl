@@ -21,6 +21,7 @@ import java.util.Map;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.metafacture.framework.MetafactureException;
 import org.metafacture.framework.ObjectReceiver;
 import org.mockito.InOrder;
 import org.mockito.Mock;
@@ -82,17 +83,15 @@ public final class TestJsonValidator {
         inOrder.verifyNoMoreInteractions();
     }
 
-    @Test
-    public void testShouldLogMissingSchemaFile() throws JsonProcessingException {
+    @Test(expected = MetafactureException.class)
+    public void testShouldCatchMissingSchemaFile() throws JsonProcessingException {
         new JsonValidator("");
-        inOrder.verifyNoMoreInteractions();
     }
 
-    @Test
-    public void testShouldLogMissingOutputFile() throws JsonProcessingException {
+    @Test(expected = MetafactureException.class)
+    public void testShouldCatchMissingOutputFile() throws JsonProcessingException {
         validator.setWriteValid("");
         validator.process(MAPPER.writeValueAsString(JSON_INVALID));
-        inOrder.verifyNoMoreInteractions();
     }
 
     @After

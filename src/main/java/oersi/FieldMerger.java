@@ -5,10 +5,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.metafacture.framework.MetafactureException;
 import org.metafacture.framework.ObjectReceiver;
 import org.metafacture.framework.helpers.DefaultObjectPipe;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -18,8 +17,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
  * @author Fabian Steeg (fsteeg)
  */
 public final class FieldMerger extends DefaultObjectPipe<String, ObjectReceiver<String>> {
-
-    private static final Logger LOG = LoggerFactory.getLogger(FieldMerger.class);
 
     private final ObjectMapper mapper = new ObjectMapper();
 
@@ -59,7 +56,7 @@ public final class FieldMerger extends DefaultObjectPipe<String, ObjectReceiver<
             Map<String, Object> json = mapper.readValue(s, MultiMap.class);
             getReceiver().process(mapper.writeValueAsString(json));
         } catch (IOException e) {
-            LOG.error(e.getMessage(), e);
+            throw new MetafactureException(e.getMessage(), e);
         }
     }
 }

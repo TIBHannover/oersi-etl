@@ -18,6 +18,7 @@ package oersi;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.metafacture.framework.MetafactureException;
 import org.metafacture.framework.ObjectReceiver;
 import org.mockito.InOrder;
 import org.mockito.Mock;
@@ -65,10 +66,9 @@ public final class TestSitemapReader {
         inOrder.verify(receiver, Mockito.calls(1)).process(ON_PAGE_2);
     }
 
-    @Test
-    public void testShouldLogInvalidUrl() {
+    @Test(expected = MetafactureException.class)
+    public void testShouldCatchInvalidUrl() {
         sitemapReader.process("");
-        inOrder.verifyNoMoreInteractions();
     }
 
     @After

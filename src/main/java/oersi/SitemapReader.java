@@ -9,6 +9,7 @@ import java.util.Scanner;
 
 import org.joox.JOOX;
 import org.joox.Match;
+import org.metafacture.framework.MetafactureException;
 import org.metafacture.framework.ObjectReceiver;
 import org.metafacture.framework.helpers.DefaultObjectPipe;
 import org.slf4j.Logger;
@@ -59,10 +60,10 @@ public final class SitemapReader extends DefaultObjectPipe<String, ObjectReceive
             }
             tryNextPage(sitemap, texts.size());
         } catch (SAXException | IOException e) {
-            LOG.error(e.getMessage(), e);
+            throw new MetafactureException(sitemap, e);
         } catch (InterruptedException e) {
-            LOG.error(e.getMessage(), e);
             Thread.currentThread().interrupt();
+            throw new MetafactureException(sitemap, e);
         }
     }
 
