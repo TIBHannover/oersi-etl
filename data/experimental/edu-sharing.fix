@@ -1,5 +1,0 @@
-map(name, title)
-map(description, description)
-map(url, url)
-map(identifier, identifier)
-map(license, license)

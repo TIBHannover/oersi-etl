@@ -7,10 +7,19 @@ Set up project
 
 `cd oersi-etl`
 
+If you do **not** have an installed metafacture instance:
+
 `sh install_snapshots.sh`
+
+If you have an installed metafacture instance:
+
+Do `git pull origin oersi ; ./gradlew install` in metafacture-core, `git pull origin oersi ; ./gradlew clean install` in metafacture-fix, and `./gradlew clean` in oersi-etl.
+
 
 User documentation
 ==================
+
+The ETL workflows are based on Metafacture, see https://metafacture.org
 
 Run workflows
 -------------
@@ -20,6 +29,10 @@ Pass a directory name to run all `*.flux` workflows in that directory, e.g.:
 `./gradlew run --args 'data/production'`
 
 This will run all `*.flux` workflows in `data/production`.
+
+If changes in metafacture were made update your metafacture before running the workflows:
+
+Do `git pull origin oersi ; ./gradlew install` in metafacture-core, `git pull origin oersi ; ./gradlew clean install` in metafacture-fix (or remove them and run `sh install_snapshots.sh`), and `./gradlew clean ` in oersi-etl.
 
 Write to backend API
 --------------------

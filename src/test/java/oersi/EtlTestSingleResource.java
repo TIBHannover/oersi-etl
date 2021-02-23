@@ -10,8 +10,6 @@ import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 import org.antlr.runtime.RecognitionException;
@@ -19,11 +17,13 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.metafacture.runner.Flux;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 @RunWith(Parameterized.class)
 public class EtlTestSingleResource {
 
-    private static final Logger LOG = Logger.getLogger(EtlTestSingleResource.class.getName());
+    private static final Logger LOG = LoggerFactory.getLogger(EtlTestSingleResource.class);
 
     private static final Object[][] PARAMS = new Object[][] { //
             { "https://www.hoou.de/materials/tutorial-lernen-lernen",
@@ -73,7 +73,7 @@ public class EtlTestSingleResource {
                 + "|org.metafacture.metamorph.Metafix(\"%s\")"//
                 + "|encode-json(prettyPrinting=\"false\")"//
                 + "|write(\"%s\");", url, fix, out);
-        LOG.log(Level.INFO, "Running Flux: {0}", flux);
+        LOG.info("Running Flux: {}", flux);
         String json = convertSingleResource(url, flux, out);
         assertThat(json, containsString(title));
         assertThat(json, containsString(description));

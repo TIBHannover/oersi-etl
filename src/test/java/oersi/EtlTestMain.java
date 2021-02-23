@@ -29,12 +29,13 @@ public class EtlTestMain {
                     "data/production/oernds-to-oersi.flux", //
                     "input_limit=2", //
                     "input_from=5", //
+                    "output_schema=resource:/schemas/schema.json", //
                     "backend_api=http://192.168.98.115:8080/oersi/api/metadata", //
                     "backend_user=test", //
                     "backend_pass=test") }, //
             // pass variables as *.properties file:
             new Object[] { Arrays.asList(//
-                    "data/production/oerbw-to-oersi.flux", //
+                    "data/production/zoerr-to-oersi.flux", //
                     "data/production/oersi.properties") } //
     };
 
@@ -58,6 +59,6 @@ public class EtlTestMain {
     public void testConvertMain() throws IOException, SAXException {
         assertFalse(ETL.OUT_FILE.exists());
         ETL.main(args.toArray(new String[0]));
-        assertTrue("Output file must exist", ETL.OUT_FILE.exists());
+        assertTrue("Output file must exist: " + ETL.OUT_FILE, ETL.OUT_FILE.exists());
     }
 }

@@ -1,0 +1,88 @@
+/* Set up the context */
+do array("@context")
+ add_field("","https://w3id.org/kim/lrmi-profile/draft/context.jsonld")
+ do entity("")
+  add_field("@language", "de")
+ end
+end
+
+/* Construct actual ID from @id */
+do map("@graph[].1.@id","id")
+    replace_all(pattern: "https://www.tib.eu/de/suchen/id/kmo-av%3Asid%7E", with: "https://av.tib.eu/media/")
+end
+
+/* Input-Title is array or string */
+do map("@graph[].1.title[].*|@graph[].1.title", "name")
+  not_equals(string: "")
+end
+
+/* At the moment only CC-licenses will be recognised */
+map("@graph[].1.issued", "dateCreated")
+do map("@graph[].1.license","license")
+  regexp(match: "https://creativecommons.org/(licenses|licences|publicdomain)/.*")
+end
+
+do array("creator", flushWith: record)
+ do entity("")
+ /* At the moment FIX does not support conditionals so that we only can recognise creators as Person */
+  add_field("type", "Person")
+  do map("@graph[].1.creator[].*|@graph[].1.creator", "name")
+    replace(pattern: "(.+), (.+)", with: "$2 $1")
+  end
+ end
+end
+
+do map("@graph[].1.language", "inLanguage")
+  replace_all(pattern: "http://id.loc.gov/vocabulary/iso639-1/", with: "")
+end
+
+do array ("type")
+  add_field("","LearningResource")
+end
+
+/* Add Video always as lRT */
+
+add_field("@hcrt","https://w3id.org/kim/hcrt/video")
+
+do array('learningResourceType')
+  do entity('')
+    map('@hcrt', 'id')
+    do entity('prefLabel')
+      do map('@hcrt', 'de')
+        lookup(in: 'data/maps/hcrt-de-labels.tsv')
+      end  
+      do map('@hcrt', 'en')
+        lookup(in: 'data/maps/hcrt-en-labels.tsv')
+      end
+    end
+  end
+end
+
+do array("publisher")
+ do entity("")
+  add_field("type", "Organization")
+  map("@graph[].1.publisher", "name")
+ end
+end
+
+do array("keywords", flushWith: record)
+  map("@graph[].1.subject[].*")
+end
+
+do array("mainEntityOfPage")
+  do entity("")
+    do map("@graph[].1.@id","id")
+      replace_all(pattern: "https://www.tib.eu/de/suchen/id/kmo-av%3Asid%7E", with: "https://av.tib.eu/media/")
+    end
+    /* Add provider/source information to each resource description */
+    do entity("provider")
+      add_field("id","$[service_id]")
+      add_field("type","Service")
+      add_field("name","$[service_name]")
+    end
+  end
+end
+
+do map('@graph[].1.identifier[].*', image)
+  contains(string: '.jpg')
+end

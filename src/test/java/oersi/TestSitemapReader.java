@@ -18,6 +18,7 @@ package oersi;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.metafacture.framework.MetafactureException;
 import org.metafacture.framework.ObjectReceiver;
 import org.mockito.InOrder;
 import org.mockito.Mock;
@@ -51,17 +52,23 @@ public final class TestSitemapReader {
         sitemapReader.setWait(0);
         sitemapReader.setReceiver(receiver);
         inOrder = Mockito.inOrder(receiver);
-        sitemapReader.process(SITEMAP_URL);
     }
 
     @Test
     public void testShouldProcessPage1() {
+        sitemapReader.process(SITEMAP_URL);
         inOrder.verify(receiver, Mockito.calls(1)).process(ON_PAGE_1);
     }
 
     @Test
     public void testShouldProcessPage2() {
+        sitemapReader.process(SITEMAP_URL);
         inOrder.verify(receiver, Mockito.calls(1)).process(ON_PAGE_2);
+    }
+
+    @Test(expected = MetafactureException.class)
+    public void testShouldCatchInvalidUrl() {
+        sitemapReader.process("");
     }
 
     @After

@@ -1,0 +1,74 @@
+/* Set up the context */
+do array("@context")
+ add_field("","https://w3id.org/kim/lrmi-profile/draft/context.jsonld")
+ do entity("")
+  add_field("@language", "de")
+ end
+end
+
+/* Map some of the data we have to the oersi model: */
+map("html.head.meta.og:title", "name")
+
+map("html.head.meta.og:description", "description")
+
+map("html.head.meta.og:image","image")
+
+/*rel = "liscence" cant be directly mapped */
+do map("*.a.license", "license")
+  regexp(match: "https://creativecommons.org/licenses/.*")
+end
+
+
+do array("creator", flushWith: record)
+ do entity("")
+  add_field("type", "Person")
+  map("html.body.div.div.div.div.section.section.section.div.h4.value", "name")
+ end
+end
+
+do map('html.body.div.div.div.div.section.div.div.div.div.div.div.span.value', inLanguage)
+  regexp(match: "Deutsch|English")
+  replace(pattern: "Deutsch", with: "de")
+  replace(pattern: "English", with: "en")
+end
+
+map("html.head.meta.og:url", "id")
+
+do array ("type")
+  add_field("","LearningResource")
+end
+
+/* Add Course always as lRT */
+
+add_field("@hcrt","https://w3id.org/kim/hcrt/course")
+
+do array('learningResourceType')
+  do entity('')
+    map('@hcrt', 'id')
+    do entity('prefLabel')
+      do map('@hcrt', 'de')
+        lookup(in: 'data/maps/hcrt-de-labels.tsv')
+      end  
+      do map('@hcrt', 'en')
+        lookup(in: 'data/maps/hcrt-en-labels.tsv')
+      end
+    end
+  end
+end
+
+do array("keywords", flushWith: record)
+  map("html.body.div.div.div.div.section.section.div.a.value")
+end
+
+do array("mainEntityOfPage")
+  do entity("")
+    do map("html.body.nav.div.div.ul.li.ul.li.a.href", "id")
+      replace(pattern: "\\?lang=fa", with: "")
+    end
+    do entity("provider")
+      add_field("id","$[service_id]")
+      add_field("type","Service")
+      add_field("name","$[service_name]")
+    end
+  end
+end

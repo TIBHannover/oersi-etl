@@ -1,10 +1,19 @@
-Description
 
+### Description
 (Which source of Open Educational Resources should be connected?)
 
-API
+### Access Point
+(How can the source be accessed? Please add API/OAI-PMH/Sitemap documentation and/or an example)
 
-(How can the source be accessed? Please add API documentation and/or an example)
+### Contact
+(Email, name of contact person etc.)
 
+### Tasks
+
+- [ ] Contact provider
+- [ ] Clarify details, receive permission
+- [ ] Configure ETL process
+- [ ] Publish blog post
+- [ ] Inform provider
 
 /label add-source
