@@ -1,5 +1,11 @@
 image: maven:3-openjdk-11
 
+stages:
+  - build
+  - test
+  - deploy
+  - deploy-release
+
 # Disable the Gradle daemon for Continuous Integration servers as correctness
 # is usually a priority over speed in CI environments. Using a fresh
 # runtime for each build is more reliable since the runtime is completely
@@ -46,3 +52,14 @@ sonar:
     - develop
     - master
     - sonar
+
+deploy release:
+  stage: deploy-release
+  dependencies:
+    - deploy
+  script:
+    - BUILDNUMBER=$(grep "BUILDNUMBER=" build.info | cut -d'=' -f2)
+    - 'wget -O etl.zip ${CI_PROJECT_URL}/-/jobs/${BUILDNUMBER}/artifacts/download'
+    - 'curl --header "JOB-TOKEN: $CI_JOB_TOKEN" --upload-file etl.zip "${CI_API_V4_URL}/projects/${CI_PROJECT_ID}/packages/generic/etl/${CI_COMMIT_TAG}/etl.zip"'
+  only:
+    - tags
