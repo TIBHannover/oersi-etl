@@ -15,9 +15,14 @@
  */
 package oersi;
 
+import java.util.Arrays;
+import java.util.Collection;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.junit.runners.Parameterized;
 import org.metafacture.framework.MetafactureException;
 import org.metafacture.framework.ObjectReceiver;
 import org.mockito.InOrder;
@@ -33,7 +38,35 @@ import com.fasterxml.jackson.core.JsonProcessingException;
  * @author Fabian Steeg
  *
  */
+@RunWith(Parameterized.class)
 public final class TestFieldMerger {
+
+    private static final Object[][] PARAMS = new Object[][] { //
+            { "Process-Maps", //
+                    json("{'key':{'key1':'val1'},'key':{'key2':'val2'}}"), //
+                    json("{'key':{'key1':'val1','key2':'val2'}}") }, //
+            { "Process-Maps-In-Arrays", //
+                    json("{'key':[{'key1':'val1'}],'key':[{'key2':'val2'}]}"), //
+                    json("{'key':[{'key1':'val1','key2':'val2'}]}") }, //
+            { "Deduplicate-Maps-In-Arrays", //
+                    json("{'key':[{'key1':'val1'},{'key1':'val1'}]}"), //
+                    json("{'key':[{'key1':'val1'}]}") }, //
+            { "Deduplicate-Maps-In-Merged-Arrays", //
+                    json("{'key':[{'key1':'val1'}],'key':[{'key1':'val1'}]}"), //
+                    json("{'key':[{'key1':'val1'}]}") } };
+
+    @Parameterized.Parameters(name = "{0}, {1} -> {2}")
+    public static Collection<Object[]> siteMaps() {
+        return Arrays.asList(PARAMS);
+    }
+
+    private String in;
+    private String out;
+
+    public TestFieldMerger(String name, String in, String out) {
+        this.in = in;
+        this.out = out;
+    }
 
     private FieldMerger fieldMerger;
 
@@ -50,29 +83,24 @@ public final class TestFieldMerger {
     }
 
     @Test
-    public void testShouldProcessMaps() throws JsonProcessingException {
-        fieldMerger.process(json("{'key':{'key1':'val1'},'key':{'key2':'val2'}}"));
-        inOrder.verify(receiver).process(json("{'key':{'key1':'val1','key2':'val2'}}"));
+    public void testProcess() throws JsonProcessingException {
+        fieldMerger.process(in);
+        inOrder.verify(receiver).process(out);
         inOrder.verifyNoMoreInteractions();
-    }
-
-    @Test
-    public void testShouldProcessMapsInArrays() throws JsonProcessingException {
-        fieldMerger.process(json("{'key':[{'key1':'val1'}],'key':[{'key2':'val2'}]}"));
-        inOrder.verify(receiver).process(json("{'key':[{'key1':'val1','key2':'val2'}]}"));
-    }
-
-    private String json(String string) {
-        return string.replace("'", "\"");
     }
 
     @Test(expected = MetafactureException.class)
     public void testShouldCatchInvalidJson() {
-        fieldMerger.process("{");
+        fieldMerger.process("{" + in);
     }
 
     @After
     public void cleanup() {
         fieldMerger.closeStream();
     }
+
+    private static String json(String string) {
+        return string.replace("'", "\"");
+    }
+
 }

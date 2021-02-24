@@ -1,7 +1,9 @@
 package oersi;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 
@@ -31,22 +33,24 @@ public final class FieldMerger extends DefaultObjectPipe<String, ObjectReceiver<
         @Override
         public Object put(String key, Object value) {
             Object oldValue = get(key);
+            Object newValue = value;
             if (oldValue instanceof Map && value instanceof Map) {
                 Map<String, Object> map = ((Map<String, Object>) oldValue);
                 map.putAll((Map<? extends String, ? extends Object>) value);
-                return super.put(key, map);
-            }
-            if (oldValue instanceof List && value instanceof List) {
+                newValue = map;
+            } else if (oldValue instanceof List && value instanceof List) {
                 List<?> oldValueAsList = (List<?>) oldValue;
                 List<?> valueAsList = (List<?>) value;
                 if (!oldValueAsList.isEmpty() && oldValueAsList.get(0) instanceof Map
                         && !valueAsList.isEmpty() && valueAsList.get(0) instanceof Map) {
                     Map<String, Object> map = ((Map<String, Object>) oldValueAsList.get(0));
                     map.putAll((Map<? extends String, ? extends Object>) valueAsList.get(0));
-                    return super.put(key, oldValueAsList);
+                    newValue = oldValueAsList;
                 }
             }
-            return super.put(key, value);
+            return super.put(key,
+                    newValue instanceof List ? new ArrayList<>(new HashSet<>((List<?>) newValue))
+                            : newValue);
         }
     }
 
