@@ -1,4 +1,4 @@
-image: gradle:jdk11
+image: maven:3-openjdk-11
 
 # Disable the Gradle daemon for Continuous Integration servers as correctness
 # is usually a priority over speed in CI environments. Using a fresh
@@ -33,7 +33,7 @@ deploy:
      - data/production/*
 
 sonar:
-  image: gradle:jdk11
+  image: maven:3-openjdk-11
   cache:
     key: "${CI_JOB_NAME}"
     paths:
