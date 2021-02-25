@@ -15,9 +15,12 @@ variables:
   SONAR_USER_HOME: "${CI_PROJECT_DIR}/.sonar"  # Defines the location of the analysis task cache
   GIT_DEPTH: "0"  # Tells git to fetch all the branches of the project, required by the analysis task
 
+install-dependencies:
+  stage: .pre
+  script: sh install_snapshots.sh
+
 build:
   script:
-    - sh install_snapshots.sh
     - ./gradlew --version
     - ./gradlew check --info
 
@@ -28,7 +31,6 @@ deploy:
     - echo COMMIT_SHA=${CI_COMMIT_SHORT_SHA} >> build.info
     - date +'TIMESTAMP=%Y%m%d%H%M%S' >> build.info
     - cat build.info
-    - sh install_snapshots.sh
     - ./gradlew installDist
   artifacts:
     paths:
@@ -45,11 +47,9 @@ sonar:
     paths:
       - .sonar/cache
   script:
-    - sh install_snapshots.sh
     - ./gradlew check jacocoTestReport sonarqube --info
   only:
     - merge_requests
-    - develop
     - master
     - sonar
 
