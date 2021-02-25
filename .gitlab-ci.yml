@@ -11,13 +11,14 @@ stages:
 # runtime for each build is more reliable since the runtime is completely
 # isolated from any previous builds.
 variables:
-  GRADLE_OPTS: "-Dorg.gradle.daemon=false"
+  MAVEN_OPTS: "-Dmaven.repo.local=$CI_PROJECT_DIR/.m2/repository"
+  GRADLE_OPTS: "-Dorg.gradle.daemon=false -Dmaven.repo.local=$CI_PROJECT_DIR/.m2/repository"
   SONAR_USER_HOME: "${CI_PROJECT_DIR}/.sonar"  # Defines the location of the analysis task cache
   GIT_DEPTH: "0"  # Tells git to fetch all the branches of the project, required by the analysis task
 
 cache:
   paths:
-    - .m2/repository/
+    - .m2/repository
 
 install-dependencies:
   stage: .pre
