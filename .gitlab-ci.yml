@@ -22,6 +22,11 @@ cache:
 install-dependencies:
   stage: .pre
   script: sh install_snapshots.sh
+  # workaround, because .pre stage is not picked up in merge_request pipelines (https://gitlab.com/gitlab-org/gitlab-runner/-/issues/5970)
+  only:
+    - branches
+    - tags
+    - merge_requests
 
 build:
   script:
