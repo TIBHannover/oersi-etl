@@ -1,11 +1,10 @@
 package oersi;
 
-import static org.joox.JOOX.matchText;
-
 import java.io.IOException;
 import java.net.URL;
 import java.util.List;
 import java.util.Scanner;
+import java.util.stream.Collectors;
 
 import org.joox.JOOX;
 import org.joox.Match;
@@ -52,7 +51,9 @@ public final class SitemapReader extends DefaultObjectPipe<String, ObjectReceive
         LOG.debug("Processing sitemap URL {}", sitemap);
         try {
             Match siteMapXml = JOOX.$(new URL(sitemap));
-            List<String> texts = siteMapXml.find("loc").filter(matchText(urlPattern)).texts();
+            List<String> texts = siteMapXml.find("loc")
+                    .map(m -> m.element().getTextContent().trim()).stream()
+                    .filter(s -> s.matches(urlPattern)).collect(Collectors.toList());
             for (String url : texts.subList(0, Math.min(limit, texts.size()))) {
                 LOG.trace("Processing resource URL {}", url);
                 getReceiver().process(findAndReplace(url));
