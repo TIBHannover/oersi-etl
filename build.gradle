@@ -87,3 +87,9 @@ run {
   // pass system properties, e.g. `gradle run -Dlog4j.debug`
   systemProperties System.getProperties()
 }
+
+test {
+  filter {
+    excludeTestsMatching "Integration*"
+  }
+}
