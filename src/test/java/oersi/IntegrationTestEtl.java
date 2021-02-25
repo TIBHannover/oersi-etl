@@ -17,7 +17,7 @@ import org.junit.runners.Parameterized;
 import org.xml.sax.SAXException;
 
 @RunWith(Parameterized.class)
-public class EtlTestMain {
+public class IntegrationTestEtl {
 
     private static final Object[][] PARAMS = new Object[][] { //
             // run all *.flux in a given directory:
@@ -46,7 +46,7 @@ public class EtlTestMain {
 
     private List<String> args;
 
-    public EtlTestMain(List<String> args) {
+    public IntegrationTestEtl(List<String> args) {
         this.args = args;
     }
 
