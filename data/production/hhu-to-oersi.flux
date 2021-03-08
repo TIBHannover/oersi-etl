@@ -8,7 +8,7 @@ default input_wait = "50";
 "https://mediathek.hhu.de/sitemap?list=videos" // FLUX_DIR + "hhu-sitemap.xml"
 | oersi.SitemapReader(wait=input_wait, limit=input_limit)
 | open-http
-| decode-html
+| decode-html(attrValsAsSubfields="&p.class&a.class&div.class&span.class")
 | fix(FLUX_DIR + "hhu.fix", *)
 | encode-json
 | oersi.FieldMerger

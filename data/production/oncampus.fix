@@ -62,7 +62,7 @@ end
 
 do array("mainEntityOfPage")
   do entity("")
-    do map("html.body.nav.div.div.ul.li.ul.li.a.href", "id")
+    do map("html.head.meta.og:url", "id")
       replace(pattern: "\\?lang=fa", with: "")
     end
     do entity("provider")
