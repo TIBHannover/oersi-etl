@@ -1,11 +1,10 @@
 package oersi;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import org.metafacture.framework.MetafactureException;
 import org.metafacture.framework.ObjectReceiver;
@@ -49,8 +48,11 @@ public final class FieldMerger extends DefaultObjectPipe<String, ObjectReceiver<
                 }
             }
             return super.put(key,
-                    newValue instanceof List ? new ArrayList<>(new HashSet<>((List<?>) newValue))
-                            : newValue);
+                    newValue instanceof List ? deduplicate((List<?>) newValue) : newValue);
+        }
+
+        private List<?> deduplicate(List<?> newValue) {
+            return newValue.stream().distinct().collect(Collectors.toList());
         }
     }
 

@@ -53,7 +53,10 @@ public final class TestFieldMerger {
                     json("{'key':[{'key1':'val1'}]}") }, //
             { "Deduplicate-Maps-In-Merged-Arrays", //
                     json("{'key':[{'key1':'val1'}],'key':[{'key1':'val1'}]}"), //
-                    json("{'key':[{'key1':'val1'}]}") } };
+                    json("{'key':[{'key1':'val1'}]}") },
+            { "Retain-Order-In-Mixed-Arrays", //
+                    json("{'key':['https',{'key1':'val1'}]}"), //
+                    json("{'key':['https',{'key1':'val1'}]}") } };
 
     @Parameterized.Parameters(name = "{0}, {1} -> {2}")
     public static Collection<Object[]> siteMaps() {
