@@ -90,6 +90,6 @@ run {
 
 test {
   filter {
-    excludeTestsMatching "Integration*"
+    excludeTestsMatching "IT*"
   }
 }

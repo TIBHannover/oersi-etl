@@ -66,4 +66,10 @@ public final class TestOersiWriter {
     public void testShouldCatchMissingFile() throws JsonProcessingException {
         oersiWriter.setLog("");
     }
+
+    @Test(expected = MetafactureException.class)
+    public void testShouldCatchConnectionRefused() {
+        oersiWriter = new OersiWriter("http://invalid");
+        oersiWriter.process("{}");
+    }
 }
