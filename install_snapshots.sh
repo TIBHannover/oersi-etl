@@ -8,5 +8,5 @@ cd metafacture-fix
 cd ..
 git clone https://github.com/clarin-eric/oai-harvest-manager -b 1.2.0
 cd oai-harvest-manager
-mvn clean install
+mvn clean install -DskipTests
 cd ..
