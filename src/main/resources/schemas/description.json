@@ -1,7 +1,7 @@
 {
-    "$id": "resource:/schemas/description.json",
-    "$schema": "http://json-schema.org/draft-07/schema#",
-    "title": "Description",
-    "description": "A description of the learning resource",
-    "type": "string"
+  "$id": "resource:/schemas/description.json",
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Description",
+  "description": "A description of the learning resource",
+  "type": "string"
 }

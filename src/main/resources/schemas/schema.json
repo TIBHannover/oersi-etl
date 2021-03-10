@@ -54,11 +54,11 @@
       "$ref": "resource:/isBasedOn.json"
     },
     "isPartOf": {
-        "$ref": "resource:/isPartOf.json"
+      "$ref": "resource:/isPartOf.json"
     },
     "hasPart": {
-        "$ref": "resource:/hasPart.json"
-      },
+      "$ref": "resource:/hasPart.json"
+    },
     "mainEntityOfPage": {
       "$ref": "resource:/mainEntityOfPage.json"
     },
