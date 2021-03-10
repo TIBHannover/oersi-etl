@@ -6,64 +6,64 @@
   "type": "object",
   "properties": {
     "@context": {
-      "$ref": "resource:/schemas/context-schema.json"
+      "$ref": "context-schema.json"
     },
     "id": {
-      "$ref": "resource:/schemas/id.json"
+      "$ref": "id.json"
     },
     "type": {
-      "$ref": "resource:/schemas/type.json"
+      "$ref": "type.json"
     },
     "name": {
-      "$ref": "resource:/schemas/name.json"
+      "$ref": "name.json"
     },
     "creator": {
-      "$ref": "resource:/creator.json"
+      "$ref": "creator.json"
     },
     "contributor": {
-      "$ref": "resource:/contributor.json"
+      "$ref": "contributor.json"
     },
     "description": {
-      "$ref": "resource:/description.json"
+      "$ref": "description.json"
     },
     "about": {
-      "$ref": "resource:/about.json"
+      "$ref": "about.json"
     },
     "license": {
-      "$ref": "resource:/license.json"
+      "$ref": "license.json"
     },
     "image": {
-      "$ref": "resource:/image.json"
+      "$ref": "image.json"
     },
     "dateCreated": {
-      "$ref": "resource:/dateCreated.json"
+      "$ref": "dateCreated.json"
     },
     "inLanguage": {
-      "$ref": "resource:/inLanguage.json"
+      "$ref": "inLanguage.json"
     },
     "publisher": {
-      "$ref": "resource:/publisher.json"
+      "$ref": "publisher.json"
     },
     "learningResourceType": {
-      "$ref": "resource:/learningResourceType.json"
+      "$ref": "learningResourceType.json"
     },
     "audience": {
-      "$ref": "resource:/audience.json"
+      "$ref": "audience.json"
     },
     "isBasedOn": {
-      "$ref": "resource:/isBasedOn.json"
+      "$ref": "isBasedOn.json"
     },
     "isPartOf": {
-      "$ref": "resource:/isPartOf.json"
+      "$ref": "isPartOf.json"
     },
     "hasPart": {
-      "$ref": "resource:/hasPart.json"
+      "$ref": "hasPart.json"
     },
     "mainEntityOfPage": {
-      "$ref": "resource:/mainEntityOfPage.json"
+      "$ref": "mainEntityOfPage.json"
     },
     "keywords": {
-      "$ref": "resource:/keywords.json"
+      "$ref": "keywords.json"
     }
   },
   "required": [
