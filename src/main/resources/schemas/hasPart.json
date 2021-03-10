@@ -8,13 +8,13 @@
     "type": "object",
     "properties": {
       "id": {
-        "$ref": "resource:/schemas/id.json"
+        "$ref": "id.json"
       },
       "type": {
-        "$ref": "resource:/schemas/type.json"
+        "$ref": "type.json"
       },
       "name": {
-        "$ref": "resource:/schemas/name.json"
+        "$ref": "name.json"
       }
     },
     "required": [

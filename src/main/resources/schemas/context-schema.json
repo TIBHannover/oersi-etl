@@ -17,7 +17,7 @@
       "type": "object",
       "properties": {
         "@language": {
-          "$ref": "resource:/schemas/Language.json"
+          "$ref": "Language.json"
         }
       },
       "additionalProperties": false,

@@ -24,13 +24,13 @@
         "type": "string"
       },
       "creator": {
-        "$ref": "resource:/schemas/creator.json"
+        "$ref": "creator.json"
       },
       "license": {
-        "$ref": "resource:/schemas/license.json"
+        "$ref": "license.json"
       },
       "provider": {
-        "$ref": "resource:/schemas/provider.json"
+        "$ref": "provider.json"
       }
     },
     "required": [

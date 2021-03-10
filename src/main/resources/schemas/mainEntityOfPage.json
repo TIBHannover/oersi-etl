@@ -16,10 +16,10 @@
         "type": "string"
       },
       "provider": {
-        "$ref": "resource:/schemas/provider.json"
+        "$ref": "provider.json"
       },
       "dateCreated": {
-        "$ref": "resource:/schemas/dateCreated.json"
+        "$ref": "dateCreated.json"
       },
       "dateModified": {
         "title": "Date of last modification of the metadata",
