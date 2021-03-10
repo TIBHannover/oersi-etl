@@ -4,17 +4,6 @@
   "title": "OER",
   "description": "This is a generic JSON schema for describing an Open Educational Resource with schema.org. This is a stricter but compatible version of the LRMI schema (https://dini-ag-kim.github.io/lrmi-profile/draft/schemas/schema.json)",
   "type": "object",
-  "default": {
-    "@context": [
-      "https://w3id.org/kim/lrmi-profile/draft/context.jsonld",
-      {
-        "@language": "de"
-      }
-    ],
-    "type": [
-      "LearningResource"
-    ]
-  },
   "properties": {
     "@context": {
       "$ref": "resource:/resource:/schemas/context-schema.json"

@@ -4,9 +4,6 @@
   "title": "Metadata/Structured descriptions",
   "description": "This object contains metametadata, i.e. information about the structured description(s) of the OER and its source(s). This schema is a more strict variation of mainEntityOfPage.json of the LRMI-Profil (https://dini-ag-kim.github.io/lrmi-profile/draft/schemas/mainEntityOfPage.json).",
   "type": "array",
-  "_display": {
-    "className": "hidden"
-  },
   "items": {
     "type": "object",
     "properties": {

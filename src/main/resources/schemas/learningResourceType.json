@@ -53,7 +53,6 @@
     "required": [
       "id",
       "prefLabel"
-    ],
-    "_widget": "SkohubLookup"
+    ]
   }
 }

@@ -4,8 +4,5 @@
     "title": "Creation Date",
     "description": "The creation date",
     "type": "string",
-    "format": "date",
-    "_display": {
-      "placeholder": "YYYY-MM-DD"
-    }
+    "format": "date"
   }

@@ -21,10 +21,7 @@
         },
         "name": {
           "title": "Name",
-          "type": "string",
-          "_display": {
-            "placeholder": "The title of the resource"
-          }
+          "type": "string"
         },
         "creator": {
           "$ref": "resource:/schemas/creator.json"
