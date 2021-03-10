@@ -6,16 +6,16 @@
   "type": "object",
   "properties": {
     "@context": {
-      "$ref": "resource:/resource:/schemas/context-schema.json"
+      "$ref": "resource:/schemas/context-schema.json"
     },
     "id": {
-      "$ref": "resource:/resource:/schemas/id.json"
+      "$ref": "resource:/schemas/id.json"
     },
     "type": {
-      "$ref": "resource:/resource:/schemas/type.json"
+      "$ref": "resource:/schemas/type.json"
     },
     "name": {
-      "$ref": "resource:/resource:/schemas/name.json"
+      "$ref": "resource:/schemas/name.json"
     },
     "creator": {
       "$ref": "resource:/creator.json"
