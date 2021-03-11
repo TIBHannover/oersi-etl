@@ -1,3 +1,7 @@
+#!/bin/bash
+# exit if any command has a non-zero exit status
+set -e
+
 git clone https://github.com/metafacture/metafacture-core.git -b oersi
 cd metafacture-core
 ./gradlew install
