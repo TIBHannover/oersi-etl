@@ -2,6 +2,9 @@ package oersi;
 
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 
 import org.metafacture.framework.MetafactureException;
 import org.metafacture.framework.ObjectReceiver;
@@ -12,6 +15,8 @@ import org.slf4j.LoggerFactory;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.fge.jsonschema.core.exceptions.ProcessingException;
+import com.github.fge.jsonschema.core.report.LogLevel;
+import com.github.fge.jsonschema.core.report.ProcessingMessage;
 import com.github.fge.jsonschema.core.report.ProcessingReport;
 import com.github.fge.jsonschema.main.JsonSchema;
 import com.github.fge.jsonschema.main.JsonSchemaFactory;
@@ -65,7 +70,11 @@ public final class JsonValidator extends DefaultObjectPipe<String, ObjectReceive
                 success++;
                 write(json, writeValid);
             } else {
-                LOG.error("Invalid JSON: {}:\n{}", report, json);
+                List<String> errorMessages = StreamSupport.stream(report.spliterator(), false)
+                        .filter(message -> message.getLogLevel() == LogLevel.ERROR)
+                        .map(ProcessingMessage::getMessage).collect(Collectors.toList());
+                LOG.info("Invalid JSON: {} in {}", errorMessages, node.get("id"));
+                LOG.debug("Full validation report for {}\n{}", json, report);
                 fail++;
                 write(json, writeInvalid);
             }
