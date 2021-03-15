@@ -26,6 +26,7 @@ import org.metafacture.framework.MetafactureException;
 import org.mockito.MockitoAnnotations;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.pgssoft.httpclient.HttpClientMock;
 
 /**
  * Tests for {@link OersiWriter}.
@@ -35,13 +36,16 @@ import com.fasterxml.jackson.core.JsonProcessingException;
  */
 public final class TestOersiWriter {
 
-    private static final String API = "http://oersi.de";
+    private static final String API = "http://localhost";
     private OersiWriter oersiWriter;
 
     @Before
     public void setup() {
         MockitoAnnotations.initMocks(this);
         oersiWriter = new OersiWriter(API);
+        HttpClientMock httpClientMock = new HttpClientMock();
+        httpClientMock.onPost(API).doReturnStatus(400);
+        oersiWriter.client = httpClientMock;
     }
 
     @Test

@@ -31,7 +31,7 @@ public final class OersiWriter implements ObjectReceiver<String> {
     private String pass;
     private FileWriter logWriter = null;
 
-    private HttpClient client;
+    HttpClient client;
     long fail = 0;
     long success = 0;
 
