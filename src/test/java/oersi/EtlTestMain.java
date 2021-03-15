@@ -23,10 +23,10 @@ public class EtlTestMain {
             // run all *.flux in a given directory:
             new Object[] { Arrays.asList("data/experimental") }, //
             // run a single *.flux file:
-            new Object[] { Arrays.asList("data/production/oernds-to-oersi.flux") }, //
+            new Object[] { Arrays.asList("data/production/twillo-to-oersi.flux") }, //
             // pass variables as command line arguments:
             new Object[] { Arrays.asList(//
-                    "data/production/oernds-to-oersi.flux", //
+                    "data/production/twillo-to-oersi.flux", //
                     "input_limit=2", //
                     "input_from=5", //
                     "output_schema=resource:/schemas/schema.json", //
