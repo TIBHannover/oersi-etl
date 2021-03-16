@@ -29,9 +29,9 @@ public final class OersiWriter implements ObjectReceiver<String> {
     private String url;
     private String user;
     private String pass;
-    FileWriter log = null;
+    private FileWriter logWriter = null;
 
-    private HttpClient client;
+    HttpClient client;
     long fail = 0;
     long success = 0;
 
@@ -55,7 +55,7 @@ public final class OersiWriter implements ObjectReceiver<String> {
     }
 
     public void setLog(String log) {
-        this.log = init(log);
+        this.logWriter = init(log);
     }
 
     private FileWriter init(String to) {
@@ -75,9 +75,9 @@ public final class OersiWriter implements ObjectReceiver<String> {
         try {
             HttpResponse<String> response = client.send(request,
                     HttpResponse.BodyHandlers.ofString());
-            if (log != null) {
-                log.append(response.body());
-                log.append("\n");
+            if (logWriter != null) {
+                logWriter.append(response.body());
+                logWriter.append("\n");
             }
             if (response.statusCode() == 200) {
                 success++;
@@ -100,9 +100,9 @@ public final class OersiWriter implements ObjectReceiver<String> {
 
     @Override
     public void closeStream() {
-        if (log != null) {
+        if (logWriter != null) {
             try {
-                log.close();
+                logWriter.close();
             } catch (IOException e) {
                 throw new MetafactureException(e.getMessage(), e);
             }

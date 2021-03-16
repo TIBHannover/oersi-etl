@@ -14,12 +14,13 @@ metafacture-*
 oai-harvest-manager
 
 # Ignore generated output data
-*.ndjson
 *.json
 *.txt
 *.xml
 !src/**
 log
+*.ndjson
+src/test/resources/local*.json
 
 # Ignore local test data
 data/test

@@ -36,7 +36,7 @@ import org.slf4j.LoggerFactory;
  */
 public class ETL {
 
-    static final String DATA_DIR = "data/experimental";
+    static final String DATA_DIR = "src/test/resources";
     static final File OUT_FILE = new File(DATA_DIR, "oersi.ndjson");
     private static final String DEFAULT_PROPERTIES = "oersi.properties";
 
@@ -67,7 +67,7 @@ public class ETL {
         return formatter.format(new Date(time));
     }
 
-    private static List<String> varsFromCliParams(String[] args) {
+    private static List<String> varsFromCliParams(String[] args) throws IOException {
         List<String> vars = new ArrayList<>();
         if (args.length > 1) {
             if (args[1].endsWith(".properties")) {
@@ -79,12 +79,10 @@ public class ETL {
         return vars;
     }
 
-    private static List<String> varsFromProperties(File file) {
+    private static List<String> varsFromProperties(File file) throws IOException {
         Properties properties = new Properties();
         try (FileInputStream in = new FileInputStream(file)) {
             properties.load(in);
-        } catch (IOException e) {
-            LOG.error(e.getMessage(), e);
         }
         return properties.entrySet().stream().map(e -> e.getKey() + "=" + e.getValue())
                 .collect(Collectors.toList());
@@ -110,7 +108,7 @@ public class ETL {
     }
 
     private static List<String> setUpVars(File flux, List<String> vars, File fileInvalid,
-            File fileValid, File fileResponses) {
+            File fileValid, File fileResponses) throws IOException {
         List<String> args = new ArrayList<>(vars);
         File defaultProperties = new File(flux.getParent(), DEFAULT_PROPERTIES);
         if (args.isEmpty() && defaultProperties.exists()) {

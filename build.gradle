@@ -43,12 +43,6 @@ dependencies {
     implementation('org.metafacture:metafacture-biblio:feature-oersi-SNAPSHOT') {
         exclude group: 'xml-apis', module: 'xml-apis'
     }
-    implementation('nl.mpi:oai-harvest-manager:1.2.0') {
-        exclude group: 'xml-apis', module: 'xml-apis'
-        exclude group: 'org.apache.logging.log4j', module: 'log4j-slf4j-impl'
-        exclude group: 'org.slf4j', module: 'log4j-over-slf4j'
-        exclude group: 'ch.qos.logback', module: 'logback-classic'
-    }
     implementation 'com.fasterxml.jackson.core:jackson-databind:2.9.10.4'
     implementation 'com.github.java-json-tools:json-schema-validator:2.2.14'
     implementation 'org.slf4j:slf4j-api:1.7.30'
@@ -56,6 +50,7 @@ dependencies {
 
     // Test frameworks:
     testImplementation 'junit:junit:4.12'
+    testImplementation 'com.pgs-soft:HttpClientMock:1.0.0'
     testCompile "org.mockito:mockito-core:2.+"
 }
 
@@ -86,4 +81,10 @@ jacocoTestReport {
 run {
   // pass system properties, e.g. `gradle run -Dlog4j.debug`
   systemProperties System.getProperties()
+}
+
+test {
+  filter {
+    excludeTestsMatching "IT*"
+  }
 }

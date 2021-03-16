@@ -16,27 +16,26 @@ import org.antlr.runtime.RecognitionException;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
-import org.metafacture.runner.Flux;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 @RunWith(Parameterized.class)
-public class EtlTestSingleResource {
+public class TestEtlHoou {
 
-    private static final Logger LOG = LoggerFactory.getLogger(EtlTestSingleResource.class);
+    private static final Logger LOG = LoggerFactory.getLogger(TestEtlHoou.class);
 
     private static final Object[][] PARAMS = new Object[][] { //
-            { "https://www.hoou.de/materials/tutorial-lernen-lernen",
+            { "/hoou-tutorial-lernen-lernen.html",
                     // ->
                     "Tutorial: Lernen lernen", //
                     "Das Bewusstsein und die Kenntnis über Ihren Lernstil kann Ihnen helfen, ", //
                     "https://creativecommons.org/licenses/by-nc-nd/4.0/" }, //
-            { "https://www.hoou.de/materials/online-punkteabfrage",
+            { "/hoou-online-punkteabfrage.html",
                     // ->
                     "Online Punkteabfrage", //
                     "Die Punktabfrage ist in Papierform (Poster / Klebepunkte) ein bewährtes Feedbackinstrument ", //
                     "http://creativecommons.org/licenses/by-sa/4.0/" }, //
-            { "https://www.hoou.de/materials/ifm-erzahlung-wie",
+            { "/hoou-ifm-erzaehlung-wie.html",
                     // ->
                     "IFM - Erzählung. Wie?", //
                     "In diesem Kapitel zeigt Professor Bramkamp anhand der Videoinstallation „Angels in Chains“ ", //
@@ -52,7 +51,7 @@ public class EtlTestSingleResource {
     private String description;
     private String license;
 
-    public EtlTestSingleResource(String url, String title, String description, String license) {
+    public TestEtlHoou(String url, String title, String description, String license) {
         this.url = url;
         this.title = title;
         this.description = description;
@@ -68,11 +67,11 @@ public class EtlTestSingleResource {
                 + "\n";
         String out = absPathToTempFile("", ".json");
         String flux = String.format("\"%s\""//
-                + "|open-http"//
+                + "|open-file"//
                 + "|decode-html"//
                 + "|org.metafacture.metamorph.Metafix(\"%s\")"//
                 + "|encode-json(prettyPrinting=\"false\")"//
-                + "|write(\"%s\");", url, fix, out);
+                + "|write(\"%s\");", getClass().getResource(url).getFile(), fix, out);
         LOG.info("Running Flux: {}", flux);
         String json = convertSingleResource(url, flux, out);
         assertThat(json, containsString(title));
@@ -83,7 +82,7 @@ public class EtlTestSingleResource {
 
     private String convertSingleResource(String sourceUrl, String flux, String outFile)
             throws IOException, RecognitionException {
-        Flux.main(new String[] { absPathToTempFile(flux, ".flux") });
+        ETL.main(new String[] { absPathToTempFile(flux, ".flux") });
         String json = Files.readAllLines(Paths.get(outFile)).stream()
                 .collect(Collectors.joining("\n"));
         // workaround until we can pick out a specific head.meta.content
