@@ -17,7 +17,6 @@ variables:
 
 build:
   script:
-    - sh install_snapshots.sh
     - ./gradlew --version
     - ./gradlew check --info
 
@@ -28,7 +27,6 @@ deploy:
     - echo COMMIT_SHA=${CI_COMMIT_SHORT_SHA} >> build.info
     - date +'TIMESTAMP=%Y%m%d%H%M%S' >> build.info
     - cat build.info
-    - sh install_snapshots.sh
     - ./gradlew installDist
   artifacts:
     paths:
@@ -45,7 +43,6 @@ sonar:
     paths:
       - .sonar/cache
   script:
-    - sh install_snapshots.sh
     - ./gradlew check jacocoTestReport sonarqube --info
   only:
     - merge_requests

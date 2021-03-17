@@ -12,13 +12,14 @@ plugins {
     id 'application'
     id "jacoco"
     id "org.sonarqube" version "2.8"
+    id 'io.github.0ffz.github-packages' version '1.2.1'
 }
 
 repositories {
     // Use jcenter for resolving your dependencies.
     // You can declare any Maven/Ivy/file repository here.
     jcenter()
-    mavenLocal()
+    maven githubPackage.invoke("metafacture")
 }
 
 dependencies {
@@ -34,12 +35,14 @@ dependencies {
     implementation 'org.metafacture:metafacture-triples:feature-oersi-SNAPSHOT'
     implementation 'org.metafacture:metafacture-formatting:feature-oersi-SNAPSHOT'
     implementation 'org.metafacture:metafacture-monitoring:feature-oersi-SNAPSHOT'
-    implementation 'org.metafacture:metafacture-runner:feature-oersi-SNAPSHOT'
+    implementation ('org.metafacture:metafacture-runner:feature-oersi-SNAPSHOT'){
+        exclude group: 'org.antlr', module: 'antlr'
+    }
     implementation 'org.metafacture:metafacture-json:feature-oersi-SNAPSHOT'
     implementation 'org.metafacture:metafacture-html:feature-oersi-SNAPSHOT'
     implementation 'org.metafacture:metafacture-elasticsearch:feature-oersi-SNAPSHOT'
     implementation 'org.metafacture:metafacture-xml:feature-oersi-SNAPSHOT'
-    implementation 'org.metafacture.fix:org.metafacture.fix:1.0.0-SNAPSHOT'
+    implementation 'org.metafacture:metafacture-fix:feature-oersi-SNAPSHOT'
     implementation('org.metafacture:metafacture-biblio:feature-oersi-SNAPSHOT') {
         exclude group: 'xml-apis', module: 'xml-apis'
     }
