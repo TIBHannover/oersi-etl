@@ -60,7 +60,11 @@ end
 do array('creator', flushWith: record)
  do entity('')
   add_field('type', 'Person')
-  map('node.properties.ccm:lifecyclecontributer_authorFN[].*', 'name')
+  do map('node.properties.ccm:lifecyclecontributer_authorFN[].*', 'name')
+    trim()
+    not_equals(string: '')
+    not_equals(string: 'null null')
+  end
  end
 end
 
