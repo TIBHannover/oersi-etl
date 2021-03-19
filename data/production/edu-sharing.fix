@@ -17,6 +17,7 @@ end
 /* Replace default ID if we have a ccm:wwwurl */
 do map('node.properties.ccm:wwwurl[].1', id)
   trim()
+  replace_all(pattern: '\\u00a0', with: '') /* %A0 / &nbsp; */
 end
 
 do array('mainEntityOfPage')
