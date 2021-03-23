@@ -1,0 +1,17 @@
+/* Set up the context */
+do array("@context")
+ add_field("","https://w3id.org/kim/lrmi-profile/draft/context.jsonld")
+ do entity("")
+  add_field("@language", "de")
+ end
+end
+
+/* Construct actual ID from @id */
+do map("header.identifier.value","id")
+    replace_all(pattern: "oai:tib.eu:kmo-av:sid~", with: "https://av.tib.eu/media/")
+end
+
+/* Input-Title is array or string */
+do map("@graph[].1.title[].*|@graph[].1.title", "name")
+  not_equals(string: "")
+end
