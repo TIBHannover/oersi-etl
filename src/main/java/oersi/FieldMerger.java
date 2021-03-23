@@ -10,7 +10,10 @@ import org.metafacture.framework.MetafactureException;
 import org.metafacture.framework.ObjectReceiver;
 import org.metafacture.framework.helpers.DefaultObjectPipe;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.JsonNodeFactory;
+import com.fasterxml.jackson.databind.node.TextNode;
 
 /**
  * Merge map entries from fields with identical names under a single field.
@@ -19,7 +22,19 @@ import com.fasterxml.jackson.databind.ObjectMapper;
  */
 public final class FieldMerger extends DefaultObjectPipe<String, ObjectReceiver<String>> {
 
-    private final ObjectMapper mapper = new ObjectMapper();
+    private final ObjectMapper mapper;
+
+    public FieldMerger() {
+        mapper = new ObjectMapper();
+        mapper.setNodeFactory(new JsonNodeFactory() {
+            private static final long serialVersionUID = 1L;
+
+            @Override
+            public TextNode textNode(String text) {
+                return super.textNode(text.trim());
+            }
+        });
+    }
 
     static class MultiMap extends HashMap<String, Object> {
         private static final long serialVersionUID = 490682490432334605L;
@@ -60,7 +75,8 @@ public final class FieldMerger extends DefaultObjectPipe<String, ObjectReceiver<
     public void process(final String s) {
         try {
             Map<String, Object> json = mapper.readValue(s, MultiMap.class);
-            getReceiver().process(mapper.writeValueAsString(json));
+            JsonNode tree = mapper.readTree(mapper.writeValueAsString(json));
+            getReceiver().process(mapper.writeValueAsString(tree));
         } catch (IOException e) {
             throw new MetafactureException(e.getMessage(), e);
         }
