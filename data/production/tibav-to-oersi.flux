@@ -2,16 +2,24 @@ service_domain = "https://av.tib.eu/";
 service_id = "https://oerworldmap.org/resource/urn:uuid:10c5092a-152d-4cc9-a823-e2deff43128e";
 service_name = "TIB AV-Portal";
 
+// out-comment first workflow to use local data
+
 "https://getinfo.tib.eu/oai/intern/repository/tib"
-| open-oaipmh(metadataPrefix="datacite", dateFrom="2020-03-02", dateUntil="2020-03-02", setSpec="kmo-av")
-| log-object("OAI-IMPUT HHIEEEEEEEEEEER:")
-// html-Decoder
+| open-oaipmh(metadataPrefix="datacite", setSpec="kmo-av")
+| as-lines
+| write(FLUX_DIR + "tibav-data-datacite.xml")
+;
+
+FLUX_DIR + "tibav-data-datacite.xml"
+| open-file
 | decode-xml
-| handle-generic-xml
-| fix(FLUX_DIR + "all.fix", *)
-| encode-json
+| split-xml-elements(elementname="record", xmldeclaration="")
+| literal-to-object
+| read-string
+| decode-html(attrValsAsSubfields="title.titletype&subject.subjectscheme&contributor.contributortype&contributorname.nametype&alternateidentifier.alternateidentifiertype&description.descriptiontype&identifier.identifiertype&date.datetype")
+| fix(FLUX_DIR + "tibav.fix", *)
+| encode-json(prettyPrinting="true")
 | oersi.FieldMerger
 | oersi.JsonValidator(output_schema, writeValid=metadata_valid, writeInvalid=metadata_invalid)
-//| oersi.OersiWriter(backend_api, user=backend_user, pass=backend_pass, log=metadata_responses)
-| print
+| oersi.OersiWriter(backend_api, user=backend_user, pass=backend_pass, log=metadata_responses)
 ;

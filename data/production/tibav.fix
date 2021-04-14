@@ -1,3 +1,7 @@
+/* The difficulty with the fix is that the attributes are read as values but not as keys.*/
+/* Also that values and the attribute are not grouped together as objects but all are single keys at the same level. */
+
+/*WORKS!!!:*/
 /* Set up the context */
 do array("@context")
  add_field("","https://w3id.org/kim/lrmi-profile/draft/context.jsonld")
@@ -6,34 +10,29 @@ do array("@context")
  end
 end
 
-/* Construct actual ID from @id */
-do map("@graph[].1.@id","id")
-    replace_all(pattern: "https://www.tib.eu/de/suchen/id/kmo-av%3Asid%7E", with: "https://av.tib.eu/media/")
+/* id: Construct actual ID from @id. Picked from header not from record itself. */
+do map("html.body.record.header.identifier.value","id")
+    replace_all(pattern: "oai:tib.eu:kmo-av:sid~", with: "https://av.tib.eu/media/")
 end
 
-/* Input-Title is array or string */
-do map("@graph[].1.title[].*|@graph[].1.title", "name")
+/* name:  */
+do map("html.body.record.metadata.resources.resource.titles.title.value", "name")
   not_equals(string: "")
 end
 
-/* At the moment only CC-licenses will be recognised */
-map("@graph[].1.issued", "dateCreated")
-do map("@graph[].1.license","license")
+/*image*/
+do map("html.body.record.header.identifier.value","image")
+    replace_all(pattern: "oai:tib.eu:kmo-av:sid~", with: "https://av.tib.eu/thumbnail/")
+end
+
+/* dateCreated: */
+map("html.body.record.metadata.resources.resource.dates.date.Issued", "dateCreated")
+
+/*description:*/
+map("html.body.record.metadata.resources.resource.descriptions.description.Abstract", "description")
+
+do map("html.body.record.metadata.resources.resource.rightsList.rights.rightsURI","license")
   regexp(match: "https://creativecommons.org/(licenses|licences|publicdomain)/.*")
-end
-
-do array("creator", flushWith: record)
- do entity("")
- /* At the moment FIX does not support conditionals so that we only can recognise creators as Person */
-  add_field("type", "Person")
-  do map("@graph[].1.creator[].*|@graph[].1.creator", "name")
-    replace(pattern: "(.+), (.+)", with: "$2 $1")
-  end
- end
-end
-
-do map("@graph[].1.language", "inLanguage")
-  replace_all(pattern: "http://id.loc.gov/vocabulary/iso639-1/", with: "")
 end
 
 do array ("type")
@@ -58,21 +57,19 @@ do array('learningResourceType')
   end
 end
 
+/*publisher:  May exist more than once. */
 do array("publisher")
  do entity("")
   add_field("type", "Organization")
-  map("@graph[].1.publisher", "name")
+  map("html.body.record.metadata.resources.resource.publisher.value", "name")
  end
 end
-
-do array("keywords", flushWith: record)
-  map("@graph[].1.subject[].*")
-end
+/* mainEntityofPage */
 
 do array("mainEntityOfPage")
   do entity("")
-    do map("@graph[].1.@id","id")
-      replace_all(pattern: "https://www.tib.eu/de/suchen/id/kmo-av%3Asid%7E", with: "https://av.tib.eu/media/")
+    do map("html.body.record.header.identifier.value","id")
+        replace_all(pattern: "oai:tib.eu:kmo-av:sid~", with: "https://av.tib.eu/media/")
     end
     /* Add provider/source information to each resource description */
     do entity("provider")
@@ -83,6 +80,36 @@ do array("mainEntityOfPage")
   end
 end
 
-do map('@graph[].1.identifier[].*', image)
-  contains(string: '.jpg')
+/* inLanguage */
+do map("html.body.record.metadata.resources.resource.language.value", "inLanguage")
+  replace_all(pattern: "http://id.loc.gov/vocabulary/iso639-1/", with: "")
+end
+
+/* TIB does not differentiate between an organisation and a person. */
+do array("creator", flushWith: record)
+ do entity("")
+ /* If TIB would provide type, we could try. At the moment FIX does not support conditionals so that we only can recognise creators as Person */
+  add_field("type", "Person")
+  do map("html.body.record.metadata.resources.resource.creators.creator.creatorname.value", "name")
+    replace(pattern: "(.+), (.+)", with: "$2 $1")
+  end
+ end
+end
+
+/*All subjects without attributes */
+do entity('keywords[]', flushWith: 'record')
+ map('html.body.record.metadata.resources.resource.subjects.subject.value')
+end
+
+do map('html.body.record.metadata.resources.resource.subjects.subject.linsearch', '@hochschulfaechersystematik')
+  lookup(in: 'data/maps/tibav-subject-mapping.tsv')
+end
+
+do array('about', flushWith: record)
+ do entity('', flushWith: '@hochschulfaechersystematik')
+  map('@hochschulfaechersystematik', 'id')
+  do map('@hochschulfaechersystematik', 'prefLabel.de')
+    lookup(in: 'data/maps/subject-labels.tsv')
+  end
+ end
 end
