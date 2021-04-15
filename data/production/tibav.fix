@@ -1,7 +1,6 @@
 /* The difficulty with the fix is that the attributes are read as values but not as keys.*/
 /* Also that values and the attribute are not grouped together as objects but all are single keys at the same level. */
 
-/*WORKS!!!:*/
 /* Set up the context */
 do array("@context")
  add_field("","https://w3id.org/kim/lrmi-profile/draft/context.jsonld")

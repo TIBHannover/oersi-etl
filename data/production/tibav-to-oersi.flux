@@ -2,16 +2,10 @@ service_domain = "https://av.tib.eu/";
 service_id = "https://oerworldmap.org/resource/urn:uuid:10c5092a-152d-4cc9-a823-e2deff43128e";
 service_name = "TIB AV-Portal";
 
-// out-comment first workflow to use local data
 
 "https://getinfo.tib.eu/oai/intern/repository/tib"
 | open-oaipmh(metadataPrefix="datacite", setSpec="kmo-av")
 | as-lines
-| write(FLUX_DIR + "tibav-data-datacite.xml")
-;
-
-FLUX_DIR + "tibav-data-datacite.xml"
-| open-file
 | decode-xml
 | split-xml-elements(elementname="record", xmldeclaration="")
 | literal-to-object
