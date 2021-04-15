@@ -5,7 +5,6 @@ service_name = "TIB AV-Portal";
 
 "https://getinfo.tib.eu/oai/intern/repository/tib"
 | open-oaipmh(metadataPrefix="datacite", setSpec="kmo-av")
-| as-lines
 | decode-xml
 | split-xml-elements(elementname="record", xmldeclaration="")
 | literal-to-object
