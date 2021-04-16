@@ -29,21 +29,21 @@ dependencies {
     // This dependency is used internally, and not exposed to consumers on their own compile classpath.
     implementation 'com.google.guava:guava:26.0-jre'
     implementation 'org.jooq:joox-java-6:1.6.0'
-    implementation 'org.metafacture:metafacture-strings:feature-oersi-SNAPSHOT'
-    implementation 'org.metafacture:metafacture-plumbing:feature-oersi-SNAPSHOT'
-    implementation 'org.metafacture:metafacture-strings:feature-oersi-SNAPSHOT'
-    implementation 'org.metafacture:metafacture-triples:feature-oersi-SNAPSHOT'
-    implementation 'org.metafacture:metafacture-formatting:feature-oersi-SNAPSHOT'
-    implementation 'org.metafacture:metafacture-monitoring:feature-oersi-SNAPSHOT'
-    implementation ('org.metafacture:metafacture-runner:feature-oersi-SNAPSHOT'){
+    implementation 'org.metafacture:metafacture-strings:5.2.0-rc1'
+    implementation 'org.metafacture:metafacture-plumbing:5.2.0-rc1'
+    implementation 'org.metafacture:metafacture-strings:5.2.0-rc1'
+    implementation 'org.metafacture:metafacture-triples:5.2.0-rc1'
+    implementation 'org.metafacture:metafacture-formatting:5.2.0-rc1'
+    implementation 'org.metafacture:metafacture-monitoring:5.2.0-rc1'
+    implementation ('org.metafacture:metafacture-runner:5.2.0-rc1'){
         exclude group: 'org.antlr', module: 'antlr'
     }
-    implementation 'org.metafacture:metafacture-json:feature-oersi-SNAPSHOT'
-    implementation 'org.metafacture:metafacture-html:feature-oersi-SNAPSHOT'
-    implementation 'org.metafacture:metafacture-elasticsearch:feature-oersi-SNAPSHOT'
-    implementation 'org.metafacture:metafacture-xml:feature-oersi-SNAPSHOT'
-    implementation 'org.metafacture:metafacture-fix:feature-oersi-SNAPSHOT'
-    implementation('org.metafacture:metafacture-biblio:feature-oersi-SNAPSHOT') {
+    implementation 'org.metafacture:metafacture-json:5.2.0-rc1'
+    implementation 'org.metafacture:metafacture-html:5.2.0-rc1'
+    implementation 'org.metafacture:metafacture-elasticsearch:5.2.0-rc1'
+    implementation 'org.metafacture:metafacture-xml:5.2.0-rc1'
+    implementation 'org.metafacture:metafacture-fix:0.1.0'
+    implementation('org.metafacture:metafacture-biblio:5.2.0-rc1') {
         exclude group: 'xml-apis', module: 'xml-apis'
     }
     implementation 'com.fasterxml.jackson.core:jackson-databind:2.9.10.4'
