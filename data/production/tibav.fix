@@ -100,15 +100,21 @@ do entity('keywords[]', flushWith: 'record')
  map('html.body.record.metadata.resources.resource.subjects.subject.value')
 end
 
-do map('html.body.record.metadata.resources.resource.subjects.subject.linsearch', '@hochschulfaechersystematik')
+/*All subjects with knm or linsearch attribute are transformed to about objects. Duplicate objects should be avoided. kmn and linsearch are almoist identical. */
+do map('html.body.record.metadata.resources.resource.subjects.subject.linsearch|html.body.record.metadata.resources.resource.subjects.subject.knm','@hochschulfaechersystematik')
   lookup(in: 'data/maps/tibav-subject-mapping.tsv')
+  unique()
+end
+  
+do array('about', flushWith: record)
+  do entity('', flushWith: '@hochschulfaechersystematik')
+    map('@hochschulfaechersystematik', 'id')
+    do map('@hochschulfaechersystematik', 'prefLabel.de')
+      lookup(in: 'data/maps/subject-labels.tsv')
+    end
+  end
 end
 
-do array('about', flushWith: record)
- do entity('', flushWith: '@hochschulfaechersystematik')
-  map('@hochschulfaechersystematik', 'id')
-  do map('@hochschulfaechersystematik', 'prefLabel.de')
-    lookup(in: 'data/maps/subject-labels.tsv')
-  end
- end
+do map("html.body.record.metadata.resources.resource.rightslist.rights.rightsuri", "license")
+  regexp(match: "https://creativecommons.org/licenses/.*")
 end
