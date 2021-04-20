@@ -58,7 +58,12 @@ dependencies {
 }
 
 apply plugin : "java"
+apply plugin: "maven"
+
 sourceCompatibility = JavaVersion.VERSION_11
+
+group = "org.oersi"
+version = "0.7.0-SNAPSHOT"
 
 ext {
    javaMainClass = "oersi.ETL"

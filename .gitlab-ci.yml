@@ -23,7 +23,9 @@ build:
 deploy:
   stage: deploy
   script:
-    - echo BUILDNUMBER=${CI_JOB_ID} > build.info
+    - 'PROJECTVERSION=$(grep "^version = \"[0-9A-Z.-]*\"" build.gradle | cut -d"=" -f2 | sed "s/[\" ]//g")'
+    - echo VERSION=${PROJECTVERSION} > build.info
+    - echo BUILDNUMBER=${CI_JOB_ID} >> build.info
     - echo COMMIT_SHA=${CI_COMMIT_SHORT_SHA} >> build.info
     - date +'TIMESTAMP=%Y%m%d%H%M%S' >> build.info
     - cat build.info
