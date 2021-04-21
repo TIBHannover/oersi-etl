@@ -63,7 +63,7 @@ apply plugin: "maven"
 sourceCompatibility = JavaVersion.VERSION_11
 
 group = "org.oersi"
-version = "0.7.0-SNAPSHOT"
+version = "0.7.0"
 
 ext {
    javaMainClass = "oersi.ETL"
