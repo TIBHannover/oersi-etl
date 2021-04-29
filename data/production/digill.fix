@@ -18,8 +18,10 @@ do map("@graph[].3.datePublished", "dateCreated")
   replace_all(pattern: 'T.*', with: '')
 end
 
-do map("@graph[].3.inLanguage", "inLanguage")
-  replace_all(pattern: '-.*', with: '')
+do array("inLanguage")
+  do map("@graph[].3.inLanguage")
+    replace_all(pattern: '-.*', with: '')
+  end
 end
 
 do array("type")

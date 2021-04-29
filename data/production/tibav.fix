@@ -80,8 +80,10 @@ do array("mainEntityOfPage")
 end
 
 /* inLanguage */
-do map("html.body.record.metadata.resources.resource.language.value", "inLanguage")
-  replace_all(pattern: "http://id.loc.gov/vocabulary/iso639-1/", with: "")
+do array("inLanguage")
+  do map("html.body.record.metadata.resources.resource.language.value")
+    replace_all(pattern: "http://id.loc.gov/vocabulary/iso639-1/", with: "")
+  end
 end
 
 /* TIB does not differentiate between an organisation and a person. */

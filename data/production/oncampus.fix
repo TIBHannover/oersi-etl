@@ -26,10 +26,12 @@ do array("creator", flushWith: record)
  end
 end
 
-do map('html.body.div.div.div.div.section.div.div.div.div.div.div.span.value', inLanguage)
-  regexp(match: "Deutsch|English")
-  replace(pattern: "Deutsch", with: "de")
-  replace(pattern: "English", with: "en")
+do array("inLanguage")
+  do map("html.body.div.div.div.div.section.div.div.div.div.div.div.span.value")
+    regexp(match: "Deutsch|English")
+    replace(pattern: "Deutsch", with: "de")
+    replace(pattern: "English", with: "en")
+  end
 end
 
 map("html.head.meta.og:url", "id")

@@ -83,10 +83,13 @@ do map('node.properties.virtual:licenseurl[].1', license)
   replace_all(pattern: '/deed.*$', with: '')
 end
 
-do map('node.properties.cclom:general_language[].1', inLanguage)
-  replace_all(pattern: '_..$', with: '') /* remove country suffixes eg. _DE */
-  replace_all(pattern: '^$', with: 'de') /* empty strings default to 'de' */
-  replace_all(pattern: 'unknown', with: 'de')
+
+do array("inLanguage")
+  do map('node.properties.cclom:general_language[].1')
+    replace_all(pattern: '_..$', with: '') /* remove country suffixes eg. _DE */
+    replace_all(pattern: '^$', with: 'de') /* empty strings default to 'de' */
+    replace_all(pattern: 'unknown', with: 'de')
+  end
 end
 
 do array('type')
