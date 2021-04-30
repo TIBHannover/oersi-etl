@@ -56,10 +56,13 @@ public final class SitemapReader extends DefaultObjectPipe<String, ObjectReceive
                     .filter(s -> s.matches(urlPattern)).collect(Collectors.toList());
             for (String url : texts.subList(0, Math.min(limit, texts.size()))) {
                 LOG.trace("Processing resource URL {}", url);
-                getReceiver().process(findAndReplace(url));
+                getReceiver().process(findAndReplace(findAndReplace, url));
                 Thread.sleep(wait);
             }
-            tryNextPage(sitemap, texts.size());
+            String nextUrl = getNextUrl(sitemap, "from=", texts.size(), limit);
+            if (nextUrl != null) {
+                process(nextUrl);
+            }
         } catch (SAXException | IOException e) {
             throw new MetafactureException(e.getMessage(), e);
         } catch (InterruptedException e) {
@@ -68,8 +71,9 @@ public final class SitemapReader extends DefaultObjectPipe<String, ObjectReceive
         }
     }
 
-    private void tryNextPage(final String sitemap, int currentPageSize) {
-        String fromParam = "from=";
+    static String getNextUrl(final String sitemap, String fromParam, int currentPageSize,
+            int limit) {
+        String nextUrl = null;
         boolean pagingIsSupported = sitemap.contains(fromParam);
         boolean isDone = currentPageSize == 0 || limit <= currentPageSize;
         if (pagingIsSupported && !isDone) {
@@ -78,15 +82,18 @@ public final class SitemapReader extends DefaultObjectPipe<String, ObjectReceive
                 if (scanner.hasNextInt()) {
                     int lastFrom = scanner.nextInt();
                     int nextFrom = lastFrom + currentPageSize;
-                    process(sitemap.replace(fromParam + lastFrom, fromParam + nextFrom));
+                    if (nextFrom <= limit) {
+                        nextUrl = sitemap.replace(fromParam + lastFrom, fromParam + nextFrom);
+                    }
                 }
             }
         }
+        return nextUrl;
     }
 
-    private String findAndReplace(String url) {
-        if (findAndReplace != null) {
-            String[] split = findAndReplace.split("`");
+    static String findAndReplace(String pattern, String url) {
+        if (pattern != null) {
+            String[] split = pattern.split("`");
             return url.replaceAll(split[0], split[1]);
         }
         return url;

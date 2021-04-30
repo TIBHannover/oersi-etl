@@ -6,11 +6,13 @@ default input_limit = "-1"; // 'default': is overridden by command-line/properti
 default input_from = "0";
 default input_wait = "50";
 
-"https://www.oerbw.de/edu-sharing/eduservlet/sitemap?from=" + input_from
-| oersi.SitemapReader(wait=input_wait,limit=input_limit,urlPattern=".*/components/.*",findAndReplace="https://uni-tuebingen.oerbw.de/edu-sharing/components/render/(.*)`https://uni-tuebingen.oerbw.de/edu-sharing/rest/node/v1/nodes/-home-/$1/metadata?propertyFilter=-all-")
+"https://www.oerbw.de/edu-sharing/rest/node/v1/nodes/-home-?query=*&maxItems=10&propertyFilter=-all-&skipCount=0"
+| oersi.NodeSearchReader(wait=input_wait,limit=input_limit,findAndReplace="^(.*)`https://uni-tuebingen.oerbw.de/edu-sharing/rest/node/v1/nodes/-home-/$1/metadata?propertyFilter=-all-")
 | open-http(accept="application/json")
 | as-lines
 | decode-json
+| filter-null-values
+| fix-filter("map(node.title)")
 | fix(FLUX_DIR + "edu-sharing.fix", *) // '*': pass all flux variables to the fix
 | encode-json
 | oersi.FieldMerger
