@@ -30,7 +30,7 @@ map("html.body.record.metadata.resources.resource.dates.date.Issued", "dateCreat
 /*description:*/
 map("html.body.record.metadata.resources.resource.descriptions.description.Abstract", "description")
 
-do map("html.body.record.metadata.resources.resource.rightsList.rights.rightsURI","license")
+do map("html.body.record.metadata.resources.resource.rightslist.rights.rightsuri","license")
   regexp(match: "https://creativecommons.org/(licenses|licences|publicdomain)/.*")
 end
 
@@ -115,8 +115,4 @@ do array('about', flushWith: record)
       lookup(in: 'data/maps/subject-labels.tsv')
     end
   end
-end
-
-do map("html.body.record.metadata.resources.resource.rightslist.rights.rightsuri", "license")
-  regexp(match: "https://creativecommons.org/licenses/.*")
 end
