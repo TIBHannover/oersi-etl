@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import org.apache.commons.lang3.StringEscapeUtils;
 import org.metafacture.framework.MetafactureException;
 import org.metafacture.framework.ObjectReceiver;
 import org.metafacture.framework.helpers.DefaultObjectPipe;
@@ -31,7 +32,7 @@ public final class FieldMerger extends DefaultObjectPipe<String, ObjectReceiver<
 
             @Override
             public TextNode textNode(String text) {
-                return super.textNode(text.trim());
+                return super.textNode(StringEscapeUtils.unescapeHtml4(text.trim()));
             }
         });
     }

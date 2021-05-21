@@ -65,7 +65,10 @@ public final class TestFieldMerger {
                     json("{'key0':{'key1':'val1','key2':['val2']}}") },
             { "Trim-In-Map-In-Array", //
                     json("{'key0':['https ',{'key1':' val1'}]}"), //
-                    json("{'key0':['https',{'key1':'val1'}]}") } };
+                    json("{'key0':['https',{'key1':'val1'}]}") },
+            { "Unescape-HTML-entities", //
+                    json("{'key0':'val1&amp;val2'}"), //
+                    json("{'key0':'val1&val2'}") } };
 
     @Parameterized.Parameters(name = "{0}, {1} -> {2}")
     public static Collection<Object[]> siteMaps() {
