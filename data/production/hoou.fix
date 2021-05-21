@@ -6,12 +6,16 @@ do array("@context")
  end
 end
 
+map("@id", "id")
+
 map("name", "name")
 
-map("hasPart[].1.thumbnailUrl", "image")
+map("image", "image")
 map("description", "description")
 map("license", "liscense")
-map("audience", "audience")
+
+/* The audicence is created differently now as object as well it is not provided often. */
+/* map("audience", "audience") */
 
 do map("dateCreated", "dateCreated")
   replace_all(pattern: "T.*", with: "")
@@ -22,9 +26,16 @@ do map("dateModified", "dateModified")
 end
 
 do array("creator", flushWith: record)
- do entity("")
+ do entity("", flushWith: "author[].?|author[].??")
   map("author[].*.@type", "type")
   map("author[].*.name", "name")
+ end
+end
+
+do array("publisher", flushWith: record)
+ do entity("")
+  add_field("type","Organization")
+  map("provider[].*.name", "name")
  end
 end
 
@@ -38,4 +49,16 @@ end
 
 do array("type")
   add_field("","LearningResource")
+end
+
+do array("mainEntityOfPage")
+  do entity("")
+    map("@id", "id")
+    /* Add provider/source information to each resource description */
+    do entity("provider")
+      add_field("id","$[service_id]")
+      add_field("type","Service")
+      add_field("name","$[service_name]")
+    end
+  end
 end
