@@ -47,8 +47,43 @@ do array("keywords")
   end
 end
 
+do map("keywords", "@hochschulfaechersystematik")
+  split(delimiter: ",")
+  trim()
+  lookup(in: "data/maps/hoou-subject-mapping.tsv")
+  lookup(in: "data/maps/subject-url-mapping.tsv")
+end
+
+do array("about", flushWith: record)
+ do entity("", flushWith: "@hochschulfaechersystematik")
+  map("@hochschulfaechersystematik", "id")
+  do map("@hochschulfaechersystematik", "prefLabel.de")
+    lookup(in: "data/maps/subject-labels.tsv")
+  end
+ end
+end
+
 do array("type")
   add_field("","LearningResource")
+end
+
+/* HOOU provides at the moment only Course or CreativeWork as types. */
+do map("@type", "@hcrt")
+  lookup(in: "data/maps/en-labels-hcrt-uri.tsv")
+end
+
+do array("learningResourceType")
+  do entity("")
+    map("@hcrt", "id")
+    do entity("prefLabel")
+      do map("@hcrt", "de")
+        lookup(in: "data/maps/hcrt-de-labels.tsv")
+      end  
+      do map("@hcrt", "en")
+        lookup(in: "data/maps/hcrt-en-labels.tsv")
+      end
+    end
+  end
 end
 
 do array("mainEntityOfPage")
@@ -59,6 +94,20 @@ do array("mainEntityOfPage")
       add_field("id","$[service_id]")
       add_field("type","Service")
       add_field("name","$[service_name]")
+    end
+  end
+end
+
+/* Only little number of records have audience informations. */
+do map("audience[].*.educationalRole", "@educationalAudienceRole")
+  lookup("Lehrer*in": "teacher", "Schüler*innen": "student", "Student*in": "student")
+end
+
+do array("audience" flushWith: record)
+  do entity("", flushWith:"@educationalAudienceRole")
+    do map("@educationalAudienceRole", "id")
+      compose(prefix: "http://purl.org/dcx/lrmi-vocabs/educationalAudienceRole/")
+      unique()
     end
   end
 end
