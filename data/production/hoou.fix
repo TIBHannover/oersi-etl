@@ -15,7 +15,6 @@ map("description", "description")
 map("license", "liscense")
 
 /* The audicence is created differently now as object as well it is not provided often. */
-/* map("audience", "audience") */
 
 do map("dateCreated", "dateCreated")
   replace_all(pattern: "T.*", with: "")
@@ -67,8 +66,9 @@ do array("type")
   add_field("","LearningResource")
 end
 
-/* HOOU provides at the moment only Course or CreativeWork as types. */
-do map("@type", "@hcrt")
+/* HOOU provides at the moment only Course or CreativeWork as types. Also learningResourceType is set with Video oder Bilder but not very often. */
+do map("@type|learningResourceType", "@hcrt")
+  replace(pattern:"Bilder", with:"Image")
   lookup(in: "data/maps/en-labels-hcrt-uri.tsv")
 end
 
