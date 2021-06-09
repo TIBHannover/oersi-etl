@@ -1,0 +1,124 @@
+/* Set up the context */
+do array('@context')
+ add_field('','https://w3id.org/kim/lrmi-profile/draft/context.jsonld')
+ do entity('')
+  add_field('@language', 'de')
+ end
+end
+
+map(node.title, name)
+map(node.preview.url, image)
+
+/* Default ID: */
+do map('node.ref.id', id)
+  compose(prefix: 'https://$[service_domain]/edu-sharing/components/render/')
+end
+
+/* Replace default ID if we have a ccm:wwwurl */
+do map('node.properties.ccm:wwwurl[].1', id)
+  trim()
+  replace_all(pattern: '\\u00a0', with: '') /* %A0 / &nbsp; */
+end
+
+do array('mainEntityOfPage')
+  do entity('')
+    do map('node.ref.id', id)
+      compose(prefix: 'https://$[service_domain]/edu-sharing/components/render/')
+    end
+    /* Add creation/modification date, converting dateTime (e.g. 2019-07-23T09:26:00Z) to date (2019-07-23) */
+    do map('node.modifiedAt', 'dateModified')
+      replace_all(pattern: 'T.+Z', with: '')
+    end
+    do map('node.createdAt', 'dateCreated')
+      replace_all(pattern: 'T.+Z', with: '')
+    end
+    /* Add provider/source information to each resource description */
+    do entity('provider')
+      add_field('id','$[service_id]')
+      add_field('type','Service')
+      add_field('name','$[service_name]')
+    end
+  end
+end
+
+do map(node.description, description)
+  not_equals(string: '')
+end
+
+do map('node.properties.ccm:taxonid[].*', '@hochschulfaechersystematik')
+  not_equals(string: '')
+  not_equals(string: 'null null')
+end
+
+do array('about', flushWith: record)
+ do entity('', flushWith: '@hochschulfaechersystematik')
+  map('@hochschulfaechersystematik', 'id')
+  do map('@hochschulfaechersystematik', 'prefLabel.de')
+    lookup(in: 'data/maps/subject-labels.tsv')
+  end
+ end
+end
+
+do array('creator', flushWith: record)
+ do entity('')
+  add_field('type', 'Person')
+  do map('node.properties.ccm:lifecyclecontributer_authorFN[].*', 'name')
+    trim()
+    not_equals(string: '')
+    not_equals(string: 'null null')
+  end
+ end
+end
+
+do array('sourceOrganization')
+ do entity('')
+  add_field('type', 'Organization')
+  do map('node.properties.ccm:university_DISPLAYNAME[].1', 'name')
+    not_equals(string: '')
+    not_equals(string: '- Alle -')
+  end
+ end
+end
+
+do map('node.properties.virtual:licenseurl[].1', license)
+  replace_all(pattern: '/deed.*$', with: '')
+end
+
+
+do array("inLanguage")
+  do map('node.properties.cclom:general_language[].1')
+    replace_all(pattern: '_..$', with: '') /* remove country suffixes eg. _DE */
+    replace_all(pattern: '^$', with: 'de') /* empty strings default to 'de' */
+    replace_all(pattern: 'unknown', with: 'de')
+  end
+end
+
+do array('type')
+  add_field('','LearningResource')
+end
+
+do map('node.properties.ccm:educationallearningresourcetype[].*', '@hcrt')
+  not_equals(string: '')
+  not_equals(string: 'null null')
+end
+
+do array('learningResourceType')
+  do entity('')
+    map('@hcrt', 'id')
+    do entity('prefLabel')
+      do map('@hcrt', 'de')
+        lookup(in: 'data/maps/hcrt-de-labels.tsv')
+      end  
+      do map('@hcrt', 'en')
+        lookup(in: 'data/maps/hcrt-en-labels.tsv')
+      end
+    end
+  end
+end
+
+do array('keywords')
+  map('node.properties.cclom:general_keyword[].*')
+end
+
+/* Enable to see what else is coming in from the source: */
+/* map(_else) */
