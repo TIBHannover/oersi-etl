@@ -31,7 +31,7 @@ do array("creator", flushWith: record)
  end
 end
 
-do array("publisher", flushWith: record)
+do array("sourceOrganization", flushWith: record)
  do entity("")
   add_field("type","Organization")
   map("provider[].*.name", "name")
