@@ -46,8 +46,7 @@ do map(node.description, description)
 end
 
 do map('node.properties.ccm:taxonid[].*', '@hochschulfaechersystematik')
-  not_equals(string: '')
-  not_equals(string: 'null null')
+  regexp(match: "^https://w3id.org/kim/hochschulfaechersystematik/.*")
 end
 
 do array('about', flushWith: record)
