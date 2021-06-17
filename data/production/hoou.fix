@@ -70,6 +70,7 @@ end
 do map("@type|learningResourceType", "@hcrt")
   replace(pattern:"Bilder", with:"Image")
   lookup(in: "data/maps/en-labels-hcrt-uri.tsv")
+  regexp(match: "https://w3id.org/kim/hcrt/.*")
 end
 
 do array("learningResourceType")
