@@ -7,6 +7,7 @@ default input_wait = "50";
 
 "https://www.hoou.de/sitemap.xml" // for local testing: "file://" + FLUX_DIR + "hoou-sitemap.xml"
 | oersi.SitemapReader(wait=input_wait, limit=input_limit, urlPattern=".*/(materials|projects)/.*")
+| catch-object-exception(logprefix="Exception from open-http: ", logstacktrace="true")
 | open-http
 | extract-element("script[data-test=model-linked-data]")
 | decode-json
