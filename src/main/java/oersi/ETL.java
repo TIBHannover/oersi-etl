@@ -91,24 +91,27 @@ public class ETL {
     private static void run(File flux, List<String> vars) throws IOException, RecognitionException {
         String name = flux.getName().split("-")[0];
         File fluxDir = flux.getParentFile();
+        File fileProcessErrors = new File(fluxDir, name + "-errors.txt");
         File fileInvalid = new File(fluxDir, name + "-invalid.json");
         File fileValid = new File(fluxDir, name + "-metadata.json");
         File fileResponses = new File(fluxDir, name + "-responses.json");
-        List<String> fullVars = setUpVars(flux, vars, fileInvalid, fileValid, fileResponses);
+        List<String> fullVars = setUpVars(flux, vars, fileProcessErrors, fileInvalid, fileValid,
+                fileResponses);
+        long start = System.currentTimeMillis();
         try {
-            long start = System.currentTimeMillis();
             Flux.main(fullVars.toArray(new String[] {}));
-            long end = System.currentTimeMillis() - start;
-            logSummary(flux, fileInvalid, fileResponses, end);
         } catch (MetafactureException e) {
             LOG.error(flux.getName(), e);
             LOG.info("Import channel {} FAILED: {} ({})", flux.getName(), e.getMessage(),
                     e.getCause() != null ? e.getCause().getClass().getSimpleName() : "<no cause>");
+        } finally {
+            logSummary(flux, fileProcessErrors, fileInvalid, fileResponses,
+                    System.currentTimeMillis() - start);
         }
     }
 
-    private static List<String> setUpVars(File flux, List<String> vars, File fileInvalid,
-            File fileValid, File fileResponses) throws IOException {
+    private static List<String> setUpVars(File flux, List<String> vars, File fileProcessErrors,
+            File fileInvalid, File fileValid, File fileResponses) throws IOException {
         List<String> args = new ArrayList<>(vars);
         File defaultProperties = new File(flux.getParent(), DEFAULT_PROPERTIES);
         if (args.isEmpty() && defaultProperties.exists()) {
@@ -116,6 +119,7 @@ public class ETL {
         }
         args.add(0, flux.getAbsolutePath());
         List<String> debuggingOutputLocations = Arrays.asList(//
+                "file_errors=" + fileProcessErrors.getAbsolutePath(), //
                 "metadata_invalid=" + fileInvalid.getAbsolutePath(), //
                 "metadata_valid=" + fileValid.getAbsolutePath(), //
                 "metadata_responses=" + fileResponses.getAbsolutePath());
@@ -126,12 +130,18 @@ public class ETL {
         return args;
     }
 
-    private static void logSummary(File flux, File invalid, File responses, long end)
-            throws IOException {
+    private static void logSummary(File flux, File failProcess, File invalid, File responses,
+            long end) throws IOException {
         String notAvailable = "n/a";
+        String countFailProcess = notAvailable;
         String countInvalid = notAvailable;
         String countSuccess = notAvailable;
-        String countError = notAvailable;
+        String countFailWrite = notAvailable;
+        if (failProcess.exists()) {
+            try (Stream<String> errored = Files.lines(failProcess.toPath())) {
+                countFailProcess = errored.count() + "";
+            }
+        }
         if (invalid.exists()) {
             try (Stream<String> invalids = Files.lines(invalid.toPath())) {
                 countInvalid = invalids.count() + "";
@@ -141,13 +151,14 @@ public class ETL {
             try (Stream<String> allResponses = Files.lines(responses.toPath())) {
                 Map<Boolean, List<String>> errored = allResponses
                         .collect(Collectors.partitioningBy(s -> s.contains("\"error\"")));
-                countError = errored.get(true).size() + "";
+                countFailWrite = errored.get(true).size() + "";
                 countSuccess = errored.get(false).size() + "";
             }
         }
         LOG.info(
-                "Import channel {}, SUCCESS: {}, FAIL-VALIDATION: {}, FAIL-WRITE: {}, DURATION: {}",
-                flux.getName(), countSuccess, countInvalid, countError, formatTime(end));
+                "Import channel {}, SUCCESS: {}, FAIL-PROCESS: {}, FAIL-VALIDATION: {}, FAIL-WRITE: {}, DURATION: {}",
+                flux.getName(), countSuccess, countFailProcess, countInvalid, countFailWrite,
+                formatTime(end));
     }
 
     private static Object[] maskCredentials(List<String> args) {
