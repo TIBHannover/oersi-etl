@@ -33,7 +33,7 @@ public final class ErrorCatcher<T> extends DefaultObjectPipe<T, ObjectReceiver<T
 
     private static final Logger LOG = LoggerFactory.getLogger(ErrorCatcher.class);
 
-    private FileWriter writer = null;
+    FileWriter writer = null;
 
     public ErrorCatcher(String file) {
         super();
@@ -53,8 +53,8 @@ public final class ErrorCatcher<T> extends DefaultObjectPipe<T, ObjectReceiver<T
             try {
                 writer.append(e.getMessage());
                 writer.append("\n");
-            } catch (IOException e1) {
-                throw new MetafactureException(e1);
+            } catch (Exception x) {
+                throw new MetafactureException(x.getMessage(), x);
             }
             LOG.debug(e.getMessage(), e);
         }
@@ -65,7 +65,7 @@ public final class ErrorCatcher<T> extends DefaultObjectPipe<T, ObjectReceiver<T
         if (writer != null) {
             try {
                 writer.close();
-            } catch (IOException e) {
+            } catch (Exception e) {
                 throw new MetafactureException(e.getMessage(), e);
             }
         }
