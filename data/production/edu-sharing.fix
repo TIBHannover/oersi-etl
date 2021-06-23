@@ -67,6 +67,15 @@ do array('creator', flushWith: record)
     not_equals(string: 'null null')
   end
  end
+ do entity('')
+  add_field('type', 'Organization')
+  do map('node.properties.ccm:lifecyclecontributer_author[].1', 'name')
+    trim()
+    not_equals(string: '')
+    not_equals(string: 'null null')
+    regexp(match: '^BEGIN:VCARD\nORG:(.+)\n.*', format: '${1}')
+  end
+ end
 end
 
 do array('sourceOrganization')
