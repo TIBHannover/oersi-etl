@@ -1,32 +1,20 @@
-"https://duepublico2.uni-due.de/servlets/OAIDataProvider"
-| open-oaipmh(metadataPrefix="mods",dateFrom="2020-05-14",dateUntil="2020-05-14")
+service_domain = "oer-contentbuffet.info";
+service_id = "https://oerworldmap.org/resource/urn:uuid:efed6ca2-b228-480f-be03-090a19de7b42";
+service_name = "OERinfo";
+
+default input_limit = "-1"; // 'default': is overridden by command-line/properties value
+default input_from = "0";
+default input_wait = "50";
+
+// Query should only ask for collection OER but DuePublico does not offer this via its OAI: // 
+"https://duepublico2.uni-due.de/oer/oai"
+| open-oaipmh(metadataPrefix="mods",dateFrom="2021-01-01",dateUntil="2021-07-01")
 | decode-xml
 | handle-generic-xml
-| org.metafacture.metamorph.Metafix("
-
-/* Set up the context, TODO: include from separate file */
-add_field('@context.id','@id')
-add_field('@context.type','@type')
-add_field('@context.@vocab','http://schema.org/')
-
-/* Map some of the data we have to the oersi model: */
-map(metadata.mods.titleInfo.title.value, name)
-map(metadata.mods.abstract.value, description)
-/* TODO: pick a specific URL: */
-map(metadata.mods.location.url.value, id)
-
-/* Dont use the actual license, API accepts only creativecommons.org URLs */
-/* map(metadata.mods.accessCondition.href, license) */
-/* TODO: change constraint or use mapping of duepublico to creativecommons URLs */
-add_field(license, 'https://creativecommons.org/licenses/unknown')
-
-")
+| fix(FLUX_DIR + "mods.fix", *) // '*': pass all flux variables to the fix
 | encode-json
 | oersi.FieldMerger
-//| oersi.JsonValidator("https://dini-ag-kim.github.io/lrmi-profile/draft/schemas/schema.json")
-| object-tee | {
-    write(FLUX_DIR + "duepub-metadata.json", header="[\n", footer="\n]", separator=",\n")
-  }{
-    oersi.OersiWriter("http://192.168.98.115:8080/oersi/api/metadata", 
-      user="test", pass="test", log=FLUX_DIR + "duepub-responses.json")
-};
+| oersi.JsonValidator(output_schema, writeValid=metadata_valid, writeInvalid=metadata_invalid)
+//| oersi.OersiWriter(backend_api, user=backend_user, pass=backend_pass, log=metadata_responses)
+| print
+;

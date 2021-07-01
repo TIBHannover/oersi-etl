@@ -1,10 +1,3 @@
-// Query should only ask for collection OER but DuePublico does not offer this via its OAI: // 
-"https://duepublico2.uni-due.de/servlets/OAIDataProvider"
-| open-oaipmh(metadataPrefix="mods",dateFrom="2020-05-14",dateUntil="2020-05-14")
-| decode-xml
-| handle-generic-xml
-| org.metafacture.metamorph.Metafix("
-
 /* Set up the context */
 do array('@context')
  add_field('','https://w3id.org/kim/lrmi-profile/draft/context.jsonld')
@@ -54,10 +47,3 @@ map(metadata.mods.subject.topic.value, keywords)
 /* map(metadata.mods. , audience) DuePublico is missing audience */
 /* map(metadata.mods. , isBasedOn) */
 /* map(metadata.mods. , mainEntityOfPage) */
-
-
-")
-| encode-json
-| oersi.FieldMerger
-// | oersi.JsonValidator("https://dini-ag-kim.github.io/lrmi-profile/draft/schemas/schema.json")
-|  write(FLUX_DIR + "duepub-metadata-tobias-neu.json", header="[\n", footer="\n]", separator=",\n");
