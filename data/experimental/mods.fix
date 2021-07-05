@@ -12,15 +12,11 @@ map("metadata.mods.identifier.value", "id")
 /* To map the image the location.url needs to carry the attribute access preview. Could creat confusion:*/
 map("metadata.mods.location.url.value", "image")
 
-
-
 do combine(name: "name", value:  "${pre} ${title}")
     map("metadata.mods.titleInfo.title.value", "title")
     map("metadata.mods.relatedItem.titleInfo.nonSort.value","pre")
 end
 
-/* name does not specify if creator type is person or institution: */
-/*  map(metadata.mods.name.displayForm.value, creator) */
 do array("creator", flushWith: record)
  do entity("", flushWith: "metadata.mods.name")
   do map("metadata.mods.name.type", "type")
@@ -33,27 +29,74 @@ do array("creator", flushWith: record)
  end
 end
 
-/* Do we additionally need the language of the abstract?: */
 map("metadata.mods.abstract.value", "description")
 
-/* Map has to be updated, when Duepublico2 Updates their links  */
 do map("metadata.mods.accessCondition.href", "license")
   lookup(in: "data/maps/DuePub-Licence.tsv")
 end
 
 map("metadata.mods.originInfo.dateIssued.value", "dataCreated")
 map("metadata.mods.relatedItem.language.languageTerm.value", "inLanguage")
-map("metadata.mods.genre.value", "learningResourceType") 
 
-/* Maps only a single keyword */
-map("metadata.mods.subject.topic.value", "keywords") 
+
+do array ("type")
+  add_field("","LearningResource")
+end
+
+do map('metadata.mods.genre.value', '@hcrt')
+  lookup(in: 'data/maps/DuePub-HCRT.tsv')
+end
+do array('learningResourceType')
+  do entity('')
+    map('@hcrt', 'id')
+    do entity('prefLabel')
+      do map('@hcrt', 'de')
+        lookup(in: 'data/maps/hcrt-de-labels.tsv')
+      end  
+      do map('@hcrt', 'en')
+        lookup(in: 'data/maps/hcrt-en-labels.tsv')
+      end
+    end
+  end
+end
+
+do entity("keywords[]")
+  map("metadata.mods.subject.topic.value")
+end
+
+
+do map("metadata.mods.classification.valueURI","@hochschulfaechersystematik")
+  lookup(in: "data/maps/DestatisPersonal2DestatisStudierende.tsv")
+  unique()
+end
+  
+do array("about", flushWith: record)
+  do entity("", flushWith: "@hochschulfaechersystematik")
+    map("@hochschulfaechersystematik", "id")
+    do map("@hochschulfaechersystematik", "prefLabel.de")
+      lookup(in: "data/maps/subject-labels.tsv")
+    end
+  end
+end
+
+/* mainEntityofPage */
+
+do array("mainEntityOfPage")
+  do entity("")
+    map("metadata.mods.identifier.value", "id")
+    /* Add provider/source information to each resource description */
+    do entity("provider")
+      add_field("id","$[service_id]")
+      add_field("type","Service")
+      add_field("name","$[service_name]")
+    end
+  end
+end
 
 /* map(_else) */
 
 /* Fehlen noch: */
 /* map(metadata.mods.typeOfResource.value, type) vocab does not match */
-/* map(metadata.mods. , about) */
 /* map(metadata.mods. , publisher) Who is the publisher? The Resource or only the real publisher? */
 /* map(metadata.mods. , audience) DuePublico is missing audience */
 /* map(metadata.mods. , isBasedOn) */
-/* map(metadata.mods. , mainEntityOfPage) */
