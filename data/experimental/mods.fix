@@ -1,46 +1,56 @@
 /* Set up the context */
-do array('@context')
- add_field('','https://w3id.org/kim/lrmi-profile/draft/context.jsonld')
- do entity('')
-  add_field('@language', 'de')
+do array("@context")
+ add_field("","https://w3id.org/kim/lrmi-profile/draft/context.jsonld")
+ do entity("")
+  add_field("@language", "de")
  end
 end
 
 /* Mapping the data to element level: */
-map(metadata.mods.identifier.value, id)
+map("metadata.mods.identifier.value", "id")
 
 /* To map the image the location.url needs to carry the attribute access preview. Could creat confusion:*/
-map(metadata.mods.location.url.value, image)
+map("metadata.mods.location.url.value", "image")
 
 
-map(metadata.mods.titleInfo.title.value, name)
+
+do combine("name", "${pre} ${title}")
+    map("metadata.mods.titleInfo.title.value", "title")
+    map("metadata.mods.relatedItem.titleInfo.nonSort.value","pre")
+end
 
 /* name does not specify if creator type is person or institution: */
 /*  map(metadata.mods.name.displayForm.value, creator) */
-do combine('name', '${first} ${last}')
-    map(node.createdBy.firstName,first)
-    map(node.createdBy.lastName,last)
+do array("creator", flushWith: record)
+ do entity("", flushWith: "metadata.mods.name")
+  do map("metadata.mods.name.type", "type")
+    equals(string: "personal")
+    constant(value:"Person")
+  end
+  do map("metadata.mods.name.displayForm.value", "name")
+    replace(pattern: "(.+), (.+)", with: "$2 $1")
+  end
+ end
 end
 
 /* Do we additionally need the language of the abstract?: */
-map(metadata.mods.abstract.value, description)
+map("metadata.mods.abstract.value", "description")
 
 /* Map has to be updated, when Duepublico2 Updates their links  */
-do map(metadata.mods.accessCondition.href, license)
-  lookup(in: 'data/maps/DuePub-Licence.tsv')
+do map("metadata.mods.accessCondition.href", "license")
+  lookup(in: "data/maps/DuePub-Licence.tsv")
 end
 
-map(metadata.mods.originInfo.dateIssued.value, dataCreated)
-map(metadata.mods.relatedItem.language.languageTerm.value, inLanguage)
-map(metadata.mods.genre.value, learningResourceType) 
+map("metadata.mods.originInfo.dateIssued.value", "dataCreated")
+map("metadata.mods.relatedItem.language.languageTerm.value", "inLanguage")
+map("metadata.mods.genre.value", "learningResourceType") 
 
 /* Maps only a single keyword */
-map(metadata.mods.subject.topic.value, keywords) 
+map("metadata.mods.subject.topic.value", "keywords") 
 
 /* map(_else) */
 
 /* Fehlen noch: */
-/* map(metadata.mods. , @context) */
 /* map(metadata.mods.typeOfResource.value, type) vocab does not match */
 /* map(metadata.mods. , about) */
 /* map(metadata.mods. , publisher) Who is the publisher? The Resource or only the real publisher? */
