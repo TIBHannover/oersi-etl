@@ -14,7 +14,7 @@ map("metadata.mods.location.url.value", "image")
 
 
 
-do combine("name", "${pre} ${title}")
+do combine(name: "name", value:  "${pre} ${title}")
     map("metadata.mods.titleInfo.title.value", "title")
     map("metadata.mods.relatedItem.titleInfo.nonSort.value","pre")
 end
