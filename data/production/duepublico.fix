@@ -7,10 +7,14 @@ do array("@context")
 end
 
 /* Mapping the data to element level: */
-map("metadata.mods.identifier.value", "id")
+do map("metadata.mods.identifier.value", "id")
+  regexp(match:"^https://duepublico2.uni-due.de/receive/.*")
+end
 
 /* To map the image the location.url needs to carry the attribute access preview. Could creat confusion:*/
-map("metadata.mods.location.url.value", "image")
+do map("metadata.mods.location.url.value", "image")
+  regexp(match:"^https://duepublico2.uni-due.de/rsc/thumbnail/.*")
+end
 
 do choose(flushWith: record)
   do combine(name: "name", value:  "${pre} ${title}")
@@ -21,15 +25,27 @@ do choose(flushWith: record)
 end
 
 do array("creator", flushWith: record)
- do entity("", flushWith: "metadata.mods.name")
-  do map("metadata.mods.name.type", "type")
-    equals(string: "personal")
-    constant(value:"Person")
+  do entity("", flushWith: "metadata.mods.name")
+    do choose(flushWith: "metadata.mods.name")
+      do map("metadata.mods.name.type", "type")
+        equals(string: "personal")
+        constant(value:"Person")
+      end
+      do map("metadata.mods.name.type", "type")
+        equals(string: "corporate")
+        constant(value:"Organization")
+      end
+    end  
+    do choose(flushWith: "metadata.mods.name")
+      do map("metadata.mods.name.valueURI", "name")
+        lookup(in: "data/maps/duepub-corporate.tsv", __default: "no_match")
+        not_equals(string: "no_match")
+      end
+      do map("metadata.mods.name.displayForm.value", "name")
+        replace(pattern: "(.+), (.+)", with: "$2 $1")
+      end
+    end  
   end
-  do map("metadata.mods.name.displayForm.value", "name")
-    replace(pattern: "(.+), (.+)", with: "$2 $1")
-  end
- end
 end
 
 map("metadata.mods.abstract.value", "description")
@@ -88,7 +104,9 @@ end
 
 do array("mainEntityOfPage")
   do entity("")
-    map("metadata.mods.identifier.value", "id")
+    do map("metadata.mods.identifier.value", "id")
+      regexp(match:"^https://duepublico2.uni-due.de/receive/.*")
+    end
     /* Add provider/source information to each resource description */
     do entity("provider")
       add_field("id","$[service_id]")
@@ -101,7 +119,6 @@ end
 /* map(_else) */
 
 /* Fehlen noch: */
-/* map(metadata.mods.typeOfResource.value, type) vocab does not match */
 /* map(metadata.mods. , publisher) Who is the publisher? The Resource or only the real publisher? */
 /* map(metadata.mods. , audience) DuePublico is missing audience */
 /* map(metadata.mods. , isBasedOn) */
