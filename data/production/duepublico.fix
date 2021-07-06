@@ -12,9 +12,12 @@ map("metadata.mods.identifier.value", "id")
 /* To map the image the location.url needs to carry the attribute access preview. Could creat confusion:*/
 map("metadata.mods.location.url.value", "image")
 
-do combine(name: "name", value:  "${pre} ${title}")
-    map("metadata.mods.titleInfo.title.value", "title")
-    map("metadata.mods.relatedItem.titleInfo.nonSort.value","pre")
+do choose(flushWith: record)
+  do combine(name: "name", value:  "${pre} ${title}")
+      map("metadata.mods.titleInfo.title.value", "title")
+      map("metadata.mods.relatedItem.titleInfo.nonSort.value","pre")
+  end
+  map("metadata.mods.titleInfo.title.value", "name")
 end
 
 do array("creator", flushWith: record)
@@ -36,8 +39,10 @@ do map("metadata.mods.accessCondition.href", "license")
 end
 
 map("metadata.mods.originInfo.dateIssued.value", "dataCreated")
-map("metadata.mods.relatedItem.language.languageTerm.value", "inLanguage")
 
+do array("inLanguage")
+  map("metadata.mods.language.languageTerm.value")
+end
 
 do array ("type")
   add_field("","LearningResource")
@@ -60,7 +65,7 @@ do array('learningResourceType')
   end
 end
 
-do entity("keywords[]")
+do array("keywords")
   map("metadata.mods.subject.topic.value")
 end
 
