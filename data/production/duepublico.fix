@@ -25,7 +25,7 @@ do choose(flushWith: record)
 end
 
 do array("creator", flushWith: record)
-  do entity("", flushWith: "metadata.mods.name")
+  do entity("", sameEntity:"true")
     do choose(flushWith: "metadata.mods.name")
       do map("metadata.mods.name.type", "type")
         equals(string: "personal")
@@ -38,8 +38,7 @@ do array("creator", flushWith: record)
     end  
     do choose(flushWith: "metadata.mods.name")
       do map("metadata.mods.name.valueURI", "name")
-        lookup(in: "data/maps/duepub-corporate.tsv", __default: "no_match")
-        not_equals(string: "no_match")
+        lookup(in: "data/maps/duepub-corporate.tsv")
       end
       do map("metadata.mods.name.displayForm.value", "name")
         replace(pattern: "(.+), (.+)", with: "$2 $1")
