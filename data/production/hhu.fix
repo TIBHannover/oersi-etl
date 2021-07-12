@@ -27,7 +27,9 @@ end
 do array("creator", flushWith: record)
  do entity("")
   add_field("type", "Person")
-  map("*.p.watch-speaker", "name")
+  do map("*.p.watch-speaker", "name")
+    setreplace("map": "data/maps/replaceAcademicTitle.tsv")
+  end 
  end
 end
 
