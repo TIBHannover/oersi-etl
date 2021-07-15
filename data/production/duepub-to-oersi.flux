@@ -9,7 +9,7 @@ service_name = "DuePublico 2";
 | fix-filter("
 map('metadata.mods.identifier.value')
 ") // filter out all deleted records
-| fix(FLUX_DIR + "duepublico.fix", *) // '*': pass all flux variables to the fix
+| fix(FLUX_DIR + "if-all-test.fix", *) // '*': pass all flux variables to the fix
 | encode-json
 | oersi.FieldMerger
 | oersi.JsonValidator(output_schema, writeValid=metadata_valid, writeInvalid=metadata_invalid)
