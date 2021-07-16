@@ -28,7 +28,7 @@ do array("creator", flushWith: record)
  do entity("")
   add_field("type", "Person")
   do map("*.p.watch-speaker", "name")
-    setreplace("map": "data/maps/replaceAcademicTitle.tsv")
+    replace(pattern: "Dr. |Prof. |PD |PD. |med. |Uni.-|-Ing. |Univ.-|h.c. |mult. |, MME|, MScN|, MSc|Dres. |, M.A.", with: "")
   end 
  end
 end
