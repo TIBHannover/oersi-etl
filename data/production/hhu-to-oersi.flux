@@ -6,10 +6,12 @@ default input_limit = "-1"; // 'default': is overridden by command-line/properti
 default input_wait = "50";
 
 "https://mediathek.hhu.de/sitemap?list=videos" // FLUX_DIR + "hhu-sitemap.xml"
-| oersi.SitemapReader(wait=input_wait, limit="30")
+| oersi.SitemapReader(wait=input_wait, limit=input_limit)
 | open-http
 | decode-html(attrValsAsSubfields="&p.class&a.class&div.class&span.class")
-| morph(FLUX_DIR + "noTitle.xml")
+| fix(FLUX_DIR + "hhu.fix", *)
 | encode-json
-| write("stdout")
+| oersi.FieldMerger
+| oersi.JsonValidator(output_schema, writeValid=metadata_valid, writeInvalid=metadata_invalid)
+| oersi.OersiWriter(backend_api, user=backend_user, pass=backend_pass, log=metadata_responses)
 ;
