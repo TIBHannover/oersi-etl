@@ -92,7 +92,20 @@ do array("creator", flushWith: record)
  /* If TIB would provide type, we could try. At the moment FIX does not support conditionals so that we only can recognise creators as Person */
   add_field("type", "Person")
   do map("html.body.record.metadata.resources.resource.creators.creator.creatorname.value", "name")
+    regexp(match: "^((?!\\(|\\)).)*$")
     replace(pattern: "(.+), (.+)", with: "$2 $1")
+  end
+ end
+end
+
+/* TIB does not differentiate between an organisation and a person. */
+do array("contributor", flushWith: record)
+ do entity("")
+ /* If TIB would provide type, we could try. At the moment FIX does not support conditionals so that we only can recognise creators as Person */
+  add_field("type", "Person")
+  do map("html.body.record.metadata.resources.resource.creators.creator.creatorname.value", "name")
+    contains(string: "(")
+    replace(pattern: "(.+), (.+) \\(.+\\)", with: "$2 $1")
   end
  end
 end
