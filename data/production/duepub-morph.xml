@@ -60,7 +60,7 @@ end
 do choose(flushWith: record)
   do combine(name: "name", value:  "${pre} ${title}")
       map("metadata.mods.titleInfo.title.value", "title")
-      map("metadata.mods.relatedItem.titleInfo.nonSort.value","pre")
+      map("metadata.mods.titleInfo.nonSort.value","pre")
   end
   map("metadata.mods.titleInfo.title.value", "name")
 end
@@ -69,7 +69,7 @@ end
 		<choose flushWith="record">
 			<combine name="name" value="${pre} ${title}">
 				<data source="metadata.mods.titleInfo.title.value" name="title" />
-				<data source="metadata.mods.relatedItem.titleInfo.nonSort.value" name="pre" />
+				<data source="metadata.mods.titleInfo.nonSort.value" name="pre" />
 			</combine>
 			<data source="metadata.mods.titleInfo.title.value" name="name"/>
 		</choose>
