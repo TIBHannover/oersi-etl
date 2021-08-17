@@ -27,7 +27,9 @@ end
 do array("creator", flushWith: record)
  do entity("", flushWith: "author[].?|author[].??")
   map("author[].*.@type", "type")
-  map("author[].*.name", "name")
+  do map("author[].*.name", "name")
+    replace(pattern: "Dr. |Prof. |PD |PD. |med. |Uni.-|-Ing. |Univ.-|h.c. |mult. |, MME|, MScN|, MSc|Dres. |, M.A.", with: "")
+  end 
  end
 end
 
