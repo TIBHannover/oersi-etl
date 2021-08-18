@@ -22,7 +22,9 @@ end
 do array("creator", flushWith: record)
  do entity("")
   add_field("type", "Person")
-  map("html.body.div.div.div.div.section.section.section.div.h4.value", "name")
+  do map("html.body.div.div.div.div.section.section.section.div.h4.value", "name")
+    replace(pattern: "Apl. |Dr. |Dr.'in |Prof. |Prof.'in |Prof.|Prof |PD |PD. |med. |rer. |pol.|nat. |Uni.-|Univ.-|Univ. |Dipl.|-Ing. |-Inform. |h.c. |mult. |, MME|, MScN|M. Sc. |, MSc|Dres. |, M.A.", with: "")
+  end
  end
 end
 

@@ -65,7 +65,7 @@ do array('creator', flushWith: record)
     trim()
     not_equals(string: '')
     not_equals(string: 'null null')
-    replace(pattern: "Dr. |Prof. |PD |PD. |med. |Uni.-|-Ing. |Univ.-|h.c. |mult. |, MME|, MScN|, MSc|Dres. |, M.A.", with: "") 
+    replace(pattern: "Apl. |Dr. |Dr.'in |Prof. |Prof.'in |Prof.|Prof |PD |PD. |med. |rer. |pol.|nat. |Uni.-|Univ.-|Univ. |Dipl.|-Ing. |-Inform. |h.c. |mult. |, MME|, MScN|M. Sc. |, MSc|Dres. |, M.A.", with: "")
   end
  end
  do entity('')
