@@ -345,12 +345,6 @@ end -->
 				</entity>
 			</entity>
 		</entity>
-		<!--
-
-/* map(_else) */
-
-/* Fehlen noch: */
-/* map(metadata.mods. , isBasedOn) */ -->
 
 
 	</rules>
