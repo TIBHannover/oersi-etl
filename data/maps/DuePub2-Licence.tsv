@@ -1,4 +1,3 @@
-https://duepublico2.uni-due.de/api/v1/classifications/mir_licenses#rights_reserved	All rights reserved
 https://duepublico2.uni-due.de/api/v1/classifications/mir_licenses#cc_by_4.0	https://creativecommons.org/licenses/cc-by/4.0
 https://duepublico2.uni-due.de/api/v1/classifications/mir_licenses#cc_by-sa_4.0	https://creativecommons.org/licenses/cc-by-sa/4.0
 https://duepublico2.uni-due.de/api/v1/classifications/mir_licenses#cc_by-nd_4.0	https://creativecommons.org/licenses/cc-by-nd/4.0
@@ -25,9 +24,5 @@ https://duepublico2.uni-due.de/api/v1/classifications/mir_licenses#cc_by-nc-sa_1
 https://duepublico2.uni-due.de/api/v1/classifications/mir_licenses#cc_by-nc-nd_1.0	https://creativecommons.org/licenses/cc-by-nc-nd-1.0
 https://duepublico2.uni-due.de/api/v1/classifications/mir_licenses#cc0	https://creativecommons.org/publicdomain/zero/1.0/
 https://duepublico2.uni-due.de/api/v1/classifications/mir_licenses#gpl_3	http://www.gnu.org/licenses/gpl-3.0
-https://duepublico2.uni-due.de/api/v1/classifications/mir_licenses#odc_pddl	https://www.opendatacommons.org/licenses/pddl/1-0/index.html
-https://duepublico2.uni-due.de/api/v1/classifications/mir_licenses#odc_by	https://opendatacommons.org/licenses/by/1-0/index.html
-https://duepublico2.uni-due.de/api/v1/classifications/mir_licenses#odc_odbl	https://opendatacommons.org/licenses/odbl/1.0/index.html
-https://duepublico2.uni-due.de/api/v1/classifications/mir_licenses#oa_nlz	https://www.nationallizenzen.de/open-access/open-access-rechte.xls/view
-https://duepublico2.uni-due.de/api/v1/classifications/mir_licenses#public_domain	public_domain
+https://duepublico2.uni-due.de/api/v1/classifications/mir_licenses#public_domain	https://creativecommons.org/public_domain
 
