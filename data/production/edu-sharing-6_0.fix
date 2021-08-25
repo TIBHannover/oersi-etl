@@ -41,7 +41,7 @@ do array('mainEntityOfPage')
   end
 end
 
-do map(node.description, description)
+do map("node.properties.cclom:general_description[].*", "description")
   not_equals(string: '')
 end
 
