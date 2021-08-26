@@ -32,8 +32,10 @@ do map("html.body.record.metadata.resources.resource.descriptions.description.Ab
   replace_all(pattern: "^\\(de\\)|^\\(en\\)", with: "")
 end
 
-do map("html.body.record.metadata.resources.resource.rightslist.rights.rightsuri","license")
-  regexp(match: "https://creativecommons.org/(licenses|licences|publicdomain)/.*")
+do entity("license")
+  do map("html.body.record.metadata.resources.resource.rightslist.rights.rightsuri", "id")
+    regexp(match: '^http[s]?:\\/\\/creativecommons.org\\/(licenses|licences|publicdomain)\\/.*|^http[s]?:\\/\\/www.gnu.org\\/licenses\\/.*|^http[s]?:\\/\\/www.apache.org\\/licenses\\/.*|http[s]?://opensource.org/licenses/MIT|^http[s]?:\\/\\/www.opensource.org\\/licenses\\/BSD.*')
+  end
 end
 
 do array ("type")
