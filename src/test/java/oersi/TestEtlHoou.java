@@ -61,15 +61,15 @@ public class TestEtlHoou {
     @Test
     public void testConvertSingleResource() throws IOException, RecognitionException {
         String fix = "\n"//
-                + "map(html.head.title.value, title)\n"//
-                + "map(html.body.div.div.div.div.div.div.div.p.value, description)\n"//
-                + "map(html.body.div.div.div.div.div.div.div.div.div.div.div.div.div.div.div.div.p.a.href, license)"
+                + "move_field(html.head.title.value, title)\n"//
+                + "move_field(html.body.div.div.div.div.div.div.div.p.value, description)\n"//
+                + "move_field(html.body.div.div.div.div.div.div.div.div.div.div.div.div.div.div.div.div.p.a.href, license)"
                 + "\n";
         String out = absPathToTempFile("", ".json");
         String flux = String.format("\"%s\""//
                 + "|open-file"//
                 + "|decode-html"//
-                + "|org.metafacture.metamorph.Metafix(\"%s\")"//
+                + "|fix(\"%s\")"//
                 + "|encode-json(prettyPrinting=\"false\")"//
                 + "|write(\"%s\");", getClass().getResource(url).getFile(), fix, out);
         LOG.info("Running Flux: {}", flux);
