@@ -12,7 +12,12 @@ map("name", "name")
 
 map("image", "image")
 map("description", "description")
-map("license", "liscense")
+
+do entity("license")
+  do map("license", "id")
+    regexp(match: '^http[s]?:\\/\\/creativecommons.org\\/(licenses|licences|publicdomain)\\/.*|^http[s]?:\\/\\/www.gnu.org\\/licenses\\/.*|^http[s]?:\\/\\/www.apache.org\\/licenses\\/.*|http[s]?://opensource.org/licenses/MIT|^http[s]?:\\/\\/www.opensource.org\\/licenses\\/BSD.*')
+  end
+end
 
 /* The audicence is created differently now as object as well it is not provided often. */
 

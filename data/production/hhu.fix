@@ -20,8 +20,11 @@ do map("*.span.watch-information-date produced", "dateCreated")
 end
 
 /*rel = "liscence" cant be directly mapped */
-do map("*.a.license", "license")
-  replace(pattern: "http:", with: "https:")
+
+do entity("license")
+  do map("*.a.license", "id")
+        regexp(match: '^http[s]?:\\/\\/creativecommons.org\\/(licenses|licences|publicdomain)\\/.*|^http[s]?:\\/\\/www.gnu.org\\/licenses\\/.*|^http[s]?:\\/\\/www.apache.org\\/licenses\\/.*|http[s]?://opensource.org/licenses/MIT|^http[s]?:\\/\\/www.opensource.org\\/licenses\\/BSD.*')
+  end
 end
 
 do array("creator", flushWith: record)

@@ -37,7 +37,10 @@ do array("publisher")
 end
 
 /* Add BY-SA 4.0 license as digiLL is saying usual license is CC BY SA) */
-add_field("license","https://creativecommons.org/licenses/by-sa/4.0/")
+
+do entity("license")
+  add_field("id","https://creativecommons.org/licenses/by-sa/4.0/")
+end
 
 /* Add Course always as lRT */
 
