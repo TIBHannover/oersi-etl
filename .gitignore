@@ -21,6 +21,7 @@ oai-harvest-manager
 log
 *.ndjson
 src/test/resources/local*.json
+!data/experimental/duepub-metafacture.*
 
 # Ignore local test data
 data/test

@@ -1,0 +1,36 @@
+# See https://github.com/TobiasNx/Catmandu-Testing/blob/master/DuePub-Test/duepub-catmandu.fix
+
+if exists ("metadata.error")
+	reject()
+end
+
+if any_equal ("header.status", "deleted")
+	reject()
+end
+
+# ---------------@context ----------------------------------
+
+set_array("@context[]", "https://w3id.org/kim/lrmi-profile/draft/context.jsonld")
+set_hash("@context[].$append", "@language": "de")
+
+# --------------id ----------------------------------------
+# TODO: why use list here at all?
+do list("path": "metadata.mods.identifier.value", "var": "a")
+	if all_match("a","^https://duepublico2.uni-due.de/receive/.*")
+		copy_field("a","id")
+	end
+end
+
+#  ------------image ------------------------------------
+# TODO: why use list here at all?
+do list("path": "metadata.mods.location.url.value", "var": "b")
+    if all_match("b","^https://duepublico2.uni-due.de/rsc/thumbnail/.*")
+        copy_field("b","image")
+    end
+end
+
+#  ------------title ------------------------------------
+paste("title","metadata.mods.titleInfo.nonSort.value","metadata.mods.titleInfo.title.value")
+
+retain("@context[]","id","image","title")
+vacuum()
