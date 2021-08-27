@@ -38,7 +38,7 @@ do map("metadata.mods.identifier.value", "id")
   regexp(match:"^https://duepublico2.uni-due.de/receive/.*")
 end -->
 
-		<data source="metadata.mods.identifier.value" name="id">
+		<data source="metadata.mods:mods.mods:identifier.value" name="id">
 			<regexp match="^https://duepublico2.uni-due.de/receive/.*" />
 		</data>
 
@@ -50,7 +50,7 @@ do map("metadata.mods.location.url.value", "image")
 end
  -->
 
-		<data source="metadata.mods.location.url.value" name="image">
+		<data source="metadata.mods:mods.mods:location.mods:url.value" name="image">
 			<regexp match="^https://duepublico2.uni-due.de/rsc/thumbnail/.*" />
 		</data>
 
@@ -68,10 +68,10 @@ end
 
 		<choose flushWith="record">
 			<combine name="name" value="${pre} ${title}">
-				<data source="metadata.mods.titleInfo.title.value" name="title" />
-				<data source="metadata.mods.titleInfo.nonSort.value" name="pre" />
+				<data source="metadata.mods:mods.mods:titleInfo.mods:title.value" name="title" />
+				<data source="metadata.mods:mods.mods:titleInfo.mods:nonSort.value" name="pre" />
 			</combine>
-			<data source="metadata.mods.titleInfo.title.value" name="name"/>
+			<data source="metadata.mods:mods.mods:titleInfo.mods:title.value" name="name"/>
 		</choose>
 
 		<!--
@@ -103,35 +103,35 @@ end
 
 -->
 		<entity name="creator[]" flushWith="record">
-			<entity name="" flushWith="metadata.mods.name" reset="true">
+			<entity name="" flushWith="metadata.mods:mods.mods:name" reset="true">
 				<if>
-					<data source="metadata.mods.name.role.roleTerm.value">
+					<data source="metadata.mods:mods.mods:name.mods:role.mods:roleTerm.value">
 						<whitelist>
 							<entry name="cre" />
 							<entry name="aut" />
 						</whitelist>
 					</data>
 				</if>
-				<data source="metadata.mods.name.type" name="type">
+				<data source="metadata.mods:mods.mods:name.type" name="type">
 					<lookup>
 						<entry name="personal" value="Person" />
 						<entry name="corporate" value="Organization" />
 					</lookup>
 				</data>
-				<choose flushWith="metadata.mods.name">
-					<data source="metadata.mods.name.valueURI" name="name">
+				<choose flushWith="metadata.mods:mods.mods:name">
+					<data source="metadata.mods:mods.mods:name.valueURI" name="name">
 						<lookup in="duePub-corporate"/>
 					</data>
-					<data source="metadata.mods.name.displayForm.value" name="name">
+					<data source="metadata.mods:mods.mods:name.mods:displayForm.value" name="name">
 						<replace pattern="(.+), (.+)" with="$2 $1"/>
 					</data>
 				</choose>
 			</entity>
 		</entity>
 		<entity name="contributor[]" flushWith="record">
-			<entity name="" flushWith="metadata.mods.name" reset="true">
+			<entity name="" flushWith="metadata.mods:mods.mods:name" reset="true">
 				<if>
-					<data source="metadata.mods.name.role.roleTerm.value">
+					<data source="metadata.mods:mods.mods:name.mods:role.mods:roleTerm.value">
 						<blacklist>
 							<entry name="cre" />
 							<entry name="aut" />
@@ -139,17 +139,17 @@ end
 						</blacklist>
 					</data>
 				</if>
-				<data source="metadata.mods.name.type" name="type">
+				<data source="metadata.mods:mods.mods:name.type" name="type">
 					<lookup>
 						<entry name="personal" value="Person" />
 						<entry name="corporate" value="Organization" />
 					</lookup>
 				</data>
-				<choose flushWith="metadata.mods.name">
-					<data source="metadata.mods.name.valueURI" name="name">
+				<choose flushWith="metadata.mods:mods.mods:name">
+					<data source="metadata.mods:mods.mods:name.valueURI" name="name">
 						<lookup in="duePub-corporate"/>
 					</data>
-					<data source="metadata.mods.name.displayForm.value" name="name">
+					<data source="metadata.mods:mods.mods:name.mods:displayForm.value" name="name">
 						<replace pattern="(.+), (.+)" with="$2 $1"/>
 					</data>
 				</choose>
@@ -157,24 +157,24 @@ end
 		</entity>
 
 		<entity name="sourceOrganization[]" flushWith="record">
-			<entity name="" flushWith="metadata.mods.name" reset="true" flushIncomplete="false">
+			<entity name="" flushWith="metadata.mods:mods.mods:name" reset="true" flushIncomplete="false">
 				<if>
-					<data source="metadata.mods.name.role.roleTerm.value">
+					<data source="metadata.mods:mods.mods:name.mods:role.mods:roleTerm.value">
 						<whitelist>
 							<entry name="his" />
 						</whitelist>
 					</data>
 				</if>
-				<data source="metadata.mods.name.type" name="type">
+				<data source="metadata.mods:mods.mods:name.type" name="type">
 					<lookup>
 						<entry name="corporate" value="Organization" />
 					</lookup>
 				</data>
-				<choose flushWith="metadata.mods.name">
-					<data source="metadata.mods.name.valueURI" name="name">
+				<choose flushWith="metadata.mods:mods.mods:name">
+					<data source="metadata.mods:mods.mods:name.valueURI" name="name">
 						<lookup in="duePub-corporate"/>
 					</data>
-					<data source="metadata.mods.name.displayForm.value" name="name">
+					<data source="metadata.mods:mods.mods:name.mods:displayForm.value" name="name">
 						<replace pattern="(.+), (.+)" with="$2 $1"/>
 					</data>
 				</choose>
@@ -186,7 +186,7 @@ map("metadata.mods.abstract.value", "description")
 
 -->
 
-		<data source="metadata.mods.abstract.value" name="description" />
+		<data source="metadata.mods:mods.mods:abstract.value" name="description" />
 
 		<!--
 
@@ -196,7 +196,7 @@ end
 
 -->
 
-		<data source="metadata.mods.accessCondition.href" name="license">
+		<data source="metadata.mods:mods.mods:accessCondition.xlink:href" name="license">
 			<lookup in="duePub-licenses"/>
 		</data>
 		<!--
@@ -205,7 +205,7 @@ map("metadata.mods.originInfo.dateIssued.value", "dataCreated")
 
 -->
 
-		<data source="metadata.mods.originInfo.dateIssued.value" name="dataCreated" />
+		<data source="metadata.mods:mods.mods:originInfo.mods:dateIssued.value" name="dataCreated" />
 
 		<!--
 
@@ -214,7 +214,7 @@ do array("inLanguage")
 end
 -->
 		<entity name="inLanguage[]" flushWith="record">
-			<data source="metadata.mods.language.languageTerm.value" />
+			<data source="metadata.mods:mods.mods:language.mods:languageTerm.value" />
 		</entity>
 		<!--
 do array ("type")
@@ -249,7 +249,7 @@ end
 
 -->
 
-		<data source="metadata.mods.genre.value" name="@hcrt">
+		<data source="metadata.mods:mods.mods:genre.value" name="@hcrt">
 			<lookup in="duePub-hcrt"/>
 		</data>
 		<entity name="learningResourceType[]" flushWith="record">
@@ -276,7 +276,7 @@ end
 
 -->
 		<entity name="keywords[]" flushWith="record">
-			<data source="metadata.mods.subject.topic.value" />
+			<data source="metadata.mods:mods.mods:subject.mods:topic.value" />
 		</entity>
 		<!--
 
@@ -286,7 +286,7 @@ do map("metadata.mods.classification.valueURI","@hochschulfaechersystematik")
   unique()
 end
 -->
-		<data source="metadata.mods.classification.valueURI" name="@hochschulfaechersystematik">
+		<data source="metadata.mods:mods.mods:classification.valueURI" name="@hochschulfaechersystematik">
 			<lookup in="destatisPersonal2destatisStudierende"/>
 			<unique/>
 		</data>
@@ -302,7 +302,7 @@ end
 
 -->
 		<entity name="about[]" flushWith="record">
-			<entity name="" flushWith="metadata.mods.classification" reset="true">
+			<entity name="" flushWith="metadata.mods:mods.mods:classification" reset="true">
 				<data source="@hochschulfaechersystematik" name="id"/>
 				<data source="@hochschulfaechersystematik" name="prefLabel.de">
 					<lookup in="subject-labels"/>
@@ -329,7 +329,7 @@ end -->
 
 		<entity name="mainEntityOfPage[]" flushWith="record">
 			<entity>
-				<data source="metadata.mods.identifier.value" name="id">
+				<data source="metadata.mods:mods.mods:identifier.value" name="id">
 					<regexp match="^https://duepublico2.uni-due.de/receive/.*" />
 				</data>
 				<entity name="provider">

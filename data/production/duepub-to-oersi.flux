@@ -5,9 +5,9 @@ service_name = "DuePublico 2";
 "https://duepublico2.uni-due.de/oer/oai"
 | open-oaipmh(metadataPrefix="mods")
 | decode-xml
-| handle-generic-xml
+| handle-generic-xml(emitNamespace="true")
 | fix-filter("
-map('metadata.mods.identifier.value')
+map('metadata.mods:mods.mods:identifier.value')
 ") // filter out all deleted records
 // due to the complex structure of the MODs a morph instead of a fix is used.
 | morph(FLUX_DIR + "duepub-morph.xml", *) // '*': pass all flux variables to the fix
