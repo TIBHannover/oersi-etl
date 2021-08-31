@@ -1,0 +1,352 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<metamorph xmlns="http://www.culturegraph.org/metamorph" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	version="1">
+	<maps>
+		<filemap name="duePub-corporate" files="data/maps/duePub-corporate.tsv" />
+		<filemap name="subject-labels" files="data/maps/subject-labels.tsv" />
+		<filemap name="duePub-licenses" files="data/maps/duePub-licenses.tsv" />
+		<filemap name="hcrt-de-labels" files="data/maps/hcrt-de-labels.tsv" />
+		<filemap name="hcrt-en-labels" files="data/maps/hcrt-en-labels.tsv" />
+		<filemap name="duePub-hcrt" files="data/maps/duePub-hcrt.tsv" />
+		<filemap name="destatisPersonal2destatisStudierende" files="data/maps/destatisPersonal2destatisStudierende.tsv" />
+	</maps>
+	<rules>
+
+		<!--	/* Set up the context */
+FIX:
+do array("@context")
+ add_field("","https://w3id.org/kim/lrmi-profile/draft/context.jsonld")
+ do entity("")
+  add_field("@language", "de")
+ end
+end
+-->
+		<entity name="@context[]" flushWith="record">
+			<data source="_id" name="">
+				<constant value="https://w3id.org/kim/lrmi-profile/draft/context.jsonld" />
+			</data>
+			<entity name="">
+				<data source="_id" name="@language">
+					<constant value="de" />
+				</data>
+			</entity>
+		</entity>
+
+		<!--
+		/* Mapping the data to element level: */
+do map("metadata.mods.identifier.value", "id")
+  regexp(match:"^https://duepublico2.uni-due.de/receive/.*")
+end -->
+
+		<data source="metadata.mods:mods.mods:identifier.value" name="id">
+			<regexp match="^https://duepublico2.uni-due.de/receive/.*" />
+		</data>
+
+
+		<!--
+/* To map the image the location.url needs to carry the attribute access preview. Could creat confusion:*/
+do map("metadata.mods.location.url.value", "image")
+  regexp(match:"^https://duepublico2.uni-due.de/rsc/thumbnail/.*")
+end
+ -->
+
+		<data source="metadata.mods:mods.mods:location.mods:url.value" name="image">
+			<regexp match="^https://duepublico2.uni-due.de/rsc/thumbnail/.*" />
+		</data>
+
+
+		<!--
+
+do choose(flushWith: record)
+  do combine(name: "name", value:  "${pre} ${title}")
+      map("metadata.mods.titleInfo.title.value", "title")
+      map("metadata.mods.titleInfo.nonSort.value","pre")
+  end
+  map("metadata.mods.titleInfo.title.value", "name")
+end
+ -->
+
+		<choose flushWith="record">
+			<combine name="name" value="${pre} ${title}">
+				<data source="metadata.mods:mods.mods:titleInfo.mods:title.value" name="title" />
+				<data source="metadata.mods:mods.mods:titleInfo.mods:nonSort.value" name="pre" />
+			</combine>
+			<data source="metadata.mods:mods.mods:titleInfo.mods:title.value" name="name"/>
+		</choose>
+
+		<!--
+
+do array("creator", flushWith: record)
+  do entity("", sameEntity:"true")
+    if contains ("metadata.mods.name.role.roleTerm.value", "aut|cre")
+      do choose(flushWith: "metadata.mods.name")
+        do map("metadata.mods.name.type", "type")
+          equals(string: "personal")
+          constant(value:"Person")
+        end
+        do map("metadata.mods.name.type", "type")
+          equals(string: "corporate")
+          constant(value:"Organization")
+        end
+      end  
+      do choose(flushWith: "metadata.mods.name")
+        do map("metadata.mods.name.valueURI", "name")
+          lookup(in: "data/maps/duepub-corporate.tsv")
+        end
+        do map("metadata.mods.name.displayForm.value", "name")
+          replace(pattern: "(.+), (.+)", with: "$2 $1")
+        end
+      end
+    end
+  end
+end
+
+-->
+		<entity name="creator[]" flushWith="record">
+			<entity name="" flushWith="metadata.mods:mods.mods:name" reset="true">
+				<if>
+					<data source="metadata.mods:mods.mods:name.mods:role.mods:roleTerm.value">
+						<whitelist>
+							<entry name="cre" />
+							<entry name="aut" />
+						</whitelist>
+					</data>
+				</if>
+				<data source="metadata.mods:mods.mods:name.type" name="type">
+					<lookup>
+						<entry name="personal" value="Person" />
+						<entry name="corporate" value="Organization" />
+					</lookup>
+				</data>
+				<choose flushWith="metadata.mods:mods.mods:name">
+					<data source="metadata.mods:mods.mods:name.valueURI" name="name">
+						<lookup in="duePub-corporate"/>
+					</data>
+					<data source="metadata.mods:mods.mods:name.mods:displayForm.value" name="name">
+						<replace pattern="(.+), (.+)" with="$2 $1"/>
+					</data>
+				</choose>
+			</entity>
+		</entity>
+		<entity name="contributor[]" flushWith="record">
+			<entity name="" flushWith="metadata.mods:mods.mods:name" reset="true">
+				<if>
+					<data source="metadata.mods:mods.mods:name.mods:role.mods:roleTerm.value">
+						<blacklist>
+							<entry name="cre" />
+							<entry name="aut" />
+							<entry name="his" />
+						</blacklist>
+					</data>
+				</if>
+				<data source="metadata.mods:mods.mods:name.type" name="type">
+					<lookup>
+						<entry name="personal" value="Person" />
+						<entry name="corporate" value="Organization" />
+					</lookup>
+				</data>
+				<choose flushWith="metadata.mods:mods.mods:name">
+					<data source="metadata.mods:mods.mods:name.valueURI" name="name">
+						<lookup in="duePub-corporate"/>
+					</data>
+					<data source="metadata.mods:mods.mods:name.mods:displayForm.value" name="name">
+						<replace pattern="(.+), (.+)" with="$2 $1"/>
+					</data>
+				</choose>
+			</entity>
+		</entity>
+
+		<entity name="sourceOrganization[]" flushWith="record">
+			<entity name="" flushWith="metadata.mods:mods.mods:name" reset="true" flushIncomplete="false">
+				<if>
+					<data source="metadata.mods:mods.mods:name.mods:role.mods:roleTerm.value">
+						<whitelist>
+							<entry name="his" />
+						</whitelist>
+					</data>
+				</if>
+				<data source="metadata.mods:mods.mods:name.type" name="type">
+					<lookup>
+						<entry name="corporate" value="Organization" />
+					</lookup>
+				</data>
+				<choose flushWith="metadata.mods:mods.mods:name">
+					<data source="metadata.mods:mods.mods:name.valueURI" name="name">
+						<lookup in="duePub-corporate"/>
+					</data>
+					<data source="metadata.mods:mods.mods:name.mods:displayForm.value" name="name">
+						<replace pattern="(.+), (.+)" with="$2 $1"/>
+					</data>
+				</choose>
+			</entity>
+		</entity>
+		<!--
+
+map("metadata.mods.abstract.value", "description")
+
+-->
+
+		<data source="metadata.mods:mods.mods:abstract.value" name="description" />
+
+		<!--
+
+do map("metadata.mods.accessCondition.href", "license")
+  lookup(in: "data/maps/duePub-licenses.tsv")
+end
+
+-->
+
+		<data source="metadata.mods:mods.mods:accessCondition.xlink:href" name="license">
+			<lookup in="duePub-licenses"/>
+		</data>
+		<!--
+
+map("metadata.mods.originInfo.dateIssued.value", "dataCreated")
+
+-->
+
+		<data source="metadata.mods:mods.mods:originInfo.mods:dateIssued.value" name="dataCreated" />
+
+		<!--
+
+do array("inLanguage")
+  map("metadata.mods.language.languageTerm.value")
+end
+-->
+		<entity name="inLanguage[]" flushWith="record">
+			<data source="metadata.mods:mods.mods:language.mods:languageTerm.value" />
+		</entity>
+		<!--
+do array ("type")
+  add_field("","LearningResource")
+end
+
+-->
+		<entity name="type[]" flushWith="record">
+			<data source="_id" name="">
+				<constant value="LearningResource" />
+			</data>
+		</entity>
+
+		<!--
+
+do map('metadata.mods.genre.value', '@hcrt')
+  lookup(in: 'data/maps/duePub-hcrt.tsv')
+end
+do array('learningResourceType')
+  do entity('')
+    map('@hcrt', 'id')
+    do entity('prefLabel')
+      do map('@hcrt', 'de')
+        lookup(in: 'data/maps/hcrt-de-labels.tsv')
+      end  
+      do map('@hcrt', 'en')
+        lookup(in: 'data/maps/hcrt-en-labels.tsv')
+      end
+    end
+  end
+end
+
+-->
+
+		<data source="metadata.mods:mods.mods:genre.value" name="@hcrt">
+			<lookup in="duePub-hcrt"/>
+		</data>
+		<entity name="learningResourceType[]" flushWith="record">
+			<entity name="" reset="true">
+				<data source="@hcrt" name="id" />
+				<entity name="prefLabel" flushWith="record">
+					<data source="@hcrt" name="de">
+						<lookup in="hcrt-de-labels"/>
+					</data>
+					<data source="@hcrt" name="en">
+						<lookup in="hcrt-en-labels"/>
+					</data>
+				</entity>
+			</entity>
+		</entity>
+
+
+
+		<!--
+
+do array("keywords")
+  map("metadata.mods.subject.topic.value")
+end
+
+-->
+		<entity name="keywords[]" flushWith="record">
+			<data source="metadata.mods:mods.mods:subject.mods:topic.value" />
+		</entity>
+		<!--
+
+
+do map("metadata.mods.classification.valueURI","@hochschulfaechersystematik")
+  lookup(in: "data/maps/DestatisPersonal2DestatisStudierende.tsv")
+  unique()
+end
+-->
+		<data source="metadata.mods:mods.mods:classification.valueURI" name="@hochschulfaechersystematik">
+			<lookup in="destatisPersonal2destatisStudierende"/>
+			<unique/>
+		</data>
+		<!-- 
+do array("about", flushWith: record)
+  do entity("", flushWith: "@hochschulfaechersystematik")
+    map("@hochschulfaechersystematik", "id")
+    do map("@hochschulfaechersystematik", "prefLabel.de")
+      lookup(in: "data/maps/subject-labels.tsv")
+    end
+  end
+end
+
+-->
+		<entity name="about[]" flushWith="record">
+			<entity name="" flushWith="metadata.mods:mods.mods:classification" reset="true">
+				<data source="@hochschulfaechersystematik" name="id"/>
+				<data source="@hochschulfaechersystematik" name="prefLabel.de">
+					<lookup in="subject-labels"/>
+				</data>
+			</entity>
+		</entity>
+		<!--
+
+/* mainEntityofPage */
+
+do array("mainEntityOfPage")
+  do entity("")
+    do map("metadata.mods.identifier.value", "id")
+      regexp(match:"^https://duepublico2.uni-due.de/receive/.*")
+    end
+    /* Add provider/source information to each resource description */
+    do entity("provider")
+      add_field("id","$[service_id]")
+      add_field("type","Service")
+      add_field("name","$[service_name]")
+    end
+  end
+end -->
+
+		<entity name="mainEntityOfPage[]" flushWith="record">
+			<entity>
+				<data source="metadata.mods:mods.mods:identifier.value" name="id">
+					<regexp match="^https://duepublico2.uni-due.de/receive/.*" />
+				</data>
+				<entity name="provider">
+					<data source="_id" name="id">
+						<constant value="$[service_id]" />
+					</data>
+					<data source="_id" name="type">
+						<constant value="Service" />
+					</data>
+					<data source="_id" name="name">
+						<constant value="$[service_name]" />
+					</data>
+				</entity>
+			</entity>
+		</entity>
+
+
+	</rules>
+
+</metamorph>
