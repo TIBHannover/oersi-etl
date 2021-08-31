@@ -1,0 +1,103 @@
+/* Set up the context */
+do array("@context")
+ add_field("","https://w3id.org/kim/lrmi-profile/draft/context.jsonld")
+ do entity("")
+  add_field("@language", "de")
+ end
+end
+
+/* id */
+map("attributes.url", "id")
+
+/* name */
+map("attributes.name", "name")
+
+/*image */
+map("attributes.image.url", "image")
+
+/* dateCreated */
+do map("startDate", "dateCreated")
+  replace(pattern: "T.*", with: "")
+end
+
+/*description */
+do combine(name: "description", value: "${1}\\nLernziel:\\n§{2}")
+  map("attributes.description", "1")
+  map("attributes.learningobjectives[].*", "2")
+end
+
+/* creator: source data is not consistent, can be a single author or multiple separated by comma or "&amp;". API estimates one object per instructor. Also there is no type even though there are persons and organisations.*/
+do map("attributes.instructors[].*.name", "@creator")
+  split(delimiter: ", | &amp; ")
+  replace(pattern: "Apl. |\\(apl.\\) |Dr. med |Dr. |Dr.'in |Dr |Dr.med.|Dres. |Dr.|Prof. |Prof.'in |Prof.|Prof |Jun.-|PD |PD. |med. |rer. |pol.|nat. |dent. |em. |Ao.-|o. Univ.|Uni.-|Univ.-|Univ. |DI |RA |Dipl.|-Ing. |-Inform. |-Psych. |h.c. |mult. |Mag. |, MME|; MME|, MScN|M. Sc. |, MSc| MSc.|, M.A.| M.A.|, M.D.|, B.A.|, MMZ|, Psychoanalytiker|, L.L.M.|, LL.M.| \\(M.A.\\)", with: "")
+  not_equals(string: '')
+end
+
+do array("creator", flushWith: "@creator")
+ do entity("")
+  add_field("type", "Person")
+  map("@creator", "name")
+ end
+end
+
+
+
+/* sourceOrganization */
+do array("sourceOrganization", flushWith: "attributes.partnerInstitute[].*.name")
+ do entity("")
+  add_field("type", "Organization")
+  map("attributes.partnerInstitute[].*.name", "name")
+ end
+end
+
+/* learningResourceType: Add Course always as lRT */
+add_field("@hcrt","https://w3id.org/kim/hcrt/course")
+
+do array('learningResourceType')
+  do entity('')
+    map('@hcrt', 'id')
+    do entity('prefLabel')
+      do map('@hcrt', 'de')
+        lookup(in: 'data/maps/hcrt-de-labels.tsv')
+      end  
+      do map('@hcrt', 'en')
+        lookup(in: 'data/maps/hcrt-en-labels.tsv')
+      end
+    end
+  end
+end
+
+/* inLanguage: The value Mehrsprachig does not represent the estimated language labels. */
+do array("inLanguage")
+  do map("attributes.languages[].*")
+    not_equals(string: "")
+    not_equals(string: "Mehrsprachig")
+  end
+end
+
+/*license */
+do map("attributes.image.licenses[].*.url","license")
+  regexp(match: "https://creativecommons.org/(licenses|licences|publicdomain)/.*")
+end
+
+/* type */
+do array ("type")
+  add_field("","LearningResource")
+end
+
+/* mainEntityofPage */
+do array("mainEntityOfPage")
+  do entity("")
+    map("attributes.url", "id")
+    /* Add provider/source information to each resource description */
+    do entity("provider")
+      add_field("id","$[service_id]")
+      add_field("type","Service")
+      add_field("name","$[service_name]")
+    end
+  end
+end
+
+/*missing:*/
+/*kewords*/
+/*about*/
