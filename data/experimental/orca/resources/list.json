@@ -1,0 +1,322 @@
+[
+	{
+		"publishScheme": "private",
+		"accessScheme": "public",
+		"@context": "https://api.hoerkaen.hbz-nrw.de/context.json",
+		"itemID": [
+			{
+				"prefLabel": "oai:api.hoerkaen.hbz-nrw.de:oer:10",
+				"@id": "oai:api.hoerkaen.hbz-nrw.de:oer:10"
+			}
+		],
+		"catalogId": "ED10",
+		"primaryTopic": "oer:10",
+		"isMemberOf": [
+			{
+				"prefLabel": "info:fedora/oai:oer",
+				"@id": "info:fedora/oai:oer"
+			},
+			{
+				"prefLabel": "info:fedora/oai:open_access",
+				"@id": "info:fedora/oai:open_access"
+			}
+		],
+		"@id": "oer:10",
+		"isDescribedBy": {
+			"@id": "oer:10.rdf",
+			"created": "2021-07-16T18:16:25.555+0000",
+			"describes": "oer:10",
+			"modified": "2021-07-16T18:16:38.460+0000",
+			"objectTimestamp": "2021-07-16T18:16:38.460+0000"
+		},
+		"contentType": "oer"
+	},
+	{
+		"publishScheme": "private",
+		"accessScheme": "public",
+		"@context": "https://api.hoerkaen.hbz-nrw.de/context.json",
+		"itemID": [
+			{
+				"prefLabel": "oai:api.hoerkaen.hbz-nrw.de:oer:11",
+				"@id": "oai:api.hoerkaen.hbz-nrw.de:oer:11"
+			}
+		],
+		"catalogId": "ED11",
+		"primaryTopic": "oer:11",
+		"isMemberOf": [
+			{
+				"prefLabel": "info:fedora/oai:oer",
+				"@id": "info:fedora/oai:oer"
+			},
+			{
+				"prefLabel": "info:fedora/oai:open_access",
+				"@id": "info:fedora/oai:open_access"
+			}
+		],
+		"@id": "oer:11",
+		"isDescribedBy": {
+			"@id": "oer:11.rdf",
+			"created": "2021-07-16T18:17:34.377+0000",
+			"describes": "oer:11",
+			"modified": "2021-07-16T18:17:43.171+0000",
+			"objectTimestamp": "2021-07-16T18:17:43.171+0000"
+		},
+		"contentType": "oer"
+	},
+	{
+		"publishScheme": "private",
+		"accessScheme": "public",
+		"@context": "https://api.hoerkaen.hbz-nrw.de/context.json",
+		"itemID": [
+			{
+				"prefLabel": "oai:api.hoerkaen.hbz-nrw.de:oer:12",
+				"@id": "oai:api.hoerkaen.hbz-nrw.de:oer:12"
+			}
+		],
+		"catalogId": "ED12",
+		"primaryTopic": "oer:12",
+		"isMemberOf": [
+			{
+				"prefLabel": "info:fedora/oai:oer",
+				"@id": "info:fedora/oai:oer"
+			},
+			{
+				"prefLabel": "info:fedora/oai:open_access",
+				"@id": "info:fedora/oai:open_access"
+			}
+		],
+		"@id": "oer:12",
+		"isDescribedBy": {
+			"@id": "oer:12.rdf",
+			"created": "2021-07-16T18:19:00.224+0000",
+			"describes": "oer:12",
+			"modified": "2021-07-16T18:19:08.837+0000",
+			"objectTimestamp": "2021-07-16T18:19:08.837+0000"
+		},
+		"contentType": "oer"
+	},
+	{
+		"publishScheme": "private",
+		"accessScheme": "public",
+		"@context": "https://api.hoerkaen.hbz-nrw.de/context.json",
+		"itemID": [
+			{
+				"prefLabel": "oai:api.hoerkaen.hbz-nrw.de:oer:15",
+				"@id": "oai:api.hoerkaen.hbz-nrw.de:oer:15"
+			}
+		],
+		"catalogId": "ED15",
+		"primaryTopic": "oer:15",
+		"isMemberOf": [
+			{
+				"prefLabel": "info:fedora/oai:oer",
+				"@id": "info:fedora/oai:oer"
+			},
+			{
+				"prefLabel": "info:fedora/oai:open_access",
+				"@id": "info:fedora/oai:open_access"
+			}
+		],
+		"@id": "oer:15",
+		"isDescribedBy": {
+			"@id": "oer:15.rdf",
+			"created": "2021-07-16T18:22:38.622+0000",
+			"describes": "oer:15",
+			"modified": "2021-07-16T18:22:52.355+0000",
+			"objectTimestamp": "2021-07-16T18:22:52.355+0000"
+		},
+		"contentType": "oer"
+	},
+	{
+		"publishScheme": "private",
+		"accessScheme": "public",
+		"@context": "https://api.hoerkaen.hbz-nrw.de/context.json",
+		"itemID": [
+			{
+				"prefLabel": "oai:api.hoerkaen.hbz-nrw.de:oer:16",
+				"@id": "oai:api.hoerkaen.hbz-nrw.de:oer:16"
+			}
+		],
+		"catalogId": "ED16",
+		"primaryTopic": "oer:16",
+		"isMemberOf": [
+			{
+				"prefLabel": "info:fedora/oai:oer",
+				"@id": "info:fedora/oai:oer"
+			},
+			{
+				"prefLabel": "info:fedora/oai:open_access",
+				"@id": "info:fedora/oai:open_access"
+			}
+		],
+		"@id": "oer:16",
+		"isDescribedBy": {
+			"@id": "oer:16.rdf",
+			"created": "2021-08-17T16:33:08.406+0000",
+			"describes": "oer:16",
+			"modified": "2021-08-18T13:46:19.515+0000",
+			"objectTimestamp": "2021-08-18T13:46:19.515+0000"
+		},
+		"contentType": "oer"
+	},
+	{
+		"publishScheme": "private",
+		"accessScheme": "public",
+		"@context": "https://api.hoerkaen.hbz-nrw.de/context.json",
+		"itemID": [
+			{
+				"prefLabel": "oai:api.hoerkaen.hbz-nrw.de:oer:17",
+				"@id": "oai:api.hoerkaen.hbz-nrw.de:oer:17"
+			}
+		],
+		"catalogId": "ED17",
+		"primaryTopic": "oer:17",
+		"isMemberOf": [
+			{
+				"prefLabel": "info:fedora/oai:oer",
+				"@id": "info:fedora/oai:oer"
+			},
+			{
+				"prefLabel": "info:fedora/oai:open_access",
+				"@id": "info:fedora/oai:open_access"
+			}
+		],
+		"@id": "oer:17",
+		"isDescribedBy": {
+			"@id": "oer:17.rdf",
+			"created": "2021-08-17T16:35:11.786+0000",
+			"describes": "oer:17",
+			"modified": "2021-08-20T11:53:13.428+0000",
+			"objectTimestamp": "2021-08-20T11:53:13.428+0000"
+		},
+		"contentType": "oer"
+	},
+	{
+		"publishScheme": "private",
+		"accessScheme": "public",
+		"@context": "https://api.hoerkaen.hbz-nrw.de/context.json",
+		"itemID": [
+			{
+				"prefLabel": "oai:api.hoerkaen.hbz-nrw.de:oer:18",
+				"@id": "oai:api.hoerkaen.hbz-nrw.de:oer:18"
+			}
+		],
+		"catalogId": "ED18",
+		"primaryTopic": "oer:18",
+		"isMemberOf": [
+			{
+				"prefLabel": "info:fedora/oai:oer",
+				"@id": "info:fedora/oai:oer"
+			},
+			{
+				"prefLabel": "info:fedora/oai:open_access",
+				"@id": "info:fedora/oai:open_access"
+			}
+		],
+		"@id": "oer:18",
+		"isDescribedBy": {
+			"@id": "oer:18.rdf",
+			"created": "2021-08-18T11:01:07.779+0000",
+			"describes": "oer:18",
+			"modified": "2021-08-20T17:49:44.129+0000",
+			"objectTimestamp": "2021-08-20T17:49:44.129+0000"
+		},
+		"contentType": "oer"
+	},
+	{
+		"publishScheme": "private",
+		"accessScheme": "public",
+		"@context": "https://api.hoerkaen.hbz-nrw.de/context.json",
+		"itemID": [
+			{
+				"prefLabel": "oai:api.hoerkaen.hbz-nrw.de:oer:19",
+				"@id": "oai:api.hoerkaen.hbz-nrw.de:oer:19"
+			}
+		],
+		"catalogId": "ED19",
+		"primaryTopic": "oer:19",
+		"isMemberOf": [
+			{
+				"prefLabel": "info:fedora/oai:oer",
+				"@id": "info:fedora/oai:oer"
+			},
+			{
+				"prefLabel": "info:fedora/oai:open_access",
+				"@id": "info:fedora/oai:open_access"
+			}
+		],
+		"@id": "oer:19",
+		"isDescribedBy": {
+			"@id": "oer:19.rdf",
+			"created": "2021-08-18T11:15:06.747+0000",
+			"describes": "oer:19",
+			"modified": "2021-08-20T18:00:51.238+0000",
+			"objectTimestamp": "2021-08-20T18:00:51.238+0000"
+		},
+		"contentType": "oer"
+	},
+	{
+		"publishScheme": "private",
+		"accessScheme": "public",
+		"@context": "https://api.hoerkaen.hbz-nrw.de/context.json",
+		"itemID": [
+			{
+				"prefLabel": "oai:api.hoerkaen.hbz-nrw.de:oer:2",
+				"@id": "oai:api.hoerkaen.hbz-nrw.de:oer:2"
+			}
+		],
+		"catalogId": "ED2",
+		"primaryTopic": "oer:2",
+		"isMemberOf": [
+			{
+				"prefLabel": "info:fedora/oai:oer",
+				"@id": "info:fedora/oai:oer"
+			},
+			{
+				"prefLabel": "info:fedora/oai:open_access",
+				"@id": "info:fedora/oai:open_access"
+			}
+		],
+		"@id": "oer:2",
+		"isDescribedBy": {
+			"@id": "oer:2.rdf",
+			"created": "2021-07-16T17:22:05.147+0000",
+			"describes": "oer:2",
+			"modified": "2021-07-16T17:34:24.352+0000",
+			"objectTimestamp": "2021-07-16T17:34:24.352+0000"
+		},
+		"contentType": "oer"
+	},
+	{
+		"publishScheme": "private",
+		"accessScheme": "public",
+		"@context": "https://api.hoerkaen.hbz-nrw.de/context.json",
+		"itemID": [
+			{
+				"prefLabel": "oai:api.hoerkaen.hbz-nrw.de:oer:20",
+				"@id": "oai:api.hoerkaen.hbz-nrw.de:oer:20"
+			}
+		],
+		"catalogId": "ED20",
+		"primaryTopic": "oer:20",
+		"isMemberOf": [
+			{
+				"prefLabel": "info:fedora/oai:oer",
+				"@id": "info:fedora/oai:oer"
+			},
+			{
+				"prefLabel": "info:fedora/oai:open_access",
+				"@id": "info:fedora/oai:open_access"
+			}
+		],
+		"@id": "oer:20",
+		"isDescribedBy": {
+			"@id": "oer:20.rdf",
+			"created": "2021-08-18T11:25:58.378+0000",
+			"describes": "oer:20",
+			"modified": "2021-08-18T11:26:00.025+0000",
+			"objectTimestamp": "2021-08-18T11:26:00.025+0000"
+		},
+		"contentType": "oer"
+	}
+]

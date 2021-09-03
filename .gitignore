@@ -15,6 +15,7 @@ oai-harvest-manager
 
 # Ignore generated output data
 *.json
+!data/**/orca/**
 *.txt
 *.xml
 !src/**
