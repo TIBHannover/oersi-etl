@@ -38,6 +38,9 @@
     "dateCreated": {
       "$ref": "dateCreated.json"
     },
+    "encoding": {
+      "$ref": "encoding.json"
+    },
     "inLanguage": {
       "$ref": "inLanguage.json"
     },
