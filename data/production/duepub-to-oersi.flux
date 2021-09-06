@@ -1,5 +1,5 @@
-service_domain = "duepublico2.uni-due.de";
-service_id = "https://oerworldmap.org/resource/urn:uuid:DUMMI";
+service_domain = "https://duepublico2.uni-due.de";
+service_id = "https://oerworldmap.org/resource/urn:uuid:c9d74da8-bf88-4f3e-b601-f2a3f6d40330";
 service_name = "DuePublico 2";
 
 "https://duepublico2.uni-due.de/oer/oai"
