@@ -76,7 +76,7 @@ do array("inLanguage")
 end
 
 /*license */
-do map("attributes.image.licenses[].*.url","license")
+do map("attributes.courseLicenses[].*.url","license")
   regexp(match: "https://creativecommons.org/(licenses|licences|publicdomain)/.*")
 end
 
