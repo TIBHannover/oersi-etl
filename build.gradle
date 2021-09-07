@@ -29,21 +29,21 @@ dependencies {
     // This dependency is used internally, and not exposed to consumers on their own compile classpath.
     implementation 'com.google.guava:guava:26.0-jre'
     implementation 'org.jooq:joox-java-6:1.6.0'
-    implementation 'org.metafacture:metafacture-strings:5.3.0-rc1'
-    implementation 'org.metafacture:metafacture-plumbing:5.3.0-rc1'
-    implementation 'org.metafacture:metafacture-strings:5.3.0-rc1'
-    implementation 'org.metafacture:metafacture-triples:5.3.0-rc1'
-    implementation 'org.metafacture:metafacture-formatting:5.3.0-rc1'
-    implementation 'org.metafacture:metafacture-monitoring:5.3.0-rc1'
-    implementation ('org.metafacture:metafacture-runner:5.3.0-rc1'){
+    implementation 'org.metafacture:metafacture-io:5.3.0-rc2'
+    implementation 'org.metafacture:metafacture-plumbing:5.3.0-rc2'
+    implementation 'org.metafacture:metafacture-strings:5.3.0-rc2'
+    implementation 'org.metafacture:metafacture-triples:5.3.0-rc2'
+    implementation 'org.metafacture:metafacture-formatting:5.3.0-rc2'
+    implementation 'org.metafacture:metafacture-monitoring:5.3.0-rc2'
+    implementation ('org.metafacture:metafacture-runner:5.3.0-rc2'){
         exclude group: 'org.antlr', module: 'antlr'
     }
-    implementation 'org.metafacture:metafacture-json:5.3.0-rc1'
-    implementation 'org.metafacture:metafacture-html:5.3.0-rc1'
-    implementation 'org.metafacture:metafacture-elasticsearch:5.3.0-rc1'
-    implementation 'org.metafacture:metafacture-xml:5.3.0-rc1'
+    implementation 'org.metafacture:metafacture-json:5.3.0-rc2'
+    implementation 'org.metafacture:metafacture-html:5.3.0-rc2'
+    implementation 'org.metafacture:metafacture-elasticsearch:5.3.0-rc2'
+    implementation 'org.metafacture:metafacture-xml:5.3.0-rc2'
     implementation 'org.metafacture:metafacture-fix:0.2.0-rc2'
-    implementation('org.metafacture:metafacture-biblio:5.3.0-rc1') {
+    implementation('org.metafacture:metafacture-biblio:5.3.0-rc2') {
         exclude group: 'xml-apis', module: 'xml-apis'
     }
     implementation 'com.fasterxml.jackson.core:jackson-databind:2.9.10.4'
