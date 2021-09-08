@@ -195,10 +195,11 @@ do map("metadata.mods.accessCondition.href", "license")
 end
 
 -->
-
-		<data source="metadata.mods:mods.mods:accessCondition.xlink:href" name="license">
-			<lookup in="duePub-licenses"/>
-		</data>
+		<entity name="license" flushWith="record">
+			<data source="metadata.mods:mods.mods:accessCondition.xlink:href" name="id">
+				<lookup in="duePub-licenses"/>
+			</data>
+		</entity>
 		<!--
 
 map("metadata.mods.originInfo.dateIssued.value", "dataCreated")
