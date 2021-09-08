@@ -14,8 +14,10 @@ map("html.head.meta.og:description", "description")
 map("html.head.meta.og:image","image")
 
 /*rel = "liscence" cant be directly mapped */
-do map("*.a.license", "license")
-  regexp(match: "https://creativecommons.org/licenses/.*")
+do entity("license")
+  do map("*.a.license", "id")
+    regexp(match: '^http[s]?:\\/\\/creativecommons.org\\/(licenses|licences|publicdomain)\\/.*|^http[s]?:\\/\\/www.gnu.org\\/licenses\\/.*|^http[s]?:\\/\\/www.apache.org\\/licenses\\/.*|http[s]?://opensource.org/licenses/MIT|^http[s]?:\\/\\/www.opensource.org\\/licenses\\/BSD.*')
+  end
 end
 
 

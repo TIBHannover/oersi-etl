@@ -76,8 +76,8 @@ do array("inLanguage")
 end
 
 /*license */
-do map("attributes.courseLicenses[].*.url","license")
-  regexp(match: "https://creativecommons.org/(licenses|licences|publicdomain)/.*")
+do entity("license")
+  map("attributes.courseLicenses[].*.url","id")
 end
 
 /* type */
