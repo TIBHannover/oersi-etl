@@ -143,6 +143,11 @@ do array('about', flushWith: record)
  end
 end
 
+/*inLanguage*/
+do array("inLanguage")
+  map("Sprache")
+end
+
 /*keywords */
 
 do array("keywords", flushWith: record)
@@ -151,6 +156,8 @@ do array("keywords", flushWith: record)
     trim()
   end
 end
+
+/*mainEntityOfPage */
 
 do array("mainEntityOfPage")
   do entity("")
