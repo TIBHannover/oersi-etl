@@ -287,6 +287,7 @@ do map("metadata.mods.classification.valueURI","@hochschulfaechersystematik")
 end
 -->
 		<data source="metadata.mods:mods.mods:classification.valueURI" name="@hochschulfaechersystematik">
+			<regexp match="^https://duepublico.uni-due.de/api/v1/classifications/destatis.*" />
 			<lookup in="destatisPersonal2destatisStudierende"/>
 			<unique/>
 		</data>
