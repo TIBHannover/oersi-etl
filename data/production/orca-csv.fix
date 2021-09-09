@@ -33,8 +33,10 @@ do array("creator", flushWith: record)
     do map("Urheber1.Name", "name")
       not_equals(string: "")
     end
-    do map("Urheber1.Hochschule-RoRID","affiliation")
-      not_equals(string: "")
+    do entity("affiliation")
+      do map("Urheber1.Hochschule-RoRID","id")
+        not_equals(string: "")
+      end
     end
     do map("Urheber1.ORCID","id")
       not_equals(string: "")
@@ -50,8 +52,10 @@ do array("creator", flushWith: record)
     do map("Urheber2.Name", "name")
       not_equals(string: "")
     end
-    do map("Urheber2.Hochschule-RoRID","affiliation")
-      not_equals(string: "")
+    do entity("affiliation")
+      do map("Urheber2.Hochschule-RoRID","id")
+        not_equals(string: "")
+      end
     end
     do map("Urheber2.ORCID","id")
       not_equals(string: "")
@@ -71,8 +75,10 @@ do array("contributor", flushWith: record)
     do map("Beitragende1.Name", "name")
       not_equals(string: "")
     end
-    do map("Beitragende1.Hochschule-RoRID","affiliation")
-      not_equals(string: "")
+    do entity("affiliation")
+      do map("Beitragende1.Hochschule-RoRID","id")
+        not_equals(string: "")
+      end
     end
     do map("Beitragende1.ORCID","id")
       not_equals(string: "")
@@ -88,8 +94,10 @@ do array("contributor", flushWith: record)
     do map("Beitragende2.Name", "name")
       not_equals(string: "")
     end
-    do map("Beitragende2.Hochschule-RoRID","affiliation")
-      not_equals(string: "")
+    do entity("affiliation")
+      do map("Beitragende2.Hochschule-RoRID","id")
+        not_equals(string: "")
+      end
     end
     do map("Beitragende2.ORCID","id")
       not_equals(string: "")
