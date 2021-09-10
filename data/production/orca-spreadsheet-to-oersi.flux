@@ -1,6 +1,6 @@
-service_domain = "ORCA-Dummi";
-service_id = "https://oerworldmap.org/resource/urn:uuid:ORCA-DUMMI";
-service_name = "ORCA-Dummi";
+service_domain = "https://www.orca.nrw";
+service_id = "https://oerworldmap.org/resource/urn:uuid:31c24f26-1a96-4664-8d6d-71fdddb8b1f5";
+service_name = "ORCA.nrw";
 
 "https://docs.google.com/spreadsheets/d/16fN1OehuPx61n2O6ial5fYc1h6jJIlPj93SkhBpfypU/gviz/tq?tqx=out:csv&sheet=Tabellenblatt1"
 | open-http(accept="application/csv")

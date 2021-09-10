@@ -33,8 +33,16 @@ do array("creator", flushWith: record)
     do map("Urheber1.Name", "name")
       not_equals(string: "")
     end
-    do map("Urheber1.Hochschule-RoRID","affiliation")
-      not_equals(string: "")
+    do entity("affiliation")
+      do map("Urheber1.Hochschule-RoRID","id")
+        not_equals(string: "")
+      end
+      do map("Urheber1.Hochschule-RoRID","type")
+        constant(value: "Organization")
+      end
+      do map("Urheber1.Hochschule-RoRID", "name")
+        lookup(in: "data/maps/orcaUni.tsv")
+      end
     end
     do map("Urheber1.ORCID","id")
       not_equals(string: "")
@@ -50,8 +58,16 @@ do array("creator", flushWith: record)
     do map("Urheber2.Name", "name")
       not_equals(string: "")
     end
-    do map("Urheber2.Hochschule-RoRID","affiliation")
-      not_equals(string: "")
+    do entity("affiliation")
+      do map("Urheber2.Hochschule-RoRID","id")
+        not_equals(string: "")
+      end
+      do map("Urheber2.Hochschule-RoRID","type")
+        constant(value: "Organization")
+      end
+      do map("Urheber2.Hochschule-RoRID", "name")
+        lookup(in: "data/maps/orcaUni.tsv")
+      end
     end
     do map("Urheber2.ORCID","id")
       not_equals(string: "")
@@ -71,8 +87,16 @@ do array("contributor", flushWith: record)
     do map("Beitragende1.Name", "name")
       not_equals(string: "")
     end
-    do map("Beitragende1.Hochschule-RoRID","affiliation")
-      not_equals(string: "")
+    do entity("affiliation")
+      do map("Beitragende1.Hochschule-RoRID","id")
+        not_equals(string: "")
+      end
+      do map("Beitragende1.Hochschule-RoRID","type")
+        constant(value: "Organization")
+      end
+      do map("Beitragende1.Hochschule-RoRID", "name")
+        lookup(in: "data/maps/orcaUni.tsv")
+      end
     end
     do map("Beitragende1.ORCID","id")
       not_equals(string: "")
@@ -88,8 +112,16 @@ do array("contributor", flushWith: record)
     do map("Beitragende2.Name", "name")
       not_equals(string: "")
     end
-    do map("Beitragende2.Hochschule-RoRID","affiliation")
-      not_equals(string: "")
+    do entity("affiliation")
+      do map("Beitragende2.Hochschule-RoRID","id")
+        not_equals(string: "")
+      end
+      do map("Beitragende2.Hochschule-RoRID","type")
+        constant(value: "Organization")
+      end
+      do map("Beitragende2.Hochschule-RoRID", "name")
+        lookup(in: "data/maps/orcaUni.tsv")
+      end
     end
     do map("Beitragende2.ORCID","id")
       not_equals(string: "")
@@ -99,6 +131,27 @@ do array("contributor", flushWith: record)
     end
   end
 end
+
+/*sourceOrganization */
+do map("Urheber1.Hochschule-RoRID|Urheber2.Hochschule-RoRID|Beitragende1.Hochschule-RoRID|Beitragende2.Hochschule-RoRID", "@sourceOrganization")
+  unique()
+end
+
+do array('sourceOrganization', flushWith: record)
+  do entity("")
+    do map("@sourceOrganization","id")
+      not_equals(string: "")
+    end
+    do map("@sourceOrganization","type")
+      constant(value: "Organization")
+    end
+    do map("@sourceOrganization", "name")
+      lookup(in: "data/maps/orcaUni.tsv")
+    end
+  end
+end
+
+/* type */
 
 do array ("type")
   add_field("","LearningResource")
