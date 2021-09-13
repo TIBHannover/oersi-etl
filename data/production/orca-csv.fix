@@ -160,15 +160,16 @@ end
 /*learningResourceType */
 
 do map("Medientyp", "@hcrt")
-  split(delimiter: ",")
+  split(delimiter: ";")
   trim()
   lookup(in: 'data/maps/orcaLabels-hcrt.tsv')
+  unique()
 end
 
-do array('learningResourceType')
-  do entity('')
+do array('learningResourceType', flushWith: record)
+  do entity('', flushWith: '@hcrt')
     map('@hcrt', 'id')
-    do entity('prefLabel')
+    do entity('prefLabel', flushWith: '@hcrt')
       do map('@hcrt', 'de')
         lookup(in: 'data/maps/hcrt-de-labels.tsv')
       end  
@@ -185,6 +186,7 @@ do map("Fachbereich", "@hochschulfaechersystematik")
   split(delimiter: ";")
   trim()
   lookup(in: 'data/maps/destatisLabels-to-uri.tsv')
+  unique()
 end
 
 do array('about', flushWith: record)
