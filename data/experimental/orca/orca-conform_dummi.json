@@ -1,0 +1,148 @@
+{
+  "image": "https://www.orca.nrw/sites/default/files/bilder/foto_detail_moveo.jpg",
+  "creator": [
+    {
+      "type": "Person",
+      "name": "Fani Lauermann",
+      "affiliation": {
+        "id": "https://ror.org/01k97gp34",
+        "type": "Organization",
+        "name": "Technische Universität Dortmund"
+      },
+      "academicTitle": "Prof."
+    },
+    {
+      "type": "Person",
+      "name": "Daria Benden",
+      "affiliation": {
+        "id": "https://ror.org/01k97gp34",
+        "type": "Organization",
+        "name": "Technische Universität Dortmund"
+      }
+    }
+  ],
+  "keywords": [
+    "Studiensituation",
+    "Studienmotivation",
+    "Lernverhalten",
+    "Selbsteinschätzung",
+    "Studienbeginn",
+    "fachübergreifend"
+  ],
+  "about": [
+    {
+      "id": "https://w3id.org/kim/hochschulfaechersystematik/n1",
+      "prefLabel": {
+        "de": "Geisteswissenschaften"
+      }
+    },
+    {
+      "id": "https://w3id.org/kim/hochschulfaechersystematik/n5",
+      "prefLabel": {
+        "de": "Humanmedizin/Gesundheitswissenschaften"
+      }
+    },
+    {
+      "id": "https://w3id.org/kim/hochschulfaechersystematik/n8",
+      "prefLabel": {
+        "de": "Ingenieurwissenschaften"
+      }
+    },
+    {
+      "id": "https://w3id.org/kim/hochschulfaechersystematik/n9",
+      "prefLabel": {
+        "de": "Kunst, Kunstwissenschaft"
+      }
+    },
+    {
+      "id": "https://w3id.org/kim/hochschulfaechersystematik/n4",
+      "prefLabel": {
+        "de": "Mathematik, Naturwissenschaften"
+      }
+    },
+    {
+      "id": "https://w3id.org/kim/hochschulfaechersystematik/n3",
+      "prefLabel": {
+        "de": "Rechts-, Wirtschafts- und Sozialwissenschaften"
+      }
+    },
+    {
+      "id": "https://w3id.org/kim/hochschulfaechersystematik/n2",
+      "prefLabel": {
+        "de": "Sport"
+      }
+    },
+    {
+      "id": "https://w3id.org/kim/hochschulfaechersystematik/n7",
+      "prefLabel": {
+        "de": "Agrar-, Forst- und Ernährungswissenschaften, Veterinärmedizin"
+      }
+    }
+  ],
+  "description": "Das Ziel des Selbsteinschätzungstests moveo ist, Studierende zu einer Selbstreflexion ihrer aktuellen Studiensituation anzuregen. Inhaltliche Schwerpunkte von moveo sind dabei die Studienmotivation sowie das Lernverhalten und typische Schwierigkeiten im Lernprozess.",
+  "inLanguage": [
+    "de"
+  ],
+  "type": [
+    "LearningResource"
+  ],
+  "mainEntityOfPage": [
+    {
+      "provider": {
+        "id": "https://oerworldmap.org/resource/urn:uuid:31c24f26-1a96-4664-8d6d-71fdddb8b1f5",
+        "type": "Service",
+        "name": "ORCA.nrw"
+      },
+      "id": "https://www.orca.nrw/assessments/moveo"
+    }
+  ],
+  "@context": [
+    "https://w3id.org/kim/lrmi-profile/draft/context.jsonld",
+    {
+      "@language": "de"
+    }
+  ],
+  "license": {
+    "id": "https://creativecommons.org/licenses/by-sa/4.0/"
+  },
+  "dateCreated": "2021-09-14",
+  "name": "moveo – Tool zur Reflexion der aktuellen Studiensituation",
+  "sourceOrganization": [
+    {
+      "id": "https://ror.org/01k97gp34",
+      "type": "Organization",
+      "name": "Technische Universität Dortmund"
+    }
+  ],
+  "id": "https://www.orca.nrw/assessments/moveo",
+  "learningResourceType": [
+    {
+      "id": "https://w3id.org/kim/hcrt/assessment",
+      "prefLabel": {
+        "de": "Lernkontrolle",
+        "en": "Assessment"
+      }
+    },
+    {
+      "id": "https://w3id.org/kim/hcrt/video",
+      "prefLabel": {
+        "de": "Video",
+        "en": "Video"
+      }
+    },
+    {
+      "id": "https://w3id.org/kim/hcrt/other",
+      "prefLabel": {
+        "de": "Sonstiges",
+        "en": "Other"
+      }
+    },
+    {
+      "id": "https://w3id.org/kim/hcrt/questionnaire",
+      "prefLabel": {
+        "de": "Fragebogen",
+        "en": "Questionnaire"
+      }
+    }
+  ]
+}
