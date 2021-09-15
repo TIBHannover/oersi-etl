@@ -86,16 +86,6 @@
   "type": [
     "LearningResource"
   ],
-  "mainEntityOfPage": [
-    {
-      "provider": {
-        "id": "https://oerworldmap.org/resource/urn:uuid:31c24f26-1a96-4664-8d6d-71fdddb8b1f5",
-        "type": "Service",
-        "name": "ORCA.nrw"
-      },
-      "id": "https://www.orca.nrw/assessments/moveo"
-    }
-  ],
   "@context": [
     "https://w3id.org/kim/lrmi-profile/draft/context.jsonld",
     {
@@ -117,28 +107,28 @@
   "id": "https://www.orca.nrw/assessments/moveo",
   "learningResourceType": [
     {
-      "id": "https://w3id.org/kim/hcrt/assessment",
+      "id": "https://w3id.org/orca.nrw/medientypen/assessment",
       "prefLabel": {
-        "de": "Lernkontrolle",
+        "de": "Assessment",
         "en": "Assessment"
       }
     },
     {
-      "id": "https://w3id.org/kim/hcrt/video",
+      "id": "https://w3id.org/orca.nrw/medientypen/video",
       "prefLabel": {
         "de": "Video",
         "en": "Video"
       }
     },
     {
-      "id": "https://w3id.org/kim/hcrt/other",
+      "id": "https://w3id.org/orca.nrw/medientypen/communication_of_contents",
       "prefLabel": {
-        "de": "Sonstiges",
-        "en": "Other"
+        "de": "Inhaltsvermittlung",
+        "en": "Communications of Contents"
       }
     },
     {
-      "id": "https://w3id.org/kim/hcrt/questionnaire",
+      "id": "https://w3id.org/orca.nrw/medientypen/questionnaire",
       "prefLabel": {
         "de": "Fragebogen",
         "en": "Questionnaire"
