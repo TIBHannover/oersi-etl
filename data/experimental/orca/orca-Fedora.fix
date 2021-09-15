@@ -25,31 +25,31 @@ end
 
 /* Creator */
 do array("creator", flushWith: record)
-  do entity("", flushWith: "creator[].*")
-    map("creator[].*.type", "type")
-    map("creator[].*.name", "name")
-    do entity("affiliation")
-      map("creator[].*.affiliation.id","id")
-      map("creator[].*.affiliation.type","type")
-      map("creator[].*.affiliation.name", "name")
+  do entity("", flushWith: "creator[].?")
+    map("creator[].?.type", "type")
+    map("creator[].?.name", "name")
+    do entity("affiliation", flushWith: "creator[].?")
+      map("creator[].?.affiliation.id","id")
+      map("creator[].?.affiliation.type","type")
+      map("creator[].?.affiliation.name", "name")
     end
-    map("creator[].*.id","id")
-    map("creator[].*.academicTitle", "academicTitle")
+    map("creator[].?.id","id")
+    map("creator[].?.academicTitle", "academicTitle")
   end
 end
 
 /* Contributor */
 do array("contributor", flushWith: record)
-  do entity("", flushWith: "contributor[].*")
-    map("contributor[].*.type", "type")
-    map("contributor[].*.name", "name")
-    do entity("affiliation")
-      map("contributor[].*.affiliation.id","id")
-      map("contributor[].*.affiliation.type","type")
-      map("contributor[].*.affiliation.name", "name")
+  do entity("", flushWith: "contributor[].?")
+    map("contributor[].?.type", "type")
+    map("contributor[].?.name", "name")
+    do entity("affiliation", flushWith: "creator[].?")
+      map("contributor[].?.affiliation.id","id")
+      map("contributor[].?.affiliation.type","type")
+      map("contributor[].?.affiliation.name", "name")
     end
-    map("contributor[].*.id","id")
-    map("contributor[].*.academicTitle", "academicTitle")
+    map("contributor[].?.id","id")
+    map("contributor[].?.academicTitle", "academicTitle")
   end
 end
 
@@ -125,7 +125,7 @@ end
 
 do array("mainEntityOfPage")
   do entity("")
-    map("URL_id", "id")
+    map("id", "id")
     /* Add provider/source information to each resource description */
     do entity("provider")
       add_field("id","$[service_id]")

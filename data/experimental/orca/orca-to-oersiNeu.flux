@@ -21,7 +21,7 @@ orca_auth="changeme";
 | open-http(auth=orca_auth, accept="application/json") // local test: open-file
 | as-records
 | decode-json
-| fix(FLux_DIR + "data/experimental/orca/orca-Fedora.fix", *)
+| fix(FLUX_DIR +  "orca-Fedora.fix", *)
 | encode-json
 | oersi.FieldMerger
 | oersi.JsonValidator("resource:/schemas/schema.json", writeValid=metadata_valid, writeInvalid=metadata_invalid)
