@@ -33,8 +33,8 @@ do map("attributes.instructors[].*.name", "@creator")
   not_equals(string: '')
 end
 
-do array("creator", flushWith: "@creator")
- do entity("")
+do array("creator", flushWith: record)
+ do entity("", flushWith: "@creator")
   add_field("type", "Person")
   map("@creator", "name")
  end
