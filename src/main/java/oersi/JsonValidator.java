@@ -14,6 +14,8 @@ import org.slf4j.LoggerFactory;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.github.fge.jsonschema.SchemaVersion;
+import com.github.fge.jsonschema.cfg.ValidationConfiguration;
 import com.github.fge.jsonschema.core.exceptions.ProcessingException;
 import com.github.fge.jsonschema.core.report.LogLevel;
 import com.github.fge.jsonschema.core.report.ProcessingMessage;
@@ -38,7 +40,11 @@ public final class JsonValidator extends DefaultObjectPipe<String, ObjectReceive
 
     public JsonValidator(final String url) {
         try {
-            schema = JsonSchemaFactory.byDefault().getJsonSchema(url);
+            ValidationConfiguration validationConfiguration = ValidationConfiguration.newBuilder()
+                    .setDefaultVersion(SchemaVersion.DRAFTV3).freeze();
+            schema = JsonSchemaFactory.newBuilder()
+                    .setValidationConfiguration(validationConfiguration).freeze()
+                    .getJsonSchema(url);
         } catch (ProcessingException e) {
             throw new MetafactureException(e.getMessage(), e);
         }

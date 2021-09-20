@@ -41,7 +41,20 @@ import com.google.common.collect.ImmutableMap;
 public final class TestJsonValidator {
 
     private static final String SCHEMA = "resource:/schemas/schema.json";
-    private static final Map<String, Object> JSON_INVALID = ImmutableMap.of("key", "val");
+    private static final Map<String, Object> JSON_INVALID_1 = ImmutableMap.of("key", "val");
+    private static final Map<String, Object> JSON_INVALID_2 = ImmutableMap.of(//
+            "id", "https://example.org/oer", //
+            "name", "Beispielkurs", //
+            "@context", Arrays.asList( //
+                    "https://w3id.org/kim/lrmi-profile/draft/context.jsonld", //
+                    ImmutableMap.of("@language", "de")),
+            "type", Arrays.asList("LearningResource"), //
+            "mainEntityOfPage", Arrays.asList(ImmutableMap.of( //
+                    "dateModified", "", //
+                    "id", "https://example.org/oer-description.html", //
+                    "provider", ImmutableMap.of(//
+                            "id", "https://example.org/oer-provider.html", //
+                            "name", "example"))));
     private static final Map<String, Object> JSON_VALID = ImmutableMap.of(//
             "id", "https://example.org/oer", //
             "name", "Beispielkurs", //
@@ -78,8 +91,14 @@ public final class TestJsonValidator {
     }
 
     @Test
-    public void testShouldInvalidate() throws JsonProcessingException {
-        validator.process(MAPPER.writeValueAsString(JSON_INVALID));
+    public void testShouldInvalidateMinimal() throws JsonProcessingException {
+        validator.process(MAPPER.writeValueAsString(JSON_INVALID_1));
+        inOrder.verifyNoMoreInteractions();
+    }
+
+    @Test
+    public void testShouldInvalidateDetails() throws JsonProcessingException {
+        validator.process(MAPPER.writeValueAsString(JSON_INVALID_2));
         inOrder.verifyNoMoreInteractions();
     }
 
@@ -91,7 +110,7 @@ public final class TestJsonValidator {
     @Test(expected = MetafactureException.class)
     public void testShouldCatchMissingOutputFile() throws JsonProcessingException {
         validator.setWriteValid("");
-        validator.process(MAPPER.writeValueAsString(JSON_INVALID));
+        validator.process(MAPPER.writeValueAsString(JSON_INVALID_1));
     }
 
     @After
