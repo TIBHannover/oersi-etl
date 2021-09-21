@@ -330,6 +330,31 @@ do array("contributor", flushWith: record)
       not_equals(string: "")
     end
   end
+  do entity("", flushWith: record)
+    do map("metadata.inlined.catalog.metadata.terms:contributor_3_type.value", "type")
+      not_equals(string: "")
+    end
+    do map("metadata.inlined.catalog.metadata.terms:contributor_3_name.value", "name")
+      not_equals(string: "")
+    end
+    do entity("affiliation")
+      do map("metadata.inlined.catalog.metadata.terms:contributor_3_affiliation_id.value","id")
+        not_equals(string: "")
+      end
+      do map("metadata.inlined.catalog.metadata.terms:contributor_3_affiliation_id.value","type")
+        constant(value: "Organization")
+      end
+      do map("metadata.inlined.catalog.metadata.terms:contributor_3_affiliation_id.value", "name")
+        lookup(in: "data/maps/orcaUni.tsv")
+      end
+    end
+    do map("metadata.inlined.catalog.metadata.terms:contributor_3_id.value","id")
+      not_equals(string: "")
+    end
+    do map("metadata.inlined.catalog.metadata.terms:contributor_3_honoricPrefix.value", "honoricPrefix")
+      not_equals(string: "")
+    end
+  end
 end
 
 /*sourceOrganization */
