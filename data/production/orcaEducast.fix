@@ -1,0 +1,425 @@
+/* Set up the context */
+do array("@context")
+ add_field("","https://w3id.org/kim/lrmi-profile/draft/context.jsonld")
+ do entity("")
+  map("metadata.inlined.catalog.metadata.terms:meta_language.value", "@language")
+ end
+end
+
+/* Map some of the data we have to the oersi model: */
+
+map("metadata.inlined.catalog.metadata.terms:id.value", "id")
+map("metadata.inlined.catalog.metadata.terms:name.value", "name")
+map("metadata.inlined.catalog.metadata.terms:description.value", "description")
+do map("metadata.inlined.mediapackage.publications.publication.attachments.attachment.url.value","image")
+  contains(string: "thumbnail")
+end
+
+/* Creation-Date comes in as "- recorded at 9/19/2012" */
+map("PubDatum", "dateCreated")
+
+
+/*rel = "liscence" cant be directly mapped */
+do entity("license", flushWith: record)
+  map("metadata.inlined.catalog.metadata.terms:license_id.value", "id")
+end
+
+/* Creator */
+do array("creator", flushWith: record)
+  do entity("", flushWith: record)
+    do map("metadata.inlined.catalog.metadata.terms:creator_1_type.value", "type")
+      not_equals(string: "")
+    end
+    do map("metadata.inlined.catalog.metadata.terms:creator_1_name.value", "name")
+      not_equals(string: "")
+    end
+    do entity("affiliation")
+      do map("metadata.inlined.catalog.metadata.terms:creator_1_affiliation_id.value","id")
+        not_equals(string: "")
+      end
+      do map("metadata.inlined.catalog.metadata.terms:creator_1_affiliation_id.value","type")
+        constant(value: "Organization")
+      end
+      do map("metadata.inlined.catalog.metadata.terms:creator_1_affiliation_id.value", "name")
+        lookup(in: "data/maps/orcaUni.tsv")
+      end
+    end
+    do map("metadata.inlined.catalog.metadata.terms:creator_1_id.value","id")
+      not_equals(string: "")
+    end
+    do map("metadata.inlined.catalog.metadata.terms:creator_1_honoricPrefix.value", "honoricPrefix")
+      not_equals(string: "")
+    end
+  end
+  do entity("", flushWith: record)
+    do map("metadata.inlined.catalog.metadata.terms:creator_2_type.value", "type")
+      not_equals(string: "")
+    end
+    do map("metadata.inlined.catalog.metadata.terms:creator_2_name.value", "name")
+      not_equals(string: "")
+    end
+    do entity("affiliation")
+      do map("metadata.inlined.catalog.metadata.terms:creator_2_affiliation_id.value","id")
+        not_equals(string: "")
+      end
+      do map("metadata.inlined.catalog.metadata.terms:creator_2_affiliation_id.value","type")
+        constant(value: "Organization")
+      end
+      do map("metadata.inlined.catalog.metadata.terms:creator_2_affiliation_id.value", "name")
+        lookup(in: "data/maps/orcaUni.tsv")
+      end
+    end
+    do map("metadata.inlined.catalog.metadata.terms:creator_2_id.value","id")
+      not_equals(string: "")
+    end
+    do map("metadata.inlined.catalog.metadata.terms:creator_2_honoricPrefix.value", "honoricPrefix")
+      not_equals(string: "")
+    end
+  end
+  do entity("", flushWith: record)
+    do map("metadata.inlined.catalog.metadata.terms:creator_3_type.value", "type")
+      not_equals(string: "")
+    end
+    do map("metadata.inlined.catalog.metadata.terms:creator_3_name.value", "name")
+      not_equals(string: "")
+    end
+    do entity("affiliation")
+      do map("metadata.inlined.catalog.metadata.terms:creator_3_affiliation_id.value","id")
+        not_equals(string: "")
+      end
+      do map("metadata.inlined.catalog.metadata.terms:creator_3_affiliation_id.value","type")
+        constant(value: "Organization")
+      end
+      do map("metadata.inlined.catalog.metadata.terms:creator_3_affiliation_id.value", "name")
+        lookup(in: "data/maps/orcaUni.tsv")
+      end
+    end
+    do map("metadata.inlined.catalog.metadata.terms:creator_3_id.value","id")
+      not_equals(string: "")
+    end
+    do map("metadata.inlined.catalog.metadata.terms:creator_3_honoricPrefix.value", "honoricPrefix")
+      not_equals(string: "")
+    end
+  end
+  do entity("", flushWith: record)
+    do map("metadata.inlined.catalog.metadata.terms:creator_4_type.value", "type")
+      not_equals(string: "")
+    end
+    do map("metadata.inlined.catalog.metadata.terms:creator_4_name.value", "name")
+      not_equals(string: "")
+    end
+    do entity("affiliation")
+      do map("metadata.inlined.catalog.metadata.terms:creator_4_affiliation_id.value","id")
+        not_equals(string: "")
+      end
+      do map("metadata.inlined.catalog.metadata.terms:creator_4_affiliation_id.value","type")
+        constant(value: "Organization")
+      end
+      do map("metadata.inlined.catalog.metadata.terms:creator_4_affiliation_id.value", "name")
+        lookup(in: "data/maps/orcaUni.tsv")
+      end
+    end
+    do map("metadata.inlined.catalog.metadata.terms:creator_4_id.value","id")
+      not_equals(string: "")
+    end
+    do map("metadata.inlined.catalog.metadata.terms:creator_4_honoricPrefix.value", "honoricPrefix")
+      not_equals(string: "")
+    end
+  end
+  do entity("", flushWith: record)
+    do map("metadata.inlined.catalog.metadata.terms:creator_5_type.value", "type")
+      not_equals(string: "")
+    end
+    do map("metadata.inlined.catalog.metadata.terms:creator_5_name.value", "name")
+      not_equals(string: "")
+    end
+    do entity("affiliation")
+      do map("metadata.inlined.catalog.metadata.terms:creator_5_affiliation_id.value","id")
+        not_equals(string: "")
+      end
+      do map("metadata.inlined.catalog.metadata.terms:creator_5_affiliation_id.value","type")
+        constant(value: "Organization")
+      end
+      do map("metadata.inlined.catalog.metadata.terms:creator_5_affiliation_id.value", "name")
+        lookup(in: "data/maps/orcaUni.tsv")
+      end
+    end
+    do map("metadata.inlined.catalog.metadata.terms:creator_5_id.value","id")
+      not_equals(string: "")
+    end
+    do map("metadata.inlined.catalog.metadata.terms:creator_5_honoricPrefix.value", "honoricPrefix")
+      not_equals(string: "")
+    end
+  end
+  do entity("", flushWith: record)
+    do map("metadata.inlined.catalog.metadata.terms:creator_6_type.value", "type")
+      not_equals(string: "")
+    end
+    do map("metadata.inlined.catalog.metadata.terms:creator_6_name.value", "name")
+      not_equals(string: "")
+    end
+    do entity("affiliation")
+      do map("metadata.inlined.catalog.metadata.terms:creator_6_affiliation_id.value","id")
+        not_equals(string: "")
+      end
+      do map("metadata.inlined.catalog.metadata.terms:creator_6_affiliation_id.value","type")
+        constant(value: "Organization")
+      end
+      do map("metadata.inlined.catalog.metadata.terms:creator_6_affiliation_id.value", "name")
+        lookup(in: "data/maps/orcaUni.tsv")
+      end
+    end
+    do map("metadata.inlined.catalog.metadata.terms:creator_6_id.value","id")
+      not_equals(string: "")
+    end
+    do map("metadata.inlined.catalog.metadata.terms:creator_6_honoricPrefix.value", "honoricPrefix")
+      not_equals(string: "")
+    end
+  end
+  do entity("", flushWith: record)
+    do map("metadata.inlined.catalog.metadata.terms:creator_7_type.value", "type")
+      not_equals(string: "")
+    end
+    do map("metadata.inlined.catalog.metadata.terms:creator_7_name.value", "name")
+      not_equals(string: "")
+    end
+    do entity("affiliation")
+      do map("metadata.inlined.catalog.metadata.terms:creator_7_affiliation_id.value","id")
+        not_equals(string: "")
+      end
+      do map("metadata.inlined.catalog.metadata.terms:creator_7_affiliation_id.value","type")
+        constant(value: "Organization")
+      end
+      do map("metadata.inlined.catalog.metadata.terms:creator_7_affiliation_id.value", "name")
+        lookup(in: "data/maps/orcaUni.tsv")
+      end
+    end
+    do map("metadata.inlined.catalog.metadata.terms:creator_7_id.value","id")
+      not_equals(string: "")
+    end
+    do map("metadata.inlined.catalog.metadata.terms:creator_7_honoricPrefix.value", "honoricPrefix")
+      not_equals(string: "")
+    end
+  end
+  do entity("", flushWith: record)
+    do map("metadata.inlined.catalog.metadata.terms:creator_8_type.value", "type")
+      not_equals(string: "")
+    end
+    do map("metadata.inlined.catalog.metadata.terms:creator_8_name.value", "name")
+      not_equals(string: "")
+    end
+    do entity("affiliation")
+      do map("metadata.inlined.catalog.metadata.terms:creator_8_affiliation_id.value","id")
+        not_equals(string: "")
+      end
+      do map("metadata.inlined.catalog.metadata.terms:creator_8_affiliation_id.value","type")
+        constant(value: "Organization")
+      end
+      do map("metadata.inlined.catalog.metadata.terms:creator_8_affiliation_id.value", "name")
+        lookup(in: "data/maps/orcaUni.tsv")
+      end
+    end
+    do map("metadata.inlined.catalog.metadata.terms:creator_8_id.value","id")
+      not_equals(string: "")
+    end
+    do map("metadata.inlined.catalog.metadata.terms:creator_8_honoricPrefix.value", "honoricPrefix")
+      not_equals(string: "")
+    end
+  end
+  do entity("", flushWith: record)
+    do map("metadata.inlined.catalog.metadata.terms:creator_9_type.value", "type")
+      not_equals(string: "")
+    end
+    do map("metadata.inlined.catalog.metadata.terms:creator_9_name.value", "name")
+      not_equals(string: "")
+    end
+    do entity("affiliation")
+      do map("metadata.inlined.catalog.metadata.terms:creator_9_affiliation_id.value","id")
+        not_equals(string: "")
+      end
+      do map("metadata.inlined.catalog.metadata.terms:creator_9_affiliation_id.value","type")
+        constant(value: "Organization")
+      end
+      do map("metadata.inlined.catalog.metadata.terms:creator_9_affiliation_id.value", "name")
+        lookup(in: "data/maps/orcaUni.tsv")
+      end
+    end
+    do map("metadata.inlined.catalog.metadata.terms:creator_9_id.value","id")
+      not_equals(string: "")
+    end
+    do map("metadata.inlined.catalog.metadata.terms:creator_9_honoricPrefix.value", "honoricPrefix")
+      not_equals(string: "")
+    end
+  end
+  do entity("", flushWith: record)
+    do map("metadata.inlined.catalog.metadata.terms:creator_10_type.value", "type")
+      not_equals(string: "")
+    end
+    do map("metadata.inlined.catalog.metadata.terms:creator_10_name.value", "name")
+      not_equals(string: "")
+    end
+    do entity("affiliation")
+      do map("metadata.inlined.catalog.metadata.terms:creator_10_affiliation_id.value","id")
+        not_equals(string: "")
+      end
+      do map("metadata.inlined.catalog.metadata.terms:creator_10_affiliation_id.value","type")
+        constant(value: "Organization")
+      end
+      do map("metadata.inlined.catalog.metadata.terms:creator_10_affiliation_id.value", "name")
+        lookup(in: "data/maps/orcaUni.tsv")
+      end
+    end
+    do map("metadata.inlined.catalog.metadata.terms:creator_10_id.value","id")
+      not_equals(string: "")
+    end
+    do map("metadata.inlined.catalog.metadata.terms:creator_10_honoricPrefix.value", "honoricPrefix")
+      not_equals(string: "")
+    end
+  end
+end
+
+/* Contributor */
+do array("contributor", flushWith: record)
+  do entity("", flushWith: record)
+    do map("metadata.inlined.catalog.metadata.terms:contributor_1_type.value", "type")
+      not_equals(string: "")
+    end
+    do map("metadata.inlined.catalog.metadata.terms:contributor_1_name.value", "name")
+      not_equals(string: "")
+    end
+    do entity("affiliation")
+      do map("metadata.inlined.catalog.metadata.terms:contributor_1_affiliation_id.value","id")
+        not_equals(string: "")
+      end
+      do map("metadata.inlined.catalog.metadata.terms:contributor_1_affiliation_id.value","type")
+        constant(value: "Organization")
+      end
+      do map("metadata.inlined.catalog.metadata.terms:contributor_1_affiliation_id.value", "name")
+        lookup(in: "data/maps/orcaUni.tsv")
+      end
+    end
+    do map("metadata.inlined.catalog.metadata.terms:contributor_1_id.value","id")
+      not_equals(string: "")
+    end
+    do map("metadata.inlined.catalog.metadata.terms:contributor_1_honoricPrefix.value", "honoricPrefix")
+      not_equals(string: "")
+    end
+  end
+  do entity("", flushWith: record)
+    do map("metadata.inlined.catalog.metadata.terms:contributor_2_type.value", "type")
+      not_equals(string: "")
+    end
+    do map("metadata.inlined.catalog.metadata.terms:contributor_2_name.value", "name")
+      not_equals(string: "")
+    end
+    do entity("affiliation")
+      do map("metadata.inlined.catalog.metadata.terms:contributor_2_affiliation_id.value","id")
+        not_equals(string: "")
+      end
+      do map("metadata.inlined.catalog.metadata.terms:contributor_2_affiliation_id.value","type")
+        constant(value: "Organization")
+      end
+      do map("metadata.inlined.catalog.metadata.terms:contributor_2_affiliation_id.value", "name")
+        lookup(in: "data/maps/orcaUni.tsv")
+      end
+    end
+    do map("metadata.inlined.catalog.metadata.terms:contributor_2_id.value","id")
+      not_equals(string: "")
+    end
+    do map("metadata.inlined.catalog.metadata.terms:contributor_2_honoricPrefix.value", "honoricPrefix")
+      not_equals(string: "")
+    end
+  end
+end
+
+/*sourceOrganization */
+do map("metadata.inlined.catalog.metadata.terms:creator_*_affiliation_id.value|metadata.inlined.catalog.metadata.terms:contributor_*_affiliation_id.value", "@sourceOrganization")
+  unique()
+end
+
+do array('sourceOrganization', flushWith: record)
+  do entity("")
+    do map("@sourceOrganization","id")
+      not_equals(string: "")
+    end
+    do map("@sourceOrganization","type")
+      constant(value: "Organization")
+    end
+    do map("@sourceOrganization", "name")
+      lookup(in: "data/maps/orcaUni.tsv")
+    end
+  end
+end
+
+/* type */
+
+do array ("type")
+  add_field("","LearningResource")
+  add_field("","VideoObject")
+end
+
+/*learningResourceType */
+
+do map("metadata.inlined.catalog.metadata.terms:learningResourceType_id.value", "@hcrt")
+  split(delimiter: ";")
+  trim()
+  lookup(in: 'data/maps/orcaMedienId-hcrt.tsv')
+  unique()
+end
+
+do array('learningResourceType', flushWith: record)
+  do entity('', flushWith: '@hcrt')
+    map('@hcrt', 'id')
+    do entity('prefLabel', flushWith: '@hcrt')
+      do map('@hcrt', 'de')
+        lookup(in: 'data/maps/hcrt-de-labels.tsv')
+      end  
+      do map('@hcrt', 'en')
+        lookup(in: 'data/maps/hcrt-en-labels.tsv')
+      end
+    end
+  end
+end
+
+/*about */
+
+do map("metadata.inlined.catalog.metadata.terms:about_id.value", "@hochschulfaechersystematik")
+  unique()
+end
+
+do array('about', flushWith: record)
+ do entity('', flushWith: '@hochschulfaechersystematik')
+  map('@hochschulfaechersystematik', 'id')
+  do map('@hochschulfaechersystematik', 'prefLabel.de')
+    lookup(in: 'data/maps/subject-labels.tsv')
+  end
+ end
+end
+
+/*inLanguage*/
+do array("inLanguage")
+  map("metadata.inlined.catalog.metadata.terms:inLanguage.value")
+end
+
+/*keywords */
+
+do array("keywords", flushWith: record)
+  do map("metadata.inlined.catalog.metadata.terms:keywords.value")
+    split(delimiter: ",")
+    trim()
+  end
+end
+
+/*mainEntityOfPage */
+
+do array("mainEntityOfPage")
+  do entity("")
+    map("metadata.inlined.catalog.metadata.terms:id.value", "id")
+    /* Add provider/source information to each resource description */
+    do entity("provider")
+      add_field("id","$[service_id]")
+      add_field("type","Service")
+      add_field("name","$[service_name]")
+    end
+  end
+end
