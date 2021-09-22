@@ -6,13 +6,7 @@ do array('@context')
  end
 end
 
-do choose(flushWith: record)
-  map(node.title, name)
-  do map("node.properties.cclom:general_description[].*", "description")
-    not_equals(string: "")
-  end
-end
-
+map(node.title, name)
 map(node.preview.url, image)
 
 /* Default ID: */
