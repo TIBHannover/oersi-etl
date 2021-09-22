@@ -11,7 +11,8 @@ default input_wait = "50";
 | open-http(accept="application/json")
 | as-lines
 | decode-json
-| fix(FLUX_DIR + "edu-sharing.fix", *) // '*': pass all flux variables to the fix
+// edu-sharing version 6.0
+| fix(FLUX_DIR + "twillo_edu-sharing.fix", *) // '*': pass all flux variables to the fix
 | encode-json
 | oersi.FieldMerger
 | oersi.JsonValidator(output_schema, writeValid=metadata_valid, writeInvalid=metadata_invalid)
