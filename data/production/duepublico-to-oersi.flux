@@ -10,7 +10,7 @@ service_name = "DuEPublico";
 map('metadata.mods:mods.mods:identifier.value')
 ") // filter out all deleted records
 // due to the complex structure of the MODs a morph instead of a fix is used.
-| morph(FLUX_DIR + "duepub-morph.xml", *) // '*': pass all flux variables to the fix
+| morph(FLUX_DIR + "duepublico-morph.xml", *) // '*': pass all flux variables to the fix
 | encode-json
 // The field merger in this case is not needed, since process control allows to deduplicate and separate.
 //| oersi.FieldMerger

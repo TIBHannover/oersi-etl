@@ -2,12 +2,12 @@
 <metamorph xmlns="http://www.culturegraph.org/metamorph" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	version="1">
 	<maps>
-		<filemap name="duePub-corporate" files="data/maps/duePub-corporate.tsv" />
+		<filemap name="duepublico-corporate" files="data/maps/duepublico-corporate.tsv" />
 		<filemap name="subject-labels" files="data/maps/subject-labels.tsv" />
-		<filemap name="duePub-licenses" files="data/maps/duePub-licenses.tsv" />
+		<filemap name="duepublico-licenses" files="data/maps/duepublico-licenses.tsv" />
 		<filemap name="hcrt-de-labels" files="data/maps/hcrt-de-labels.tsv" />
 		<filemap name="hcrt-en-labels" files="data/maps/hcrt-en-labels.tsv" />
-		<filemap name="duePub-hcrt" files="data/maps/duePub-hcrt.tsv" />
+		<filemap name="duepublico-hcrt" files="data/maps/duepublico-hcrt.tsv" />
 		<filemap name="destatisPersonal2destatisStudierende" files="data/maps/destatisPersonal2destatisStudierende.tsv" />
 	</maps>
 	<rules>
@@ -91,7 +91,7 @@ do array("creator", flushWith: record)
       end  
       do choose(flushWith: "metadata.mods.name")
         do map("metadata.mods.name.valueURI", "name")
-          lookup(in: "data/maps/duepub-corporate.tsv")
+          lookup(in: "data/maps/duepublico-corporate.tsv")
         end
         do map("metadata.mods.name.displayForm.value", "name")
           replace(pattern: "(.+), (.+)", with: "$2 $1")
@@ -120,7 +120,7 @@ end
 				</data>
 				<choose flushWith="metadata.mods:mods.mods:name">
 					<data source="metadata.mods:mods.mods:name.valueURI" name="name">
-						<lookup in="duePub-corporate"/>
+						<lookup in="duepublico-corporate"/>
 					</data>
 					<data source="metadata.mods:mods.mods:name.mods:displayForm.value" name="name">
 						<replace pattern="(.+), (.+)" with="$2 $1"/>
@@ -147,7 +147,7 @@ end
 				</data>
 				<choose flushWith="metadata.mods:mods.mods:name">
 					<data source="metadata.mods:mods.mods:name.valueURI" name="name">
-						<lookup in="duePub-corporate"/>
+						<lookup in="duepublico-corporate"/>
 					</data>
 					<data source="metadata.mods:mods.mods:name.mods:displayForm.value" name="name">
 						<replace pattern="(.+), (.+)" with="$2 $1"/>
@@ -172,7 +172,7 @@ end
 				</data>
 				<choose flushWith="metadata.mods:mods.mods:name">
 					<data source="metadata.mods:mods.mods:name.valueURI" name="name">
-						<lookup in="duePub-corporate"/>
+						<lookup in="duepublico-corporate"/>
 					</data>
 					<data source="metadata.mods:mods.mods:name.mods:displayForm.value" name="name">
 						<replace pattern="(.+), (.+)" with="$2 $1"/>
@@ -191,13 +191,13 @@ map("metadata.mods.abstract.value", "description")
 		<!--
 
 do map("metadata.mods.accessCondition.href", "license")
-  lookup(in: "data/maps/duePub-licenses.tsv")
+  lookup(in: "data/maps/duepublico-licenses.tsv")
 end
 
 -->
 		<entity name="license" flushWith="record">
 			<data source="metadata.mods:mods.mods:accessCondition.xlink:href" name="id">
-				<lookup in="duePub-licenses"/>
+				<lookup in="duepublico-licenses"/>
 			</data>
 		</entity>
 		<!--
@@ -232,7 +232,7 @@ end
 		<!--
 
 do map('metadata.mods.genre.value', '@hcrt')
-  lookup(in: 'data/maps/duePub-hcrt.tsv')
+  lookup(in: 'data/maps/duepublico-hcrt.tsv')
 end
 do array('learningResourceType')
   do entity('')
@@ -251,7 +251,7 @@ end
 -->
 
 		<data source="metadata.mods:mods.mods:genre.value" name="@hcrt">
-			<lookup in="duePub-hcrt"/>
+			<lookup in="duepublico-hcrt"/>
 		</data>
 		<entity name="learningResourceType[]" flushWith="record">
 			<entity name="" reset="true">
