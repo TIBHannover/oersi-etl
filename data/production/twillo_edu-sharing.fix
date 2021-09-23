@@ -6,7 +6,13 @@ do array('@context')
  end
 end
 
-map(node.title, name)
+do choose(flushWith: record)
+  map(node.title, name)
+  do map("node.properties.cm:name[].*", "name")
+    not_equals(string: "")
+  end
+end
+
 map(node.preview.url, image)
 
 /* Default ID: */
