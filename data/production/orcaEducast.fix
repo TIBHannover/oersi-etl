@@ -363,7 +363,7 @@ do map("metadata.inlined.catalog.metadata.terms:creator_*_affiliation_id.value|m
 end
 
 do array('sourceOrganization', flushWith: record)
-  do entity("")
+  do entity("", flushWith: "@sourceOrganization")
     do map("@sourceOrganization","id")
       not_equals(string: "")
     end
