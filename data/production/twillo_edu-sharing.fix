@@ -52,7 +52,7 @@ do map("node.properties.cclom:general_description[].*", "description")
 end
 
 do map('node.properties.ccm:taxonid[].*', '@hochschulfaechersystematik')
-  lookup(in: 'data/maps/edusharing-subject-mapping.tsv')
+  regexp(match: "^https://w3id.org/kim/hochschulfaechersystematik/.*")
 end
 
 do array('about', flushWith: record)
@@ -114,8 +114,9 @@ do array('type')
   add_field('','LearningResource')
 end
 
-do map('node.properties.ccm:educationallearningresourcetype[].1', '@hcrt')
-  lookup(in: 'data/maps/edusharing-hcrt-mapping.tsv')
+do map('node.properties.ccm:educationallearningresourcetype[].*', '@hcrt')
+  not_equals(string: '')
+  not_equals(string: 'null null')
 end
 
 do array('learningResourceType')
