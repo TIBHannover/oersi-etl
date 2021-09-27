@@ -435,16 +435,30 @@ do array("keywords", flushWith: record)
   end
 end
 
+/* embed and download URL */
+
+do map('metadata.inlined.mediapackage.publications.publication.media.track.url.value', '@contentUrl')
+  regexp(match: '^https:\\/\\/cdn-staging.educast.cloud\\/vod\\/orca\\/export\\/.*')
+end
+
+do map('metadata.inlined.mediapackage.publications.publication.url.value', '@embedUrl')
+  regexp(match: '^https:\\/\\/player.orca-staging.educast.nrw\\/.*')
+end
+
 do array('encoding')
 /* Download */
   do entity('', flushWith: record)
-    add_field('type', 'MediaObject')
-    do map('metadata.inlined.mediapackage.publications.publication.media.track.url.value', 'contentUrl')
-      regexp(match: '^https:\\/\\/cdn-staging.educast.cloud\\/vod\\/orca\\/export\\/.*')
+    do map("@contentUrl", 'type')
+      constant(value: "MediaObject")
     end
-    do map('metadata.inlined.mediapackage.publications.publication.url.value', 'embedUrl')
-      regexp(match: '^https:\\/\\/player.orca-staging.educast.nrw\\/.*')
+    map('@contentUrl', 'contentUrl')
+  end
+  /* Download */
+  do entity('', flushWith: record)
+    do map("@embedUrl", 'type')
+      constant(value: "MediaObject")
     end
+    map('@embedUrl', 'embedUrl')
   end
 end
 
