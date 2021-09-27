@@ -8,14 +8,14 @@ end
 
 /* Map some of the data we have to the oersi model: */
 
-map("id", "id")
-map("name", "name")
-map("description", "description")
-map("image","image")
+map("id")
+map("name")
+map("description")
+map("image")
 
 
 /* Creation-Date comes in as "- recorded at 9/19/2012" */
-map("dateCreated", "dateCreated")
+map("datePublished", "dateCreated")
 
 
 /*rel = "liscence" cant be directly mapped */
@@ -34,7 +34,7 @@ do array("creator", flushWith: record)
       map("creator[].?.affiliation.name", "name")
     end
     map("creator[].?.id","id")
-    map("creator[].?.academicTitle", "academicTitle")
+    map("creator[].?.honoricPrefix", "honoricPrefix")
   end
 end
 
@@ -81,7 +81,7 @@ end
 /*learningResourceType */
 
 do map("learningResourceType[].*.id", "@hcrt")
-  lookup(in: 'data/experimental/orca/orcaMedienId-hcrt.tsv')
+  lookup(in: 'data/maps/orcaMedienId-hcrt.tsv')
   unique()
 end
 
