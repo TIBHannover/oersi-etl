@@ -24,7 +24,7 @@ end")
 | open-http(accept="application/json") // local test: open-file
 | as-records
 | decode-json
-| fix(FLUX_DIR +  "orcaFedora.fix", *)
+| fix(FLUX_DIR +  "orca_fedora.fix", *)
 | encode-json
 | oersi.FieldMerger
 | oersi.JsonValidator(output_schema, writeValid=metadata_valid, writeInvalid=metadata_invalid)
