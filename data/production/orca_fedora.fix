@@ -102,9 +102,9 @@ end
 /*about */
 
 do array("about", flushWith: record)
- do entity("", flushWith: "about[].*.id")
-  map("about[].*.id", "id")
-  do map("about[].*.id", "prefLabel.de")
+ do entity("", flushWith: "about[].?.id")
+  map("about[].?.id", "id")
+  do map("about[].?.id", "prefLabel.de")
     lookup(in: "data/maps/subject-labels.tsv")
   end
  end
