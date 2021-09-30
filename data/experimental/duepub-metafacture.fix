@@ -1,36 +1,86 @@
 # See https://github.com/TobiasNx/Catmandu-Testing/blob/master/DuePub-Test/duepub-catmandu.fix
 
 if exists ("metadata.error")
-	reject()
+    reject()
 end
 
 if any_equal ("header.status", "deleted")
-	reject()
+    reject()
 end
 
 # ---------------@context ----------------------------------
 
-set_array("@context[]", "https://w3id.org/kim/lrmi-profile/draft/context.jsonld")
-set_hash("@context[].$append", "@language": "de")
+set_array("@context", "https://w3id.org/kim/lrmi-profile/draft/context.jsonld")
+set_hash("@context.$append", "@language": "de")
 
 # --------------id ----------------------------------------
-# TODO: why use list here at all?
-do list("path": "metadata.mods.identifier.value", "var": "a")
-	if all_match("a","^https://duepublico2.uni-due.de/receive/.*")
-		copy_field("a","id")
-	end
+do list("path": "metadata.mods.identifier.value", "var": "identifier")
+    if all_match("identifier","^https://duepublico2.uni-due.de/receive/.*")
+        copy_field("identifier","id")
+    end
 end
 
 #  ------------image ------------------------------------
-# TODO: why use list here at all?
-do list("path": "metadata.mods.location.url.value", "var": "b")
-    if all_match("b","^https://duepublico2.uni-due.de/rsc/thumbnail/.*")
-        copy_field("b","image")
+do list("path": "metadata.mods.location.url.value", "var": "url")
+    if all_match("url","^https://duepublico2.uni-due.de/rsc/thumbnail/.*")
+        copy_field("url","image")
     end
 end
 
 #  ------------title ------------------------------------
 paste("title","metadata.mods.titleInfo.nonSort.value","metadata.mods.titleInfo.title.value")
 
-retain("@context[]","id","image","title")
+#  ------------creator------------------------------------
+do list("path":"metadata.mods.name","var":"name")
+    if any_match("name.role.roleTerm.value","aut|cre")
+        set_array("creator")
+        copy_field("name.displayForm.value","creator.$append.name")
+        if any_equal("name.type","personal") /* TODO: looks at all names, not just current name */
+            add_field("creator.$last.type", "Person") /* TODO: we only get the very last, not every last one */
+        end
+        if any_equal("name.type","corporate")
+            add_field("creator.$last.type", "Organization")
+        end
+    end
+end
+
+/* TODO: impl replace_all("creator.name",'(.+), (.+)', '$2 $1') */
+/* TODO: contributor */
+/* TODO: sourceOrganization */
+
+#  ------------description------------------------------------
+copy_field("metadata.mods.abstract.value","description")
+
+/* TODO: license, xlink:href / namespace */
+
+#  ------------dataCreated------------------------------------
+copy_field("metadata.mods.originInfo.dateIssued.value","dataCreated")
+
+#  ------------inLanguage------------------------------------
+set_array(inLanguage) /* Force array even for 1 elem */ /* TODO: test multiple input langs */
+copy_field("metadata.mods.language.languageTerm.value","inLanguage")
+
+# ---------------type ----------------------------------
+set_array("type", "LearningResource")
+
+/* TODO: learningResourceType */
+
+#  ------------keywords------------------------------------
+copy_field("metadata.mods.subject.topic.value","keywords")
+/* TODO: split_field(keywords,",") */
+trim("keywords")
+
+#  ------------about------------------------------------
+do list("path":"metadata.mods.classification","var":"classification")
+    if any_equal("classification.authorityURI","https://duepublico.uni-due.de/api/v1/classifications/destatis") /* TODO: looks at all, not just current */
+        set_array("about")
+        lookup("classification.valueURI","data/maps/DestatisPersonal2DestatisStudierende.tsv","sep_char":"\t") /* TODO: loses non-found values*/
+        copy_field("classification.valueURI","about.$append.id")
+        lookup("classification.valueURI","data/maps/subject-labels.tsv","sep_char":"\t")
+        copy_field("classification.valueURI","about.$last.prefLabel.de") /* TODO: we only get the very last, not every last one */
+    end
+end
+
+retain("@context","id","image","title","creator","contributor","sourceOrganization",
+"description","dataCreated","inLanguage","type","learningResourceType","keywords","about")
 vacuum()
