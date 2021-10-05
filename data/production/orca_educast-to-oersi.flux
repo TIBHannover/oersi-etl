@@ -11,7 +11,7 @@ do map('metadata.inlined.catalog.metadata.terms:oersi-unlist.value')
 	equals(string: 'false')
 end
 ") // filter out all deleted records
-| fix(FLUX_DIR + "orcaEducast.fix", *)
+| fix(FLUX_DIR + "orca_educast.fix", *)
 | encode-json(prettyPrinting="true")
 | oersi.FieldMerger
 | oersi.JsonValidator(output_schema, writeValid=metadata_valid, writeInvalid=metadata_invalid)
