@@ -36,6 +36,13 @@ do array("creator", flushWith: record)
  end
 end
 
+do array("sourceOrganization", flushWith: record)
+ do entity("")
+  add_field("type", "Organization")
+  add_field("name", "HHU Düsseldorf")
+ end
+end
+
 map("html.head.meta.og:url", "id")
 
 do array ("type")
