@@ -41,12 +41,12 @@ do array('mainEntityOfPage')
   end
 end
 
-do map(node.description, description)
+do map("node.properties.cclom:general_description[].*", "description")
   not_equals(string: '')
 end
 
 do map('node.properties.ccm:taxonid[].*', '@hochschulfaechersystematik')
-  lookup(in: 'data/maps/edusharing-subject-mapping.tsv')
+  regexp(match: "^https://w3id.org/kim/hochschulfaechersystematik/.*")
 end
 
 do array('about', flushWith: record)
@@ -88,8 +88,11 @@ do array('sourceOrganization')
  end
 end
 
-do map('node.properties.virtual:licenseurl[].1', license)
-  replace_all(pattern: '/deed.*$', with: '')
+do entity("license")
+  do map('node.properties.virtual:licenseurl[].1', id)
+    regexp(match: '^http[s]?:\\/\\/creativecommons.org\\/(licenses|licences|publicdomain)\\/.*|^http[s]?:\\/\\/www.gnu.org\\/licenses\\/.*|^http[s]?:\\/\\/www.apache.org\\/licenses\\/.*|http[s]?://opensource.org/licenses/MIT|^http[s]?:\\/\\/www.opensource.org\\/licenses\\/BSD.*')
+    replace_all(pattern: '/deed.*$', with: '')
+  end
 end
 
 
@@ -105,8 +108,9 @@ do array('type')
   add_field('','LearningResource')
 end
 
-do map('node.properties.ccm:educationallearningresourcetype[].1', '@hcrt')
-  lookup(in: 'data/maps/edusharing-hcrt-mapping.tsv')
+do map('node.properties.ccm:educationallearningresourcetype[].*', '@hcrt')
+  not_equals(string: '')
+  not_equals(string: 'null null')
 end
 
 do array('learningResourceType')

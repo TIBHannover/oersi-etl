@@ -65,7 +65,7 @@ do array('creator', flushWith: record)
     trim()
     not_equals(string: '')
     not_equals(string: 'null null')
-    replace(pattern: "Apl. |\\(apl.\\) |Dr. med |Dr. |Dr.'in |Dr |Dr.med.|Dres. |Dr.|Prof. |Prof.'in |Prof.|Prof |Jun.-|PD |PD. |med. |rer. |pol.|nat. |dent. |em. |Uni.-|Univ.-|Univ. |Dipl.|-Ing. |-Inform. |-Psych. |h.c. |mult. |, MME|; MME|, MScN|M. Sc. |, MSc| MSc.|, M.A.| M.A.|, M.D.|, B.A.|, MMZ|, Psychoanalytiker|, L.L.M.|, LL.M.| \\(M.A.\\)", with: "")
+    replace(pattern: "Apl\\. |\\(apl\\.\\) |Dr\\. med |Dr\\. |Dr\\.'in |Dr |Dr\\.med\\.|Dres\\. |Dr\\.|Prof\\. |Prof\\.'in |Prof\\.|Prof |Jun\\.-|PD |PD\\. |med\\. |rer\\. |pol\\.|nat\\. |dent\\. |em\\. |Ao\\.-|o\\. Univ\\.|Uni\\.-|Univ\\.-|Univ\\. |DI |RA |Dipl\\.|-Ing\\. |-Inform\\. |-Psych\\. |h\\.c\\. |mult\\. |Mag\\. |, MME|; MME|, MScN|M\\. Sc\\. |, MSc| MSc\\.|, M\\.A\\.| M\\.A\\.|, M\\.D\\.|, B\\.A\\.|, MMZ|, Psychoanalytiker|, L\\.L\\.M\\.|, LL\\.M\\.| \\(M\\.A\\.\\)", with: "")
   end
  end
  do entity('')
@@ -89,10 +89,12 @@ do array('sourceOrganization')
  end
 end
 
-do map('node.properties.virtual:licenseurl[].1', license)
-  replace_all(pattern: '/deed.*$', with: '')
+do entity("license")
+  do map('node.properties.virtual:licenseurl[].1', id)
+    regexp(match: '^http[s]?:\\/\\/creativecommons.org\\/(licenses|licences|publicdomain)\\/.*|^http[s]?:\\/\\/www.gnu.org\\/licenses\\/.*|^http[s]?:\\/\\/www.apache.org\\/licenses\\/.*|http[s]?://opensource.org/licenses/MIT|^http[s]?:\\/\\/www.opensource.org\\/licenses\\/BSD.*')
+    replace_all(pattern: '/deed.*$', with: '')
+  end
 end
-
 
 do array("inLanguage")
   do map('node.properties.cclom:general_language[].1')

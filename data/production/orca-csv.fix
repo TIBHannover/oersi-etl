@@ -1,0 +1,227 @@
+/* Set up the context */
+do array("@context")
+ add_field("","https://w3id.org/kim/lrmi-profile/draft/context.jsonld")
+ do entity("")
+  add_field("@language", "de")
+ end
+end
+
+/* Map some of the data we have to the oersi model: */
+
+map("URL_id", "id")
+map("Titel_des_Materials", "name")
+map("Kurzbeschreibung", "description")
+do map("Vorschaubild_URL","image")
+  not_equals(string: "")
+end
+
+/* Creation-Date comes in as "- recorded at 9/19/2012" */
+map("PubDatum", "dateCreated")
+
+
+/*rel = "liscence" cant be directly mapped */
+do entity("license", flushWith: record)
+  map("Lizenz", "id")
+end
+
+/* Creator */
+do array("creator", flushWith: record)
+  do entity("", flushWith: record)
+    do map("Urheber1.Typ", "type")
+      not_equals(string: "")
+    end
+    do map("Urheber1.Name", "name")
+      not_equals(string: "")
+    end
+    do entity("affiliation")
+      do map("Urheber1.Hochschule-RoRID","id")
+        not_equals(string: "")
+      end
+      do map("Urheber1.Hochschule-RoRID","type")
+        constant(value: "Organization")
+      end
+      do map("Urheber1.Hochschule-RoRID", "name")
+        lookup(in: "data/maps/orcaUni.tsv")
+      end
+    end
+    do map("Urheber1.ORCID","id")
+      not_equals(string: "")
+    end
+    do map("Urheber1.Grad", "academicTitle")
+      not_equals(string: "")
+    end
+  end
+  do entity("", flushWith: record)
+    do map("Urheber2.Typ", "type")
+      not_equals(string: "")
+    end
+    do map("Urheber2.Name", "name")
+      not_equals(string: "")
+    end
+    do entity("affiliation")
+      do map("Urheber2.Hochschule-RoRID","id")
+        not_equals(string: "")
+      end
+      do map("Urheber2.Hochschule-RoRID","type")
+        constant(value: "Organization")
+      end
+      do map("Urheber2.Hochschule-RoRID", "name")
+        lookup(in: "data/maps/orcaUni.tsv")
+      end
+    end
+    do map("Urheber2.ORCID","id")
+      not_equals(string: "")
+    end
+    do map("Urheber2.Grad", "academicTitle")
+      not_equals(string: "")
+    end
+  end
+end
+
+/* Contributor */
+do array("contributor", flushWith: record)
+  do entity("", flushWith: record)
+    do map("Beitragende1.Typ", "type")
+      not_equals(string: "")
+    end
+    do map("Beitragende1.Name", "name")
+      not_equals(string: "")
+    end
+    do entity("affiliation")
+      do map("Beitragende1.Hochschule-RoRID","id")
+        not_equals(string: "")
+      end
+      do map("Beitragende1.Hochschule-RoRID","type")
+        constant(value: "Organization")
+      end
+      do map("Beitragende1.Hochschule-RoRID", "name")
+        lookup(in: "data/maps/orcaUni.tsv")
+      end
+    end
+    do map("Beitragende1.ORCID","id")
+      not_equals(string: "")
+    end
+    do map("Beitragende1.Grad", "academicTitle")
+      not_equals(string: "")
+    end
+  end
+  do entity("", flushWith: record)
+    do map("Beitragende2.Typ", "type")
+      not_equals(string: "")
+    end
+    do map("Beitragende2.Name", "name")
+      not_equals(string: "")
+    end
+    do entity("affiliation")
+      do map("Beitragende2.Hochschule-RoRID","id")
+        not_equals(string: "")
+      end
+      do map("Beitragende2.Hochschule-RoRID","type")
+        constant(value: "Organization")
+      end
+      do map("Beitragende2.Hochschule-RoRID", "name")
+        lookup(in: "data/maps/orcaUni.tsv")
+      end
+    end
+    do map("Beitragende2.ORCID","id")
+      not_equals(string: "")
+    end
+    do map("Beitragende2.Grad", "academicTitle")
+      not_equals(string: "")
+    end
+  end
+end
+
+/*sourceOrganization */
+do map("Urheber1.Hochschule-RoRID|Urheber2.Hochschule-RoRID|Beitragende1.Hochschule-RoRID|Beitragende2.Hochschule-RoRID", "@sourceOrganization")
+  unique()
+end
+
+do array('sourceOrganization', flushWith: record)
+  do entity("")
+    do map("@sourceOrganization","id")
+      not_equals(string: "")
+    end
+    do map("@sourceOrganization","type")
+      constant(value: "Organization")
+    end
+    do map("@sourceOrganization", "name")
+      lookup(in: "data/maps/orcaUni.tsv")
+    end
+  end
+end
+
+/* type */
+
+do array ("type")
+  add_field("","LearningResource")
+end
+
+/*learningResourceType */
+
+do map("Medientyp", "@hcrt")
+  split(delimiter: ";")
+  trim()
+  lookup(in: 'data/maps/orcaLabels-hcrt.tsv')
+  unique()
+end
+
+do array('learningResourceType', flushWith: record)
+  do entity('', flushWith: '@hcrt')
+    map('@hcrt', 'id')
+    do entity('prefLabel', flushWith: '@hcrt')
+      do map('@hcrt', 'de')
+        lookup(in: 'data/maps/hcrt-de-labels.tsv')
+      end  
+      do map('@hcrt', 'en')
+        lookup(in: 'data/maps/hcrt-en-labels.tsv')
+      end
+    end
+  end
+end
+
+/*about */
+
+do map("Fachbereich", "@hochschulfaechersystematik")
+  split(delimiter: ";")
+  trim()
+  lookup(in: 'data/maps/destatisLabels-to-uri.tsv')
+  unique()
+end
+
+do array('about', flushWith: record)
+ do entity('', flushWith: '@hochschulfaechersystematik')
+  map('@hochschulfaechersystematik', 'id')
+  do map('@hochschulfaechersystematik', 'prefLabel.de')
+    lookup(in: 'data/maps/subject-labels.tsv')
+  end
+ end
+end
+
+/*inLanguage*/
+do array("inLanguage")
+  map("Sprache")
+end
+
+/*keywords */
+
+do array("keywords", flushWith: record)
+  do map("Tags_Schlagwörter")
+    split(delimiter: ",")
+    trim()
+  end
+end
+
+/*mainEntityOfPage */
+
+do array("mainEntityOfPage")
+  do entity("")
+    map("URL_id", "id")
+    /* Add provider/source information to each resource description */
+    do entity("provider")
+      add_field("id","$[service_id]")
+      add_field("type","Service")
+      add_field("name","$[service_name]")
+    end
+  end
+end

@@ -30,7 +30,7 @@ dependencies {
     // This dependency is used internally, and not exposed to consumers on their own compile classpath.
     implementation 'com.google.guava:guava:26.0-jre'
     implementation 'org.jooq:joox-java-6:1.6.0'
-    implementation 'org.metafacture:metafacture-strings:5.3.0-rc2'
+    implementation 'org.metafacture:metafacture-io:5.3.0-rc2'
     implementation 'org.metafacture:metafacture-plumbing:5.3.0-rc2'
     implementation 'org.metafacture:metafacture-strings:5.3.0-rc2'
     implementation 'org.metafacture:metafacture-triples:5.3.0-rc2'
