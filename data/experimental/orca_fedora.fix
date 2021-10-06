@@ -1,0 +1,147 @@
+/* Set up the context */
+do array("@context")
+ add_field("","https://w3id.org/kim/lrmi-profile/draft/context.jsonld")
+ do entity("")
+  add_field("@language", "de")
+ end
+end
+
+/* Map some of the data we have to the oersi model: */
+
+map("id")
+map("name")
+map("description")
+map("image")
+
+
+/* Creation-Date comes in as "- recorded at 9/19/2012" */
+map("datePublished", "dateCreated")
+
+
+/*rel = "liscence" cant be directly mapped */
+do entity("license", flushWith: record)
+  map("license.id", "id")
+end
+
+/* Creator */
+do array("creator", flushWith: record)
+  do entity("", flushWith: "creator[].?")
+    map("creator[].?.type", "type")
+    map("creator[].?.name", "name")
+    do entity("affiliation", flushWith: "creator[].?")
+      map("creator[].?.affiliation.id","id")
+      map("creator[].?.affiliation.type","type")
+      map("creator[].?.affiliation.name", "name")
+    end
+    map("creator[].?.id","id")
+    map("creator[].?.honoricPrefix", "honoricPrefix")
+  end
+end
+
+/* Contributor */
+do array("contributor", flushWith: record)
+  do entity("", flushWith: "contributor[].?")
+    map("contributor[].?.type", "type")
+    map("contributor[].?.name", "name")
+    do entity("affiliation", flushWith: "creator[].?")
+      map("contributor[].?.affiliation.id","id")
+      map("contributor[].?.affiliation.type","type")
+      map("contributor[].?.affiliation.name", "name")
+    end
+    map("contributor[].?.id","id")
+    map("contributor[].?.academicTitle", "academicTitle")
+  end
+end
+
+/*sourceOrganization */
+do map("contributor[].*.affiliation.id|creator[].*.affiliation.id", "@sourceOrganization")
+  unique()
+end
+
+do array("sourceOrganization", flushWith: record)
+  do entity("")
+    do map("@sourceOrganization","id")
+      not_equals(string: "")
+    end
+    do map("@sourceOrganization","type")
+      constant(value: "Organization")
+    end
+    do map("@sourceOrganization", "name")
+      lookup(in: "data/maps/orcaUni.tsv")
+    end
+  end
+end
+
+/* type */
+
+do array ("type")
+  add_field("","LearningResource")
+end
+
+/*learningResourceType */
+
+do map("learningResourceType[].*.id", "@hcrt")
+  lookup(in: "data/maps/orcaMedienId-hcrt.tsv")
+  unique()
+end
+
+do array("learningResourceType", flushWith: record)
+  do entity("", flushWith: "@hcrt")
+    map("@hcrt", "id")
+    do entity("prefLabel", flushWith: "@hcrt")
+      do map("@hcrt", "de")
+        lookup(in: "data/maps/hcrt-de-labels.tsv")
+      end  
+      do map("@hcrt", "en")
+        lookup(in: "data/maps/hcrt-en-labels.tsv")
+      end
+    end
+  end
+end
+
+/*about */
+
+do array("about", flushWith: record)
+ do entity("", flushWith: "about[].?.id")
+  map("about[].?.id", "id")
+  do map("about[].?.id", "prefLabel.de")
+    lookup(in: "data/maps/subject-labels.tsv")
+  end
+ end
+end
+
+/*encoding - NEEDS TO BE UPDATED IF ORCA STARTS TO BE A REFERALTORY TOO. */
+
+do array("encoding", flushWith: record)
+ do entity("")
+  do map("id", "contentUrl")
+    compose(postfix:"/data")
+  end
+  add_field("type", "MediaObject")
+ end
+end
+
+/*inLanguage*/
+do array("inLanguage")
+  map("inLanguage[].*")
+end
+
+/*keywords */
+
+do array("keywords", flushWith: record)
+  map("keywords[].*")
+end
+
+/*mainEntityOfPage */
+
+do array("mainEntityOfPage")
+  do entity("")
+    map("id", "id")
+    /* Add provider/source information to each resource description */
+    do entity("provider")
+      add_field("id","$[service_id]")
+      add_field("type","Service")
+      add_field("name","$[service_name]")
+    end
+  end
+end
