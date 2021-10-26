@@ -6,7 +6,8 @@ service_name = "iMoox";
 | open-http(accept="application/json")
 | as-lines
 | decode-json(recordPath="$.data")
-| fix(FLUX_DIR + "moochub.fix", *)
+// iMoox is partner of MoocHub, we use their moocHub metadata.
+| fix(FLUX_DIR + "iMoox_moocHub.fix", *)
 | encode-json
 | oersi.FieldMerger
 | oersi.JsonValidator(output_schema, writeValid=metadata_valid, writeInvalid=metadata_invalid)
