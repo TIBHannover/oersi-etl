@@ -13,6 +13,6 @@ XML_FILE
 | open-file
 | decode-xml
 | handle-generic-xml
-| fix(FLUX_DIR + "duepub-metafacture.fix")
+| metafix(FLUX_DIR + "duepub-metafacture.fix")
 | encode-json(prettyPrinting="true")
 | write(FLUX_DIR + "duepub-metafacture.json");

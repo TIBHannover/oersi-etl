@@ -10,7 +10,7 @@ FLUX_DIR + "markus.json"
 | open-file
 | as-records
 | decode-json
-| fix(FLUX_DIR +  "orca_fedoraNew.fix")
+| metafix(FLUX_DIR +  "orca_fedoraNew.fix")
 | encode-json
 //| oersi.JsonValidator(output_schema, writeValid=metadata_valid, writeInvalid=metadata_invalid)
 | write(FLUX_DIR + "MarkusOutput.json")
