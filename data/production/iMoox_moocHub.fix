@@ -16,7 +16,7 @@ map("attributes.name", "name")
 map("attributes.image.url", "image")
 
 /* dateCreated */
-do map("startDate", "dateCreated")
+do map("attributes.startDate", "dateCreated")
   replace(pattern: "T.*", with: "")
 end
 
