@@ -8,10 +8,15 @@ end
 
 /* Map some of the data we have to the oersi model: */
 
-map("id")
+do map("id", "@id")
+    replace(pattern: ".*orca\\:", with: "https://www.orca.nrw/content/")
+end
+map("@id", "id")
 map("name")
 map("description")
-map("image")
+do map("id", "image")
+  compose(prefix:"https://api.edoweb-test.hbz-nrw.de/tools/thumby?url=", postfix:"/data&size=250")
+end
 
 
 /* Creation-Date comes in as "- recorded at 9/19/2012" */
@@ -136,7 +141,7 @@ end
 
 do array("mainEntityOfPage")
   do entity("")
-    map("id", "id")
+    map("@id", "id")
     /* Add provider/source information to each resource description */
     do entity("provider")
       add_field("id","$[service_id]")
