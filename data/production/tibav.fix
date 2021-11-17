@@ -60,6 +60,16 @@ do array('learningResourceType')
   end
 end
 
+/* encoding: */
+do array("encoding", flushWith: record)
+ do entity("")
+  do map("html.body.record.header.identifier.value","embedUrl")
+    replace_all(pattern: "oai:tib.eu:kmo-av:sid~", with: "https://av.tib.eu/player/")
+  end
+  add_field("type", "MediaObject")
+ end
+end
+
 /*publisher:  May exist more than once. */
 do array("publisher")
  do entity("")
