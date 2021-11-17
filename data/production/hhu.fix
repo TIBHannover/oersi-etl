@@ -67,6 +67,20 @@ do array('learningResourceType')
   end
 end
 
+/* encoding: So far only embedUrl */
+do map("html.body.form.div.div.div.div.div.div.div.div.div.div.div.textarea.value","@embedUrl")
+  regexp(match: "^<iframe.*src='(https:\\/\\/mediathek\\.hhu\\.de\\/embed\\/.*)(' frameborder='0' allowfullscreen><\\/iframe>)$", format: '${1}')
+end
+
+do array("encoding", flushWith: record)
+  do entity("")
+    map("@embedUrl","embedUrl")
+    do map("@embedUrl", "type")
+      constant(value: "MediaObject")
+    end
+  end
+end
+
 do array("keywords", flushWith: record)
   map("html.body.form.div.div.div.div.div.div.div.div.div.div.div.ul.li.a.value")
 end
