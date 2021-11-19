@@ -1,5 +1,5 @@
 service_domain = "https://open.hpi.de/";
-service_id = "https://oerworldmap.org/resource/urn:!!!!______NEEDS_ENTRY___!!!!";
+service_id = "https://oerworldmap.org/resource/urn:uuid:75c7c768-c5b2-47ad-bb62-08fb1db2d74b";
 service_name = "openHPI";
 
 "https://open.hpi.de/bridges/moochub/courses"
