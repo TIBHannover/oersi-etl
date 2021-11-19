@@ -1,5 +1,5 @@
 service_domain = "https://learn.ki-campus.org";
-service_id = "https://oerworldmap.org/resource/urn:uuid:b092c55e-038c-4634-8063-77f9aa7b7404s";
+service_id = "https://oerworldmap.org/resource/urn:uuid:b092c55e-038c-4634-8063-77f9aa7b7404";
 service_name = "KI Campus";
 
 "https://learn.ki-campus.org/bridges/moochub/courses"
