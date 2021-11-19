@@ -1,6 +1,6 @@
 service_domain = "https://egov-campus.org/";
-service_id = "https://oerworldmap.org/resource/urn:!!!!______NEEDS_ENTRY_CHOO_CHOO__!!!!";
-service_name = "eGov Campus";
+service_id = "https://oerworldmap.org/resource/urn:uuid:13dd3971-2768-4de8-bdd8-55f18ed3d752";
+service_name = "eGov-Campus";
 
 "https://learn.egov-campus.org/bridges/moochub/courses"
 | open-http(accept="application/json")
