@@ -22,7 +22,8 @@ end
 
 /*description */
 do map("attributes.description", "description")
-  replace(pattern:"<p>|</p>|<strong>|</strong>", with: "")
+  replace(pattern:'<a[^>]*?href=\\"(.*?)\\">', with: "")
+  replace(pattern:"<\\w*>|</\\w*>", with: "")
 end
 
 /* creator: source data is not consistent, can be a single author or multiple separated by comma or "&amp;". API estimates one object per instructor. Also there is no type even though there are persons and organisations.*/
