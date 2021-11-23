@@ -38,7 +38,12 @@ do array("creator", flushWith: record)
  end
 end
 
-
+do array('about', flushWith: record)
+ do entity('', flushWith: record)
+  add_field("id", "https://w3id.org/kim/hochschulfaechersystematik/n172")
+  add_field("prefLabel.de", "Verwaltungswissenschaft/-wesen")
+ end
+end
 
 /* sourceOrganization Should OpenHPI always be the sourceOrganization?
 do array("sourceOrganization", flushWith: "attributes.partnerInstitute[].*.name")
