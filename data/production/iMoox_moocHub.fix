@@ -43,7 +43,7 @@ end
 
 
 /* sourceOrganization */
-do array("sourceOrganization", flushWith: "attributes.partnerInstitute[].*.name")
+do array("sourceOrganization", flushWith: record)
  do entity("")
   add_field("type", "Organization")
   map("attributes.partnerInstitute[].*.name", "name")
