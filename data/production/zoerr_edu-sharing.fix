@@ -79,7 +79,7 @@ do array('creator', flushWith: record)
     end
     map('@Person', 'name')
     do map('node.properties.ccm:lifecyclecontributer_author[].*', 'id')
-      regexp(match: '^BEGIN:VCARD[\\s\\S]*X-ORCID:(.+)\r\n.*', format: '${1}')
+      regexp(match: '^BEGIN:VCARD[\\s\\S]*X-ORCID:https\\\\://(.+)\r\n.*', format: 'https://${1}')
       trim()
       not_equals(string: '')
       not_equals(string: 'null null')
