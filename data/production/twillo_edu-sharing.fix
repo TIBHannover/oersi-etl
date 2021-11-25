@@ -58,24 +58,39 @@ do array('about', flushWith: record)
  end
 end
 
+do map('node.properties.ccm:lifecyclecontributer_author[].*', '@Person')
+  regexp(match: '^BEGIN:VCARD[\\s\\S]*FN:(.+)\n.*', format: '${1}')
+  trim()
+  not_equals(string: '')
+  not_equals(string: 'null null')
+end
+
+do map('node.properties.ccm:lifecyclecontributer_author[].*', '@Organization')
+  regexp(match: '^BEGIN:VCARD\nORG:(.+)\n.*', format: '${1}')
+  trim()
+  not_equals(string: '')
+  not_equals(string: 'null null')
+end
+
 do array('creator', flushWith: record)
- do entity('')
-  add_field('type', 'Person')
-  do map('node.properties.ccm:lifecyclecontributer_authorFN[].*', 'name')
-    trim()
-    not_equals(string: '')
-    not_equals(string: 'null null')
+  do entity('', flushWith: 'node.properties.ccm:lifecyclecontributer_author[].*')
+    do map('@Person', 'type')
+      constant(value:"Person")
+    end
+    map('@Person', 'name')
+    do map('node.properties.ccm:lifecyclecontributer_author[].*', 'id')
+      regexp(match: '^BEGIN:VCARD[\\s\\S]*X-ORCID:(.+)\n.*', format: '${1}')
+      trim()
+      not_equals(string: '')
+      not_equals(string: 'null null')
+    end
   end
- end
- do entity('')
-  add_field('type', 'Organization')
-  do map('node.properties.ccm:lifecyclecontributer_author[].*', 'name')
-    trim()
-    not_equals(string: '')
-    not_equals(string: 'null null')
-    regexp(match: '^BEGIN:VCARD\nORG:(.+)\n.*', format: '${1}')
+  do entity('', flushWith: 'node.properties.ccm:lifecyclecontributer_author[].*')
+    do map('@Organization', 'type')
+      constant(value:"Organization")
+    end
+    map('@Organization', 'name')
   end
- end
 end
 
 do array('sourceOrganization')
