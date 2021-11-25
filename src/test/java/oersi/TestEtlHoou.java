@@ -62,8 +62,7 @@ public class TestEtlHoou {
     public void testConvertSingleResource() throws IOException, RecognitionException {
         String fix = "\n"//
                 + "move_field(html.head.title.value, title)\n"//
-                + "move_field(html.body.div.div.div.div.div.div.div.p.value, description)\n"//
-                + "move_field(html.body.div.div.div.div.div.div.div.div.div.div.div.div.div.div.div.div.p.a.href, license)"
+                + "copy_field(_id, id)"//
                 + "\n";
         String out = absPathToTempFile("", ".json");
         String flux = String.format("\"%s\""//

@@ -222,7 +222,7 @@
               <mods:namePart type="family">Armbruster</mods:namePart>
               <mods:namePart type="given">André</mods:namePart>
             </mods:name>
-            <mods:name type="personal" xlink:type="simple">
+            <mods:name type="corporate" xlink:type="simple">
               <mods:displayForm>Seyfert, Robert</mods:displayForm>
               <mods:role>
                 <mods:roleTerm authority="marcrelator" type="code">aut</mods:roleTerm>

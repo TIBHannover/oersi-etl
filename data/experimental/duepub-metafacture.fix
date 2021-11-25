@@ -10,8 +10,8 @@ end
 
 # ---------------@context ----------------------------------
 
-set_array("@context", "https://w3id.org/kim/lrmi-profile/draft/context.jsonld")
-set_hash("@context.$append", "@language": "de")
+set_array("@context[]", "https://w3id.org/kim/lrmi-profile/draft/context.jsonld")
+set_hash("@context[].$append", "@language": "de")
 
 # --------------id ----------------------------------------
 do list("path": "metadata.mods.identifier.value", "var": "identifier")
@@ -31,15 +31,15 @@ end
 paste("title","metadata.mods.titleInfo.nonSort.value","metadata.mods.titleInfo.title.value")
 
 #  ------------creator------------------------------------
+set_array("creator[]")
 do list("path":"metadata.mods.name","var":"name")
-    if any_match("name.role.roleTerm.value","aut|cre")
-        set_array("creator")
-        copy_field("name.displayForm.value","creator.$append.name")
+    if any_match("name.role.*.roleTerm.*.value","aut|cre")
+        copy_field("name.displayForm.value","creator[].$append.name")
         if any_equal("name.type","personal") /* TODO: looks at all names, not just current name */
-            add_field("creator.$last.type", "Person") /* TODO: we only get the very last, not every last one */
+            add_field("creator[].$last.type", "Person")
         end
         if any_equal("name.type","corporate")
-            add_field("creator.$last.type", "Organization")
+            add_field("creator[].$last.type", "Organization")
         end
     end
 end
@@ -57,30 +57,30 @@ copy_field("metadata.mods.abstract.value","description")
 copy_field("metadata.mods.originInfo.dateIssued.value","dataCreated")
 
 #  ------------inLanguage------------------------------------
-set_array(inLanguage) /* Force array even for 1 elem */ /* TODO: test multiple input langs */
-copy_field("metadata.mods.language.languageTerm.value","inLanguage")
+set_array("inLanguage[]") /* Force array even for 1 elem */ /* TODO: test multiple input langs */
+copy_field("metadata.mods.language.languageTerm.value","inLanguage[]")
 
 # ---------------type ----------------------------------
-set_array("type", "LearningResource")
+set_array("type[]", "LearningResource")
 
 /* TODO: learningResourceType */
 
 #  ------------keywords------------------------------------
-copy_field("metadata.mods.subject.topic.value","keywords")
+copy_field("metadata.mods.subject.topic.value","keywords[]")
 /* TODO: split_field(keywords,",") */
-trim("keywords")
+trim("keywords[]")
 
 #  ------------about------------------------------------
+set_array("about[]")
 do list("path":"metadata.mods.classification","var":"classification")
     if any_equal("classification.authorityURI","https://duepublico.uni-due.de/api/v1/classifications/destatis") /* TODO: looks at all, not just current */
-        set_array("about")
         lookup("classification.valueURI","data/maps/DestatisPersonal2DestatisStudierende.tsv","sep_char":"\t") /* TODO: loses non-found values*/
-        copy_field("classification.valueURI","about.$append.id")
+        copy_field("classification.valueURI","about[].$append.id")
         lookup("classification.valueURI","data/maps/subject-labels.tsv","sep_char":"\t")
-        copy_field("classification.valueURI","about.$last.prefLabel.de") /* TODO: we only get the very last, not every last one */
+        copy_field("classification.valueURI","about[].$last.prefLabel.de") /* TODO: we only get the very last, not every last one */
     end
 end
 
-retain("@context","id","image","title","creator","contributor","sourceOrganization",
-"description","dataCreated","inLanguage","type","learningResourceType","keywords","about")
+retain("@context[]","id","image","title","creator[]","contributor","sourceOrganization",
+"description","dataCreated","inLanguage[]","type[]","learningResourceType","keywords[]","about[]")
 vacuum()
