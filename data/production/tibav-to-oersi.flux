@@ -4,7 +4,7 @@ service_name = "TIB AV-Portal";
 
 
 "https://getinfo.tib.eu/oai/intern/repository/tib"
-| open-oaipmh(metadataPrefix="datacite", setSpec="kmo-av")
+| open-oaipmh(metadataPrefix="datacite", setSpec="collection~kmo-av_solr~documentFormat:el")
 | decode-xml
 | split-xml-elements(elementname="record", xmldeclaration="")
 | literal-to-object
