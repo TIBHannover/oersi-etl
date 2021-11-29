@@ -14,31 +14,31 @@ set_array("@context[]", "https://w3id.org/kim/lrmi-profile/draft/context.jsonld"
 set_hash("@context[].$append", "@language": "de")
 
 # --------------id ----------------------------------------
-do list("path": "metadata.mods.identifier.value", "var": "identifier")
+do list("path": "metadata.mods:mods.mods:identifier", "var": "identifier")
     if all_match("identifier","^https://duepublico2.uni-due.de/receive/.*")
         copy_field("identifier","id")
     end
 end
 
 #  ------------image ------------------------------------
-do list("path": "metadata.mods.location.url.value", "var": "url")
+do list("path": "metadata.mods:mods.mods:location.mods:url", "var": "url")
     if all_match("url","^https://duepublico2.uni-due.de/rsc/thumbnail/.*")
         copy_field("url","image")
     end
 end
 
-#  ------------title ------------------------------------
-paste("title","metadata.mods.titleInfo.nonSort.value","metadata.mods.titleInfo.title.value")
+#  ------------name ------------------------------------
+paste("name","metadata.mods:mods.mods:relatedItem.mods:titleInfo.mods:nonSort.value","metadata.mods:mods.mods:relatedItem.mods:titleInfo.mods:title.value")
 
 #  ------------creator------------------------------------
 set_array("creator[]")
-do list("path":"metadata.mods.name","var":"name")
-    if any_match("name.role.*.roleTerm.*.value","aut|cre")
-        copy_field("name.displayForm.value","creator[].$append.name")
-        if any_equal("name.type","personal") /* TODO: looks at all names, not just current name */
+do list("path":"metadata.mods:mods.mods:name","var":"creator")
+    if any_match("creator.mods:role.mods:roleTerm.*.value","aut|cre")
+        copy_field("creator.displayForm.value","creator[].$append.name")
+        if any_equal("creator.mods:name.*.type","personal") /* TODO: looks at all names, not just current name */
             add_field("creator[].$last.type", "Person")
         end
-        if any_equal("name.type","corporate")
+        if any_equal("creator.mods:name.*.type","corporate")
             add_field("creator[].$last.type", "Organization")
         end
     end
@@ -46,27 +46,58 @@ end
 
 /* TODO: impl replace_all("creator.name",'(.+), (.+)', '$2 $1') */
 /* TODO: contributor */
+set_array("contributor[]")
+do list("path":"metadata.mods:mods.mods:name","var":"contributor")
+    unless any_match("name.mods:role.mods:roleTerm.*.value","aut|cre|his")
+        copy_field("contributor.displayForm.value","contributor[].$append.name")
+        if any_equal("contributor.mods:name.*.type","personal") /* TODO: looks at all names, not just current name */
+            add_field("contributor[].$last.type", "Person")
+        end
+        if any_equal("contributor.mods:name.*.type","corporate")
+            add_field("contributor[].$last.type", "Organization")
+        end
+    end
+end
+
 /* TODO: sourceOrganization */
+set_array("sourceOrganization[]")
+do list("path":"metadata.mods:mods.mods:name","var":"sourceOrganization")
+    if any_match("sourceOrganization.mods:role.mods:roleTerm.*.value","his")
+        copy_field("sourceOrganization.displayForm.value","sourceOrganization[].$append.name")
+        add_field("sourceOrganization[].$last.type", "Organization")
+    end
+end
 
 #  ------------description------------------------------------
-copy_field("metadata.mods.abstract.value","description")
+copy_field("metadata.mods:mods.mods:abstract.*.value","description")
 
 /* TODO: license, xlink:href / namespace */
 
 #  ------------dataCreated------------------------------------
-copy_field("metadata.mods.originInfo.dateIssued.value","dataCreated")
+copy_field("metadata.mods:mods.mods:originInfo.mods:dateIssued.value","dataCreated")
 
 #  ------------inLanguage------------------------------------
-set_array("inLanguage[]") /* Force array even for 1 elem */ /* TODO: test multiple input langs */
-copy_field("metadata.mods.language.languageTerm.value","inLanguage[]")
+set_array("inLanguage[]")
+copy_field("metadata.mods:mods.mods:relatedItem.mods:language.mods:languageTerm.value","inLanguage[].$append")
+# Should work with a single value because of $append
 
 # ---------------type ----------------------------------
 set_array("type[]", "LearningResource")
 
 /* TODO: learningResourceType */
 
+do list("path":"metadata.mods:mods.mods:genre","var":"learningResourceType")
+    if any_equal("learningResourceType.authorityURI","https://duepublico.uni-due.de/api/v1/classifications/mir_genres") /* TODO: looks at all, not just current */
+        lookup("learningResourceType.valueURI","data/maps/DuePub-HCRT.tsv","sep_char":"\t") /* TODO: loses non-found values*/
+        copy_field("learningResourceType.valueURI","learningResourceType[].$append.id")
+        lookup("learningResourceType.valueURI","data/maps/hcrt-de-labels.tsv","sep_char":"\t")
+        copy_field("learningResourceType.valueURI","learningResourceType[].$last.prefLabel.de") /* TODO: we only get the very last, not every last one */
+    end
+end
+
+
 #  ------------keywords------------------------------------
-copy_field("metadata.mods.subject.topic.value","keywords[]")
+copy_field("metadata.mods:mods.mods:subject.mods:topic.*.value","keywords[].$append")
 /* TODO: split_field(keywords,",") */
 trim("keywords[]")
 
@@ -81,6 +112,6 @@ do list("path":"metadata.mods.classification","var":"classification")
     end
 end
 
-retain("@context[]","id","image","title","creator[]","contributor","sourceOrganization",
-"description","dataCreated","inLanguage[]","type[]","learningResourceType","keywords[]","about[]")
+retain("@context[]","id","image","name","creator[]","contributor[]","sourceOrganization[]",
+"description","dataCreated","inLanguage[]","type[]","learningResourceType[]","keywords[]","about[]")
 vacuum()
