@@ -51,7 +51,7 @@ end
 set_array("sourceOrganization[]")
 do list("path":"metadata.mods:mods.mods:name","var":"sourceOrganization")
     if any_match("sourceOrganization.mods:role.mods:roleTerm.*.value","his")
-        copy_field("sourceOrganization.displayForm.value","sourceOrganization[].$append.name")
+        copy_field("sourceOrganization.mods:displayForm.value","sourceOrganization[].$append.name")
         add_field("sourceOrganization[].$last.type", "Organization")
     end
 end
