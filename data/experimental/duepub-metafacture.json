@@ -4,7 +4,7 @@
   } ],
   "id" : "https://duepublico2.uni-due.de/receive/duepublico_mods_00074441",
   "image" : "https://duepublico2.uni-due.de/rsc/thumbnail/duepublico_mods_00074441.png",
-  "title" : "Der Streit, Episode 7 - Wagner-Pacifici: What is an Event?",
+  "name" : "Der Streit, Episode 7 - Wagner-Pacifici: What is an Event?",
   "creator" : [ {
     "name" : "Armbruster, André",
     "type" : "Person"
@@ -12,16 +12,21 @@
     "name" : "Seyfert, Robert",
     "type" : "Person"
   } ],
+  "sourceOrganization" : [ {
+    "type" : "Organization"
+  } ],
   "description" : "Der Streit – Podcast über neue soziologische Literatur. Mit Robert und André Armbruster. Die französische Revolution, 9/11, Courbets „L’Origine du monde“ – um all das geht es in „What is an Event?“ von Robin Wagner-Pacifici (Chicago UP, 2017). Wir bleiben aber doch ratlos: Was lernt man in dem Buch? Woraus entstehen Events? Und vor allem: Was ist denn nun ein Event? Musik: zapsplat.com",
+  "license" : {
+    "id" : "https://creativecommons.org/licenses/by-nc-sa/4.0/"
+  },
   "dataCreated" : "2021-05-27",
   "inLanguage" : [ "de" ],
   "type" : [ "LearningResource" ],
-  "keywords" : [ "Podcast", "Soziologie", "Review", "Besprechungen" ],
-  "about" : [ {
-    "id" : "https://w3id.org/kim/hochschulfaechersystematik/n149",
-    "prefLabel" : {
-      "de" : "Soziologie"
-    }
+  "learningResourceType" : [ "https://duepublico.uni-due.de/api/v1/classifications/mir_genres#audio", {
+    "de" : "https://duepublico.uni-due.de/api/v1/classifications/mir_genres#audio"
+  } ],
+  "about" : [ "https://duepublico.uni-due.de/api/v1/classifications/destatis#2330", {
+    "de" : "https://duepublico.uni-due.de/api/v1/classifications/destatis#2330"
   } ]
 }
 {
@@ -30,15 +35,25 @@
   } ],
   "id" : "https://duepublico2.uni-due.de/receive/duepublico_mods_00074302",
   "image" : "https://duepublico2.uni-due.de/rsc/thumbnail/duepublico_mods_00074302.png",
-  "title" : "Erich Kästner \"zum Gebrauch\"",
+  "name" : "Erich Kästner \"zum Gebrauch\"",
   "creator" : [ {
     "name" : "Oeste, Bettina",
     "type" : "Person"
   } ],
+  "sourceOrganization" : [ {
+    "type" : "Organization"
+  } ],
   "description" : "Trotz – oder gerade wegen – seines hohen Bekanntheitsgrads ist Erich Kästner in der literaturwissenschaftlichen Fachwelt nicht unumstritten. Vor allem haben ihm sein pragmatischer Schreibstil, die Direktheit seiner Worte und die Eindeutigkeit seiner literarischen Botschaften den Ruf des Gebrauchsschriftstellers eingebracht. Die damit einhergehende leichte Zugänglichkeit seines Werks stellt im schulischen Unterricht einen didaktischen Mehrwert dar, der im Zuge einer Blended Learning-Unterrichtseinheit mit der Lernplattform Moodle lernzielkonform für den Lyrikunterricht in den Klassen 9 und 10 „gebraucht“ werden kann – gegebenenfalls auch auf Distanz. Analog zu den Unterrichtsideen von Bettina Oeste, die sich unter dem Titel Kästner zum Gebrauch im Heft 3-2021 der Zeitschrift \"Deutschunterricht\" (Westermann Verlag) nachlesen lassen, wurde im Folgenden ein Musterkursraum angelegt, in dem die dortigen Unterrichtvorschläge mit geeigneten Moodle-Aktivitäten in ein E-Learning-Konzept überführt wurden. Der Kursraum soll den Leserinnen und Lesern der Zeitschrift (sowie anderweitig Interessierten) somit als Muster und Anschauung dienen, kann aber je nach Bedarf auch abgewandelt und variert werden. Gäste dieses Raumes haben die Möglichkeit, die Inhalte des Raums unter folgender Lizenz nachzunutzen: Creative Commons Namensnennung - Weitergabe unter gleichen Bedingungen 4.0 Lizenz (CC BY-SA 4.0)",
+  "license" : {
+    "id" : "https://creativecommons.org/licenses/by-sa/4.0/"
+  },
   "dataCreated" : "2021",
   "inLanguage" : [ "de" ],
   "type" : [ "LearningResource" ],
-  "keywords[]" : "Kästner",
-  "about" : [ ]
+  "learningResourceType" : [ "https://duepublico.uni-due.de/api/v1/classifications/mir_genres#teaching_material", {
+    "de" : "https://duepublico.uni-due.de/api/v1/classifications/mir_genres#teaching_material"
+  } ],
+  "about" : [ "https://duepublico.uni-due.de/api/v1/classifications/destatis#1080", {
+    "de" : "https://duepublico.uni-due.de/api/v1/classifications/destatis#1080"
+  } ]
 }

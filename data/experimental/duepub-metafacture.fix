@@ -15,49 +15,37 @@ set_hash("@context[].$append", "@language": "de")
 
 # --------------id ----------------------------------------
 do list("path": "metadata.mods:mods.mods:identifier", "var": "identifier")
-    if all_match("identifier","^https://duepublico2.uni-due.de/receive/.*")
-        copy_field("identifier","id")
+    if all_match("identifier.value","https://duepublico2.uni-due.de/receive/.*")
+        copy_field("identifier.value","id")
     end
 end
 
+
 #  ------------image ------------------------------------
 do list("path": "metadata.mods:mods.mods:location.mods:url", "var": "url")
-    if all_match("url","^https://duepublico2.uni-due.de/rsc/thumbnail/.*")
-        copy_field("url","image")
+    if all_match("url.value","^https://duepublico2.uni-due.de/rsc/thumbnail/.*")
+        copy_field("url.value","image")
     end
 end
 
 #  ------------name ------------------------------------
-paste("name","metadata.mods:mods.mods:relatedItem.mods:titleInfo.mods:nonSort.value","metadata.mods:mods.mods:relatedItem.mods:titleInfo.mods:title.value")
+paste("name","metadata.mods:mods.mods:titleInfo.mods:nonSort.value","metadata.mods:mods.mods:titleInfo.mods:title.value")
 
 #  ------------creator------------------------------------
 set_array("creator[]")
-do list("path":"metadata.mods:mods.mods:name","var":"creator")
-    if any_match("creator.mods:role.mods:roleTerm.*.value","aut|cre")
-        copy_field("creator.displayForm.value","creator[].$append.name")
-        if any_equal("creator.mods:name.*.type","personal") /* TODO: looks at all names, not just current name */
+do list("path":"metadata.mods:mods.mods:name","var":"name")
+    if any_match("name.mods:role.mods:roleTerm.*.value","aut|cre")
+        copy_field("name.mods:displayForm.value","creator[].$append.name")
+        /* This seems not to work */
+        if any_equal("name.type","personal") /* TODO: looks at all names, not just current name */
             add_field("creator[].$last.type", "Person")
         end
-        if any_equal("creator.mods:name.*.type","corporate")
+        if any_equal("name.type","corporate")
             add_field("creator[].$last.type", "Organization")
         end
     end
 end
 
-/* TODO: impl replace_all("creator.name",'(.+), (.+)', '$2 $1') */
-/* TODO: contributor */
-set_array("contributor[]")
-do list("path":"metadata.mods:mods.mods:name","var":"contributor")
-    unless any_match("name.mods:role.mods:roleTerm.*.value","aut|cre|his")
-        copy_field("contributor.displayForm.value","contributor[].$append.name")
-        if any_equal("contributor.mods:name.*.type","personal") /* TODO: looks at all names, not just current name */
-            add_field("contributor[].$last.type", "Person")
-        end
-        if any_equal("contributor.mods:name.*.type","corporate")
-            add_field("contributor[].$last.type", "Organization")
-        end
-    end
-end
 
 /* TODO: sourceOrganization */
 set_array("sourceOrganization[]")
@@ -71,47 +59,43 @@ end
 #  ------------description------------------------------------
 copy_field("metadata.mods:mods.mods:abstract.*.value","description")
 
-/* TODO: license, xlink:href / namespace */
+# -----------license----------
+copy_field("metadata.mods:mods.mods:accessCondition.xlink:href","license.id")
+lookup("license.id","data/maps/duepublico-licenses.tsv","sep_char":"\t") 
 
 #  ------------dataCreated------------------------------------
 copy_field("metadata.mods:mods.mods:originInfo.mods:dateIssued.value","dataCreated")
 
 #  ------------inLanguage------------------------------------
-set_array("inLanguage[]")
-copy_field("metadata.mods:mods.mods:relatedItem.mods:language.mods:languageTerm.value","inLanguage[].$append")
-# Should work with a single value because of $append
+copy_field("metadata.mods:mods.mods:language.mods:languageTerm.value","inLanguage[].$append.label")
+# TODO: The result is right, but I think it should be copied to "inLanguage[].$append" not "inLanguage[].$append.label"
 
 # ---------------type ----------------------------------
 set_array("type[]", "LearningResource")
 
 /* TODO: learningResourceType */
-
-do list("path":"metadata.mods:mods.mods:genre","var":"learningResourceType")
-    if any_equal("learningResourceType.authorityURI","https://duepublico.uni-due.de/api/v1/classifications/mir_genres") /* TODO: looks at all, not just current */
-        lookup("learningResourceType.valueURI","data/maps/DuePub-HCRT.tsv","sep_char":"\t") /* TODO: loses non-found values*/
-        copy_field("learningResourceType.valueURI","learningResourceType[].$append.id")
-        lookup("learningResourceType.valueURI","data/maps/hcrt-de-labels.tsv","sep_char":"\t")
-        copy_field("learningResourceType.valueURI","learningResourceType[].$last.prefLabel.de") /* TODO: we only get the very last, not every last one */
+# TODO: Needs lookup but array behaviour some not to work here.
+do list("path":"metadata.mods:mods.mods:genre","var":"lRT")
+    if any_match("lRT.authorityURI","https://duepublico.uni-due.de/api/v1/classifications/mir_genres") /* TODO: looks at all, not just current */
+        copy_field("lRT.valueURI","learningResourceType[].$append.id") #???
+        copy_field("lRT.valueURI","learningResourceType[].$last.prefLabel.de") /* TODO: we only get the very last, not every last one */
     end
 end
 
-
-#  ------------keywords------------------------------------
+/* # TODO ------------keywords------------------------------------
 copy_field("metadata.mods:mods.mods:subject.mods:topic.*.value","keywords[].$append")
-/* TODO: split_field(keywords,",") */
+TODO: split_field(keywords,",") 
 trim("keywords[]")
+*/
 
 #  ------------about------------------------------------
-set_array("about[]")
-do list("path":"metadata.mods.classification","var":"classification")
-    if any_equal("classification.authorityURI","https://duepublico.uni-due.de/api/v1/classifications/destatis") /* TODO: looks at all, not just current */
-        lookup("classification.valueURI","data/maps/DestatisPersonal2DestatisStudierende.tsv","sep_char":"\t") /* TODO: loses non-found values*/
+
+do list("path":"metadata.mods:mods.mods:classification","var":"classification")
+    if any_equal("classification.authorityURI","https://duepublico.uni-due.de/api/v1/classifications/destatis") /* TODO: looks at all, not just current */ /* TODO: loses non-found values*/
         copy_field("classification.valueURI","about[].$append.id")
-        lookup("classification.valueURI","data/maps/subject-labels.tsv","sep_char":"\t")
         copy_field("classification.valueURI","about[].$last.prefLabel.de") /* TODO: we only get the very last, not every last one */
     end
 end
 
-retain("@context[]","id","image","name","creator[]","contributor[]","sourceOrganization[]",
-"description","dataCreated","inLanguage[]","type[]","learningResourceType[]","keywords[]","about[]")
+retain("@context[]","id","image","name","creator[]","contributor[]","sourceOrganization[]", "license","description","dataCreated","inLanguage[]","type[]","learningResourceType[]","keywords[]","about[]")
 vacuum()
