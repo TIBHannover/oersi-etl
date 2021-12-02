@@ -93,7 +93,26 @@ do array("mainEntityOfPage")
   end
 end
 
+/* keywords*/
+do entity('keywords[]', flushWith: 'record')
+  do map('attributes.keywords')
+    split(delimiter: ",")
+  end
+end
+
+/*description */
+do concat(name: "@description", delimiter: "\n\n\n", flushWith: 'record')
+  map("attributes.abstract")
+  map("attributes.targetgroup")    
+  map("attributes.learningObjectives")
+  map("attributes.outline")    
+end
+
+do map("@description", "description")
+  replace(pattern:'<a[^>]*?href=\\"(.*?)\\">', with: "")
+  replace(pattern:'<p[^>]*?dir=\\"(.*?)\\" style=\\"(.*?)\\">', with: "")   
+  replace(pattern:"<\\w*>|</\\w*>", with: "")
+end
+
 /*missing:*/
-/*kewords*/
 /*about*/
-/*description*/
