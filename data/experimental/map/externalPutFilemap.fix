@@ -1,0 +1,4 @@
+put_filemap("data/experimental/map/mapfile.tsv", "map", "sep_char":"\t")
+
+copy_field("animal", "animalGroup")
+lookup("animalGroup", "map")

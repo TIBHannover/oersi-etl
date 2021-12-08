@@ -1,0 +1,11 @@
+put_map("map",
+"dog":"mammal",
+"cat":"mammal",
+"parrot":"bird",
+"shark":"fish",
+"dragon":"ficational animal",
+"unicorn":"ficational animal"
+	)
+
+copy_field("animal", "animalGroup")
+lookup("animalGroup", "map")

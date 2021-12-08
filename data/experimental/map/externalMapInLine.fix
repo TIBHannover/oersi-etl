@@ -1,0 +1,5 @@
+copy_field("animal", "animalGroup")
+lookup("animalGroup", "data/experimental/map/mapfile.tsv", "sep_char":"\t")
+
+copy_field("animal", "animalGroupTEST")
+lookup("animalGroupTEST", "data/experimental/map/mapfile.tsv")
