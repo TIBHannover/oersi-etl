@@ -1,0 +1,19 @@
+{
+	"_field": "one",
+	"_array": [
+		"dog",
+		"cat",
+		"parrot"
+	],
+	"_object": {
+		"_subfield": "two",
+		"_subarray": [
+			{
+				"_subsubfield": "three"
+			},
+			{
+				"_subsubfield": "four"
+			}
+		]
+	}
+}
