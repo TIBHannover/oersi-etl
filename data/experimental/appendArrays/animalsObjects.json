@@ -1,0 +1,8 @@
+{
+	"animals":[
+			{"animal": "dog"},
+			{"animal": "cat"}
+	],
+	"others": {"animal": "human"},
+	"fictional": {"animal": "unicorn"}
+}
