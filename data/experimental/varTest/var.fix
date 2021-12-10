@@ -1,0 +1,12 @@
+add_field("provider.id","$[service_id]")
+add_field("provider.type","Service")
+add_field("provider.name","$[service_name]")
+
+put_var("tag", "OER by $[service_name]")
+
+add_field("sourceTag", "$[tag]")
+
+put_vars("status": "yes", "redist": "allowed")
+
+add_field("open", "$[status]")
+add_field("reuse", "$[redist]")
