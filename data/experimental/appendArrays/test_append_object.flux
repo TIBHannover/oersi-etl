@@ -4,7 +4,7 @@ infile
 | open-file
 | as-records
 | decode-json
-| fix(FLUX_DIR + "test_append_objects.fix")
+| fix(FLUX_DIR + "test_append_object.fix")
 | encode-json(prettyPrinting="true")
 | print
 ;
