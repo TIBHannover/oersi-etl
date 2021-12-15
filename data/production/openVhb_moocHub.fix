@@ -64,7 +64,7 @@ end
 
 /* inLanguage: The value Mehrsprachig does not represent the estimated language labels. */
 do array("inLanguage")
-  do map("attributes.languages[].*")
+  do map("attributes.languages")
     not_equals(string: "")
     not_equals(string: "Mehrsprachig")
   end
@@ -105,13 +105,13 @@ do concat(name: "@description", delimiter: "\n\n\n", flushWith: 'record')
   map("attributes.abstract")
   map("attributes.targetgroup")    
   map("attributes.learningObjectives")
-  map("attributes.outline")    
 end
 
 do map("@description", "description")
-  replace(pattern:'<a[^>]*?href=\\"(.*?)\\">', with: "")
-  replace(pattern:'<p[^>]*?dir=\\"(.*?)\\" style=\\"(.*?)\\">', with: "")   
-  replace(pattern:"<\\w*>|</\\w*>", with: "")
+  replace(pattern:'\\w*[^>]*?\\w*=\\"(.*?)\\">', with: "")
+  replace(pattern:'\\w*[^>]*?\\w*=\\"(.*?)\\">', with: "")
+  replace(pattern:'\\w*[^>]*?\\w*=\\"(.*?)\\" \\w*=\\"(.*?)\\>', with: "")
+  replace(pattern:"<\\w*>|</\\w*>|<!--(.*?)-->", with: "")
 end
 
 /*missing:*/
