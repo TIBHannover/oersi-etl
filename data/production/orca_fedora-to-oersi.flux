@@ -6,8 +6,8 @@ service_domain = "https://www.orca.nrw";
 service_id = "https://oerworldmap.org/resource/urn:uuid:31c24f26-1a96-4664-8d6d-71fdddb8b1f5";
 service_name = "ORCA.nrw";
 
-// First API call  needs Password
-"https://api.paideia.hbz-nrw.de/resource?contentType=file"
+// First API call  needs Password + contentType is unfortunatly researchData
+"https://api.paideia.hbz-nrw.de/resource?contentType=researchData&from=0&until=100000"
 | open-http(auth=orca_auth, accept="application/json")
 | as-records
 | decode-json(recordPath="$")

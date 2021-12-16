@@ -16,21 +16,20 @@ map("attributes.name", "name")
 map("attributes.image.url", "image")
 
 /* dateCreated */
-do map("startDate", "dateCreated")
+do map("attributes.startDate", "dateCreated")
   replace(pattern: "T.*", with: "")
 end
 
 /*description */
-do combine(name: "description", value: "${1} ${2}")
-  map("attributes.description", "1")
-  map("attributes.learningobjectives[].*", "2")
+do map("attributes.description", "description")
+  replace(pattern:'<a[^>]*?href=\\"(.*?)\\">', with: "")
+  replace(pattern:"<\\w*>|</\\w*>", with: "")
 end
 
 /* creator: source data is not consistent, can be a single author or multiple separated by comma or "&amp;". API estimates one object per instructor. Also there is no type even though there are persons and organisations.*/
 do map("attributes.instructors[].*.name", "@creator")
-  split(delimiter: ", | &amp; ")
-  replace(pattern: "Apl\\. |\\(apl\\.\\) |Dr\\. med |Dr\\. |Dr\\.'in |Dr |Dr\\.med\\.|Dres\\. |Dr\\.|Prof\\. |Prof\\.'in |Prof\\.|Prof |Jun\\.-|PD |PD\\. |med\\. |rer\\. |pol\\.|nat\\. |dent\\. |em\\. |Ao\\.-|o\\. Univ\\.|Uni\\.-|Univ\\.-|Univ\\. |DI |RA |Dipl\\.|-Ing\\. |-Inform\\. |-Psych\\. |h\\.c\\. |mult\\. |Mag\\. |, MME|; MME|, MScN|M\\. Sc\\. |, MSc| MSc\\.|, M\\.A\\.| M\\.A\\.|, M\\.D\\.|, B\\.A\\.|, MMZ|, Psychoanalytiker|, L\\.L\\.M\\.|, LL\\.M\\.| \\(M\\.A\\.\\)", with: "")
-  not_equals(string: '')
+  replace(pattern: "Apl\\. |\\(apl\\.\\) |Dr\\. med |Dr\\. |Dr\\.'in |Dr |Dr\\.med\\.|Dres\\. |Dr\\.|Prof\\. |Prof\\.'in |Prof\\.|Prof |Jun\\.-|PD |PD\\. |med\\. |rer\\. |pol\\.|nat\\. |dent\\. |em\\. |Ao\\.-|o\\. Univ\\.|Uni\\.-|Univ\\.-|Univ\\. |DI |RA |Dipl\\.|-Ing\\. |-Inform\\. |-Psych\\. |h\\.c\\. |mult\\. |Mag\\. |, MME|; MME|, MScN|M\\. Sc\\. |, MSc| MSc\\.|, M\\.A\\.| M\\.A\\.|, M\\.D\\.|, B\\.A\\.|, MMZ|, Psychoanalytiker|, L\\.L\\.M\\.|, LL\\.M\\.| \\(M\\.A\\.\\)| \\(PhD Student\\)", with: "")
+  not_equals(string: "")
 end
 
 do array("creator", flushWith: record)
@@ -40,28 +39,37 @@ do array("creator", flushWith: record)
  end
 end
 
+do array('about', flushWith: record)
+ do entity('', flushWith: record)
+  add_field("id", "https://w3id.org/kim/hochschulfaechersystematik/n172")
+  add_field("prefLabel.de", "Verwaltungswissenschaft/-wesen")
+ end
+end
 
-
-/* sourceOrganization */
+/* sourceOrganization Should OpenHPI always be the sourceOrganization?
 do array("sourceOrganization", flushWith: "attributes.partnerInstitute[].*.name")
  do entity("")
   add_field("type", "Organization")
   map("attributes.partnerInstitute[].*.name", "name")
  end
-end
+ do entity("")
+  add_field("type", "Organization")
+  add_field("name", "Hasso-Plattner-Institut")
+ end
+end */
 
 /* learningResourceType: Add Course always as lRT */
 add_field("@hcrt","https://w3id.org/kim/hcrt/course")
 
-do array('learningResourceType')
-  do entity('')
-    map('@hcrt', 'id')
-    do entity('prefLabel')
-      do map('@hcrt', 'de')
-        lookup(in: 'data/maps/hcrt-de-labels.tsv')
+do array("learningResourceType")
+  do entity("")
+    map("@hcrt", "id")
+    do entity("prefLabel")
+      do map("@hcrt", "de")
+        lookup(in: "data/maps/hcrt-de-labels.tsv")
       end  
-      do map('@hcrt', 'en')
-        lookup(in: 'data/maps/hcrt-en-labels.tsv')
+      do map("@hcrt", "en")
+        lookup(in: "data/maps/hcrt-en-labels.tsv")
       end
     end
   end

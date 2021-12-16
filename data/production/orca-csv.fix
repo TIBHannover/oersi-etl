@@ -207,7 +207,7 @@ end
 
 do array("keywords", flushWith: record)
   do map("Tags_Schlagwörter")
-    split(delimiter: ",")
+    split(delimiter: ";")
     trim()
   end
 end
