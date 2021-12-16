@@ -33,25 +33,22 @@ paste("name","metadata.mods:mods.mods:titleInfo.mods:nonSort.value","metadata.mo
 
 #  ------------creator------------------------------------
 set_array("creator[]")
-do list("path":"metadata.mods:mods.mods:name","var":"name")
-    if any_match("name.mods:role.mods:roleTerm.*.value","aut|cre")
-        copy_field("name.mods:displayForm.value","creator[].$append.name")
-        /* This seems not to work */
-        if any_equal("name.type","personal") /* TODO: looks at all names, not just current name */
+do list("path":"metadata.mods:mods.mods:name","var":"n")
+    if any_match("n.mods:role.mods:roleTerm.*.value","aut|cre")
+        copy_field("n.mods:displayForm.value","creator[].$append.name")
+        if any_equal("n.type","personal")
             add_field("creator[].$last.type", "Person")
         end
-        if any_equal("name.type","corporate")
+        if any_equal("n.type","corporate")
             add_field("creator[].$last.type", "Organization")
         end
     end
 end
 
-
-/* TODO: sourceOrganization */
 set_array("sourceOrganization[]")
-do list("path":"metadata.mods:mods.mods:name","var":"sourceOrganization")
-    if any_match("sourceOrganization.mods:role.mods:roleTerm.*.value","his")
-        copy_field("sourceOrganization.mods:displayForm.value","sourceOrganization[].$append.name")
+do list("path":"metadata.mods:mods.mods:name","var":"org")
+    if any_match("org.mods:role.mods:roleTerm.*.value","his")
+        copy_field("org.valueURI","sourceOrganization[].$append.id")
         add_field("sourceOrganization[].$last.type", "Organization")
     end
 end
@@ -73,12 +70,11 @@ copy_field("metadata.mods:mods.mods:language.mods:languageTerm.value","inLanguag
 # ---------------type ----------------------------------
 set_array("type[]", "LearningResource")
 
-/* TODO: learningResourceType */
-# TODO: Needs lookup but array behaviour some not to work here.
+/* TODO: Needs lookup */
 do list("path":"metadata.mods:mods.mods:genre","var":"lRT")
-    if any_match("lRT.authorityURI","https://duepublico.uni-due.de/api/v1/classifications/mir_genres") /* TODO: looks at all, not just current */
-        copy_field("lRT.valueURI","learningResourceType[].$append.id") #???
-        copy_field("lRT.valueURI","learningResourceType[].$last.prefLabel.de") /* TODO: we only get the very last, not every last one */
+    if any_match("lRT.authorityURI","https://duepublico.uni-due.de/api/v1/classifications/mir_genres")
+        copy_field("lRT.valueURI","learningResourceType[].$append.id")
+        copy_field("lRT.valueURI","learningResourceType[].$last.prefLabel.de") /* TODO: $last not working here, see fix#94 */
     end
 end
 
@@ -91,9 +87,9 @@ trim("keywords[]")
 #  ------------about------------------------------------
 
 do list("path":"metadata.mods:mods.mods:classification","var":"classification")
-    if any_equal("classification.authorityURI","https://duepublico.uni-due.de/api/v1/classifications/destatis") /* TODO: looks at all, not just current */ /* TODO: loses non-found values*/
+    if any_equal("classification.authorityURI","https://duepublico.uni-due.de/api/v1/classifications/destatis")
         copy_field("classification.valueURI","about[].$append.id")
-        copy_field("classification.valueURI","about[].$last.prefLabel.de") /* TODO: we only get the very last, not every last one */
+        copy_field("classification.valueURI","about[].$last.prefLabel.de") /* TODO: $last not working here, see fix#94 */
     end
 end
 

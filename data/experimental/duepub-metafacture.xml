@@ -131,7 +131,7 @@
             <mods:nameIdentifier type="gnd">1081830107</mods:nameIdentifier>
             <mods:nameIdentifier type="lsf">59028</mods:nameIdentifier>
           </mods:name>
-          <mods:name type="personal" xlink:type="simple">
+          <mods:name type="corporate" xlink:type="simple">
             <mods:displayForm>Seyfert, Robert</mods:displayForm>
             <mods:role>
               <mods:roleTerm authority="marcrelator" type="code">cre</mods:roleTerm>
