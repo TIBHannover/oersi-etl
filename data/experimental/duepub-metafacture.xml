@@ -1,0 +1,567 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<harvest>
+<?xml-stylesheet href="https://duepublico2.uni-due.de/oai/oai2.xsl" type="text/xsl"?>
+<OAI-PMH xmlns="http://www.openarchives.org/OAI/2.0/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.openarchives.org/OAI/2.0/ http://www.openarchives.org/OAI/2.0/OAI-PMH.xsd">
+  <responseDate>2021-08-26T12:29:07Z</responseDate>
+  <request verb="Identify">https://duepublico2.uni-due.de/oer/oai</request>
+  <Identify>
+    <repositoryName>DuEPublico OER: University of Duisburg-Essen Open Educational Resources</repositoryName>
+    <baseURL>https://duepublico2.uni-due.de/oer/oai</baseURL>
+    <protocolVersion>2.0</protocolVersion>
+    <adminEmail>oer@uni-due.de</adminEmail>
+    <earliestDatestamp>2018-10-17</earliestDatestamp>
+    <deletedRecord>persistent</deletedRecord>
+    <granularity>YYYY-MM-DD</granularity>
+    <description>
+      <oai-identifier xmlns="http://www.openarchives.org/OAI/2.0/oai-identifier" xsi:schemaLocation="http://www.openarchives.org/OAI/2.0/oai-identifier http://www.openarchives.org/OAI/2.0/oai-identifier.xsd"><scheme>oai</scheme><repositoryIdentifier>oer.uni-due.de</repositoryIdentifier><delimiter>:</delimiter><sampleIdentifier>oai:oer.uni-due.de:duepublico_mods_00001234</sampleIdentifier></oai-identifier></description>
+    <description>
+      <friends xmlns="http://www.openarchives.org/OAI/2.0/friends/" xsi:schemaLocation="http://www.openarchives.org/OAI/2.0/friends/ http://www.openarchives.org/OAI/2.0/friends.xsd"/></description>
+  </Identify>
+</OAI-PMH>
+<?xml-stylesheet href="https://duepublico2.uni-due.de/oai/oai2.xsl" type="text/xsl"?>
+<OAI-PMH xmlns="http://www.openarchives.org/OAI/2.0/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.openarchives.org/OAI/2.0/ http://www.openarchives.org/OAI/2.0/OAI-PMH.xsd">
+  <responseDate>2021-08-26T12:29:07Z</responseDate>
+  <request verb="ListMetadataFormats">https://duepublico2.uni-due.de/oer/oai</request>
+  <ListMetadataFormats>
+    <metadataFormat>
+      <metadataPrefix>mods</metadataPrefix>
+      <schema>http://www.loc.gov/standards/mods/v3/mods-3-6.xsd</schema>
+      <metadataNamespace>http://www.loc.gov/mods/v3</metadataNamespace>
+    </metadataFormat>
+    <metadataFormat>
+      <metadataPrefix>oai_dc</metadataPrefix>
+      <schema>http://www.openarchives.org/OAI/2.0/oai_dc.xsd</schema>
+      <metadataNamespace>http://www.openarchives.org/OAI/2.0/oai_dc/</metadataNamespace>
+    </metadataFormat>
+  </ListMetadataFormats>
+</OAI-PMH>
+<?xml-stylesheet href="https://duepublico2.uni-due.de/oai/oai2.xsl" type="text/xsl"?>
+<OAI-PMH xmlns="http://www.openarchives.org/OAI/2.0/" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:oai_dc="http://www.openarchives.org/OAI/2.0/oai_dc/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.openarchives.org/OAI/2.0/ http://www.openarchives.org/OAI/2.0/OAI-PMH.xsd">
+  <responseDate>2021-08-26T12:29:07Z</responseDate>
+  <request verb="ListSets">https://duepublico2.uni-due.de/oer/oai</request>
+  <ListSets>
+    <set>
+      <setSpec>ddc:000</setSpec>
+      <setName>000 Generalities, Science</setName>
+    </set>
+    <set>
+      <setSpec>ddc:020</setSpec>
+      <setName>020 Library &amp; information sciences</setName>
+    </set>
+    <set>
+      <setSpec>ddc:300</setSpec>
+      <setName>300 Social sciences</setName>
+    </set>
+    <set>
+      <setSpec>ddc:310</setSpec>
+      <setName>310 General statistics</setName>
+    </set>
+    <set>
+      <setSpec>ddc:330</setSpec>
+      <setName>330 Economics</setName>
+    </set>
+    <set>
+      <setSpec>ddc:340</setSpec>
+      <setName>340 Law</setName>
+    </set>
+    <set>
+      <setSpec>ddc:370</setSpec>
+      <setName>370 Education</setName>
+    </set>
+    <set>
+      <setSpec>ddc:430</setSpec>
+      <setName>430 Germanic</setName>
+    </set>
+    <set>
+      <setSpec>ddc:800</setSpec>
+      <setName>800 Literature &amp; rhetoric</setName>
+    </set>
+    <set>
+      <setSpec>doc-type:Sound</setSpec>
+      <setName>sound</setName>
+      <setDescription>
+        <oai_dc:dc xsi:schemaLocation="http://www.openarchives.org/OAI/2.0/oai_dc/ http://www.openarchives.org/OAI/2.0/oai_dc.xsd"><dc:description>A resource primarily intended to be heard.</dc:description></oai_dc:dc></setDescription>
+    </set>
+    <set>
+      <setSpec>doc-type:CourseMaterial</setSpec>
+      <setName>course material</setName>
+      <setDescription>
+        <oai_dc:dc xsi:schemaLocation="http://www.openarchives.org/OAI/2.0/oai_dc/ http://www.openarchives.org/OAI/2.0/oai_dc.xsd"><dc:description>Course material in a broader sense.</dc:description></oai_dc:dc></setDescription>
+    </set>
+    <set>
+      <setSpec>doc-type:other</setSpec>
+      <setName>other resources, not textual</setName>
+      <setDescription>
+        <oai_dc:dc xsi:schemaLocation="http://www.openarchives.org/OAI/2.0/oai_dc/ http://www.openarchives.org/OAI/2.0/oai_dc.xsd"><dc:description>Especially meant for non-publication data, that cannot be classified by other terms.</dc:description></oai_dc:dc></setDescription>
+    </set>
+    <set>
+      <setSpec>doc-type:Other</setSpec>
+      <setName>other resources, not textual</setName>
+      <setDescription>
+        <oai_dc:dc xsi:schemaLocation="http://www.openarchives.org/OAI/2.0/oai_dc/ http://www.openarchives.org/OAI/2.0/oai_dc.xsd"><dc:description>Especially meant for non-publication data, that cannot be classified by other terms.</dc:description></oai_dc:dc></setDescription>
+    </set>
+  </ListSets>
+</OAI-PMH>
+<?xml-stylesheet href="https://duepublico2.uni-due.de/oai/oai2.xsl" type="text/xsl"?>
+<OAI-PMH xmlns="http://www.openarchives.org/OAI/2.0/" xmlns:mods="http://www.loc.gov/mods/v3" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.openarchives.org/OAI/2.0/ http://www.openarchives.org/OAI/2.0/OAI-PMH.xsd">
+  <responseDate>2021-08-26T12:29:08Z</responseDate>
+  <request from="2021-05-14" metadataPrefix="mods" until="2021-05-31" verb="ListRecords">https://duepublico2.uni-due.de/oer/oai</request>
+  <ListRecords>
+    <record>
+      <header>
+        <identifier>oai:oer.uni-due.de:duepublico_mods_00074441</identifier>
+        <datestamp>2021-05-27</datestamp>
+        <setSpec>ddc:300</setSpec>
+        <setSpec>doc-type:Sound</setSpec>
+      </header>
+      <metadata>
+        <mods:mods ID="duepublico_mods_00074441"><mods:location><mods:url access="object in context">https://duepublico2.uni-due.de/receive/duepublico_mods_00074441</mods:url><mods:url access="raw object">https://duepublico2.uni-due.de/servlets/MCRFileNodeServlet/duepublico_derivate_00074180/DerStreit_07_Wagner-Pacifici_What_is_an_event.mp3</mods:url><mods:url access="preview">https://duepublico2.uni-due.de/rsc/thumbnail/duepublico_mods_00074441.png</mods:url></mods:location>
+          <mods:classification authorityURI="https://duepublico.uni-due.de/api/v1/classifications/collection" valueURI="https://duepublico.uni-due.de/api/v1/classifications/collection#OER"/>
+          <mods:titleInfo xlink:type="simple" xml:lang="de">
+            <mods:title>Streit, Episode 7 - Wagner-Pacifici: What is an Event?</mods:title>
+            <mods:nonSort>Der</mods:nonSort>
+          </mods:titleInfo>
+          <mods:name type="personal" xlink:type="simple">
+            <mods:displayForm>Armbruster, André</mods:displayForm>
+            <mods:role>
+              <mods:roleTerm authority="marcrelator" type="code">cre</mods:roleTerm>
+            <mods:roleTerm authority="marcrelator" type="text">Creator</mods:roleTerm></mods:role>
+            <mods:namePart type="family">Armbruster</mods:namePart>
+            <mods:namePart type="given">André</mods:namePart>
+            <mods:nameIdentifier type="gnd">1081830107</mods:nameIdentifier>
+            <mods:nameIdentifier type="lsf">59028</mods:nameIdentifier>
+          </mods:name>
+          <mods:name type="corporate" xlink:type="simple">
+            <mods:displayForm>Seyfert, Robert</mods:displayForm>
+            <mods:role>
+              <mods:roleTerm authority="marcrelator" type="code">cre</mods:roleTerm>
+            <mods:roleTerm authority="marcrelator" type="text">Creator</mods:roleTerm></mods:role>
+            <mods:namePart type="family">Seyfert</mods:namePart>
+            <mods:namePart type="given">Robert</mods:namePart>
+            <mods:nameIdentifier type="gnd">1123664978</mods:nameIdentifier>
+          </mods:name>
+          <mods:name authorityURI="https://duepublico.uni-due.de/api/v1/classifications/mir_institutes" type="corporate" valueURI="https://duepublico.uni-due.de/api/v1/classifications/mir_institutes#16.03" xlink:type="simple">
+            <mods:role>
+              <mods:roleTerm authority="marcrelator" type="code">his</mods:roleTerm>
+            <mods:roleTerm authority="marcrelator" type="text"/></mods:role>
+          </mods:name>
+          <mods:genre authorityURI="https://duepublico.uni-due.de/api/v1/classifications/mir_genres" type="intern" valueURI="https://duepublico.uni-due.de/api/v1/classifications/mir_genres#audio"/>
+          <mods:genre authority="marcgt">sound</mods:genre>
+          <mods:classification authorityURI="https://duepublico.uni-due.de/api/v1/classifications/diniPublType" generator="mir_genres2diniPublType-mycore" valueURI="https://duepublico.uni-due.de/api/v1/classifications/diniPublType#Sound"/>
+          <mods:typeOfResource>sound recording-nonmusical</mods:typeOfResource>
+          <mods:language>
+            <mods:languageTerm authority="rfc5646" type="code">de</mods:languageTerm>
+          </mods:language>
+          <mods:classification authorityURI="https://duepublico.uni-due.de/api/v1/classifications/destatis" valueURI="https://duepublico.uni-due.de/api/v1/classifications/destatis#2330"/>
+          <mods:classification authorityURI="http://www.mycore.org/classifications/itunes-podcast" valueURI="http://www.mycore.org/classifications/itunes-podcast#Social_Sciences"/>
+          <mods:originInfo eventType="publication">
+            <mods:dateIssued encoding="w3cdtf">2021-05-27</mods:dateIssued>
+          </mods:originInfo>
+          <mods:abstract altFormat="data:text/xml;charset=UTF-8;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz48YWJzdHJhY3QgYWx0UmVwR3JvdXA9IjY2LThmM2MtOGIyMDZkNzNkZmNkIiB4bWw6bGFuZz0iZGUiPkRlciBTdHJlaXQg4oCTIFBvZGNhc3Qgw7xiZXIgbmV1ZSBzb3ppb2xvZ2lzY2hlIExpdGVyYXR1ci4gTWl0IFJvYmVydCB1bmQgQW5kcsOpIEFybWJydXN0ZXIuIERpZSBmcmFuesO2c2lzY2hlIFJldm9sdXRpb24sIDkvMTEsIENvdXJiZXRzIOKAnkzigJlPcmlnaW5lIGR1IG1vbmRl4oCcIOKAkyB1bSBhbGwgZGFzIGdlaHQgZXMgaW4g4oCeV2hhdCBpcyBhbiBFdmVudD/igJwgdm9uIFJvYmluIFdhZ25lci1QYWNpZmljaSAoQ2hpY2FnbyBVUCwgMjAxNykuIFdpciBibGVpYmVuIGFiZXIgZG9jaCByYXRsb3M6IFdhcyBsZXJudCBtYW4gaW4gZGVtIEJ1Y2g/IFdvcmF1cyBlbnRzdGVoZW4gRXZlbnRzPyBVbmQgdm9yIGFsbGVtOiBXYXMgaXN0IGRlbm4gbnVuIGVpbiBFdmVudD8mbHQ7YnIgLyZndDsmIzEzOwpNdXNpazogJmx0O2EgaHJlZj0iaHR0cHM6Ly93d3cuemFwc3BsYXQuY29tLyImZ3Q7emFwc3BsYXQuY29tJmx0Oy9hJmd0OzwvYWJzdHJhY3Q+" altRepGroup="66-8f3c-8b206d73dfcd" contentType="text/xml" xlink:type="simple" xml:lang="de"/>
+          <mods:abstract altRepGroup="66-8f3c-8b206d73dfcd" xlink:type="simple" xml:lang="de">Der Streit – Podcast über neue soziologische Literatur. Mit Robert und André Armbruster. Die französische Revolution, 9/11, Courbets „L’Origine du monde“ – um all das geht es in „What is an Event?“ von Robin Wagner-Pacifici (Chicago UP, 2017). Wir bleiben aber doch ratlos: Was lernt man in dem Buch? Woraus entstehen Events? Und vor allem: Was ist denn nun ein Event? Musik: zapsplat.com</mods:abstract>
+          <mods:accessCondition type="use and reproduction" xlink:href="https://duepublico.uni-due.de/api/v1/classifications/mir_licenses#cc_by-nc-sa_4.0" xlink:type="simple"/>
+          <mods:physicalDescription>
+            <mods:extent>00:43:43</mods:extent>
+          </mods:physicalDescription>
+          <mods:classification authority="sdnb" displayLabel="sdnb">300</mods:classification>
+          <mods:subject xlink:type="simple">
+            <mods:topic>Podcast</mods:topic>
+            <mods:topic authority="gnd" authorityURI="http://d-nb.info/gnd/" valueURI="http://d-nb.info/gnd/4077624-4">Soziologie</mods:topic>
+            <mods:topic>Review</mods:topic>
+            <mods:topic>Besprechungen</mods:topic>
+          </mods:subject>
+          <mods:relatedItem type="host" xlink:href="duepublico_mods_00074024" xlink:type="simple">
+            <mods:titleInfo xlink:type="simple" xml:lang="de">
+              <mods:title>Streit - Über neue soziologische Literatur</mods:title>
+              <mods:nonSort>Der</mods:nonSort>
+              <mods:subTitle>Podcast</mods:subTitle>
+            </mods:titleInfo>
+            <mods:typeOfResource>sound recording</mods:typeOfResource>
+            <mods:genre authorityURI="https://duepublico.uni-due.de/api/v1/classifications/mir_genres" type="intern" valueURI="https://duepublico.uni-due.de/api/v1/classifications/mir_genres#series"/>
+            <mods:genre authority="marcgt">series</mods:genre>
+            <mods:classification authorityURI="https://duepublico.uni-due.de/api/v1/classifications/diniPublType" generator="mir_genres2diniPublType-mycore" valueURI="https://duepublico.uni-due.de/api/v1/classifications/diniPublType#Other"/>
+            <mods:name authorityURI="https://duepublico.uni-due.de/api/v1/classifications/mir_institutes" type="corporate" valueURI="https://duepublico.uni-due.de/api/v1/classifications/mir_institutes#16.03" xlink:type="simple">
+              <mods:role>
+                <mods:roleTerm authority="marcrelator" type="code">his</mods:roleTerm>
+              <mods:roleTerm authority="marcrelator" type="text"/></mods:role>
+            </mods:name>
+            <mods:classification authorityURI="https://duepublico.uni-due.de/api/v1/classifications/collection" valueURI="https://duepublico.uni-due.de/api/v1/classifications/collection#OER"/>
+            <mods:classification authorityURI="http://www.mycore.org/classifications/itunes-podcast" valueURI="http://www.mycore.org/classifications/itunes-podcast#Social_Sciences"/>
+            <mods:language>
+              <mods:languageTerm authority="rfc5646" type="code">de</mods:languageTerm>
+            </mods:language>
+            <mods:abstract altFormat="data:text/xml;charset=UTF-8;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz48YWJzdHJhY3QgYWx0UmVwR3JvdXA9ImNiLTg1NTgtOWJkYTUzZDE0ZDgwIiB4bWw6bGFuZz0iZGUiPiZsdDtwJmd0O0RlciBTdHJlaXQgLSDDnGJlciBuZXVlIHNvemlvbG9naXNjaGUgTGl0ZXJhdHVyLiBNaXQgUm9iZXJ0IFNleWZlcnQgdW5kIEFuZHLDqSBBcm1icnVzdGVyLiBXaXIgc3RyZWl0ZW4gdW5zIHVtIG5ldWUgQmVpdHLDpGdlIHp1ciBTb3ppb2xvZ2llLCBiZXNvbmRlcnMgZ2VybmUgdW0gc296aW9sb2dpc2NoZSBUaGVvcmllLiBBbnRhZ29uaXN0aXNjaGUgUm9sbGVuIC0gZGVyIGVpbmUgaGFzc3QsIGRlciBlaW5lIGxpZWJ0IC0gc29yZ2VuIGbDvHIgS29udHJvdmVyc2UgdW5kIFNwYW5udW5nIC0gc2llIGJlZnJlaWVuIGF1cyBkZXIgS29uZm9ybWl0w6R0IHVuZCBkZW0gRWluaGVpdHNicmVpIHNvemlvbG9naXNjaGVyIExpdGVyYXR1cmJlc3ByZWNodW5nZW4uIEFsbGUgSW5mb3JtYXRpb25lbiB1bmQgS29udGFrdCBhdWYgVHdpdHRlciB1bnRlciAmbHQ7YSBocmVmPSJodHRwczovL3R3aXR0ZXIuY29tL0Rlcl9TdHJlaXQgIiZndDtARGVyX1N0cmVpdCZsdDsvYSZndDsmbHQ7L3AmZ3Q7PC9hYnN0cmFjdD4" altRepGroup="cb-8558-9bda53d14d80" contentType="text/xml" xlink:type="simple" xml:lang="de"/>
+            <mods:abstract altRepGroup="cb-8558-9bda53d14d80" xlink:type="simple" xml:lang="de">Der Streit - Über neue soziologische Literatur. Mit Robert Seyfert und André Armbruster. Wir streiten uns um neue Beiträge zur Soziologie, besonders gerne um soziologische Theorie. Antagonistische Rollen - der eine hasst, der eine liebt - sorgen für Kontroverse und Spannung - sie befreien aus der Konformität und dem Einheitsbrei soziologischer Literaturbesprechungen. Alle Informationen und Kontakt auf Twitter unter @Der_Streit</mods:abstract>
+            <mods:accessCondition type="use and reproduction" xlink:href="https://duepublico.uni-due.de/api/v1/classifications/mir_licenses#cc_by-nc-sa_4.0" xlink:type="simple"/>
+            <mods:originInfo eventType="creation">
+              <mods:dateModified encoding="w3cdtf">2020-09-15</mods:dateModified>
+            </mods:originInfo>
+            <mods:originInfo eventType="publication">
+              <mods:dateIssued encoding="w3cdtf">2021-02-16</mods:dateIssued>
+            </mods:originInfo>
+            <mods:classification authority="sdnb" displayLabel="sdnb">300</mods:classification>
+            <mods:classification authorityURI="https://duepublico.uni-due.de/api/v1/classifications/destatis" valueURI="https://duepublico.uni-due.de/api/v1/classifications/destatis#2330"/>
+            <mods:name type="personal" xlink:type="simple">
+              <mods:displayForm>Armbruster, André</mods:displayForm>
+              <mods:role>
+                <mods:roleTerm authority="marcrelator" type="code">own</mods:roleTerm>
+              <mods:roleTerm authority="marcrelator" type="text">Owner</mods:roleTerm></mods:role>
+              <mods:nameIdentifier type="gnd">1081830107</mods:nameIdentifier>
+              <mods:nameIdentifier type="lsf">59028</mods:nameIdentifier>
+              <mods:namePart type="family">Armbruster</mods:namePart>
+              <mods:namePart type="given">André</mods:namePart>
+              <mods:affiliation>andre.armbruster@uni-due.de</mods:affiliation>
+            </mods:name>
+            <mods:name type="personal" xlink:type="simple">
+              <mods:displayForm>Armbruster, André</mods:displayForm>
+              <mods:role>
+                <mods:roleTerm authority="marcrelator" type="code">aut</mods:roleTerm>
+              <mods:roleTerm authority="marcrelator" type="text">Author</mods:roleTerm></mods:role>
+              <mods:nameIdentifier type="gnd">1081830107</mods:nameIdentifier>
+              <mods:nameIdentifier type="lsf">59028</mods:nameIdentifier>
+              <mods:namePart type="family">Armbruster</mods:namePart>
+              <mods:namePart type="given">André</mods:namePart>
+            </mods:name>
+            <mods:name type="corporate" xlink:type="simple">
+              <mods:displayForm>Seyfert, Robert</mods:displayForm>
+              <mods:role>
+                <mods:roleTerm authority="marcrelator" type="code">aut</mods:roleTerm>
+              <mods:roleTerm authority="marcrelator" type="text">Author</mods:roleTerm></mods:role>
+              <mods:nameIdentifier type="gnd">1123664978</mods:nameIdentifier>
+              <mods:nameIdentifier type="lsf">59016</mods:nameIdentifier>
+              <mods:namePart type="family">Seyfert</mods:namePart>
+              <mods:namePart type="given">Robert</mods:namePart>
+            </mods:name>
+          </mods:relatedItem>
+        <mods:identifier type="citekey">duepublico_mods_00074441</mods:identifier><mods:identifier type="uri">https://duepublico2.uni-due.de/receive/duepublico_mods_00074441</mods:identifier></mods:mods></metadata>
+    </record>
+    <record>
+      <header>
+        <identifier>oai:oer.uni-due.de:duepublico_mods_00074302</identifier>
+        <datestamp>2021-05-27</datestamp>
+        <setSpec>ddc:800</setSpec>
+        <setSpec>doc-type:CourseMaterial</setSpec>
+      </header>
+      <metadata>
+        <mods:mods ID="duepublico_mods_00074302"><mods:location><mods:url access="object in context">https://duepublico2.uni-due.de/receive/duepublico_mods_00074302</mods:url><mods:url access="raw object">https://duepublico2.uni-due.de/servlets/MCRFileNodeServlet/duepublico_derivate_00074185/sicherung-moodle-kaestner_zum_gebrauch-202104.mbz</mods:url><mods:url access="preview">https://duepublico2.uni-due.de/rsc/thumbnail/duepublico_mods_00074302.png</mods:url>
+            <mods:url>https://moodle.uni-due.de/course/view.php?id=25871</mods:url>
+          </mods:location>
+          <mods:classification authorityURI="https://duepublico.uni-due.de/api/v1/classifications/collection" valueURI="https://duepublico.uni-due.de/api/v1/classifications/collection#OER"/>
+          <mods:titleInfo xlink:type="simple" xml:lang="de">
+            <mods:title>Erich Kästner "zum Gebrauch"</mods:title>
+            <mods:subTitle>Unterrichtspraktische Anregungen für die Klassen 9 und 10</mods:subTitle>
+          </mods:titleInfo>
+          <mods:name type="personal" xlink:type="simple">
+            <mods:displayForm>Oeste, Bettina</mods:displayForm>
+            <mods:role>
+              <mods:roleTerm authority="marcrelator" type="code">aut</mods:roleTerm>
+            <mods:roleTerm authority="marcrelator" type="text">Author</mods:roleTerm></mods:role>
+            <mods:namePart type="family">Oeste</mods:namePart>
+            <mods:namePart type="given">Bettina</mods:namePart>
+            <mods:nameIdentifier type="gnd">121505002X</mods:nameIdentifier>
+            <mods:nameIdentifier type="lsf">44770</mods:nameIdentifier>
+          </mods:name>
+          <mods:name authorityURI="https://duepublico.uni-due.de/api/v1/classifications/mir_institutes" type="corporate" valueURI="https://duepublico.uni-due.de/api/v1/classifications/mir_institutes#03.02.03" xlink:type="simple">
+            <mods:role>
+              <mods:roleTerm authority="marcrelator" type="code">his</mods:roleTerm>
+            <mods:roleTerm authority="marcrelator" type="text"/></mods:role>
+          </mods:name>
+          <mods:genre authorityURI="https://duepublico.uni-due.de/api/v1/classifications/mir_genres" type="intern" valueURI="https://duepublico.uni-due.de/api/v1/classifications/mir_genres#teaching_material"/>
+          <mods:genre authority="marcgt">instruction</mods:genre>
+          <mods:classification authorityURI="https://duepublico.uni-due.de/api/v1/classifications/diniPublType" generator="mir_genres2diniPublType-mycore" valueURI="https://duepublico.uni-due.de/api/v1/classifications/diniPublType#CourseMaterial"/>
+          <mods:classification authorityURI="http://schema.org/" generator="mir_genres2schemaOrg-mycore" valueURI="http://schema.org/CreativeWork"/>
+          <mods:typeOfResource>mixed material</mods:typeOfResource>
+          <mods:language>
+            <mods:languageTerm authority="rfc5646" type="code">de</mods:languageTerm>
+          </mods:language>
+          <mods:classification authorityURI="https://duepublico.uni-due.de/api/v1/classifications/destatis" valueURI="https://duepublico.uni-due.de/api/v1/classifications/destatis#1080"/>
+          <mods:classification authorityURI="http://www.mycore.org/classifications/itunes-podcast" valueURI="http://www.mycore.org/classifications/itunes-podcast#Courses"/>
+          <mods:subject xlink:type="simple">
+            <mods:topic>Kästner</mods:topic>
+          </mods:subject>
+          
+          <mods:originInfo eventType="publication">
+            <mods:dateIssued encoding="w3cdtf">2021</mods:dateIssued>
+          </mods:originInfo>
+          <mods:abstract altFormat="data:text/xml;charset=UTF-8;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz48YWJzdHJhY3QgYWx0UmVwR3JvdXA9IjRkLWE3ZDItYmZjMTkwZWI4NjQwIiB4bWw6bGFuZz0iZGUiPlRyb3R6IOKAkyBvZGVyIGdlcmFkZSB3ZWdlbiDigJMgc2VpbmVzIGhvaGVuIEJla2FubnRoZWl0c2dyYWRzIGlzdCBFcmljaCBLw6RzdG5lciBpbiBkZXIgbGl0ZXJhdHVyd2lzc2Vuc2NoYWZ0bGljaGVuIEZhY2h3ZWx0IG5pY2h0IHVudW1zdHJpdHRlbi4gVm9yIGFsbGVtIGhhYmVuIGlobSBzZWluIHByYWdtYXRpc2NoZXIgU2NocmVpYnN0aWwsIGRpZSBEaXJla3RoZWl0IHNlaW5lciBXb3J0ZSB1bmQgZGllIEVpbmRldXRpZ2tlaXQgc2VpbmVyIGxpdGVyYXJpc2NoZW4gQm90c2NoYWZ0ZW4gZGVuIFJ1ZiBkZXMgR2VicmF1Y2hzc2NocmlmdHN0ZWxsZXJzIGVpbmdlYnJhY2h0LiBEaWUgZGFtaXQgZWluaGVyZ2VoZW5kZSBsZWljaHRlIFp1Z8OkbmdsaWNoa2VpdCBzZWluZXMgV2Vya3Mgc3RlbGx0IGltIHNjaHVsaXNjaGVuIFVudGVycmljaHQgZWluZW4gZGlkYWt0aXNjaGVuIE1laHJ3ZXJ0IGRhciwgZGVyIGltIFp1Z2UgZWluZXIgQmxlbmRlZCBMZWFybmluZy1VbnRlcnJpY2h0c2VpbmhlaXQgbWl0IGRlciBMZXJucGxhdHRmb3JtIE1vb2RsZSBsZXJuemllbGtvbmZvcm0gZsO8ciBkZW4gTHlyaWt1bnRlcnJpY2h0IGluIGRlbiBLbGFzc2VuIDkgdW5kIDEwIOKAnmdlYnJhdWNodOKAnCB3ZXJkZW4ga2FubiDigJMgZ2VnZWJlbmVuZmFsbHMgYXVjaCBhdWYgRGlzdGFuei4gQW5hbG9nIHp1IGRlbiBVbnRlcnJpY2h0c2lkZWVuIHZvbiBCZXR0aW5hIE9lc3RlLCBkaWUgc2ljaCB1bnRlciBkZW0gVGl0ZWwgS8Okc3RuZXIgenVtIEdlYnJhdWNoIGltIEhlZnQgMy0yMDIxIGRlciBaZWl0c2NocmlmdCAiRGV1dHNjaHVudGVycmljaHQiIChXZXN0ZXJtYW5uIFZlcmxhZykgbmFjaGxlc2VuIGxhc3Nlbiwgd3VyZGUgaW0gRm9sZ2VuZGVuIGVpbiBNdXN0ZXJrdXJzcmF1bSBhbmdlbGVndCwgaW4gZGVtIGRpZSBkb3J0aWdlbiBVbnRlcnJpY2h0dm9yc2NobMOkZ2UgbWl0IGdlZWlnbmV0ZW4gTW9vZGxlLUFrdGl2aXTDpHRlbiBpbiBlaW4gRS1MZWFybmluZy1Lb256ZXB0IMO8YmVyZsO8aHJ0IHd1cmRlbi4gRGVyIEt1cnNyYXVtIHNvbGwgZGVuIExlc2VyaW5uZW4gdW5kIExlc2VybiBkZXIgWmVpdHNjaHJpZnQgKHNvd2llIGFuZGVyd2VpdGlnIEludGVyZXNzaWVydGVuKSBzb21pdCBhbHMgTXVzdGVyIHVuZCBBbnNjaGF1dW5nIGRpZW5lbiwga2FubiBhYmVyIGplIG5hY2ggQmVkYXJmIGF1Y2ggYWJnZXdhbmRlbHQgdW5kIHZhcmllcnQgd2VyZGVuLiBHw6RzdGUgZGllc2VzIFJhdW1lcyBoYWJlbiBkaWUgTcO2Z2xpY2hrZWl0LCBkaWUgSW5oYWx0ZSBkZXMgUmF1bXMgdW50ZXIgZm9sZ2VuZGVyIExpemVueiBuYWNoenVudXR6ZW46IENyZWF0aXZlIENvbW1vbnMgTmFtZW5zbmVubnVuZyAtIFdlaXRlcmdhYmUgdW50ZXIgZ2xlaWNoZW4gQmVkaW5ndW5nZW4gNC4wIExpemVueiAoQ0MgQlktU0EgNC4wKTwvYWJzdHJhY3Q+" altRepGroup="4d-a7d2-bfc190eb8640" contentType="text/xml" xlink:type="simple" xml:lang="de"/>
+          <mods:abstract altRepGroup="4d-a7d2-bfc190eb8640" xlink:type="simple" xml:lang="de">Trotz – oder gerade wegen – seines hohen Bekanntheitsgrads ist Erich Kästner in der literaturwissenschaftlichen Fachwelt nicht unumstritten. Vor allem haben ihm sein pragmatischer Schreibstil, die Direktheit seiner Worte und die Eindeutigkeit seiner literarischen Botschaften den Ruf des Gebrauchsschriftstellers eingebracht. Die damit einhergehende leichte Zugänglichkeit seines Werks stellt im schulischen Unterricht einen didaktischen Mehrwert dar, der im Zuge einer Blended Learning-Unterrichtseinheit mit der Lernplattform Moodle lernzielkonform für den Lyrikunterricht in den Klassen 9 und 10 „gebraucht“ werden kann – gegebenenfalls auch auf Distanz. Analog zu den Unterrichtsideen von Bettina Oeste, die sich unter dem Titel Kästner zum Gebrauch im Heft 3-2021 der Zeitschrift "Deutschunterricht" (Westermann Verlag) nachlesen lassen, wurde im Folgenden ein Musterkursraum angelegt, in dem die dortigen Unterrichtvorschläge mit geeigneten Moodle-Aktivitäten in ein E-Learning-Konzept überführt wurden. Der Kursraum soll den Leserinnen und Lesern der Zeitschrift (sowie anderweitig Interessierten) somit als Muster und Anschauung dienen, kann aber je nach Bedarf auch abgewandelt und variert werden. Gäste dieses Raumes haben die Möglichkeit, die Inhalte des Raums unter folgender Lizenz nachzunutzen: Creative Commons Namensnennung - Weitergabe unter gleichen Bedingungen 4.0 Lizenz (CC BY-SA 4.0)</mods:abstract>
+          <mods:accessCondition type="use and reproduction" xlink:href="https://duepublico.uni-due.de/api/v1/classifications/mir_licenses#cc_by-sa_4.0" xlink:type="simple"/>
+          <mods:classification authority="sdnb" displayLabel="sdnb">800</mods:classification>
+          <mods:note type="requirements" xlink:type="simple">Der Kurs ist in der Moodle-Instanz Version 3.5 der Universität Duisburg-Essen erstellt worden. Die Datei wird als Moodle-Sicherungsdatei zur Verfügung gestellt und kann auf einer eigenen Moodle-Installation wiederhergestellt werden. Der Kurs kann für einen ersten Eindruck als Gast über die UDE-Instanz eingesehen werden (siehe Link URL).</mods:note>
+          <mods:note type="requirements" xlink:type="simple">Im Moodle-Kurs werden folgende Lernaktivitäten verwendet, die nicht in einer Standard-Moodle-Installation installiert bzw. aktiviert sind: Chat, Etherpad, Gruppenwahl, BigBlueButton</mods:note>
+          <mods:note type="performers" xlink:type="simple">&lt;p&gt;Bei Nachnutzung des Kurses freut sich Bettina Oeste über eine entsprechende Nachricht an:&amp;#xa0;bettina.oeste@uni-due.de&lt;/p&gt;</mods:note>
+        <mods:identifier type="citekey">duepublico_mods_00074302</mods:identifier><mods:identifier type="uri">https://duepublico2.uni-due.de/receive/duepublico_mods_00074302</mods:identifier></mods:mods></metadata>
+    </record>
+    <record>
+      <header status="deleted">
+        <identifier>oai:oer.uni-due.de:duepublico_mods_00074413</identifier>
+        <datestamp>2021-05-18</datestamp>
+      </header>
+    </record>
+    <record>
+      <header status="deleted">
+        <identifier>oai:oer.uni-due.de:duepublico_derivate_00074060</identifier>
+        <datestamp>2021-05-19</datestamp>
+      </header>
+    </record>
+    <record>
+      <header status="deleted">
+        <identifier>oai:oer.uni-due.de:duepublico_mods_00074457</identifier>
+        <datestamp>2021-05-30</datestamp>
+      </header>
+    </record>
+    <record>
+      <header status="deleted">
+        <identifier>oai:oer.uni-due.de:duepublico_mods_00074434</identifier>
+        <datestamp>2021-05-25</datestamp>
+      </header>
+    </record>
+    <record>
+      <header status="deleted">
+        <identifier>oai:oer.uni-due.de:duepublico_mods_00074456</identifier>
+        <datestamp>2021-05-29</datestamp>
+      </header>
+    </record>
+    <record>
+      <header status="deleted">
+        <identifier>oai:oer.uni-due.de:duepublico_mods_00074433</identifier>
+        <datestamp>2021-05-24</datestamp>
+      </header>
+    </record>
+    <record>
+      <header status="deleted">
+        <identifier>oai:oer.uni-due.de:duepublico_mods_00074455</identifier>
+        <datestamp>2021-05-27</datestamp>
+      </header>
+    </record>
+    <record>
+      <header status="deleted">
+        <identifier>oai:oer.uni-due.de:duepublico_mods_00074439</identifier>
+        <datestamp>2021-05-25</datestamp>
+      </header>
+    </record>
+    <record>
+      <header status="deleted">
+        <identifier>oai:oer.uni-due.de:duepublico_mods_00074416</identifier>
+        <datestamp>2021-05-17</datestamp>
+      </header>
+    </record>
+    <record>
+      <header status="deleted">
+        <identifier>oai:oer.uni-due.de:duepublico_mods_00074415</identifier>
+        <datestamp>2021-05-15</datestamp>
+      </header>
+    </record>
+    <record>
+      <header status="deleted">
+        <identifier>oai:oer.uni-due.de:duepublico_derivate_00074183</identifier>
+        <datestamp>2021-05-27</datestamp>
+      </header>
+    </record>
+    <record>
+      <header status="deleted">
+        <identifier>oai:oer.uni-due.de:duepublico_mods_00074296</identifier>
+        <datestamp>2021-05-19</datestamp>
+      </header>
+    </record>
+    <record>
+      <header status="deleted">
+        <identifier>oai:oer.uni-due.de:duepublico_mods_00074450</identifier>
+        <datestamp>2021-05-27</datestamp>
+      </header>
+    </record>
+    <record>
+      <header status="deleted">
+        <identifier>oai:oer.uni-due.de:duepublico_mods_00074454</identifier>
+        <datestamp>2021-05-27</datestamp>
+      </header>
+    </record>
+    <record>
+      <header status="deleted">
+        <identifier>oai:oer.uni-due.de:duepublico_mods_00074431</identifier>
+        <datestamp>2021-05-24</datestamp>
+      </header>
+    </record>
+    <record>
+      <header status="deleted">
+        <identifier>oai:oer.uni-due.de:duepublico_mods_00074453</identifier>
+        <datestamp>2021-05-27</datestamp>
+      </header>
+    </record>
+    <record>
+      <header status="deleted">
+        <identifier>oai:oer.uni-due.de:duepublico_mods_00074430</identifier>
+        <datestamp>2021-05-22</datestamp>
+      </header>
+    </record>
+    <record>
+      <header status="deleted">
+        <identifier>oai:oer.uni-due.de:duepublico_mods_00074452</identifier>
+        <datestamp>2021-05-27</datestamp>
+      </header>
+    </record>
+    <record>
+      <header status="deleted">
+        <identifier>oai:oer.uni-due.de:duepublico_mods_00074451</identifier>
+        <datestamp>2021-05-27</datestamp>
+      </header>
+    </record>
+    <record>
+      <header status="deleted">
+        <identifier>oai:oer.uni-due.de:duepublico_mods_00074419</identifier>
+        <datestamp>2021-05-18</datestamp>
+      </header>
+    </record>
+    <record>
+      <header status="deleted">
+        <identifier>oai:oer.uni-due.de:duepublico_derivate_00074158</identifier>
+        <datestamp>2021-05-15</datestamp>
+      </header>
+    </record>
+    <record>
+      <header status="deleted">
+        <identifier>oai:oer.uni-due.de:duepublico_mods_00074425</identifier>
+        <datestamp>2021-05-21</datestamp>
+      </header>
+    </record>
+    <record>
+      <header status="deleted">
+        <identifier>oai:oer.uni-due.de:duepublico_mods_00074447</identifier>
+        <datestamp>2021-05-27</datestamp>
+      </header>
+    </record>
+    <record>
+      <header status="deleted">
+        <identifier>oai:oer.uni-due.de:duepublico_mods_00074424</identifier>
+        <datestamp>2021-05-20</datestamp>
+      </header>
+    </record>
+    <record>
+      <header status="deleted">
+        <identifier>oai:oer.uni-due.de:duepublico_mods_00074446</identifier>
+        <datestamp>2021-05-26</datestamp>
+      </header>
+    </record>
+    <record>
+      <header status="deleted">
+        <identifier>oai:oer.uni-due.de:duepublico_mods_00074445</identifier>
+        <datestamp>2021-05-26</datestamp>
+      </header>
+    </record>
+    <record>
+      <header status="deleted">
+        <identifier>oai:oer.uni-due.de:duepublico_mods_00074444</identifier>
+        <datestamp>2021-05-26</datestamp>
+      </header>
+    </record>
+    <record>
+      <header status="deleted">
+        <identifier>oai:oer.uni-due.de:duepublico_mods_00074466</identifier>
+        <datestamp>2021-05-31</datestamp>
+      </header>
+    </record>
+    <record>
+      <header status="deleted">
+        <identifier>oai:oer.uni-due.de:duepublico_mods_00074429</identifier>
+        <datestamp>2021-05-21</datestamp>
+      </header>
+    </record>
+    <record>
+      <header status="deleted">
+        <identifier>oai:oer.uni-due.de:duepublico_mods_00074428</identifier>
+        <datestamp>2021-05-21</datestamp>
+      </header>
+    </record>
+    <record>
+      <header status="deleted">
+        <identifier>oai:oer.uni-due.de:duepublico_mods_00074427</identifier>
+        <datestamp>2021-05-21</datestamp>
+      </header>
+    </record>
+    <record>
+      <header status="deleted">
+        <identifier>oai:oer.uni-due.de:duepublico_mods_00074449</identifier>
+        <datestamp>2021-05-27</datestamp>
+      </header>
+    </record>
+    <record>
+      <header status="deleted">
+        <identifier>oai:oer.uni-due.de:duepublico_mods_00074426</identifier>
+        <datestamp>2021-05-21</datestamp>
+      </header>
+    </record>
+    <record>
+      <header status="deleted">
+        <identifier>oai:oer.uni-due.de:duepublico_mods_00074448</identifier>
+        <datestamp>2021-05-27</datestamp>
+      </header>
+    </record>
+    <record>
+      <header status="deleted">
+        <identifier>oai:oer.uni-due.de:duepublico_mods_00074461</identifier>
+        <datestamp>2021-05-31</datestamp>
+      </header>
+    </record>
+    <record>
+      <header status="deleted">
+        <identifier>oai:oer.uni-due.de:duepublico_mods_00074460</identifier>
+        <datestamp>2021-05-31</datestamp>
+      </header>
+    </record>
+    <record>
+      <header status="deleted">
+        <identifier>oai:oer.uni-due.de:duepublico_mods_00074421</identifier>
+        <datestamp>2021-05-19</datestamp>
+      </header>
+    </record>
+    <record>
+      <header status="deleted">
+        <identifier>oai:oer.uni-due.de:duepublico_mods_00074443</identifier>
+        <datestamp>2021-05-26</datestamp>
+      </header>
+    </record>
+    <record>
+      <header status="deleted">
+        <identifier>oai:oer.uni-due.de:duepublico_mods_00074465</identifier>
+        <datestamp>2021-05-31</datestamp>
+      </header>
+    </record>
+    <record>
+      <header status="deleted">
+        <identifier>oai:oer.uni-due.de:duepublico_mods_00074420</identifier>
+        <datestamp>2021-05-18</datestamp>
+      </header>
+    </record>
+    <record>
+      <header status="deleted">
+        <identifier>oai:oer.uni-due.de:duepublico_mods_00074442</identifier>
+        <datestamp>2021-05-26</datestamp>
+      </header>
+    </record>
+    <record>
+      <header status="deleted">
+        <identifier>oai:oer.uni-due.de:duepublico_mods_00074440</identifier>
+        <datestamp>2021-05-26</datestamp>
+      </header>
+    </record>
+    <record>
+      <header status="deleted">
+        <identifier>oai:oer.uni-due.de:duepublico_derivate_00074164</identifier>
+        <datestamp>2021-05-19</datestamp>
+      </header>
+    </record>
+    <record>
+      <header status="deleted">
+        <identifier>oai:oer.uni-due.de:duepublico_derivate_00074165</identifier>
+        <datestamp>2021-05-19</datestamp>
+      </header>
+    </record>
+    <record>
+      <header status="deleted">
+        <identifier>oai:oer.uni-due.de:duepublico_derivate_00074201</identifier>
+        <datestamp>2021-05-31</datestamp>
+      </header>
+    </record>
+  </ListRecords>
+</OAI-PMH>
+</harvest>

@@ -1,0 +1,97 @@
+# See https://github.com/TobiasNx/Catmandu-Testing/blob/master/DuePub-Test/duepub-catmandu.fix
+
+if exists ("metadata.error")
+    reject()
+end
+
+if any_equal ("header.status", "deleted")
+    reject()
+end
+
+# ---------------@context ----------------------------------
+
+set_array("@context[]", "https://w3id.org/kim/lrmi-profile/draft/context.jsonld")
+set_hash("@context[].$append", "@language": "de")
+
+# --------------id ----------------------------------------
+do list("path": "metadata.mods:mods.mods:identifier", "var": "identifier")
+    if all_match("identifier.value","https://duepublico2.uni-due.de/receive/.*")
+        copy_field("identifier.value","id")
+    end
+end
+
+
+#  ------------image ------------------------------------
+do list("path": "metadata.mods:mods.mods:location.mods:url", "var": "url")
+    if all_match("url.value","^https://duepublico2.uni-due.de/rsc/thumbnail/.*")
+        copy_field("url.value","image")
+    end
+end
+
+#  ------------name ------------------------------------
+paste("name","metadata.mods:mods.mods:titleInfo.mods:nonSort.value","metadata.mods:mods.mods:titleInfo.mods:title.value")
+
+#  ------------creator------------------------------------
+set_array("creator[]")
+do list("path":"metadata.mods:mods.mods:name","var":"n")
+    if any_match("n.mods:role.mods:roleTerm.*.value","aut|cre")
+        copy_field("n.mods:displayForm.value","creator[].$append.name")
+        if any_equal("n.type","personal")
+            add_field("creator[].$last.type", "Person")
+        end
+        if any_equal("n.type","corporate")
+            add_field("creator[].$last.type", "Organization")
+        end
+    end
+end
+
+set_array("sourceOrganization[]")
+do list("path":"metadata.mods:mods.mods:name","var":"org")
+    if any_match("org.mods:role.mods:roleTerm.*.value","his")
+        copy_field("org.valueURI","sourceOrganization[].$append.id")
+        add_field("sourceOrganization[].$last.type", "Organization")
+    end
+end
+
+#  ------------description------------------------------------
+copy_field("metadata.mods:mods.mods:abstract.*.value","description")
+
+# -----------license----------
+copy_field("metadata.mods:mods.mods:accessCondition.xlink:href","license.id")
+lookup("license.id","data/maps/duepublico-licenses.tsv","sep_char":"\t") 
+
+#  ------------dataCreated------------------------------------
+copy_field("metadata.mods:mods.mods:originInfo.mods:dateIssued.value","dataCreated")
+
+#  ------------inLanguage------------------------------------
+copy_field("metadata.mods:mods.mods:language.mods:languageTerm.value","inLanguage[].$append.label")
+# TODO: The result is right, but I think it should be copied to "inLanguage[].$append" not "inLanguage[].$append.label"
+
+# ---------------type ----------------------------------
+set_array("type[]", "LearningResource")
+
+/* TODO: Needs lookup */
+do list("path":"metadata.mods:mods.mods:genre","var":"lRT")
+    if any_match("lRT.authorityURI","https://duepublico.uni-due.de/api/v1/classifications/mir_genres")
+        copy_field("lRT.valueURI","learningResourceType[].$append.id")
+        copy_field("lRT.valueURI","learningResourceType[].$last.prefLabel.de") /* TODO: $last not working here, see fix#94 */
+    end
+end
+
+/* # TODO ------------keywords------------------------------------
+copy_field("metadata.mods:mods.mods:subject.mods:topic.*.value","keywords[].$append")
+TODO: split_field(keywords,",") 
+trim("keywords[]")
+*/
+
+#  ------------about------------------------------------
+
+do list("path":"metadata.mods:mods.mods:classification","var":"classification")
+    if any_equal("classification.authorityURI","https://duepublico.uni-due.de/api/v1/classifications/destatis")
+        copy_field("classification.valueURI","about[].$append.id")
+        copy_field("classification.valueURI","about[].$last.prefLabel.de") /* TODO: $last not working here, see fix#94 */
+    end
+end
+
+retain("@context[]","id","image","name","creator[]","contributor[]","sourceOrganization[]", "license","description","dataCreated","inLanguage[]","type[]","learningResourceType[]","keywords[]","about[]")
+vacuum()

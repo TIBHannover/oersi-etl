@@ -1,0 +1,40 @@
+/*
+# sourceOrganization 
+copy_field("contributor[].*.affiliation.id", "sO.$append")
+copy_field("creator[].*.affiliation.id", "sO.$append")
+
+ uniq("sO") 
+
+do list("path": "sO", "var": "sOname")
+	copy_field("sOname", "sourceOrganization[].$append.id")
+	copy_field("sOname", "sourceOrganization[].$end.name")
+	lookup("sourceOrganization.$end.name", "data/maps/orcaUni.tsv", "sep_char":"\t")
+	add_field("sourceOrganization.$end.type", "Organization")
+end
+
+
+# learningResourceType
+
+do list(path: "learningResourceType[]")
+	lookup(id,"data/maps/orcaMedienId-hcrt.tsv", "sep_char":"\t")
+	remove_field("prefLabel") # do not know if that is necessary, when rewriten
+	copy_field("id", "prefLabel.de")
+	lookup("prefLabel.de","data/maps/hcrt-de-labels.tsv", "sep_char":"\t")
+	copy_field("id", "prefLabel.en")
+	lookup("prefLabel.en","data/maps/hcrt-en-labels.tsv", "sep_char":"\t")
+end
+ */
+
+# -----  encoding ----
+
+set_array("encoding[]")
+copy_field("id", "encoding[].$append.downloadUrl")
+/*
+append("encoding[].$end.id", "/data")
+add_field("encoding[].$end.type", "MediaObject")
+*/
+
+
+# --- retain needs the exact name as it enters, so creator[]
+retain("@context[]","id","image","name", "license", "creator[]","contributor[]","sourceOrganization[]","description","inLanguage[]","type[]","learningResourceType[]","keywords[]","about[]", "encoding[]")
+vacuum()
