@@ -1,0 +1,39 @@
+# ---------------@context ----------------------------------
+
+set_array("@context[]", "https://w3id.org/kim/lrmi-profile/draft/context.jsonld")
+set_hash("@context[].$append", "@language": "de")
+
+#  ------------inLanguage------------------------------------
+move_field("inLanguage","inLanguage[].$append")
+
+# ---------------type ----------------------------------
+set_array("type[]", "LearningResource")
+
+# ---------description---------
+//TODO: replace seems not to work
+//replace_all("description", '\\w*[^>]*?\\w*=\\"(.*?)\\">', with: " ")
+//replace_all("description", '\\w*[^>]*?\\w*=\\"(.*?)\\" \\w*=\\"(.*?)\\>', with: " ")
+//replace_all("description", '<\\w*>|</\\w*>', with: " ")
+//replace_all("description", '  ', with: " ")
+
+# ------------learningResourceType-----
+copy_field("rescourcetype", "learningResourceType[].$append.id")
+// Lookup with array with [] seems not to work
+lookup("learningResourceType[].*.id", "data/maps/hcrt-de-labels-to-uri.tsv","sep_char":"\t")
+// Lookup with array without [] does not work
+copy_field("rescourcetype", "learningResourceTYPE.$append.id")
+// This seems not to work
+lookup("learningResourceTYPE.*.id", "data/maps/hcrt-de-labels-to-uri.tsv","sep_char":"\t")
+
+# ------about----
+//move_field("fields", "fields[].$append")
+//copy_field("fields[].*", "about[].$append.id")
+//lookup("about[].$append.id", "data/maps/destatisLabels-to-uri.tsv","sep_char":"\t")
+
+/* mainEntityofPage */
+copy_field("id", "mainEntityofPage.$append.id")
+
+// TODO: Needs $last and var-updates from Jens
+//add_field("mainEntityofPage.$last.provider.id","$[service_id]")
+//add_field("mainEntityofPage.$last.provider.type","Service")
+//add_field("mainEntityofPage.$last.provider.name","$[service_name]")
