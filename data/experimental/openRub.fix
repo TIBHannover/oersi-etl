@@ -17,15 +17,19 @@ set_array("type[]", "LearningResource")
 # replace_all("description", '  ', with: " ")
 
 # ------------learningResourceType-----
-copy_field("rescourcetype", "learningResourceType[].$append.id")
-#  Lookup with array with [] seems not to work
-lookup("learningResourceType[].*.id", "data/maps/hcrt-de-labels-to-uri.tsv","sep_char":"\t")
-
+remove_field("learningResourceType")
+lookup("learningResource", "data/maps/hcrt-de-labels-to-uri.tsv","sep_char":"\t")
+copy_field("learningResource", "learningResourceType[].$append.id")
+lookup("learningResource", "data/maps/hcrt-de-labels.tsv","sep_char":"\t")
+copy_field("learningResource", "learningResourceType[].$last.prefLabel.de")
+remove_field("learningResource")
 
 # ------about----
-# move_field("fields", "fields[].$append")
-# copy_field("fields[].*", "about[].$append.id")
-# lookup("about[].$append.id", "data/maps/destatisLabels-to-uri.tsv","sep_char":"\t")
+lookup("fields[]", "data/maps/destatisLabels-to-uri.tsv","sep_char":"\t")
+do list(path: "fields[]", "var": f)
+    copy_field("f", "about[].$append.id")
+end
+remove_field('fields[]')
 
 /* mainEntityOfPage */
 copy_field("id", "mainEntityOfPage[].$append.id")
