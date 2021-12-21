@@ -27,10 +27,8 @@ lookup("learningResourceType[].*.id", "data/maps/hcrt-de-labels-to-uri.tsv","sep
 # copy_field("fields[].*", "about[].$append.id")
 # lookup("about[].$append.id", "data/maps/destatisLabels-to-uri.tsv","sep_char":"\t")
 
-/* mainEntityofPage */
-copy_field("id", "mainEntityofPage.$append.id")
-
-#  TODO: Needs $last and var-updates from Jens
-# add_field("mainEntityofPage.$last.provider.id","$[service_id]")
-# add_field("mainEntityofPage.$last.provider.type","Service")
-# add_field("mainEntityofPage.$last.provider.name","$[service_name]")
+/* mainEntityOfPage */
+copy_field("id", "mainEntityOfPage[].$append.id")
+add_field("mainEntityOfPage[].$last.provider.id","$[service_id]")
+add_field("mainEntityOfPage[].$last.provider.type","Service")
+add_field("mainEntityOfPage[].$last.provider.name","$[service_name]")
