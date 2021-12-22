@@ -1,0 +1,1 @@
+copy_field("[ac]nimal", "stringimals[].$append")
