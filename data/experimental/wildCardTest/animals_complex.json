@@ -1,0 +1,10 @@
+{
+	"animals": ["dog", "cat", "zebra"],
+	"animal": "bunny",
+	"animols": {
+		"name": "bird",
+		"type": "TEST"
+	},
+	"ANIMALS": "dragon and unicorn"
+
+}
