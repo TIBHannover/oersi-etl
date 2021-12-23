@@ -10,11 +10,11 @@ move_field("inLanguage","inLanguage[].$append")
 set_array("type[]", "LearningResource")
 
 # ---------description---------
-# TODO: replace seems not to work
-# replace_all("description", '\\w*[^>]*?\\w*=\\"(.*?)\\">', with: " ")
-# replace_all("description", '\\w*[^>]*?\\w*=\\"(.*?)\\" \\w*=\\"(.*?)\\>', with: " ")
-# replace_all("description", '<\\w*>|</\\w*>', with: " ")
-# replace_all("description", '  ', with: " ")
+replace_all("description", '\\w*[^>]*?\\w*=\\"(.*?)\\">', " ")
+replace_all("description", '\\w*[^>]*?\\w*=\\"(.*?)\\" \\w*=\\"(.*?)\\>', " ")
+replace_all("description", '<\\w*>|</\\w*>', " ")
+replace_all("description", '  ', " ")
+trim("description")
 
 # ------------learningResourceType-----
 remove_field("learningResourceType")
