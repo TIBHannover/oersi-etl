@@ -161,9 +161,9 @@ public class ETL {
                 formatTime(end));
     }
 
-    private static Object[] maskCredentials(List<String> args) {
+    static Object[] maskCredentials(List<String> args) {
         return new Object[] {
-                args.stream().map(arg -> arg.replaceAll("_(user|pass)=.*", "_$1=<masked>"))
+                args.stream().map(arg -> arg.replaceAll("_(user|pass|auth)=.*", "_$1=<masked>"))
                         .collect(Collectors.toList()) };
     }
 

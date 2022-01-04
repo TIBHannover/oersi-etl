@@ -16,12 +16,14 @@
 
 package oersi;
 
+import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.Arrays;
 
 import org.junit.Test;
 import org.xml.sax.SAXException;
@@ -59,6 +61,16 @@ public class TestEtl {
         ETL.main(new String[] { "src/test/resources/local-hoou-to-oersi.flux",
                 "data/production/oersi.properties" });
         assertTrue("Output file must exist: " + ETL.OUT_FILE, ETL.OUT_FILE.exists());
+    }
+
+    @Test
+    public void testMaskCredentials() {
+        assertArrayEquals("normal values are unmasked",
+                new Object[] { Arrays.asList("some_prop=v") },
+                ETL.maskCredentials(Arrays.asList("some_prop=v")));
+        assertArrayEquals("credentials are masked", new Object[] { Arrays.asList(//
+                "some_user=<masked>", "some_pass=<masked>", "some_auth=<masked>") },
+                ETL.maskCredentials(Arrays.asList("some_user=v", "some_pass=v", "some_auth=v")));
     }
 
     @Test(expected = IOException.class)
