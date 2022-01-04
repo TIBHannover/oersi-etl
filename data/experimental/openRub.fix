@@ -6,6 +6,9 @@ set_hash("@context[].$append", "@language": "de")
 #  ------------inLanguage------------------------------------
 move_field("inLanguage","inLanguage[].$append")
 
+# --------------licenses-------------
+move_field("license", "license.id")
+
 # ---------------type ----------------------------------
 set_array("type[]", "LearningResource")
 
@@ -17,22 +20,29 @@ replace_all("description", '  ', " ")
 trim("description")
 
 # ------------learningResourceType-----
-remove_field("learningResourceType")
-lookup("learningResource", "data/maps/hcrt-de-labels-to-uri.tsv","sep_char":"\t")
-copy_field("learningResource", "learningResourceType[].$append.id")
-lookup("learningResource", "data/maps/hcrt-de-labels.tsv","sep_char":"\t")
-copy_field("learningResource", "learningResourceType[].$last.prefLabel.de")
-remove_field("learningResource")
+lookup("learningResourceType", "data/maps/openRubLearningResourceTypes.tsv","sep_char":"\t")
+lookup("learningResourceType", "data/maps/hcrt-de-labels-to-uri.tsv","sep_char":"\t")
+copy_field("learningResourceType", "learningResourceType[].$append.id")
+lookup("learningResourceType", "data/maps/hcrt-de-labels.tsv","sep_char":"\t")
+copy_field("learningResourceType", "learningResourceType[].$last.prefLabel.de")
+
 
 # ------about----
-lookup("fields[]", "data/maps/destatisLabels-to-uri.tsv","sep_char":"\t")
+# sometimes the field is not an array. This needs to be settled.
+copy_field("fields", "fields[].$append")
+lookup("fields[].*", "data/maps/destatisLabels-to-uri.tsv","sep_char":"\t")
 do list(path: "fields[]", "var": f)
-    copy_field("f", "about[].$append.id")
+  copy_field("f", "about[].$append.id")
+  lookup("f", "data/maps/subject-url-mapping.tsv","sep_char":"\t")
+  copy_field("f", "about[].$last.prefLabel.de")
 end
-remove_field('fields[]')
+
 
 /* mainEntityOfPage */
 copy_field("id", "mainEntityOfPage[].$append.id")
 add_field("mainEntityOfPage[].$last.provider.id","$[service_id]")
 add_field("mainEntityOfPage[].$last.provider.type","Service")
 add_field("mainEntityOfPage[].$last.provider.name","$[service_name]")
+
+retain("@context[]","id","image","name","creator[]","contributor[]","sourceOrganization[]", "license","description","dataCreated","inLanguage[]","type[]","learningResourceType[]","keywords[]","about[]")
+vacuum()
