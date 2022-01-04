@@ -19,7 +19,6 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import org.antlr.runtime.RecognitionException;
-import org.metafacture.framework.MetafactureException;
 import org.metafacture.runner.Flux;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -100,13 +99,12 @@ public class ETL {
         long start = System.currentTimeMillis();
         try {
             Flux.main(fullVars.toArray(new String[] {}));
-        } catch (MetafactureException e) {
-            LOG.error(flux.getName(), e);
-            LOG.info("Import channel {} FAILED: {} ({})", flux.getName(), e.getMessage(),
-                    e.getCause() != null ? e.getCause().getClass().getSimpleName() : "<no cause>");
-        } finally {
             logSummary(flux, fileProcessErrors, fileInvalid, fileResponses,
                     System.currentTimeMillis() - start);
+        } catch (Exception e) {
+            LOG.error("Error processing import channel {}", flux.getName(), e);
+            LOG.info("Import channel {} FAILED: {} ({})", flux.getName(), e.getMessage(),
+                    e.getCause() != null ? e.getCause().getClass().getSimpleName() : "<no cause>");
         }
     }
 

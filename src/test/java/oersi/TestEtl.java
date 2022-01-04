@@ -24,12 +24,11 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 
 import org.junit.Test;
-import org.xml.sax.SAXException;
 
 public class TestEtl {
 
     @Test
-    public void testConvertMainOk() throws IOException, SAXException {
+    public void testConvertMainOk() throws IOException {
         Files.deleteIfExists(Paths.get(ETL.OUT_FILE.toURI()));
         assertFalse(ETL.OUT_FILE.exists());
         ETL.main(new String[] { "src/test/resources/local-hoou-to-oersi.flux" });
@@ -37,15 +36,22 @@ public class TestEtl {
     }
 
     @Test
-    public void testConvertMainFail() throws IOException, SAXException {
+    public void testConvertMainFailEmptyInput() throws IOException {
         Files.deleteIfExists(Paths.get(ETL.OUT_FILE.toURI()));
         assertFalse(ETL.OUT_FILE.exists());
-        ETL.main(new String[] { "src/test/resources/failing.flux" });
+        ETL.main(new String[] { "src/test/resources/failing-empty-input.flux" });
+        assertTrue("Output file must exist: " + ETL.OUT_FILE, ETL.OUT_FILE.exists());
+    }
+
+    public void testConvertMainFailFixNotFound() throws IOException {
+        Files.deleteIfExists(Paths.get(ETL.OUT_FILE.toURI()));
+        assertFalse(ETL.OUT_FILE.exists());
+        ETL.main(new String[] { "src/test/resources/failing-fix-not-found.flux" });
         assertTrue("Output file must exist: " + ETL.OUT_FILE, ETL.OUT_FILE.exists());
     }
 
     @Test
-    public void testConvertMainAllFluxFiles() throws IOException, SAXException {
+    public void testConvertMainAllFluxFiles() throws IOException {
         Files.deleteIfExists(Paths.get(ETL.OUT_FILE.toURI()));
         assertFalse(ETL.OUT_FILE.exists());
         ETL.main(new String[] {});
@@ -53,7 +59,7 @@ public class TestEtl {
     }
 
     @Test
-    public void testConvertMainPropertiesOk() throws IOException, SAXException {
+    public void testConvertMainPropertiesOk() throws IOException {
         Files.deleteIfExists(Paths.get(ETL.OUT_FILE.toURI()));
         assertFalse(ETL.OUT_FILE.exists());
         ETL.main(new String[] { "src/test/resources/local-hoou-to-oersi.flux",
@@ -62,7 +68,7 @@ public class TestEtl {
     }
 
     @Test(expected = IOException.class)
-    public void testConvertMainPropertiesFail() throws IOException, SAXException {
+    public void testConvertMainPropertiesFail() throws IOException {
         ETL.main(new String[] { "src/test/resources/", "non-existing.properties" });
     }
 }
