@@ -130,8 +130,8 @@ public class ETL {
 
     private static void logSummary(File flux, File failProcess, File invalid, File responses,
             long end) throws IOException {
+        String countFailProcess = "0";
         String notAvailable = "n/a";
-        String countFailProcess = notAvailable;
         String countInvalid = notAvailable;
         String countSuccess = notAvailable;
         String countFailWrite = notAvailable;
