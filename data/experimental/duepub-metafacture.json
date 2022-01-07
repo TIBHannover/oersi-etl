@@ -21,21 +21,18 @@
     "id" : "https://creativecommons.org/licenses/by-nc-sa/4.0/"
   },
   "dataCreated" : "2021-05-27",
-  "inLanguage" : [ {
-    "label" : "de"
-  } ],
+  "inLanguage" : [ "de" ],
   "type" : [ "LearningResource" ],
   "learningResourceType" : [ {
-    "id" : "https://duepublico.uni-due.de/api/v1/classifications/mir_genres#audio"
-  }, {
-    "1" : {
+    "id" : "https://duepublico.uni-due.de/api/v1/classifications/mir_genres#audio",
+    "prefLabel" : {
       "de" : "https://duepublico.uni-due.de/api/v1/classifications/mir_genres#audio"
     }
   } ],
+  "keywords" : [ "Podcast", "Soziologie", "Review", "Besprechungen" ],
   "about" : [ {
-    "id" : "https://duepublico.uni-due.de/api/v1/classifications/destatis#2330"
-  }, {
-    "1" : {
+    "id" : "https://duepublico.uni-due.de/api/v1/classifications/destatis#2330",
+    "prefLabel" : {
       "de" : "https://duepublico.uni-due.de/api/v1/classifications/destatis#2330"
     }
   } ]
@@ -60,21 +57,18 @@
     "id" : "https://creativecommons.org/licenses/by-sa/4.0/"
   },
   "dataCreated" : "2021",
-  "inLanguage" : [ {
-    "label" : "de"
-  } ],
+  "inLanguage" : [ "de" ],
   "type" : [ "LearningResource" ],
   "learningResourceType" : [ {
-    "id" : "https://duepublico.uni-due.de/api/v1/classifications/mir_genres#teaching_material"
-  }, {
-    "1" : {
+    "id" : "https://duepublico.uni-due.de/api/v1/classifications/mir_genres#teaching_material",
+    "prefLabel" : {
       "de" : "https://duepublico.uni-due.de/api/v1/classifications/mir_genres#teaching_material"
     }
   } ],
+  "keywords" : [ "Kästner" ],
   "about" : [ {
-    "id" : "https://duepublico.uni-due.de/api/v1/classifications/destatis#1080"
-  }, {
-    "1" : {
+    "id" : "https://duepublico.uni-due.de/api/v1/classifications/destatis#1080",
+    "prefLabel" : {
       "de" : "https://duepublico.uni-due.de/api/v1/classifications/destatis#1080"
     }
   } ]

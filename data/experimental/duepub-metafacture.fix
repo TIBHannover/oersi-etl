@@ -64,8 +64,7 @@ lookup("license.id","data/maps/duepublico-licenses.tsv","sep_char":"\t")
 copy_field("metadata.mods:mods.mods:originInfo.mods:dateIssued.value","dataCreated")
 
 #  ------------inLanguage------------------------------------
-copy_field("metadata.mods:mods.mods:language.mods:languageTerm.value","inLanguage[].$append.label")
-# TODO: The result is right, but I think it should be copied to "inLanguage[].$append" not "inLanguage[].$append.label"
+copy_field("metadata.mods:mods.mods:language.mods:languageTerm.value","inLanguage[].$append")
 
 # ---------------type ----------------------------------
 set_array("type[]", "LearningResource")
@@ -74,22 +73,22 @@ set_array("type[]", "LearningResource")
 do list("path":"metadata.mods:mods.mods:genre","var":"lRT")
     if any_match("lRT.authorityURI","https://duepublico.uni-due.de/api/v1/classifications/mir_genres")
         copy_field("lRT.valueURI","learningResourceType[].$append.id")
-        copy_field("lRT.valueURI","learningResourceType[].$last.prefLabel.de") /* TODO: $last not working here, see fix#94 */
+        copy_field("lRT.valueURI","learningResourceType[].$last.prefLabel.de")
     end
 end
 
-/* # TODO ------------keywords------------------------------------
+# ------------keywords------------------------------------
 copy_field("metadata.mods:mods.mods:subject.mods:topic.*.value","keywords[].$append")
-TODO: split_field(keywords,",") 
-trim("keywords[]")
-*/
+# TODO: split_field(keywords,",") 
+# TODO: trim("keywords[]")
+
 
 #  ------------about------------------------------------
 
 do list("path":"metadata.mods:mods.mods:classification","var":"classification")
     if any_equal("classification.authorityURI","https://duepublico.uni-due.de/api/v1/classifications/destatis")
         copy_field("classification.valueURI","about[].$append.id")
-        copy_field("classification.valueURI","about[].$last.prefLabel.de") /* TODO: $last not working here, see fix#94 */
+        copy_field("classification.valueURI","about[].$last.prefLabel.de")
     end
 end
 

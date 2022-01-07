@@ -1,6 +1,5 @@
-service_domain = "https://www.hoou.de/";
-service_id = "https://oerworldmap.org/resource/urn:uuid:ac5d5269-6449-43c0-b43b-2ed372763a0e";
-service_name = "HOOU";
+service_id = "https://oerworldmap.org/resource/urn:uuid:4a889a12-e481-4319-b145-0782fe51def2";
+service_name = "OpenRub";
 
 default input_limit = "-1"; // 'default': is overridden by command-line/properties value
 default input_wait = "50";
@@ -9,8 +8,10 @@ default input_wait = "50";
 | oersi.SitemapReader(wait=input_wait, limit=input_limit, urlPattern="(?!.*/en).*/(lernangebot)/.*")
 | open-http
 | extract-element("script[type=application/ld+json]")
+| match(pattern="@(type|id)", replacement="$1")
 | decode-json(recordPath="$.@graph")
 | metafix(FLUX_DIR + "openRub.fix", *)
 | encode-json(prettyPrinting="true")
-| write(FLUX_DIR + "openRub.json")
+| oersi.JsonValidator(output_schema, writeValid=metadata_valid, writeInvalid=metadata_invalid)
+| oersi.OersiWriter(backend_api, user=backend_user, pass=backend_pass, log=metadata_responses)
 ;
