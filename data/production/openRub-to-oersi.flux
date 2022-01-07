@@ -1,4 +1,3 @@
-service_domain = "https://www.hoou.de/";
 service_id = "https://oerworldmap.org/resource/urn:uuid:4a889a12-e481-4319-b145-0782fe51def2";
 service_name = "OpenRub";
 
@@ -14,5 +13,5 @@ default input_wait = "50";
 | metafix(FLUX_DIR + "openRub.fix", *)
 | encode-json(prettyPrinting="true")
 | oersi.JsonValidator(output_schema, writeValid=metadata_valid, writeInvalid=metadata_invalid)
-| write(FLUX_DIR + "openRub.json")
+| oersi.OersiWriter(backend_api, user=backend_user, pass=backend_pass, log=metadata_responses)
 ;
