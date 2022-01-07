@@ -24,9 +24,9 @@
   "inLanguage" : [ "de" ],
   "type" : [ "LearningResource" ],
   "learningResourceType" : [ {
-    "id" : "https://duepublico.uni-due.de/api/v1/classifications/mir_genres#audio",
+    "id" : "https://w3id.org/kim/hcrt/audio",
     "prefLabel" : {
-      "de" : "https://duepublico.uni-due.de/api/v1/classifications/mir_genres#audio"
+      "de" : "Tonaufnahme"
     }
   } ],
   "keywords" : [ "Podcast", "Soziologie", "Review", "Besprechungen" ],
@@ -60,9 +60,9 @@
   "inLanguage" : [ "de" ],
   "type" : [ "LearningResource" ],
   "learningResourceType" : [ {
-    "id" : "https://duepublico.uni-due.de/api/v1/classifications/mir_genres#teaching_material",
+    "id" : "https://w3id.org/kim/hcrt/other",
     "prefLabel" : {
-      "de" : "https://duepublico.uni-due.de/api/v1/classifications/mir_genres#teaching_material"
+      "de" : "Sonstiges"
     }
   } ],
   "keywords" : [ "Kästner" ],

@@ -69,19 +69,22 @@ copy_field("metadata.mods:mods.mods:language.mods:languageTerm.value","inLanguag
 # ---------------type ----------------------------------
 set_array("type[]", "LearningResource")
 
-/* TODO: Needs lookup */
 do list("path":"metadata.mods:mods.mods:genre","var":"lRT")
     if any_match("lRT.authorityURI","https://duepublico.uni-due.de/api/v1/classifications/mir_genres")
+        /* TODO: Or use duepublico-hcrt.tsv with value, not URI? See productive morph. Both need more content? */
+        lookup("lRT.valueURI", "data/maps/DuePub-HCRT.tsv","sep_char":"\t")
         copy_field("lRT.valueURI","learningResourceType[].$append.id")
+        lookup("lRT.valueURI", "data/maps/hcrt-de-labels.tsv","sep_char":"\t")
         copy_field("lRT.valueURI","learningResourceType[].$last.prefLabel.de")
     end
 end
 
 # ------------keywords------------------------------------
 copy_field("metadata.mods:mods.mods:subject.mods:topic.*.value","keywords[].$append")
-# TODO: split_field(keywords,",") 
-# TODO: trim("keywords[]")
-
+do list(path:"keywords[]", "var":"kw" ) /* Do we actually need this? Keywords seem to be tokenized in the data. */
+    split_field("kw",",")
+    trim("kw")
+end
 
 #  ------------about------------------------------------
 
