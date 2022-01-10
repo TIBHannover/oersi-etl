@@ -112,7 +112,8 @@ do map("@description", "description")
   replace(pattern:'\\w*[^>]*?\\w*=\\"(.*?)\\">', with: " ")
   replace(pattern:'\\w*[^>]*?\\w*=\\"(.*?)\\" \\w*=\\"(.*?)\\>', with: " ")
   replace(pattern:"<\\w*>|</\\w*>|<!--(.*?)-->", with: " ")
-  replace(pattern:"  ", with: " ")   
+  replace(pattern:"<br />", with: " ")
+  replace(pattern:"  ", with: " ")  
   trim()
 end
 
