@@ -17,6 +17,7 @@ set_array("type[]", "LearningResource")
 replace_all("description", '\\w*[^>]*?\\w*=\\"(.*?)\\">', " ")
 replace_all("description", '\\w*[^>]*?\\w*=\\"(.*?)\\" \\w*=\\"(.*?)\\>', " ")
 replace_all("description", '<\\w*>|</\\w*>', " ")
+replace_all("description", '<br />', " ")
 replace_all("description", '  ', " ")
 trim("description")
 
