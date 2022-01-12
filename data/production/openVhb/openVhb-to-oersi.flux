@@ -7,7 +7,7 @@ service_name = "Open VHB";
 | as-lines
 | decode-json(recordPath="$.data")
 | filter-null-values
-| fix-filter(FLUX_DIR + "moocHub_filter.fix", *)
+| fix-filter("data/production/_sharedFixes/moocHub_filter.fix", *)
 // openVhb is partner of MoocHub, we use their moocHub metadata with added infos for OERSI.
 | fix(FLUX_DIR + "openVhb_moocHub.fix", *)
 | encode-json
