@@ -1,0 +1,80 @@
+/* Set up the context */
+do array("@context")
+ add_field("","https://w3id.org/kim/lrmi-profile/draft/context.jsonld")
+ do entity("")
+  add_field("@language", "de")
+ end
+end
+
+/* Delete the plattform name in the title of the resource */
+map("@graph[].3.url", "id")
+do map( "@graph[].3.name", "name")
+  replace_all(pattern: " - Universitätsverbund digiLL",  with: "")
+end
+
+map("@graph[].2.url", "image")
+
+do map("@graph[].3.datePublished", "dateCreated")
+  replace_all(pattern: 'T.*', with: '')
+end
+
+do array("inLanguage")
+  do map("@graph[].3.inLanguage")
+    replace_all(pattern: '-.*', with: '')
+  end
+end
+
+do array("type")
+  add_field("","LearningResource")
+end
+
+do array("publisher")
+ do entity("")
+  add_field("type", "Organization")
+  map("@graph[].1.@id","id")
+  map("@graph[].1.name", "name")
+ end
+end
+
+/* Add BY-SA 4.0 license as digiLL is saying usual license is CC BY SA) */
+
+do entity("license")
+  add_field("id","https://creativecommons.org/licenses/by-sa/4.0/")
+end
+
+/* Add Course always as lRT */
+
+add_field("@hcrt","https://w3id.org/kim/hcrt/course")
+
+do array('learningResourceType')
+  do entity('')
+    map('@hcrt', 'id')
+    do entity('prefLabel')
+      do map('@hcrt', 'de')
+        lookup(in: 'data/maps/hcrt-de-labels.tsv')
+      end  
+      do map('@hcrt', 'en')
+        lookup(in: 'data/maps/hcrt-en-labels.tsv')
+      end
+    end
+  end
+end
+
+do array('mainEntityOfPage')
+  do entity('')
+    map('@graph[].3.url', id)
+    /* Add creation/modification date, converting dateTime (e.g. 2019-07-23T09:26:00Z) to date (2019-07-23) */
+    do map("@graph[].3.dateModified", "dateModified")
+      replace_all(pattern: 'T.*', with: '')
+    end
+    do map("@graph[].3.datePublished", "dateCreated")
+      replace_all(pattern: 'T.*', with: '')
+    end
+    /* Add provider/source information to each resource description */
+    do entity('provider')
+      add_field('id','$[service_id]')
+      add_field('type','Service')
+      add_field('name','$[service_name]')
+    end
+  end
+end
