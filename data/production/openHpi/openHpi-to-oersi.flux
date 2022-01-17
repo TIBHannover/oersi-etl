@@ -7,7 +7,7 @@ service_name = "openHPI";
 | as-lines
 | decode-json(recordPath="$.data")
 | filter-null-values
-| fix-filter("data/production/_sharedFixes/moocHub_filter.fix", *)
+| fix-filter("data/fixes/moocHub_filter.fix", *)
 // openHPI is partner of MoocHub, we use their moocHub metadata.
 | fix(FLUX_DIR + "openHpi_moocHub.fix", *)
 | encode-json
