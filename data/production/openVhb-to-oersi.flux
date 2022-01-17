@@ -9,9 +9,7 @@ service_name = "Open VHB";
 | filter-null-values
 | fix-filter(FLUX_DIR + "moocHub_filter.fix", *)
 // openVhb is partner of MoocHub, we use their moocHub metadata with added infos for OERSI.
-| fix(FLUX_DIR + "openVhb_moocHub.fix", *)
+| metafix(FLUX_DIR + "openVhb_moocHub.fix", *)
 | encode-json
-| oersi.FieldMerger
-| oersi.JsonValidator(output_schema, writeValid=metadata_valid, writeInvalid=metadata_invalid)
-| oersi.OersiWriter(backend_api, user=backend_user, pass=backend_pass, log=metadata_responses)
+| write("openVhb-fix.json")
 ;
