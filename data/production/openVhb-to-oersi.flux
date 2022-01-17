@@ -1,7 +1,8 @@
 service_domain = "https://open.vhb.org/";
 service_id = "https://oerworldmap.org/resource/urn:uuid:46c8a3e5-1d91-4f07-b29e-b4f254aa6010";
-service_name = "Open VHB";
+service_name = "vhb";
 
+// Cumstomized JSON for OERSI based on moocHub JSON-data.
 "https://open.vhb.org/oersi.json"
 | open-http(accept="application/json")
 | as-lines
