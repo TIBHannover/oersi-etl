@@ -13,8 +13,40 @@
 
 - [ ] Contact provider
 - [ ] Clarify details, receive permission
-- [ ] Configure ETL process
+- [ ] Configure ETL process (see [Checklist](#Checklist))
 - [ ] Publish blog post
 - [ ] Inform provider
+
+### Checklist
+
+#### Mandatory in AMB/OERSI
+
+- [ ] `@context`
+    - [ ] `@language` set to the record's language?
+- [ ] `id`
+- [ ] `"type": "LearningResource"`
+- [ ] `name`
+- [ ] `mainEntityOfPage` with `provider`
+
+#### Essential data for filtering
+
+- [ ] `learningResourceType`
+- [ ] `creator`, ideally with `id`
+- [ ] `about`
+- [ ] `license`
+- [ ] `inlanguage`
+- [ ] `sourceOrganization`
+
+#### Important for display purposes
+
+- [ ] `image`
+
+#### Additional metadata
+
+- [ ] `description`
+- [ ] `keywords`
+- [ ] `datePublished` and/or `dateCreated`
+- [ ] `encoding.contentUrl` for download links
+- [ ] `encoding.embedUrl` for embed links
 
 /label add-source
