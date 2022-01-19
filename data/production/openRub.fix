@@ -3,6 +3,9 @@
 set_array("@context[]", "https://w3id.org/kim/lrmi-profile/draft/context.jsonld")
 set_hash("@context[].$append", "@language": "de")
 
+#  ------------id------------------------------------
+replace_all("description", '(.*?)/lernangebot">', "https://open.ruhr-uni-bochum.de/lernangebot")
+
 #  ------------inLanguage------------------------------------
 move_field("inLanguage","inLanguage[].$append")
 
@@ -20,6 +23,10 @@ replace_all("description", '<\\w*>|</\\w*>', " ")
 replace_all("description", '<br />', " ")
 replace_all("description", '  ', " ")
 trim("description")
+
+# ---------sourceOrganization---------
+add_field("sourceOrganization[].$append.name", "Ruhr-Universität Bochum")
+add_field("sourceOrganization[].$last.type","Organization")
 
 # ------------learningResourceType-----
 lookup("learningResourceType", "data/maps/openRubLearningResourceTypes.tsv", "sep_char":"\t")
@@ -43,7 +50,7 @@ do list(path: "fields[]", "var": f)
 end
 remove_field('fields[]')
 
-/* mainEntityOfPage */
+# ---------mainEntityOfPage----------------
 copy_field("id", "mainEntityOfPage[].$append.id")
 add_field("mainEntityOfPage[].$last.provider.id","$[service_id]")
 add_field("mainEntityOfPage[].$last.provider.type","Service")
