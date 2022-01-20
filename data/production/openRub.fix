@@ -4,7 +4,7 @@ set_array("@context[]", "https://w3id.org/kim/lrmi-profile/draft/context.jsonld"
 set_hash("@context[].$append", "@language": "de")
 
 #  ------------id------------------------------------
-replace_all("description", '(.*?)/lernangebot">', "https://open.ruhr-uni-bochum.de/lernangebot")
+replace_all("id", '(.*?)/lernangebot', "https://open.ruhr-uni-bochum.de/lernangebot")
 
 #  ------------inLanguage------------------------------------
 move_field("inLanguage","inLanguage[].$append")
