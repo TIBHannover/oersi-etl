@@ -13,7 +13,7 @@ map("attributes.url", "id")
 map("attributes.name", "name")
 
 /*image */
-map("attributes.image.url", "image")
+map("attributes.moocProvider.logo", "image")
 
 /* dateCreated */
 do map("attributes.startDate", "dateCreated")
@@ -23,7 +23,6 @@ end
 
 /* creator: source data is not consistent, can be a single author or multiple separated by comma or "&amp;". API estimates one object per instructor. Also there is no type even though there are persons and organisations.*/
 do map("attributes.instructors[].*.name", "@creator")
-  split(delimiter: ", | &amp; | & | /")
   replace(pattern: "Apl\\. |\\(apl\\.\\) |Dr\\. med |Dr\\. |Dr\\.'in |Dr |Dr\\.med\\.|Dres\\. |Dr\\.|habil\\. |Prof\\. |Prof\\.'in |Prof\\.|Prof |Jun\\.-|PD |PD\\. |med\\. |rer\\. |pol\\.|nat\\. |dent\\. |em\\. |Ao\\.-|o\\. Univ\\.|Uni\\.-|Univ\\.-|Univ\\. |DI |RA |Priv\\.-Doz\\. |Dipl\\.|-Ing\\. |-Inform\\. |-Psych\\. |h\\.c\\. |mult\\. |Mag\\. |, MME|; MME|, MScN|M\\. Sc\\. |M\\.Sc\\. |Psych\\. |, MSc| MSc\\.|, M\\.A\\.| M\\.A\\.|, M\\.D\\.|, B\\.A\\.|, MMZ|, Psychoanalytiker|, L\\.L\\.M\\.|, LL\\.M\\.| \\(M\\.A\\.\\)|  \\(kommissarisch\\)", with: "")
   not_equals(string: '')
 end
@@ -36,9 +35,18 @@ do array("creator", flushWith: record)
 end
 
 
-
 /* sourceOrganization */
+do map("attributes.university", "@sourceOrganization")
+  split(delimiter: ",| &amp; | & | /")
+  not_equals(string: '')
+  trim()
+end
+
 do array("sourceOrganization", flushWith: record)
+ do entity("")
+  add_field("type", "Organization")
+  map("@sourceOrganization", "name")
+ end
  do entity("")
   add_field("type", "Organization")
   add_field("name", "Virtuelle Hochschule Bayern")
@@ -60,6 +68,20 @@ do array('learningResourceType')
       end
     end
   end
+end
+
+/* about */
+do map("attributes.subjectarea", "@about")
+  lookup(in: 'data/maps/openVhb_subjects.tsv')
+end
+
+do array("about", flushWith: record)
+ do entity("", flushWith: record)
+  map("@about", "id")
+  do map("@about", "prefLabel.de")
+    lookup(in: "data/maps/subject-labels.tsv")
+  end
+ end
 end
 
 /* inLanguage: The value Mehrsprachig does not represent the estimated language labels. */
@@ -98,6 +120,7 @@ do entity('keywords[]', flushWith: 'record')
   do map('attributes.keywords')
     split(delimiter: ",")
   end
+  map('attributes.subjectarea')
 end
 
 /*description */
