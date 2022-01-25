@@ -15,11 +15,17 @@ The ETL workflows are based on Metafacture, see https://metafacture.org
 Run workflows
 -------------
 
-Pass a directory name to run all `*.flux` workflows in that directory, e.g.:
+Pass a directory name to run all `*.flux` workflows in that directory (or pass a single `*.flux` file), e.g.:
 
-`./gradlew run --args 'data/production'`
+`./gradlew run --args 'data/production/openRub'`
 
-This will run all `*.flux` workflows in `data/production`.
+This will run all `*.flux` workflows in `data/production/openRub`.
+
+To use a `*.properties` file from another directory for workflow variables, pass its location as the second argument:
+
+`./gradlew run --args 'data/production/openRub data/production/oersi.properties'`
+
+A `oersi.properties` file in the same location as the `*.flux` file is picked up automatically.
 
 Write to backend API
 --------------------
@@ -28,13 +34,13 @@ By default a local `oersi-setup` with `vagrant up` is expected:
 
 `cd ../oersi-setup ; vagrant up ; cd ../oersi-etl`
 
-Run the workflows in `data/production`:
+Run the workflows in `data/production/openRub`:
 
-`./gradlew run --args 'data/production'`
+`./gradlew run --args 'data/production/openRub data/production/oersi.properties'`
 
-Check the responses in `*-response.json`, access by ID in the backend, e.g.:
+Check the responses in `*-response.json`, search in the backend, e.g.:
 
-[http://192.168.98.115:8080/oersi/api/metadata/1](http://192.168.98.115:8080/oersi/api/metadata/1)
+[http://192.168.98.115/resources?provider=["OpenRub"]](http://192.168.98.115/resources/?provider=%5B%22OpenRub%22%5D)
 
 Write to elasticsearch
 ----------------------

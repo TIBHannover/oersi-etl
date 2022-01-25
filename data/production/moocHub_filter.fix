@@ -1,3 +1,0 @@
-do map('attributes.access[].*')
-	equals(string:"free")
-end
