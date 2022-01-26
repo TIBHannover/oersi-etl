@@ -1,4 +1,7 @@
 # See https://github.com/TobiasNx/Catmandu-Testing/blob/master/DuePub-Test/duepub-catmandu.fix
+# In general: vacuum does not work with empty arrays and empty objects.
+
+
 
 if exists ("metadata.error")
     reject()
@@ -19,7 +22,6 @@ do list("path": "metadata.mods:mods.mods:identifier", "var": "identifier")
         copy_field("identifier.value","id")
     end
 end
-
 
 #  ------------image ------------------------------------
 do list("path": "metadata.mods:mods.mods:location.mods:url", "var": "url")
@@ -45,6 +47,23 @@ do list("path":"metadata.mods:mods.mods:name","var":"n")
     end
 end
 
+#  ------------contributor------------------------------------
+set_array("contributor[]")
+do list("path":"metadata.mods:mods.mods:name","var":"n")
+    if any_match("n.type","corporate|personal")
+        unless any_match("n.mods:role.mods:roleTerm.*.value","aut|cre|his")
+            copy_field("n.mods:displayForm.value","contributor[].$append.name")
+            if any_equal("n.type","personal")
+                add_field("contributor[].$last.type", "Person")
+            end
+            if any_equal("n.type","corporate")
+                add_field("contributor[].$last.type", "Organization")
+            end
+        end
+    end
+end
+
+#  ------------sourceOrganization------------------------------------
 set_array("sourceOrganization[]")
 do list("path":"metadata.mods:mods.mods:name","var":"org")
     if any_match("org.mods:role.mods:roleTerm.*.value","his")
@@ -69,31 +88,45 @@ copy_field("metadata.mods:mods.mods:language.mods:languageTerm.value","inLanguag
 # ---------------type ----------------------------------
 set_array("type[]", "LearningResource")
 
+# ---------------learningResourceType ----------------------------------
+set_array("learningResourceType[]")
 do list("path":"metadata.mods:mods.mods:genre","var":"lRT")
     if any_match("lRT.authorityURI","https://duepublico.uni-due.de/api/v1/classifications/mir_genres")
         /* TODO: Or use duepublico-hcrt.tsv with value, not URI? See productive morph. Both need more content? */
         lookup("lRT.valueURI", "data/maps/DuePub-HCRT.tsv","sep_char":"\t")
         copy_field("lRT.valueURI","learningResourceType[].$append.id")
-        lookup("lRT.valueURI", "data/maps/hcrt-de-labels.tsv","sep_char":"\t")
         copy_field("lRT.valueURI","learningResourceType[].$last.prefLabel.de")
+        copy_field("lRT.valueURI","learningResourceType[].$last.prefLabel.en")
     end
 end
 
-# ------------keywords------------------------------------
+lookup("learningResourceType[].*.prefLabel.de", "data/maps/hcrt-de-labels.tsv","sep_char":"\t")
+lookup("learningResourceType[].*.prefLabel.en", "data/maps/hcrt-en-labels.tsv","sep_char":"\t")
+
+# ---------------keywords----------------------------------
+set_array("keywords[]")
+# TODO: Does not work at the moment. Also seem to be tokenized in the data.
 copy_field("metadata.mods:mods.mods:subject.mods:topic.*.value","keywords[].$append")
-do list(path:"keywords[]", "var":"kw" ) /* Do we actually need this? Keywords seem to be tokenized in the data. */
-    split_field("kw",",")
-    trim("kw")
-end
 
 #  ------------about------------------------------------
-
+set_array("about[]")
 do list("path":"metadata.mods:mods.mods:classification","var":"classification")
     if any_equal("classification.authorityURI","https://duepublico.uni-due.de/api/v1/classifications/destatis")
+        lookup("classification.valueURI", "data/maps/destatisPersonal2destatisStudierende.tsv","sep_char":"\t")
         copy_field("classification.valueURI","about[].$append.id")
         copy_field("classification.valueURI","about[].$last.prefLabel.de")
     end
 end
 
+lookup("about[].*.prefLabel.de", "data/maps/subject-labels.tsv","sep_char":"\t")
+
+# ---------mainEntityOfPage----------------
+copy_field("id", "mainEntityOfPage[].$append.id")
+add_field("mainEntityOfPage[].$last.provider.id","$[service_id]")
+add_field("mainEntityOfPage[].$last.provider.type","Service")
+add_field("mainEntityOfPage[].$last.provider.name","$[service_name]")
+
+
+# ---------tidy up!----------------
 retain("@context[]","id","image","name","creator[]","contributor[]","sourceOrganization[]", "license","description","dataCreated","inLanguage[]","type[]","learningResourceType[]","keywords[]","about[]")
 vacuum()
