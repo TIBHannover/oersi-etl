@@ -2,7 +2,7 @@
 <harvest>
 <?xml-stylesheet href="https://duepublico2.uni-due.de/oai/oai2.xsl" type="text/xsl"?>
 <OAI-PMH xmlns="http://www.openarchives.org/OAI/2.0/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.openarchives.org/OAI/2.0/ http://www.openarchives.org/OAI/2.0/OAI-PMH.xsd">
-  <responseDate>2022-01-26T14:33:50Z</responseDate>
+  <responseDate>2022-01-27T14:03:21Z</responseDate>
   <request verb="Identify">https://duepublico2.uni-due.de/oer/oai</request>
   <Identify>
     <repositoryName>DuEPublico OER: University of Duisburg-Essen Open Educational Resources</repositoryName>
@@ -20,7 +20,7 @@
 </OAI-PMH>
 <?xml-stylesheet href="https://duepublico2.uni-due.de/oai/oai2.xsl" type="text/xsl"?>
 <OAI-PMH xmlns="http://www.openarchives.org/OAI/2.0/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.openarchives.org/OAI/2.0/ http://www.openarchives.org/OAI/2.0/OAI-PMH.xsd">
-  <responseDate>2022-01-26T14:33:51Z</responseDate>
+  <responseDate>2022-01-27T14:03:21Z</responseDate>
   <request verb="ListMetadataFormats">https://duepublico2.uni-due.de/oer/oai</request>
   <ListMetadataFormats>
     <metadataFormat>
@@ -37,7 +37,7 @@
 </OAI-PMH>
 <?xml-stylesheet href="https://duepublico2.uni-due.de/oai/oai2.xsl" type="text/xsl"?>
 <OAI-PMH xmlns="http://www.openarchives.org/OAI/2.0/" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:oai_dc="http://www.openarchives.org/OAI/2.0/oai_dc/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.openarchives.org/OAI/2.0/ http://www.openarchives.org/OAI/2.0/OAI-PMH.xsd">
-  <responseDate>2022-01-26T14:33:51Z</responseDate>
+  <responseDate>2022-01-27T14:03:22Z</responseDate>
   <request verb="ListSets">https://duepublico2.uni-due.de/oer/oai</request>
   <ListSets>
     <set>
@@ -124,9 +124,137 @@
 </OAI-PMH>
 <?xml-stylesheet href="https://duepublico2.uni-due.de/oai/oai2.xsl" type="text/xsl"?>
 <OAI-PMH xmlns="http://www.openarchives.org/OAI/2.0/" xmlns:mods="http://www.loc.gov/mods/v3" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.openarchives.org/OAI/2.0/ http://www.openarchives.org/OAI/2.0/OAI-PMH.xsd">
-  <responseDate>2022-01-26T14:33:52Z</responseDate>
+  <responseDate>2022-01-27T14:03:23Z</responseDate>
   <request metadataPrefix="mods" verb="ListRecords">https://duepublico2.uni-due.de/oer/oai</request>
   <ListRecords>
+    <record>
+      <header>
+        <identifier>oai:oer.uni-due.de:duepublico_mods_00075332</identifier>
+        <datestamp>2022-01-27</datestamp>
+        <setSpec>ddc:300</setSpec>
+        <setSpec>doc-type:Sound</setSpec>
+      </header>
+      <metadata>
+        <mods:mods ID="duepublico_mods_00075332"><mods:location><mods:url access="object in context">https://duepublico2.uni-due.de/receive/duepublico_mods_00075332</mods:url><mods:url access="raw object">https://duepublico2.uni-due.de/servlets/MCRFileNodeServlet/duepublico_derivate_00075052/Der-Streit_11_Selwyn-What-Is-Digital-Sociology.mp3</mods:url><mods:url access="preview">https://duepublico2.uni-due.de/rsc/thumbnail/duepublico_mods_00075332.png</mods:url></mods:location>
+          <mods:classification authorityURI="https://duepublico.uni-due.de/api/v1/classifications/collection" valueURI="https://duepublico.uni-due.de/api/v1/classifications/collection#OER"/>
+          <mods:titleInfo xlink:type="simple" xml:lang="de">
+            <mods:title>Streit, Episode 11 - Selwyn: What is Digital Sociology?</mods:title>
+            <mods:nonSort>Der</mods:nonSort>
+          </mods:titleInfo>
+          <mods:name type="personal" xlink:type="simple">
+            <mods:displayForm>Armbruster, André</mods:displayForm>
+            <mods:role>
+              <mods:roleTerm authority="marcrelator" type="code">aut</mods:roleTerm>
+            <mods:roleTerm authority="marcrelator" type="text">Author</mods:roleTerm></mods:role>
+            <mods:nameIdentifier type="gnd">1081830107</mods:nameIdentifier>
+            <mods:nameIdentifier type="lsf">59028</mods:nameIdentifier>
+            <mods:namePart type="family">Armbruster</mods:namePart>
+            <mods:namePart type="given">André</mods:namePart>
+          </mods:name>
+          <mods:name type="personal" xlink:type="simple">
+            <mods:displayForm>Seyfert, Robert</mods:displayForm>
+            <mods:role>
+              <mods:roleTerm authority="marcrelator" type="code">aut</mods:roleTerm>
+            <mods:roleTerm authority="marcrelator" type="text">Author</mods:roleTerm></mods:role>
+            <mods:nameIdentifier type="gnd">1123664978</mods:nameIdentifier>
+            <mods:namePart type="family">Seyfert</mods:namePart>
+            <mods:namePart type="given">Robert</mods:namePart>
+          </mods:name>
+          <mods:name authorityURI="https://duepublico.uni-due.de/api/v1/classifications/mir_institutes" type="corporate" valueURI="https://duepublico.uni-due.de/api/v1/classifications/mir_institutes#16.03" xlink:type="simple">
+            <mods:role>
+              <mods:roleTerm authority="marcrelator" type="code">his</mods:roleTerm>
+            <mods:roleTerm authority="marcrelator" type="text"/></mods:role>
+          </mods:name>
+          <mods:genre authorityURI="https://duepublico.uni-due.de/api/v1/classifications/mir_genres" type="intern" valueURI="https://duepublico.uni-due.de/api/v1/classifications/mir_genres#audio"/>
+          <mods:genre authority="marcgt">sound</mods:genre>
+          <mods:classification authorityURI="https://duepublico.uni-due.de/api/v1/classifications/diniPublType" generator="mir_genres2diniPublType-mycore" valueURI="https://duepublico.uni-due.de/api/v1/classifications/diniPublType#Sound"/>
+          <mods:typeOfResource>sound recording</mods:typeOfResource>
+          <mods:language>
+            <mods:languageTerm authority="rfc5646" type="code">de</mods:languageTerm>
+          </mods:language>
+          <mods:classification authorityURI="https://duepublico.uni-due.de/api/v1/classifications/destatis" valueURI="https://duepublico.uni-due.de/api/v1/classifications/destatis#2330"/>
+          <mods:classification authorityURI="http://www.mycore.org/classifications/itunes-podcast" valueURI="http://www.mycore.org/classifications/itunes-podcast#Social_Sciences"/>
+          <mods:originInfo eventType="publication">
+            <mods:dateIssued encoding="w3cdtf">2022-01-27</mods:dateIssued>
+          </mods:originInfo>
+          <mods:abstract altFormat="data:text/xml;charset=UTF-8;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz48YWJzdHJhY3QgYWx0UmVwR3JvdXA9ImEwLTkzMGEtMTI1YjA4YjJhOWZmIiB4bWw6bGFuZz0iZGUiPkRlciBTdHJlaXQg4oCTIFBvZGNhc3Qgw7xiZXIgbmV1ZSBzb3ppb2xvZ2lzY2hlIExpdGVyYXR1ci4gTWl0IFJvYmVydCBTZXlmZXJ0IHVuZCBBbmRyw6kgQXJtYnJ1c3Rlci4gRGllIG5ldWUgU3RhZmZlbCBiZWdpbm50IG1pdCBlaW5lbSBTcGV6aWFsIHp1ciBEaWdpdGFsaXNpZXJ1bmcuIFp1ciBFaW5zdGltbXVuZyB1bmQgRWluZsO8aHJ1bmcgZGlza3V0aWVyZW4gd2lyIGluIGRlciBlcnN0ZW4gU2Nod2VycHVua3Rmb2xnZSBOZWlsIFNlbHd5bnMg4oCeV2hhdCBpcyBEaWdpdGFsIFNvY2lvbG9neT/igJwgKFBvbGl0eSwgMjAxOSkuIEFiZXIga2FubiBTZWx3eW5zIFdlcmsgZGFzIGlubm92YXRpdmUgdW5kIHJldm9sdXRpb27DpHJlIFBvdGVudGlhbCBkZXIgZGlnaXRhbGVuIFNvemlvbG9naWUgYXVmemVpZ2VuIOKAkyBvZGVyIGlzdCBlcyBkb2NoIGVoZXIgZWluZSBrb25zZXJ2YXRpdmUgRWluZ2VtZWluZHVuZyBkZXIgZGlnaXRhbGVuIFNvemlvbG9naWU/PC9hYnN0cmFjdD4" altRepGroup="a0-930a-125b08b2a9ff" contentType="text/xml" xlink:type="simple" xml:lang="de"/>
+          <mods:abstract altRepGroup="a0-930a-125b08b2a9ff" xlink:type="simple" xml:lang="de">Der Streit – Podcast über neue soziologische Literatur. Mit Robert Seyfert und André Armbruster. Die neue Staffel beginnt mit einem Spezial zur Digitalisierung. Zur Einstimmung und Einführung diskutieren wir in der ersten Schwerpunktfolge Neil Selwyns „What is Digital Sociology?“ (Polity, 2019). Aber kann Selwyns Werk das innovative und revolutionäre Potential der digitalen Soziologie aufzeigen – oder ist es doch eher eine konservative Eingemeindung der digitalen Soziologie?</mods:abstract>
+          <mods:accessCondition type="use and reproduction" xlink:href="https://duepublico.uni-due.de/api/v1/classifications/mir_licenses#cc_by-nc-sa_4.0" xlink:type="simple"/>
+          <mods:classification authority="sdnb" displayLabel="sdnb">300</mods:classification>
+          <mods:relatedItem type="host" xlink:href="duepublico_mods_00074024" xlink:type="simple">
+            <mods:titleInfo xlink:type="simple" xml:lang="de">
+              <mods:title>Streit - Über neue soziologische Literatur</mods:title>
+              <mods:nonSort>Der</mods:nonSort>
+              <mods:subTitle>Podcast</mods:subTitle>
+            </mods:titleInfo>
+            <mods:typeOfResource>sound recording</mods:typeOfResource>
+            <mods:genre authorityURI="https://duepublico.uni-due.de/api/v1/classifications/mir_genres" type="intern" valueURI="https://duepublico.uni-due.de/api/v1/classifications/mir_genres#series"/>
+            <mods:genre authority="marcgt">series</mods:genre>
+            <mods:classification authorityURI="https://duepublico.uni-due.de/api/v1/classifications/diniPublType" generator="mir_genres2diniPublType-mycore" valueURI="https://duepublico.uni-due.de/api/v1/classifications/diniPublType#Other"/>
+            <mods:name authorityURI="https://duepublico.uni-due.de/api/v1/classifications/mir_institutes" type="corporate" valueURI="https://duepublico.uni-due.de/api/v1/classifications/mir_institutes#16.03" xlink:type="simple">
+              <mods:role>
+                <mods:roleTerm authority="marcrelator" type="code">his</mods:roleTerm>
+              <mods:roleTerm authority="marcrelator" type="text"/></mods:role>
+            </mods:name>
+            <mods:classification authorityURI="https://duepublico.uni-due.de/api/v1/classifications/collection" valueURI="https://duepublico.uni-due.de/api/v1/classifications/collection#OER"/>
+            <mods:classification authorityURI="http://www.mycore.org/classifications/itunes-podcast" valueURI="http://www.mycore.org/classifications/itunes-podcast#Social_Sciences"/>
+            <mods:language>
+              <mods:languageTerm authority="rfc5646" type="code">de</mods:languageTerm>
+            </mods:language>
+            <mods:abstract altFormat="data:text/xml;charset=UTF-8;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz48YWJzdHJhY3QgYWx0UmVwR3JvdXA9ImNiLTg1NTgtOWJkYTUzZDE0ZDgwIiB4bWw6bGFuZz0iZGUiPiZsdDtwJmd0O0RlciBTdHJlaXQgLSDDnGJlciBuZXVlIHNvemlvbG9naXNjaGUgTGl0ZXJhdHVyLiBNaXQgUm9iZXJ0IFNleWZlcnQgdW5kIEFuZHLDqSBBcm1icnVzdGVyLiBXaXIgc3RyZWl0ZW4gdW5zIHVtIG5ldWUgQmVpdHLDpGdlIHp1ciBTb3ppb2xvZ2llLCBiZXNvbmRlcnMgZ2VybmUgdW0gc296aW9sb2dpc2NoZSBUaGVvcmllLiBBbnRhZ29uaXN0aXNjaGUgUm9sbGVuIC0gZGVyIGVpbmUgaGFzc3QsIGRlciBlaW5lIGxpZWJ0IC0gc29yZ2VuIGbDvHIgS29udHJvdmVyc2UgdW5kIFNwYW5udW5nIC0gc2llIGJlZnJlaWVuIGF1cyBkZXIgS29uZm9ybWl0w6R0IHVuZCBkZW0gRWluaGVpdHNicmVpIHNvemlvbG9naXNjaGVyIExpdGVyYXR1cmJlc3ByZWNodW5nZW4uIEFsbGUgSW5mb3JtYXRpb25lbiB1bmQgS29udGFrdCBhdWYgVHdpdHRlciB1bnRlciAmbHQ7YSBocmVmPSJodHRwczovL3R3aXR0ZXIuY29tL0Rlcl9TdHJlaXQgIiZndDtARGVyX1N0cmVpdCZsdDsvYSZndDsmbHQ7L3AmZ3Q7PC9hYnN0cmFjdD4" altRepGroup="cb-8558-9bda53d14d80" contentType="text/xml" xlink:type="simple" xml:lang="de"/>
+            <mods:abstract altRepGroup="cb-8558-9bda53d14d80" xlink:type="simple" xml:lang="de">Der Streit - Über neue soziologische Literatur. Mit Robert Seyfert und André Armbruster. Wir streiten uns um neue Beiträge zur Soziologie, besonders gerne um soziologische Theorie. Antagonistische Rollen - der eine hasst, der eine liebt - sorgen für Kontroverse und Spannung - sie befreien aus der Konformität und dem Einheitsbrei soziologischer Literaturbesprechungen. Alle Informationen und Kontakt auf Twitter unter @Der_Streit</mods:abstract>
+            <mods:accessCondition type="use and reproduction" xlink:href="https://duepublico.uni-due.de/api/v1/classifications/mir_licenses#cc_by-nc-sa_4.0" xlink:type="simple"/>
+            <mods:originInfo eventType="creation">
+              <mods:dateModified encoding="w3cdtf">2020-09-15</mods:dateModified>
+            </mods:originInfo>
+            <mods:originInfo eventType="publication">
+              <mods:dateIssued encoding="w3cdtf">2021-02-16</mods:dateIssued>
+            </mods:originInfo>
+            <mods:classification authority="sdnb" displayLabel="sdnb">300</mods:classification>
+            <mods:classification authorityURI="https://duepublico.uni-due.de/api/v1/classifications/destatis" valueURI="https://duepublico.uni-due.de/api/v1/classifications/destatis#2330"/>
+            <mods:name type="personal" xlink:type="simple">
+              <mods:displayForm>Armbruster, André</mods:displayForm>
+              <mods:role>
+                <mods:roleTerm authority="marcrelator" type="code">own</mods:roleTerm>
+              <mods:roleTerm authority="marcrelator" type="text">Owner</mods:roleTerm></mods:role>
+              <mods:nameIdentifier type="gnd">1081830107</mods:nameIdentifier>
+              <mods:nameIdentifier type="lsf">59028</mods:nameIdentifier>
+              <mods:namePart type="family">Armbruster</mods:namePart>
+              <mods:namePart type="given">André</mods:namePart>
+              <mods:affiliation>andre.armbruster@uni-due.de</mods:affiliation>
+            </mods:name>
+            <mods:name type="personal" xlink:type="simple">
+              <mods:displayForm>Armbruster, André</mods:displayForm>
+              <mods:role>
+                <mods:roleTerm authority="marcrelator" type="code">aut</mods:roleTerm>
+              <mods:roleTerm authority="marcrelator" type="text">Author</mods:roleTerm></mods:role>
+              <mods:nameIdentifier type="gnd">1081830107</mods:nameIdentifier>
+              <mods:nameIdentifier type="lsf">59028</mods:nameIdentifier>
+              <mods:namePart type="family">Armbruster</mods:namePart>
+              <mods:namePart type="given">André</mods:namePart>
+            </mods:name>
+            <mods:name type="personal" xlink:type="simple">
+              <mods:displayForm>Seyfert, Robert</mods:displayForm>
+              <mods:role>
+                <mods:roleTerm authority="marcrelator" type="code">aut</mods:roleTerm>
+              <mods:roleTerm authority="marcrelator" type="text">Author</mods:roleTerm></mods:role>
+              <mods:nameIdentifier type="gnd">1123664978</mods:nameIdentifier>
+              <mods:nameIdentifier type="lsf">59016</mods:nameIdentifier>
+              <mods:namePart type="family">Seyfert</mods:namePart>
+              <mods:namePart type="given">Robert</mods:namePart>
+            </mods:name>
+          </mods:relatedItem>
+          <mods:subject xlink:type="simple">
+            <mods:topic>Podcast</mods:topic>
+            <mods:topic authority="gnd" authorityURI="http://d-nb.info/gnd/" valueURI="http://d-nb.info/gnd/4077624-4">Soziologie</mods:topic>
+            <mods:topic>Review</mods:topic>
+            <mods:topic>Besprechungen</mods:topic>
+          </mods:subject>
+          <mods:physicalDescription>
+            <mods:extent>00:46:08</mods:extent>
+          </mods:physicalDescription>
+        <mods:identifier type="citekey">duepublico_mods_00075332</mods:identifier><mods:identifier type="uri">https://duepublico2.uni-due.de/receive/duepublico_mods_00075332</mods:identifier></mods:mods></metadata>
+    </record>
     <record>
       <header>
         <identifier>oai:oer.uni-due.de:duepublico_mods_00075323</identifier>

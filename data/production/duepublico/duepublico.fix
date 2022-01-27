@@ -67,10 +67,16 @@ end
 set_array("sourceOrganization[]")
 do list("path":"metadata.mods:mods.mods:name","var":"org")
     if any_match("org.mods:role.mods:roleTerm.*.value","his")
-        copy_field("org.valueURI","sourceOrganization[].$append.id")
+        unless exists("org.mods:displayForm.value")
+            lookup("org.valueURI","data/maps/duepublico-corporate.tsv","sep_char":"\t")
+            copy_field("org.valueURI","sourceOrganization[].$append.name")           
+        end
         add_field("sourceOrganization[].$last.type", "Organization")
     end
 end
+
+add_field("sourceOrganization[].$append.name", "Universität Duisburg-Essen")
+add_field("sourceOrganization[].$last.type", "Organization")
 
 #  ------------description------------------------------------
 copy_field("metadata.mods:mods.mods:abstract.*.value","description")
@@ -121,6 +127,7 @@ end
 lookup("about[].*.prefLabel.de", "data/maps/subject-labels.tsv","sep_char":"\t")
 
 # ---------mainEntityOfPage----------------
+set_array("mainEntityOfPage[]")
 copy_field("id", "mainEntityOfPage[].$append.id")
 add_field("mainEntityOfPage[].$last.provider.id","$[service_id]")
 add_field("mainEntityOfPage[].$last.provider.type","Service")
@@ -128,5 +135,5 @@ add_field("mainEntityOfPage[].$last.provider.name","$[service_name]")
 
 
 # ---------tidy up!----------------
-retain("@context[]","id","image","name","creator[]","contributor[]","sourceOrganization[]", "license","description","dataCreated","inLanguage[]","type[]","learningResourceType[]","keywords[]","about[]")
+retain("@context[]","id","image","name","creator[]","contributor[]","sourceOrganization[]", "license","description","dataCreated","inLanguage[]","type[]","learningResourceType[]","keywords[]","about[]","mainEntityOfPage[]")
 vacuum()
