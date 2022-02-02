@@ -117,7 +117,7 @@ do entity('keywords[]', flushWith: 'record')
 end
 
 /*All subjects with knm or linsearch attribute are transformed to about objects. Duplicate objects should be avoided. kmn and linsearch are almoist identical. */
-do map('html.body.record.metadata.resources.resource.subjects.subject.linsearch*|html.body.record.metadata.resources.resource.subjects.subject.knm*','@hochschulfaechersystematik')
+do map('html.body.record.metadata.resources.resource.subjects.subject.linsearch*|html.body.record.metadata.resources.resource.subjects.subject.knm','@hochschulfaechersystematik')
   lookup(in: 'data/maps/tibav-subject-mapping.tsv')
   unique()
 end
