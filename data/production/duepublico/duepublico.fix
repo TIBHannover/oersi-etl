@@ -120,7 +120,7 @@ lookup("learningResourceType[].*.prefLabel.en", "data/maps/hcrt-en-labels.tsv","
 
 # ---------------keywords----------------------------------
 set_array("keywords[]")
-# TODO: Does not work at the moment. Also seem to be tokenized in the data.
+# TODO: Keywords seem to be tokenized in the data mostly, but some are concatinated. Need to split and add to the array.
 copy_field("metadata.mods:mods.mods:subject.mods:topic.*.value","keywords[].$append")
 
 #  ------------about------------------------------------
