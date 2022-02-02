@@ -30,6 +30,16 @@ do list("path": "metadata.mods:mods.mods:location.mods:url", "var": "url")
     end
 end
 
+
+#  ------------encoding ------------------------------------
+set_array("encoding[]")
+do list("path": "metadata.mods:mods.mods:location.mods:url", "var": "url")
+    if all_match("url.value","^https://duepublico2.uni-due.de/servlets/.*")
+        copy_field("url.value","encoding[].$append.contentUrl")
+        add_field("encoding[].$last.type", "MediaObject")
+    end
+end
+
 #  ------------name ------------------------------------
 paste("name","metadata.mods:mods.mods:titleInfo.mods:nonSort.value","metadata.mods:mods.mods:titleInfo.mods:title.value")
 
@@ -98,7 +108,6 @@ set_array("type[]", "LearningResource")
 set_array("learningResourceType[]")
 do list("path":"metadata.mods:mods.mods:genre","var":"lRT")
     if any_match("lRT.authorityURI","https://duepublico.uni-due.de/api/v1/classifications/mir_genres")
-        /* TODO: Or use duepublico-hcrt.tsv with value, not URI? See productive morph. Both need more content? */
         lookup("lRT.valueURI", "data/maps/DuePub-HCRT.tsv","sep_char":"\t")
         copy_field("lRT.valueURI","learningResourceType[].$append.id")
         copy_field("lRT.valueURI","learningResourceType[].$last.prefLabel.de")
@@ -135,5 +144,5 @@ add_field("mainEntityOfPage[].$last.provider.name","$[service_name]")
 
 
 # ---------tidy up!----------------
-retain("@context[]","id","image","name","creator[]","contributor[]","sourceOrganization[]", "license","description","dataCreated","inLanguage[]","type[]","learningResourceType[]","keywords[]","about[]","mainEntityOfPage[]")
+retain("@context[]","id","image","name","creator[]","contributor[]","sourceOrganization[]", "license","description","dataCreated","inLanguage[]","type[]","learningResourceType[]","keywords[]","about[]","mainEntityOfPage[]", "encoding[]")
 vacuum()
