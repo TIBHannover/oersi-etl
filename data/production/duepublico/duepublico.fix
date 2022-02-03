@@ -1,7 +1,4 @@
 # See https://github.com/TobiasNx/Catmandu-Testing/blob/master/DuePub-Test/duepub-catmandu.fix
-# In general: vacuum does not work with empty arrays and empty objects.
-
-
 
 if exists ("metadata.error")
     reject()
