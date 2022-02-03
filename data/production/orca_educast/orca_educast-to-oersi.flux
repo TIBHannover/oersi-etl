@@ -2,8 +2,8 @@ service_domain = "https://www.orca.nrw";
 service_id = "https://oerworldmap.org/resource/urn:uuid:31c24f26-1a96-4664-8d6d-71fdddb8b1f5";
 service_name = "ORCA.nrw";
 
-"https://dist.orca-staging.educast.cloud/oaipmh/default" //Prod-System: https://dist.orca.educast.cloud/oaipmh/default
-| open-oaipmh(metadataPrefix="matterhorn-inlined")
+"https://dist.orca.educast.cloud/oaipmh/default" //Prod-System: https://dist.orca.educast.cloud/oaipmh/default
+| open-oaipmh(metadataPrefix="matterhorn-inlined", setSpec="oersi")
 | decode-xml
 | handle-generic-xml(emitNamespace="true")
 | fix-filter("
