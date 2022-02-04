@@ -26,12 +26,14 @@ replace_all("description", '  ', " ")
 trim("description")
 
 # ---------sourceOrganization---------
+set_array("sourceOrganization[]")
 add_field("sourceOrganization[].$append.name", "Ruhr-Universität Bochum")
 add_field("sourceOrganization[].$last.type","Organization")
 
 # ------------learningResourceType-----
 lookup("learningResourceType", "data/maps/openRubLearningResourceTypes.tsv", "sep_char":"\t")
 lookup("learningResourceType", "data/maps/hcrt-de-labels-to-uri.tsv", "sep_char":"\t")
+set_array("learningResourceType[]")
 copy_field("learningResourceType", "learningResourceType[].$append.id")
 copy_field("learningResourceType", "learningResourceTypeDE")
 move_field("learningResourceType", "learningResourceTypeEN")
@@ -41,17 +43,16 @@ move_field("learningResourceTypeDE", "learningResourceType[].$last.prefLabel.de"
 move_field("learningResourceTypeEN", "learningResourceType[].$last.prefLabel.en")
 
 # ------about----
-# sometimes the field is not an array. This needs to be settled:
-move_field("fields", "fields[].$append")
-lookup("fields[]", "data/maps/destatisLabels-to-uri.tsv","sep_char":"\t")
-do list(path: "fields[]", "var": f)
+lookup("fields", "data/maps/destatisLabels-to-uri.tsv","sep_char":"\t")
+do list(path: "fields", "var": f)
     copy_field("f", "about[].$append.id")
     lookup("f", "data/maps/subject-labels.tsv","sep_char":"\t")
     copy_field("f", "about[].$last.prefLabel.de")
 end
-remove_field('fields[]')
+remove_field('fields')
 
 # ---------mainEntityOfPage----------------
+set_array("mainEntityOfPage[]")
 copy_field("id", "mainEntityOfPage[].$append.id")
 add_field("mainEntityOfPage[].$last.provider.id","$[service_id]")
 add_field("mainEntityOfPage[].$last.provider.type","Service")
