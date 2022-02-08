@@ -12,7 +12,7 @@ default input_wait = "50";
 | as-lines
 | decode-json
 // edu-sharing version 6.0
-| fix(FLUX_DIR + "zoerr_edu-sharing.fix", *) // '*': pass all flux variables to the fix
+| metafix(FLUX_DIR + "zoerr_edu-sharing.fix", *) // '*': pass all flux variables to the fix
 | encode-json
 | oersi.FieldMerger
 | oersi.JsonValidator(output_schema, writeValid=metadata_valid, writeInvalid=metadata_invalid)
