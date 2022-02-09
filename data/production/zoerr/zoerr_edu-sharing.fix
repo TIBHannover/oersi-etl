@@ -1,149 +1,148 @@
-/* Set up the context */
-do array('@context')
- add_field('','https://w3id.org/kim/lrmi-profile/draft/context.jsonld')
- do entity('')
-  add_field('@language', 'de')
- end
+#  ---------------@context ----------------------------------
+
+set_array("@context[]", "https://w3id.org/kim/lrmi-profile/draft/context.jsonld")
+set_hash("@context[].$append", "@language": "de")
+
+#  ---------------name ----------------------------------
+copy_field("node.title", "name")
+
+#  ---------------image----------------------------------
+copy_field("node.preview.url", "image")
+
+#  ---------------id----------------------------------
+if exists ("node.properties.ccm:wwwurl[].1")
+  copy_field("node.properties.ccm:wwwurl[].1", "id")
+  trim("id")
+  replace_all("id", "\\u00a0", "") /* %A0 / &nbsp; */
+else
+  copy_field("node.ref.id", "id")
+  prepend("id","https://$[service_domain]/edu-sharing/components/render/")
 end
 
-map(node.title, name)
-map(node.preview.url, image)
+#  ---------mainEntityOfPage----------------
+set_array("mainEntityOfPage[]")
+copy_field("node.ref.id", "mainEntityOfPage[].$append.id")
+append("mainEntityOfPage[].$last.id","https://$[service_domain]/edu-sharing/components/render/")
+copy_field("node.modifiedAt", "mainEntityOfPage[].$last.dateModified")
+replace_all("mainEntityOfPage[].$last.dateModified","T.+Z","")
+copy_field("node.createdAt", "mainEntityOfPage[].$last.dateCreated")
+replace_all("mainEntityOfPage[].$last.dateCreated","T.+Z","")
+add_field("mainEntityOfPage[].$last.provider.id","$[service_id]")
+add_field("mainEntityOfPage[].$last.provider.type","Service")
+add_field("mainEntityOfPage[].$last.provider.name","$[service_name]")
 
-/* Default ID: */
-do map('node.ref.id', id)
-  compose(prefix: 'https://$[service_domain]/edu-sharing/components/render/')
+
+# ---------------description----------------------------------
+copy_field("node.properties.cclom:general_description[].*", "description") # eventuell nur .1 nicht .*
+
+
+#  ---------------about----------------------------------
+set_array("@hochschulfaechersystematik[]")
+copy_field("node.properties.ccm:taxonid[].*", "@hochschulfaechersystematik[].$append")
+filter("@hochschulfaechersystematik[].*", "^https://w3id.org/kim/hochschulfaechersystematik/.*")
+ 
+set_array("about[]")
+do list(path:"@hochschulfaechersystematik[]", "var":"$i")
+  copy_field("$i", "about[].$append.id")
+  copy_field("$i", "about[].$last.prefLabel.de")
 end
+lookup("about[].*.prefLabel.de", "data/maps/subject-labels.tsv","sep_char":"\t")
 
-/* Replace default ID if we have a ccm:wwwurl */
-do map('node.properties.ccm:wwwurl[].1', id)
-  trim()
-  replace_all(pattern: '\\u00a0', with: '') /* %A0 / &nbsp; */
-end
-
-do array('mainEntityOfPage')
-  do entity('')
-    do map('node.ref.id', id)
-      compose(prefix: 'https://$[service_domain]/edu-sharing/components/render/')
-    end
-    /* Add creation/modification date, converting dateTime (e.g. 2019-07-23T09:26:00Z) to date (2019-07-23) */
-    do map('node.modifiedAt', 'dateModified')
-      replace_all(pattern: 'T.+Z', with: '')
-    end
-    do map('node.createdAt', 'dateCreated')
-      replace_all(pattern: 'T.+Z', with: '')
-    end
-    /* Add provider/source information to each resource description */
-    do entity('provider')
-      add_field('id','$[service_id]')
-      add_field('type','Service')
-      add_field('name','$[service_name]')
-    end
+#  ---------------creator----------------------------------
+set_array("creator[]")
+do list(path:"node.properties.ccm:lifecyclecontributer_author[]", "var": "$i")
+  if any_match("$i", "^BEGIN:VCARD[\\s\\S]*FN:(.+)\r\n[\\s\\S]*")
+    copy_field("$i", "creator[].$append.name")
+    add_field("creator[].$last.type", "Person")
+  elsif any_match("$i", "^BEGIN:VCARD\r\nORG:(.+)\r\n[\\s\\S]*")
+    copy_field("$i", "creator[].$append.name")
+    add_field("creator[].$last.type", "Organization")
   end
 end
 
-do map("node.properties.cclom:general_description[].*", "description")
-  not_equals(string: '')
-end
+#####---------- This does not seem to work yet.
 
-do map('node.properties.ccm:taxonid[].*', '@hochschulfaechersystematik')
-  regexp(match: "^https://w3id.org/kim/hochschulfaechersystematik/.*")
-end
-
-do array('about', flushWith: record)
- do entity('', flushWith: '@hochschulfaechersystematik')
-  map('@hochschulfaechersystematik', 'id')
-  do map('@hochschulfaechersystematik', 'prefLabel.de')
-    lookup(in: 'data/maps/subject-labels.tsv')
+do list(path:"creator[]")
+  if any_match("name", "^BEGIN:VCARD[\\s\\S]*X-ORCID:https\\\\://(.+)\r\n[\\s\\S]*")
+    copy_field("name", "id")
+    replace_all("id","^BEGIN:VCARD[\\s\\S]*X-ORCID:https\\\\://(.+)\r\n[\\s\\S]*", "$1")
   end
- end
+  replace_all("name","^BEGIN:VCARD[\\s\\S]*FN:(.+)\r\n[\\s\\S]*", "$1")
+  replace_all("name","^BEGIN:VCARD\r\nORG:(.+)\r\n[\\s\\S]*", "$1")
 end
 
-do map('node.properties.ccm:lifecyclecontributer_author[].*', '@Person')
-  regexp(match: '^BEGIN:VCARD[\\s\\S]*FN:(.+)\r\n.*', format: '${1}')
-  trim()
-  not_equals(string: '')
-  not_equals(string: 'null null')
-end
-
-do map('node.properties.ccm:lifecyclecontributer_author[].*', '@Organization')
-  regexp(match: '^BEGIN:VCARD\r\nORG:(.+)\r\n.*', format: '${1}')
-  trim()
-  not_equals(string: '')
-  not_equals(string: 'null null')
-end
-
-do array('creator', flushWith: record)
-  do entity('', flushWith: 'node.properties.ccm:lifecyclecontributer_author[].*')
-    do map('@Person', 'type')
-      constant(value:"Person")
-    end
-    map('@Person', 'name')
-    do map('node.properties.ccm:lifecyclecontributer_author[].*', 'id')
-      regexp(match: '^BEGIN:VCARD[\\s\\S]*X-ORCID:https\\\\://(.+)\r\n.*', format: 'https://${1}')
-      trim()
-      not_equals(string: '')
-      not_equals(string: 'null null')
-    end
-  end
-  do entity('', flushWith: 'node.properties.ccm:lifecyclecontributer_author[].*')
-    do map('@Organization', 'type')
-      constant(value:"Organization")
-    end
-    map('@Organization', 'name')
+/*
+#  ---------------contributor----------------------------------
+set_array("contributor[]")
+do list(path:"node.properties.ccm:lifecyclecontributer_author[]", "var": "$i")
+  if any_match("$i", "^BEGIN:VCARD[\\s\\S]*FN:(.+)\r\n[\\s\\S]*\r\nEND:VCARD$")
+    copy_field("$i", "contributor[].$append.name")
+    add_field("contributor[].$last.type", "Person")
+  elsif any_match("$i", "^BEGIN:VCARD\r\nORG:(.+)\r\n[\\s\\S]*\r\nEND:VCARD$")
+    copy_field("$i", "contributor[].$append.name")
+    add_field("contributor[].$last.type", "Organization")
   end
 end
 
-do array('sourceOrganization')
- do entity('')
-  add_field('type', 'Organization')
-  do map('node.properties.ccm:university_DISPLAYNAME[].1', 'name')
-    not_equals(string: '')
-    not_equals(string: '- Alle -')
+do list(path:"contributor[]")
+  if any_match("name", "^BEGIN:VCARD[\\s\\S]*X-ORCID:(.+)\r\n[\\s\\S]+END:VCARD$")
+    copy_field("name", "id")
+    replace_all("id","^BEGIN:VCARD[\\s\\S]*X-ORCID:(.+)\r\n[\\s\\S]*\r\nEND:VCARD$", "$1")
   end
- end
+  replace_all("name","^BEGIN:VCARD[\\s\\S]*FN:(.+)\r\n[\\s\\S]*\r\nEND:VCARD$", "$1")
+  replace_all("name","^BEGIN:VCARD\r\nORG:(.+)\r\n[\\s\\S]*\r\nEND:VCARD$", "$1")
+end
+*/
+
+#  ---------------sourceOrganization----------------------------------      
+set_array("sourceOrganization[]")
+do list(path:"node.properties.ccm:university_DISPLAYNAME[]", "var": "$i")
+  copy_field("$i", "sourceOrganization[].$append.name")
+  add_field("sourceOrganization[].$last.type", "Organization")
 end
 
-do entity("license")
-  do map('node.properties.virtual:licenseurl[].1', id)
-    regexp(match: '^http[s]?:\\/\\/creativecommons.org\\/(licenses|licences|publicdomain)\\/.*|^http[s]?:\\/\\/www.gnu.org\\/licenses\\/.*|^http[s]?:\\/\\/www.apache.org\\/licenses\\/.*|http[s]?://opensource.org/licenses/MIT|^http[s]?:\\/\\/www.opensource.org\\/licenses\\/BSD.*')
-    replace_all(pattern: '/deed.*$', with: '')
-  end
-end
+#  ---------------license----------------------------------
+copy_field("node.properties.virtual:licenseurl[].1", "license.id")
+filter("license.id","^http[s]?:\\/\\/creativecommons.org\\/(licenses|licences|publicdomain)\\/.*|^http[s]?:\\/\\/www.gnu.org\\/licenses\\/.*|^http[s]?:\\/\\/www.apache.org\\/licenses\\/.*|http[s]?://opensource.org/licenses/MIT|^http[s]?:\\/\\/www.opensource.org\\/licenses\\/BSD.*")
+ 
+ 
+# ---------------inLanguage----------------------------------
+set_array("inLanguage[]")
+copy_field("node.properties.cclom:general_language[].*", "inLanguage[].$append")
 
-do array("inLanguage")
-  do map('node.properties.cclom:general_language[].1')
-    replace_all(pattern: '_..$', with: '') /* remove country suffixes eg. _DE */
-    replace_all(pattern: '^$', with: 'de') /* empty strings default to 'de' */
-    replace_all(pattern: 'unknown', with: 'de')
-  end
-end
+replace_all("inLanguage[].*","_..$", "") /* remove country suffixes eg. _DE */
+replace_all("inLanguage[].*","^$", "de") /* empty strings default to 'de' */
+replace_all("inLanguage[].*","unknown", "de")
 
-do array('type')
-  add_field('','LearningResource')
-end
-
-do map('node.properties.ccm:educationallearningresourcetype[].*', '@hcrt')
-  not_equals(string: '')
-  not_equals(string: 'null null')
-end
-
-do array('learningResourceType')
-  do entity('')
-    map('@hcrt', 'id')
-    do entity('prefLabel')
-      do map('@hcrt', 'de')
-        lookup(in: 'data/maps/hcrt-de-labels.tsv')
-      end  
-      do map('@hcrt', 'en')
-        lookup(in: 'data/maps/hcrt-en-labels.tsv')
-      end
-    end
+# ---------------type----------------------------------
+set_array("type[]", "LearningResource")
+ 
+# ---------------learningResourceType----------------------------------
+set_array("learningResourceType[]")
+do list(path:"node.properties.ccm:educationallearningresourcetype[]", "var": "$i")
+  unless any_equal("$i", "|null null")
+    copy_field("$i", "learningResourceType[].$append.id")
+    copy_field("$i", "learningResourceType[].$last.prefLabel.de")
+    copy_field("$i", "learningResourceType[].$last.prefLabel.en")
   end
 end
+ 
+lookup("learningResourceType[].*.prefLabel.de", "data/maps/hcrt-de-labels.tsv","sep_char":"\t")
+lookup("learningResourceType[].*.prefLabel.en", "data/maps/hcrt-en-labels.tsv","sep_char":"\t")
+ 
+#  ---------------keywords----------------------------------
+copy_field("node.properties.cclom:general_keyword[]", "keywords[]")
 
-do array('keywords')
-  map('node.properties.cclom:general_keyword[].*')
+# ---------------encoding----------------------------------
+unless exists('node.properties.ccm:wwwurl[].1')
+  set_array("encoding[]")
+  add_field("encoding[].$append.type", "MediaObject")
+  copy_field("node.downloadUrl", "encoding[].$last.contentUrl")
+  copy_field("node.content.hash", "encoding[].$last.sha256")
+  copy_field("node.mimetype", "encoding[].$last.encodingFormat")
+  copy_field("node.size", "encoding[].$last.contentSize")
 end
 
-/* Enable to see what else is coming in from the source: */
-/* map(_else) */
+# 
+retain("@context[]","id","image","name","creator[]","contributor[]","sourceOrganization[]", "license","description","dataCreated","inLanguage[]","type[]","learningResourceType[]","keywords[]","about[]", "encoding[]", "mainEntityOfPage[]")
+vacuum()
