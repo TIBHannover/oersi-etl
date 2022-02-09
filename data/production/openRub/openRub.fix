@@ -43,13 +43,20 @@ move_field("learningResourceTypeDE", "learningResourceType[].$last.prefLabel.de"
 move_field("learningResourceTypeEN", "learningResourceType[].$last.prefLabel.en")
 
 # ------about----
-lookup("fields", "data/maps/destatisLabels-to-uri.tsv","sep_char":"\t")
-do list(path: "fields", "var": f)
-    copy_field("f", "about[].$append.id")
-    lookup("f", "data/maps/subject-labels.tsv","sep_char":"\t")
-    copy_field("f", "about[].$last.prefLabel.de")
+# sometimes the "fields"-element is not an array and therefore has no brackets "[]". The transformation mechanism handles this:
+set_array("about[]")
+unless exists("fields[]")
+    set_array("fields[]")
+    move_field("fields", "fields[].$append")
 end
-remove_field('fields')
+lookup("fields[].*", "data/maps/destatisLabels-to-uri.tsv","sep_char":"\t")
+do list(path: "fields[]", "var": "$f")
+    copy_field("$f", "about[].$append.id")
+    copy_field("$f", "about[].$last.prefLabel.de")
+end
+lookup("about[].*.prefLabel.de", "data/maps/subject-labels.tsv","sep_char":"\t")
+remove_field('fields[]')
+
 
 # ---------mainEntityOfPage----------------
 set_array("mainEntityOfPage[]")
