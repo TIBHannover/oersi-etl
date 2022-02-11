@@ -1,3 +1,6 @@
+# Delete all empty values
+vacuum()
+
 #  ---------------@context ----------------------------------
 
 set_array("@context[]", "https://w3id.org/kim/lrmi-profile/draft/context.jsonld")
@@ -6,23 +9,30 @@ set_hash("@context[].$append", "@language": "de")
 #  ---------------name ----------------------------------
 copy_field("node.title", "name")
 
+# If title is not set select name
+unless exists("name")
+  copy_field("node.name", "name")
+end  
 #  ---------------image----------------------------------
 copy_field("node.preview.url", "image")
 
 #  ---------------id----------------------------------
-if exists ("node.properties.ccm:wwwurl[].1")
-  copy_field("node.properties.ccm:wwwurl[].1", "id")
-  trim("id")
-  replace_all("id", "\\u00a0", "") /* %A0 / &nbsp; */
+copy_field("node.properties.ccm:wwwurl[].1", "@external_id")
+trim("@external_id")
+replace_all("@external_id", "\\u00a0", "") /* %A0 / &nbsp; */
+
+copy_field("node.ref.id", "@internal_id")
+prepend("@internal_id","https://$[service_domain]/edu-sharing/components/render/")
+
+if exists("@external_id")
+  copy_field("@external_id", "id")
 else
-  copy_field("node.ref.id", "id")
-  prepend("id","https://$[service_domain]/edu-sharing/components/render/")
+  copy_field("@internal_id", "id")
 end
 
 #  ---------mainEntityOfPage----------------
 set_array("mainEntityOfPage[]")
-copy_field("node.ref.id", "mainEntityOfPage[].$append.id")
-append("mainEntityOfPage[].$last.id","https://$[service_domain]/edu-sharing/components/render/")
+copy_field("@internal_id", "mainEntityOfPage[].$append.id")
 copy_field("node.modifiedAt", "mainEntityOfPage[].$last.dateModified")
 replace_all("mainEntityOfPage[].$last.dateModified","T.+Z","")
 copy_field("node.createdAt", "mainEntityOfPage[].$last.dateCreated")
@@ -95,8 +105,10 @@ end
 #  ---------------sourceOrganization----------------------------------      
 set_array("sourceOrganization[]")
 do list(path:"node.properties.ccm:university_DISPLAYNAME[]", "var": "$i")
-  copy_field("$i", "sourceOrganization[].$append.name")
-  add_field("sourceOrganization[].$last.type", "Organization")
+  unless any_equal("$i", "null null|- Alle -")
+    copy_field("$i", "sourceOrganization[].$append.name")
+    add_field("sourceOrganization[].$last.type", "Organization")
+  end
 end
 
 #  ---------------license----------------------------------
@@ -118,7 +130,7 @@ set_array("type[]", "LearningResource")
 # ---------------learningResourceType----------------------------------
 set_array("learningResourceType[]")
 do list(path:"node.properties.ccm:educationallearningresourcetype[]", "var": "$i")
-  unless any_equal("$i", "|null null")
+  unless any_equal("$i", "null null")
     copy_field("$i", "learningResourceType[].$append.id")
     copy_field("$i", "learningResourceType[].$last.prefLabel.de")
     copy_field("$i", "learningResourceType[].$last.prefLabel.en")
@@ -141,6 +153,5 @@ unless exists('node.properties.ccm:wwwurl[].1')
   copy_field("node.size", "encoding[].$last.contentSize")
 end
 
-# 
 retain("@context[]","id","image","name","creator[]","contributor[]","sourceOrganization[]", "license","description","dataCreated","inLanguage[]","type[]","learningResourceType[]","keywords[]","about[]", "encoding[]", "mainEntityOfPage[]")
 vacuum()
