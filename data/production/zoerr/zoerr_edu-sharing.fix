@@ -154,7 +154,6 @@ unless exists('node.properties.ccm:wwwurl[].1')
   set_array("encoding[]")
   add_field("encoding[].$append.type", "MediaObject")
   copy_field("node.downloadUrl", "encoding[].$last.contentUrl")
-  copy_field("node.content.hash", "encoding[].$last.sha256")
   copy_field("node.mimetype", "encoding[].$last.encodingFormat")
   copy_field("node.size", "encoding[].$last.contentSize")
 end
