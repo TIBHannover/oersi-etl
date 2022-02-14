@@ -135,7 +135,7 @@ set_array("learningResourceType[]")
 do list(path:"node.properties.ccm:educationallearningresourcetype[]", "var": "$i")
   unless any_equal("$i", "null null")
     if all_equal("$i", "Video")
-      replace_all("$i", "https://w3id.org/kim/hcrt/video")
+      replace_all("$i", "Video", "https://w3id.org/kim/hcrt/video")
     end  
     copy_field("$i", "learningResourceType[].$append.id")
     copy_field("$i", "learningResourceType[].$last.prefLabel.de")
