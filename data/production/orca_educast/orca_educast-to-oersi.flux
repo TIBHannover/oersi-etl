@@ -6,14 +6,8 @@ service_name = "ORCA.nrw";
 | open-oaipmh(metadataPrefix="matterhorn-inlined", setSpec="oersi")
 | decode-xml
 | handle-generic-xml(emitNamespace="true")
-| fix-filter("
-do map('metadata.inlined.catalog.metadata.terms:oersi-unlist.value')
-	equals(string: 'false')
-end
-") // filter out all deleted records
-| fix(FLUX_DIR + "orca_educast.fix", *)
+| fix(FLUX_DIR + "vacuum.fix", *)
 | encode-json(prettyPrinting="true")
-| oersi.FieldMerger
 | oersi.JsonValidator(output_schema, writeValid=metadata_valid, writeInvalid=metadata_invalid)
 | oersi.OersiWriter(backend_api, user=backend_user, pass=backend_pass, log=metadata_responses)
 ;
