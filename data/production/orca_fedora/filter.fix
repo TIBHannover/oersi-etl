@@ -1,0 +1,5 @@
+unless any_equal("publishScheme", "public")
+    reject()
+end
+
+move_field('@id','id')
