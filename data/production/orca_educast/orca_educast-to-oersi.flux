@@ -13,7 +13,7 @@ XML_FILE
 | open-file
 | decode-xml
 | handle-generic-xml(emitNamespace="true")
-| fix(FLUX_DIR + "orca_educast_new.fix", *)
+| metafix(FLUX_DIR + "orca_educast.fix", *)
 | encode-json(prettyPrinting="true")
 | oersi.JsonValidator(output_schema, writeValid=metadata_valid, writeInvalid=metadata_invalid)
 | oersi.OersiWriter(backend_api, user=backend_user, pass=backend_pass, log=metadata_responses)
