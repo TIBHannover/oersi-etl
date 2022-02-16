@@ -1,11 +1,11 @@
 # See https://github.com/TobiasNx/Catmandu-Testing/blob/master/DuePub-Test/duepub-catmandu.fix
 
 if exists ("metadata.error")
-    reject()
+  reject()
 end
 
 if any_equal ("header.status", "deleted")
-    reject()
+  reject()
 end
 
 # ---------------@context ----------------------------------
@@ -14,27 +14,27 @@ set_array("@context[]", "https://w3id.org/kim/lrmi-profile/draft/context.jsonld"
 set_hash("@context[].$append", "@language": "de")
 
 # --------------id ----------------------------------------
-do list("path": "metadata.mods:mods.mods:identifier", "var": "identifier")
-    if all_match("identifier.value","https://duepublico2.uni-due.de/receive/.*")
-        copy_field("identifier.value","id")
-    end
+do list("path": "metadata.mods:mods.mods:identifier", "var": "$i")
+  if all_match("$i.value","https://duepublico2.uni-due.de/receive/.*")
+    copy_field("$i.value","id")
+  end
 end
 
 #  ------------image ------------------------------------
-do list("path": "metadata.mods:mods.mods:location.mods:url", "var": "url")
-    if all_match("url.value","^https://duepublico2.uni-due.de/rsc/thumbnail/.*")
-        copy_field("url.value","image")
-    end
+do list("path": "metadata.mods:mods.mods:location.mods:url", "var": "$i")
+  if all_match("$i.value","^https://duepublico2.uni-due.de/rsc/thumbnail/.*")
+    copy_field("$i.value","image")
+  end
 end
 
 
 #  ------------encoding ------------------------------------
 set_array("encoding[]")
-do list("path": "metadata.mods:mods.mods:location.mods:url", "var": "url")
-    if all_match("url.value","^https://duepublico2.uni-due.de/servlets/.*")
-        copy_field("url.value","encoding[].$append.contentUrl")
-        add_field("encoding[].$last.type", "MediaObject")
-    end
+do list("path": "metadata.mods:mods.mods:location.mods:url", "var": "$i")
+  if all_match("$i.value","^https://duepublico2.uni-due.de/servlets/.*")
+    copy_field("$i.value","encoding[].$append.contentUrl")
+    add_field("encoding[].$last.type", "MediaObject")
+  end
 end
 
 #  ------------name ------------------------------------
@@ -42,44 +42,49 @@ paste("name","metadata.mods:mods.mods:titleInfo.mods:nonSort.value","metadata.mo
 
 #  ------------creator------------------------------------
 set_array("creator[]")
-do list("path":"metadata.mods:mods.mods:name","var":"n")
-    if any_match("n.mods:role.mods:roleTerm.*.value","aut|cre")
-        copy_field("n.mods:displayForm.value","creator[].$append.name")
-        if any_equal("n.type","personal")
-            add_field("creator[].$last.type", "Person")
-        end
-        if any_equal("n.type","corporate")
-            add_field("creator[].$last.type", "Organization")
-        end
+do list("path":"metadata.mods:mods.mods:name","var":"$i")
+  if any_match("$i.mods:role.mods:roleTerm.*.value","aut|cre")
+    copy_field("$i.mods:displayForm.value","creator[].$append.name")
+    if any_equal("$i.type","personal")
+      add_field("creator[].$last.type", "Person")
     end
+    if any_equal("$i.type","corporate")
+      add_field("creator[].$last.type", "Organization")
+    end
+    do list(path:"$i.mods:nameIdentifier", "var": "$j")
+      if any_equal("$j.type","orcid")
+        paste("creator[].$last.id", "~https://orcid.org/", "$j.value", join_char:"")
+      end
+    end
+  end
 end
 
 #  ------------contributor------------------------------------
 set_array("contributor[]")
-do list("path":"metadata.mods:mods.mods:name","var":"n")
-    if any_match("n.type","corporate|personal")
-        unless any_match("n.mods:role.mods:roleTerm.*.value","aut|cre|his")
-            copy_field("n.mods:displayForm.value","contributor[].$append.name")
-            if any_equal("n.type","personal")
-                add_field("contributor[].$last.type", "Person")
-            end
-            if any_equal("n.type","corporate")
-                add_field("contributor[].$last.type", "Organization")
-            end
-        end
+do list("path":"metadata.mods:mods.mods:name","var":"$i")
+  if any_match("$i.type","corporate|personal")
+    unless any_match("$i.mods:role.mods:roleTerm.*.value","aut|cre|his")
+      copy_field("$i.mods:displayForm.value","contributor[].$append.name")
+      if any_equal("$i.type","personal")
+        add_field("contributor[].$last.type", "Person")
+      end
+      if any_equal("$i.type","corporate")
+        add_field("contributor[].$last.type", "Organization")
+      end
     end
+  end
 end
 
 #  ------------sourceOrganization------------------------------------
 set_array("sourceOrganization[]")
-do list("path":"metadata.mods:mods.mods:name","var":"org")
-    if any_match("org.mods:role.mods:roleTerm.*.value","his")
-        unless exists("org.mods:displayForm.value")
-            lookup("org.valueURI","data/maps/duepublico-corporate.tsv","sep_char":"\t")
-            copy_field("org.valueURI","sourceOrganization[].$append.name")           
-        end
-        add_field("sourceOrganization[].$last.type", "Organization")
+do list(path:"metadata.mods:mods.mods:name","var":"$i")
+  if any_match("$i.mods:role.mods:roleTerm.*.value","his")
+    unless exists("$i.mods:displayForm.value")
+      lookup("$i.valueURI","data/maps/duepublico-corporate.tsv","sep_char":"\t")
+      copy_field("$i.valueURI","sourceOrganization[].$append.name")           
     end
+    add_field("sourceOrganization[].$last.type", "Organization")
+  end
 end
 
 add_field("sourceOrganization[].$append.name", "Universität Duisburg-Essen")
@@ -96,6 +101,7 @@ lookup("license.id","data/maps/duepublico-licenses.tsv","sep_char":"\t")
 copy_field("metadata.mods:mods.mods:originInfo.mods:dateIssued.value","dataCreated")
 
 #  ------------inLanguage------------------------------------
+set_array("inLanguage[]")
 copy_field("metadata.mods:mods.mods:language.mods:languageTerm.value","inLanguage[].$append")
 
 # ---------------type ----------------------------------
@@ -103,13 +109,23 @@ set_array("type[]", "LearningResource")
 
 # ---------------learningResourceType ----------------------------------
 set_array("learningResourceType[]")
-do list("path":"metadata.mods:mods.mods:genre","var":"lRT")
-    if any_match("lRT.authorityURI","https://duepublico.uni-due.de/api/v1/classifications/mir_genres")
-        lookup("lRT.valueURI", "data/maps/DuePub-HCRT.tsv","sep_char":"\t")
-        copy_field("lRT.valueURI","learningResourceType[].$append.id")
-        copy_field("lRT.valueURI","learningResourceType[].$last.prefLabel.de")
-        copy_field("lRT.valueURI","learningResourceType[].$last.prefLabel.en")
-    end
+set_array("@lRT")
+do list(path:"metadata.mods:mods.mods:genre","var":"$i") 
+  if any_match("$i.authorityURI","https://duepublico.uni-due.de/api/v1/classifications/mir_genres")
+    lookup("$i.valueURI", "data/maps/duepublico-hcrt.tsv","sep_char":"\t")
+    copy_field("$i.valueURI", "@lRT.$append")
+  end
+end
+do list(path:"metadata.mods:mods.mods:typeOfResource","var":"$i")
+  lookup("$i.value", "data/maps/duepublico_typeOfResource-hcrt.tsv","sep_char":"\t")
+  copy_field("$i.value", "@lRT.$append")
+end
+uniq("@lRT")
+
+do list(path: "@lRT", "var":"$i")
+  copy_field("$i","learningResourceType[].$append.id")
+  copy_field("$i","learningResourceType[].$last.prefLabel.de")
+  copy_field("$i","learningResourceType[].$last.prefLabel.en")
 end
 
 lookup("learningResourceType[].*.prefLabel.de", "data/maps/hcrt-de-labels.tsv","sep_char":"\t")
@@ -122,15 +138,28 @@ copy_field("metadata.mods:mods.mods:subject.mods:topic.*.value","keywords[].$app
 
 #  ------------about------------------------------------
 set_array("about[]")
-do list("path":"metadata.mods:mods.mods:classification","var":"classification")
-    if any_equal("classification.authorityURI","https://duepublico.uni-due.de/api/v1/classifications/destatis")
-        lookup("classification.valueURI", "data/maps/destatisPersonal2destatisStudierende.tsv","sep_char":"\t")
-        copy_field("classification.valueURI","about[].$append.id")
-        copy_field("classification.valueURI","about[].$last.prefLabel.de")
-    end
+do list(path:"metadata.mods:mods.mods:classification","var":"$i")
+  if any_equal("$i.authorityURI","https://duepublico.uni-due.de/api/v1/classifications/destatis")
+    lookup("$i.valueURI", "data/maps/destatisPersonal2destatisStudierende.tsv","sep_char":"\t")
+    copy_field("$i.valueURI","about[].$append.id")
+    copy_field("$i.valueURI","about[].$last.prefLabel.de")
+  end
 end
 
 lookup("about[].*.prefLabel.de", "data/maps/subject-labels.tsv","sep_char":"\t")
+
+
+# -------isPartOf---------
+set_array("isPartOf[]")
+do list(path: "metadata.mods:mods.mods:relatedItem", "var": "$i")
+  if any_equal("$i.type","host")
+    copy_field("$i.xlink:href", "isPartOf[].$append.id")
+    paste("isPartOf[].$last.name","$i.mods:titleInfo.mods:nonSort.value","$i.mods:titleInfo.mods:title.value")
+  end
+end
+
+prepend("isPartOf[].*.id", "https://duepublico2.uni-due.de/receive/")
+
 
 # ---------mainEntityOfPage----------------
 set_array("mainEntityOfPage[]")
@@ -141,5 +170,5 @@ add_field("mainEntityOfPage[].$last.provider.name","$[service_name]")
 
 
 # ---------tidy up!----------------
-retain("@context[]","id","image","name","creator[]","contributor[]","sourceOrganization[]", "license","description","dataCreated","inLanguage[]","type[]","learningResourceType[]","keywords[]","about[]","mainEntityOfPage[]", "encoding[]")
+retain("@context[]","id","image","name","creator[]","contributor[]","sourceOrganization[]", "license","description","dataCreated","inLanguage[]","type[]","learningResourceType[]","keywords[]","about[]", "isPartOf[]", "mainEntityOfPage[]", "encoding[]")
 vacuum()
