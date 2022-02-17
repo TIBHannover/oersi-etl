@@ -106,7 +106,7 @@ end
 #  ---------------sourceOrganization----------------------------------      
 set_array("sourceOrganization[]")
 do list(path:"node.properties.ccm:university_DISPLAYNAME[]", "var": "$i")
-  unless any_equal("$i", "null null|- Alle -")
+  unless any_match("$i", "null null|- Alle -")
     copy_field("$i", "sourceOrganization[].$append.name")
     add_field("sourceOrganization[].$last.type", "Organization")
   end
