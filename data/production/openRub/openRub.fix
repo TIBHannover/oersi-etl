@@ -7,6 +7,7 @@ set_hash("@context[].$append", "@language": "de")
 replace_all("id", '(.*?)/lernangebot', "https://open.ruhr-uni-bochum.de/lernangebot")
 
 #  ------------inLanguage------------------------------------
+set_array("inLanguage[]")
 move_field("inLanguage","inLanguage[].$append")
 
 # --------------licenses-------------
