@@ -9,33 +9,34 @@ set_array("@context[]", "https://w3id.org/kim/lrmi-profile/draft/context.jsonld"
 set_hash("@context[].$append", "@language": "de")
 
 
-/* Map some of the data we have to the oersi model: */
-
+# ------ id --- 
 copy_field("metadata.inlined.catalog.*.metadata.terms:id.value", "id")
+
+# ------ name --- 
 copy_field("metadata.inlined.catalog.*.metadata.terms:name.value", "name")
+
+# ------ description --- 
 copy_field("metadata.inlined.catalog.*.metadata.terms:description.value", "description")
 
-# What is the preview image there are two.
-# do list(path:"metadata.inlined.mediapackage.publications.publication", "var": "$i")
-#   do list(path: "attachments.attachment", "var": "$j")
-#     if all_match("$j.url.value",".*thumbnail.*")
-#       copy_field("$j.url.value","image")
-#     end
-#   end  
-# end
-
-
+# ------ image --- 
+do list(path:"metadata.inlined.mediapackage.publications.publication", "var": "$i")
+  do list(path: "$i.attachments.attachment", "var": "$j")
+    if any_equal("$j.type","presenter/search+preview")
+      copy_field("$j.url.value","image")
+    end
+  end  
+end
+# ------ dateCreated --- 
 # What is the creation date?
 /* Creation-Date comes in as "- recorded at 9/19/2012" */
 # copy_field("metadata.inlined.catalog.*.dublincore.dcterms:created.value", "dateCreated")
 
 
-/*rel = "liscence" cant be directly mapped */
-
+# ------ license --- 
 copy_field("metadata.inlined.catalog.*.metadata.terms:license_id.value", "license.id")
 
 
-/* Creator */
+# ------ creator --- 
 set_array("creator[]")
 copy_field("metadata.inlined.catalog.*.metadata.terms:creator_1_type.value", "creator[].1.type")
 copy_field("metadata.inlined.catalog.*.metadata.terms:creator_1_name.value", "creator[].1.name")
@@ -135,7 +136,7 @@ do list(path:"contributor[]", "var":"$i")
 end
 
 
-/*sourceOrganization*/ 
+# ------ sourceOrganization ----
 set_array("sourceOrganization[]")
 uniq("@sourceOrga")
 
@@ -147,10 +148,10 @@ end
 
 lookup("sourceOrganization[].*.name", "data/maps/orcaUni.tsv","sep_char":"\t")
 
-/* type */
+# ------ type --- 
 set_array("type[]", "LearningResource", "VideoObject")
 
-/*learningResourceType */
+# ------ learningResourceType --- 
 
 copy_field("metadata.inlined.catalog.*.metadata.terms:learningResourceType_id.value", "@hcrt")
 split_field("@hcrt", ";")
@@ -168,7 +169,7 @@ do list(path:"learningResourceType[]")
   lookup("prefLabel.en", "data/maps/hcrt-en-labels.tsv","sep_char":"\t")
 end
 
-/*about */
+# ------ about --- 
 
 set_array("about[]")
 set_array("@hochschulfaechersystematik")
@@ -183,23 +184,25 @@ do list(path: "about[]")
   lookup("prefLabel.de","data/maps/subject-labels.tsv","sep_char":"\t")
 end
 
-/*inLanguage*/
+# ------ inLanguage --- 
 set_array("inLanguage[]")
 copy_field("metadata.inlined.catalog.*.metadata.terms:inLanguage.value", "inLanguage[].$append")
 
 
-/*keywords */
+# ------ keywords --- 
 set_array("keywords[]")
 do list(path: "metadata.inlined.catalog", "var": "$i")
   copy_field("$i.metadata.terms:keywords.*.value","keywords[].$append")
 end
 
-/* embed and download URL */
+# ------ encoding --- 
 
 set_array("encoding[]")
 do list(path: "metadata.inlined.mediapackage.publications.publication", "var": "$i")
   if all_match("$i.media.track.url.value", "^https:\\/\\/cdn.educast.cloud\\/vod\\/orca\\/export\\/.*")
     copy_field("$i.media.track.url.value", "encoding[].$append.contentUrl")
+    copy_field("$i.media.track.size.value", "encoding[].$last.contentSize")
+    copy_field("$i.media.track.mimetype.value", "encoding[].$last.encodingFormat")    
     add_field("encoding[].$last.type", "MediaObject")
   end
 end
@@ -219,5 +222,7 @@ add_field("mainEntityOfPage[].$last.provider.id","$[service_id]")
 add_field("mainEntityOfPage[].$last.provider.type","Service")
 add_field("mainEntityOfPage[].$last.provider.name","$[service_name]")
 
+
+# ------ tidy up --- 
 retain("@context[]","id","image","name","creator[]","contributor[]","sourceOrganization[]", "license","description","dataCreated","inLanguage[]","type[]","learningResourceType[]","keywords[]","about[]", "encoding[]", "mainEntityOfPage[]")
 vacuum()
