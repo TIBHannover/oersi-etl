@@ -201,7 +201,7 @@ set_array("encoding[]")
 do list(path: "metadata.inlined.mediapackage.publications.publication", "var": "$i")
   if all_match("$i.media.track.url.value", "^https:\\/\\/cdn.educast.cloud\\/vod\\/orca\\/export\\/.*")
     copy_field("$i.media.track.url.value", "encoding[].$append.contentUrl")
-    copy_field("$i.media.track.size.value", "encoding[].$last.contentSize")
+    paste("encoding[].$last.contentSize", "$i.media.track.size.value", "~bytes")
     copy_field("$i.media.track.mimetype.value", "encoding[].$last.encodingFormat")    
     add_field("encoding[].$last.type", "MediaObject")
   end
