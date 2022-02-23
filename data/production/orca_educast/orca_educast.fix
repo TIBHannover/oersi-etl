@@ -1,0 +1,228 @@
+
+# --------Delete all emtpy values-------
+vacuum()
+
+
+# ---------------@context ----------------------------------
+
+set_array("@context[]", "https://w3id.org/kim/lrmi-profile/draft/context.jsonld")
+set_hash("@context[].$append", "@language": "de")
+
+
+# ------ id --- 
+copy_field("metadata.inlined.catalog.*.metadata.terms:id.value", "id")
+
+# ------ name --- 
+copy_field("metadata.inlined.catalog.*.metadata.terms:name.value", "name")
+
+# ------ description --- 
+copy_field("metadata.inlined.catalog.*.metadata.terms:description.value", "description")
+
+# ------ image --- 
+do list(path:"metadata.inlined.mediapackage.publications.publication", "var": "$i")
+  do list(path: "$i.attachments.attachment", "var": "$j")
+    if any_equal("$j.type","presenter/search+preview")
+      copy_field("$j.url.value","image")
+    end
+  end  
+end
+# ------ dateCreated --- 
+# What is the creation date?
+/* Creation-Date comes in as "- recorded at 9/19/2012" */
+# copy_field("metadata.inlined.catalog.*.dublincore.dcterms:created.value", "dateCreated")
+
+
+# ------ license --- 
+copy_field("metadata.inlined.catalog.*.metadata.terms:license_id.value", "license.id")
+
+
+# ------ creator --- 
+set_array("creator[]")
+copy_field("metadata.inlined.catalog.*.metadata.terms:creator_1_type.value", "creator[].1.type")
+copy_field("metadata.inlined.catalog.*.metadata.terms:creator_1_name.value", "creator[].1.name")
+copy_field("metadata.inlined.catalog.*.metadata.terms:creator_1_affiliation_id.value","creator[].1.@affiliation")
+copy_field("metadata.inlined.catalog.*.metadata.terms:creator_1_id.value","creator[].1.id")
+copy_field("metadata.inlined.catalog.*.metadata.terms:creator_1_honoricPrefix.value", "creator[].1.honoricPrefix")
+
+copy_field("metadata.inlined.catalog.*.metadata.terms:creator_2_type.value", "creator[].2.type")
+copy_field("metadata.inlined.catalog.*.metadata.terms:creator_2_name.value", "creator[].2.name")
+copy_field("metadata.inlined.catalog.*.metadata.terms:creator_2_affiliation_id.value","creator[].2.@affiliation")
+copy_field("metadata.inlined.catalog.*.metadata.terms:creator_2_id.value","creator[].2.id")
+copy_field("metadata.inlined.catalog.*.metadata.terms:creator_2_honoricPrefix.value", "creator[].2.honoricPrefix")
+
+copy_field("metadata.inlined.catalog.*.metadata.terms:creator_3_type.value", "creator[].3.type")
+copy_field("metadata.inlined.catalog.*.metadata.terms:creator_3_name.value", "creator[].3.name")
+copy_field("metadata.inlined.catalog.*.metadata.terms:creator_3_affiliation_id.value","creator[].3.@affiliation")
+copy_field("metadata.inlined.catalog.*.metadata.terms:creator_3_id.value","creator[].3.id")
+copy_field("metadata.inlined.catalog.*.metadata.terms:creator_3_honoricPrefix.value", "creator[].3.honoricPrefix")
+
+copy_field("metadata.inlined.catalog.*.metadata.terms:creator_4_type.value", "creator[].4.type")
+copy_field("metadata.inlined.catalog.*.metadata.terms:creator_4_name.value", "creator[].4.name")
+copy_field("metadata.inlined.catalog.*.metadata.terms:creator_4_affiliation_id.value","creator[].4.@affiliation")
+copy_field("metadata.inlined.catalog.*.metadata.terms:creator_4_id.value","creator[].4.id")
+copy_field("metadata.inlined.catalog.*.metadata.terms:creator_4_honoricPrefix.value", "creator[].4.honoricPrefix")
+
+copy_field("metadata.inlined.catalog.*.metadata.terms:creator_5_type.value", "creator[].5.type")
+copy_field("metadata.inlined.catalog.*.metadata.terms:creator_5_name.value", "creator[].5.name")
+copy_field("metadata.inlined.catalog.*.metadata.terms:creator_5_affiliation_id.value","creator[].5.@affiliation")
+copy_field("metadata.inlined.catalog.*.metadata.terms:creator_5_id.value","creator[].5.id")
+copy_field("metadata.inlined.catalog.*.metadata.terms:creator_5_honoricPrefix.value", "creator[].5.honoricPrefix")
+
+copy_field("metadata.inlined.catalog.*.metadata.terms:creator_6_type.value", "creator[].6.type")
+copy_field("metadata.inlined.catalog.*.metadata.terms:creator_6_name.value", "creator[].6.name")
+copy_field("metadata.inlined.catalog.*.metadata.terms:creator_6_affiliation_id.value","creator[].6.@affiliation")
+copy_field("metadata.inlined.catalog.*.metadata.terms:creator_6_id.value","creator[].6.id")
+copy_field("metadata.inlined.catalog.*.metadata.terms:creator_6_honoricPrefix.value", "creator[].6.honoricPrefix")
+
+copy_field("metadata.inlined.catalog.*.metadata.terms:creator_7_type.value", "creator[].7.type")
+copy_field("metadata.inlined.catalog.*.metadata.terms:creator_7_name.value", "creator[].7.name")
+copy_field("metadata.inlined.catalog.*.metadata.terms:creator_7_affiliation_id.value","creator[].7.@affiliation")
+copy_field("metadata.inlined.catalog.*.metadata.terms:creator_7_id.value","creator[].7.id")
+copy_field("metadata.inlined.catalog.*.metadata.terms:creator_7_honoricPrefix.value", "creator[].7.honoricPrefix")
+
+copy_field("metadata.inlined.catalog.*.metadata.terms:creator_8_type.value", "creator[].8.type")
+copy_field("metadata.inlined.catalog.*.metadata.terms:creator_8_name.value", "creator[].8.name")
+copy_field("metadata.inlined.catalog.*.metadata.terms:creator_8_affiliation_id.value","creator[].8.@affiliation")
+copy_field("metadata.inlined.catalog.*.metadata.terms:creator_8_id.value","creator[].8.id")
+copy_field("metadata.inlined.catalog.*.metadata.terms:creator_8_honoricPrefix.value", "creator[].8.honoricPrefix")
+
+copy_field("metadata.inlined.catalog.*.metadata.terms:creator_9_type.value", "creator[].9.type")
+copy_field("metadata.inlined.catalog.*.metadata.terms:creator_9_name.value", "creator[].9.name")
+copy_field("metadata.inlined.catalog.*.metadata.terms:creator_9_affiliation_id.value","creator[].9.@affiliation")
+copy_field("metadata.inlined.catalog.*.metadata.terms:creator_9_id.value","creator[].9.id")
+copy_field("metadata.inlined.catalog.*.metadata.terms:creator_9_honoricPrefix.value", "creator[].9.honoricPrefix")
+
+copy_field("metadata.inlined.catalog.*.metadata.terms:creator_10_type.value", "creator[].10.type")
+copy_field("metadata.inlined.catalog.*.metadata.terms:creator_10_name.value", "creator[].10.name")
+copy_field("metadata.inlined.catalog.*.metadata.terms:creator_10_affiliation_id.value","creator[].10.@affiliation")
+copy_field("metadata.inlined.catalog.*.metadata.terms:creator_10_id.value","creator[].10.id")
+copy_field("metadata.inlined.catalog.*.metadata.terms:creator_10_honoricPrefix.value", "creator[].10.honoricPrefix")
+
+set_array("@sourceOrga")
+do list(path:"creator[]", "var":"$i")
+  copy_field("$i.@affiliation", "affiliation.id")
+  copy_field("$i.@affiliation", "affiliation.name")
+  lookup("$i.affiliation.name", "data/maps/orcaUni.tsv","sep_char":"\t")
+  add_field("$i.affiliation.type", "Organization")
+  move_field("$i.@affiliation", "@sourceOrga.$append")
+end
+
+# -------contributor -----
+set_array("contributor[]")
+copy_field("metadata.inlined.catalog.*.metadata.terms:contributor_1_type.value", "contributor[].1.type")
+copy_field("metadata.inlined.catalog.*.metadata.terms:contributor_1_name.value", "contributor[].1.name")
+copy_field("metadata.inlined.catalog.*.metadata.terms:contributor_1_affiliation_id.value","contributor[].1.@affiliation")
+copy_field("metadata.inlined.catalog.*.metadata.terms:contributor_1_id.value","contributor[].1.id")
+copy_field("metadata.inlined.catalog.*.metadata.terms:contributor_1_honoricPrefix.value", "contributor[].1.honoricPrefix")
+
+copy_field("metadata.inlined.catalog.*.metadata.terms:contributor_2_type.value", "contributor[].2.type")
+copy_field("metadata.inlined.catalog.*.metadata.terms:contributor_2_name.value", "contributor[].2.name")
+copy_field("metadata.inlined.catalog.*.metadata.terms:contributor_2_affiliation_id.value","contributor[].2.@affiliation")
+copy_field("metadata.inlined.catalog.*.metadata.terms:contributor_2_id.value","contributor[].2.id")
+copy_field("metadata.inlined.catalog.*.metadata.terms:contributor_2_honoricPrefix.value", "contributor[].2.honoricPrefix")
+
+copy_field("metadata.inlined.catalog.*.metadata.terms:contributor_3_type.value", "contributor[].3.type")
+copy_field("metadata.inlined.catalog.*.metadata.terms:contributor_3_name.value", "contributor[].3.name")
+copy_field("metadata.inlined.catalog.*.metadata.terms:contributor_3_affiliation_id.value","contributor[].3.@affiliation")
+copy_field("metadata.inlined.catalog.*.metadata.terms:contributor_3_id.value","contributor[].3.id")
+copy_field("metadata.inlined.catalog.*.metadata.terms:contributor_3_honoricPrefix.value", "contributor[].3.honoricPrefix")
+
+do list(path:"contributor[]", "var":"$i")
+  copy_field("$i.@affiliation", "affiliation.id")
+  copy_field("$i.@affiliation", "affiliation.name")
+  lookup("$i.affiliation.name", "data/maps/orcaUni.tsv","sep_char":"\t")
+  add_field("$i.affiliation.type", "Organization")
+  move_field("$i.@affiliation", "@sourceOrga.$append")
+end
+
+
+# ------ sourceOrganization ----
+set_array("sourceOrganization[]")
+uniq("@sourceOrga")
+
+do list(path:"@sourceOrga", "var": "$i")
+  copy_field("$i", "sourceOrganization[].$append.id")
+  copy_field("$i", "sourceOrganization[].$last.name")
+  add_field("sourceOrganization[].$last.type", "Organization")
+end
+
+lookup("sourceOrganization[].*.name", "data/maps/orcaUni.tsv","sep_char":"\t")
+
+# ------ type --- 
+set_array("type[]", "LearningResource", "VideoObject")
+
+# ------ learningResourceType --- 
+
+copy_field("metadata.inlined.catalog.*.metadata.terms:learningResourceType_id.value", "@hcrt")
+split_field("@hcrt", ";")
+trim("@hcrt.*")
+uniq("@hcrt")
+lookup("@hcrt.*","data/maps/orcaMedienId-hcrt.tsv","sep_char":"\t")
+
+set_array("learningResourceType[]")
+copy_field("@hcrt.*", "learningResourceType[].$append.id")
+
+do list(path:"learningResourceType[]")
+  copy_field("id", "prefLabel.de")
+  lookup("prefLabel.de", "data/maps/hcrt-de-labels.tsv","sep_char":"\t")
+  copy_field("id", "prefLabel.en")
+  lookup("prefLabel.en", "data/maps/hcrt-en-labels.tsv","sep_char":"\t")
+end
+
+# ------ about --- 
+
+set_array("about[]")
+set_array("@hochschulfaechersystematik")
+do list(path:"metadata.inlined.catalog", "var": "$i")
+  copy_field("$i.metadata.terms:about_id.*.value", "@hochschulfaechersystematik.$append")
+end
+uniq("@hochschulfaechersystematik")
+copy_field("@hochschulfaechersystematik.*","about[].$append.id")
+
+do list(path: "about[]")
+  copy_field("id", "prefLabel.de")
+  lookup("prefLabel.de","data/maps/subject-labels.tsv","sep_char":"\t")
+end
+
+# ------ inLanguage --- 
+set_array("inLanguage[]")
+copy_field("metadata.inlined.catalog.*.metadata.terms:inLanguage.value", "inLanguage[].$append")
+
+
+# ------ keywords --- 
+set_array("keywords[]")
+do list(path: "metadata.inlined.catalog", "var": "$i")
+  copy_field("$i.metadata.terms:keywords.*.value","keywords[].$append")
+end
+
+# ------ encoding --- 
+
+set_array("encoding[]")
+do list(path: "metadata.inlined.mediapackage.publications.publication", "var": "$i")
+  if all_match("$i.media.track.url.value", "^https:\\/\\/cdn.educast.cloud\\/vod\\/orca\\/export\\/.*")
+    copy_field("$i.media.track.url.value", "encoding[].$append.contentUrl")
+    copy_field("$i.media.track.size.value", "encoding[].$last.contentSize")
+    copy_field("$i.media.track.mimetype.value", "encoding[].$last.encodingFormat")    
+    add_field("encoding[].$last.type", "MediaObject")
+  end
+end
+
+do list(path: "metadata.inlined.mediapackage.publications.publication", "var": "$i")
+  if all_match("$i.url.value", "^https:\\/\\/player.orca.educast.nrw\\/.*")
+    copy_field("$i.url.value", "encoding[].$append.embedUrl")
+    add_field("encoding[].$last.type", "MediaObject")
+  end
+end
+
+
+# ---------mainEntityOfPage----------------
+set_array("mainEntityOfPage[]")
+copy_field("id", "mainEntityOfPage[].$append.id")
+add_field("mainEntityOfPage[].$last.provider.id","$[service_id]")
+add_field("mainEntityOfPage[].$last.provider.type","Service")
+add_field("mainEntityOfPage[].$last.provider.name","$[service_name]")
+
+
+# ------ tidy up --- 
+retain("@context[]","id","image","name","creator[]","contributor[]","sourceOrganization[]", "license","description","dataCreated","inLanguage[]","type[]","learningResourceType[]","keywords[]","about[]", "encoding[]", "mainEntityOfPage[]")
+vacuum()

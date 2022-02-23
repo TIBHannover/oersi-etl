@@ -9,6 +9,7 @@ default input_wait = "50";
 "https://www.oerbw.de/edu-sharing/eduservlet/sitemap?from=" + input_from
 | oersi.SitemapReader(wait=input_wait,limit=input_limit,urlPattern=".*/components/.*",findAndReplace="https://www.zoerr.de/edu-sharing/components/render/(.*)`https://uni-tuebingen.oerbw.de/edu-sharing/rest/node/v1/nodes/-home-/$1/metadata?propertyFilter=-all-")
 | open-http(accept="application/json")
+| oersi.ErrorCatcher(file_errors)
 | as-lines
 | decode-json
 // edu-sharing version 6.0
