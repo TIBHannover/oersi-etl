@@ -100,8 +100,8 @@ copy_field("metadata.inlined.catalog.*.metadata.terms:creator_10_honoricPrefix.v
 
 set_array("@sourceOrga")
 do list(path:"creator[]", "var":"$i")
-  copy_field("$i.@affiliation", "affiliation.id")
-  copy_field("$i.@affiliation", "affiliation.name")
+  copy_field("$i.@affiliation", "$i.affiliation.id")
+  copy_field("$i.@affiliation", "$i.affiliation.name")
   lookup("$i.affiliation.name", "data/maps/orcaUni.tsv","sep_char":"\t")
   add_field("$i.affiliation.type", "Organization")
   move_field("$i.@affiliation", "@sourceOrga.$append")
@@ -128,8 +128,8 @@ copy_field("metadata.inlined.catalog.*.metadata.terms:contributor_3_id.value","c
 copy_field("metadata.inlined.catalog.*.metadata.terms:contributor_3_honoricPrefix.value", "contributor[].3.honoricPrefix")
 
 do list(path:"contributor[]", "var":"$i")
-  copy_field("$i.@affiliation", "affiliation.id")
-  copy_field("$i.@affiliation", "affiliation.name")
+  copy_field("$i.@affiliation", "$i.affiliation.id")
+  copy_field("$i.@affiliation", "$i.affiliation.name")
   lookup("$i.affiliation.name", "data/maps/orcaUni.tsv","sep_char":"\t")
   add_field("$i.affiliation.type", "Organization")
   move_field("$i.@affiliation", "@sourceOrga.$append")
