@@ -20,6 +20,22 @@ end
 replace_all("id", ".*orca\\:", "https://www.orca.nrw/content/")
 
 
+# ------- creator/contributor-affiliation ------
+
+do list(path: "creator[]", "var": "$i")
+	copy_field("$i.affiliation.id", "$i.affiliation.name")
+end
+
+lookup("creator[].*.affiliation.name", "data/maps/orcaUni.tsv", "sep_char":"\t")
+
+do list(path: "contributor[]", "var": "$i")
+	copy_field("$i.affiliation.id", "$i.affiliation.name")
+end
+
+
+lookup("contributor[].*.affiliation.name", "data/maps/orcaUni.tsv", "sep_char":"\t")
+
+
 # ------------ sourceOrganization -------------
 set_array("@sourceOrga")
 copy_field("contributor[].*.affiliation.id", "@sourceOrga.$append")
@@ -30,9 +46,10 @@ set_array("sourceOrganization[]")
 do list(path: "@sourceOrga", "var": "$i")
 	copy_field("$i", "sourceOrganization[].$append.id")
 	copy_field("$i", "sourceOrganization[].$last.name")
-	lookup("sourceOrganization[].$last.name", "data/maps/orcaUni.tsv", "sep_char":"\t")
 	add_field("sourceOrganization[].$last.type", "Organization")
 end
+	
+lookup("sourceOrganization[].*.name", "data/maps/orcaUni.tsv", "sep_char":"\t")
 
 
 do list(path: "learningResourceType[]")

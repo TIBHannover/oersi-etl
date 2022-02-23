@@ -1,5 +1,15 @@
+# Filters all that are not set to public
+
 unless any_equal("publishScheme", "public")
     reject()
 end
 
-move_field('@id','id')
+move_field("@id","id")
+
+# Filters all that have an id that is not an UUID
+
+unless any_match("id", "^orca:[0-9a-fA-F]{8}\\b-[0-9a-fA-F]{4}\\b-[0-9a-fA-F]{4}\\b-[0-9a-fA-F]{4}\\b-[0-9a-fA-F]{12}$")
+    reject()
+end
+
+retain("id")
