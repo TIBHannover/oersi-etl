@@ -12,11 +12,7 @@ service_name = "ORCA.nrw";
 | as-records
 | decode-json(recordPath="$")
 // Filters out any resource that is not public
-| fix-filter("
-do map('publishScheme')
-    equals(string: 'public')
-end")
-| fix("map('@id','id')")
+| metafix(FLUX_DIR +  "filter.fix")
 | literal-to-object
 // Second API call doest NOT need password
 | template("https://api.paideia.hbz-nrw.de/resource/${o}/lrmiData") // local test: FLUX_DIR + "resources/${o}.json"
@@ -24,9 +20,8 @@ end")
 | open-http(accept="application/json") // local test: open-file
 | as-records
 | decode-json
-| fix(FLUX_DIR +  "orca_fedora.fix", *)
+| metafix(FLUX_DIR +  "orca_fedora.fix", *)
 | encode-json
-| oersi.FieldMerger
 | oersi.JsonValidator(output_schema, writeValid=metadata_valid, writeInvalid=metadata_invalid)
 | oersi.OersiWriter(backend_api, user=backend_user, pass=backend_pass, log=metadata_responses)
 ;
