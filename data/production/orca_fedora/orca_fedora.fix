@@ -1,152 +1,85 @@
-/* Set up the context */
-do array("@context")
- add_field("","https://w3id.org/kim/lrmi-profile/draft/context.jsonld")
- do entity("")
-  add_field("@language", "de")
- end
-end
+# The data build mostly on AMB-profil. We only need some adjustments.
 
-/* Map some of the data we have to the oersi model: */
+# ---------------@context ----------------------------------
 
-do map("id", "@id")
-    replace(pattern: ".*orca\\:", with: "https://www.orca.nrw/content/")
-end
-map("@id", "id")
-map("name")
-map("description")
-do map("id", "image")
-  compose(prefix:"https://api.edoweb-test.hbz-nrw.de/tools/thumby?url=", postfix:"/data&size=250")
+set_array("@context[]", "https://w3id.org/kim/lrmi-profile/draft/context.jsonld")
+set_hash("@context[].$append", "@language": "de")
+
+
+# -------  image ----
+#There are no pictures there at the moment
+unless exists("image")
+  copy_field("id", "image")
+  prepend("image", "https://api.edoweb-test.hbz-nrw.de/tools/thumby?url=")
+  append("image","/data&size=250")
 end
 
 
-/* Creation-Date comes in as "- recorded at 9/19/2012" */
-map("datePublished", "dateCreated")
+# -------  id ----
+# Needs ajustment to link to the landingPage and not to fedora
+replace_all("id", ".*orca\\:", "https://www.orca.nrw/content/")
 
 
-/*rel = "liscence" cant be directly mapped */
-do entity("license", flushWith: record)
-  map("license.id", "id")
+# ------- creator/contributor-affiliation ------
+
+do list(path: "creator[]", "var": "$i")
+	copy_field("$i.affiliation.id", "$i.affiliation.name")
 end
 
-/* Creator */
-do array("creator", flushWith: record)
-  do entity("", flushWith: "creator[].?")
-    map("creator[].?.type", "type")
-    map("creator[].?.name", "name")
-    do entity("affiliation", flushWith: "creator[].?")
-      map("creator[].?.affiliation.id","id")
-      map("creator[].?.affiliation.type","type")
-      map("creator[].?.affiliation.name", "name")
-    end
-    map("creator[].?.id","id")
-    map("creator[].?.honoricPrefix", "honoricPrefix")
-  end
+lookup("creator[].*.affiliation.name", "data/maps/orcaUni.tsv", "sep_char":"\t")
+
+do list(path: "contributor[]", "var": "$i")
+	copy_field("$i.affiliation.id", "$i.affiliation.name")
 end
 
-/* Contributor */
-do array("contributor", flushWith: record)
-  do entity("", flushWith: "contributor[].?")
-    map("contributor[].?.type", "type")
-    map("contributor[].?.name", "name")
-    do entity("affiliation", flushWith: "creator[].?")
-      map("contributor[].?.affiliation.id","id")
-      map("contributor[].?.affiliation.type","type")
-      map("contributor[].?.affiliation.name", "name")
-    end
-    map("contributor[].?.id","id")
-    map("contributor[].?.academicTitle", "academicTitle")
-  end
+
+lookup("contributor[].*.affiliation.name", "data/maps/orcaUni.tsv", "sep_char":"\t")
+
+
+# ------------ sourceOrganization -------------
+set_array("@sourceOrga")
+copy_field("contributor[].*.affiliation.id", "@sourceOrga.$append")
+copy_field("creator[].*.affiliation.id", "@sourceOrga.$append")
+uniq("@sourceOrga") 
+
+set_array("sourceOrganization[]")
+do list(path: "@sourceOrga", "var": "$i")
+	copy_field("$i", "sourceOrganization[].$append.id")
+	copy_field("$i", "sourceOrganization[].$last.name")
+	add_field("sourceOrganization[].$last.type", "Organization")
+end
+	
+lookup("sourceOrganization[].*.name", "data/maps/orcaUni.tsv", "sep_char":"\t")
+
+
+do list(path: "learningResourceType[]")
+	lookup("id","data/maps/orcaMedienId-hcrt.tsv", "sep_char":"\t")
+	remove_field("prefLabel") # do not know if that is necessary, when rewriten
+	copy_field("id", "prefLabel.de")
+	lookup("prefLabel.de","data/maps/hcrt-de-labels.tsv", "sep_char":"\t")
+	copy_field("id", "prefLabel.en")
+	lookup("prefLabel.en","data/maps/hcrt-en-labels.tsv", "sep_char":"\t")
 end
 
-/*sourceOrganization */
-do map("contributor[].*.affiliation.id|creator[].*.affiliation.id", "@sourceOrganization")
-  unique()
-end
+replace_all("learningResourceType[].*.inScheme.id", "https://w3id.org/orca.nrw/medientypen/", "https://w3id.org/kim/hcrt/scheme")
 
-do array("sourceOrganization", flushWith: record)
-  do entity("")
-    do map("@sourceOrganization","id")
-      not_equals(string: "")
-    end
-    do map("@sourceOrganization","type")
-      constant(value: "Organization")
-    end
-    do map("@sourceOrganization", "name")
-      lookup(in: "data/maps/orcaUni.tsv")
-    end
-  end
-end
-
-/* type */
-
-do array ("type")
-  add_field("","LearningResource")
-end
-
-/*learningResourceType */
-
-do map("learningResourceType[].*.id", "@hcrt")
-  lookup(in: "data/maps/orcaMedienId-hcrt.tsv")
-  unique()
-end
-
-do array("learningResourceType", flushWith: record)
-  do entity("", flushWith: "@hcrt")
-    map("@hcrt", "id")
-    do entity("prefLabel", flushWith: "@hcrt")
-      do map("@hcrt", "de")
-        lookup(in: "data/maps/hcrt-de-labels.tsv")
-      end  
-      do map("@hcrt", "en")
-        lookup(in: "data/maps/hcrt-en-labels.tsv")
-      end
-    end
-  end
-end
-
-/*about */
-
-do array("about", flushWith: record)
- do entity("", flushWith: "about[].?.id")
-  map("about[].?.id", "id")
-  do map("about[].?.id", "prefLabel.de")
-    lookup(in: "data/maps/subject-labels.tsv")
-  end
- end
-end
 
 /*encoding - NEEDS TO BE UPDATED IF ORCA STARTS TO BE A REFERALTORY TOO. */
 
-do array("encoding", flushWith: record)
- do entity("")
-  do map("id", "contentUrl")
-    compose(postfix:"/data")
-  end
-  add_field("type", "MediaObject")
- end
-end
+set_array("encoding[]")
+copy_field("id", "encoding[].$append.contentUrl")
+append("encoding[].*.id", "/data")
+add_field("encoding[].$last.type", "MediaObject")
 
-/*inLanguage*/
-do array("inLanguage")
-  map("inLanguage[].*")
-end
 
-/*keywords */
 
-do array("keywords", flushWith: record)
-  map("keywords[].*")
-end
+# ---------mainEntityOfPage----------------
+set_array("mainEntityOfPage[]")
+copy_field("id", "mainEntityOfPage[].$append.id")
+add_field("mainEntityOfPage[].$last.provider.id","$[service_id]")
+add_field("mainEntityOfPage[].$last.provider.type","Service")
+add_field("mainEntityOfPage[].$last.provider.name","$[service_name]")
 
-/*mainEntityOfPage */
-
-do array("mainEntityOfPage")
-  do entity("")
-    map("@id", "id")
-    /* Add provider/source information to each resource description */
-    do entity("provider")
-      add_field("id","$[service_id]")
-      add_field("type","Service")
-      add_field("name","$[service_name]")
-    end
-  end
-end
+# --- retain needs the exact name as it enters, so creator[]
+retain("@context[]","id","image","name", "license", "creator[]","contributor[]","sourceOrganization[]","description","inLanguage[]","type[]","learningResourceType[]","keywords[]","about[]", "encoding[]", "mainEntityOfPage[]" )
+vacuum()
