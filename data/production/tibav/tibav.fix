@@ -1,132 +1,170 @@
-/* The difficulty with the fix is that the attributes are read as values but not as keys.*/
-/* Also that values and the attribute are not grouped together as objects but all are single keys at the same level. */
-
-/* Set up the context */
-do array("@context")
- add_field("","https://w3id.org/kim/lrmi-profile/draft/context.jsonld")
- do entity("")
-  add_field("@language", "de")
- end
+if exists ("metadata.error")
+  reject()
 end
 
-/* id: Construct actual ID from @id. Picked from header not from record itself. */
-do map("html.body.record.header.identifier.value","id")
-    replace_all(pattern: "oai:tib.eu:kmo-av:sid~", with: "https://av.tib.eu/media/")
+if any_equal ("header.status", "deleted")
+  reject()
 end
 
-/* name:  */
-do map("html.body.record.metadata.resources.resource.titles.title.value", "name")
-  not_equals(string: "")
-end
 
-/*image*/
-do map("html.body.record.header.identifier.value","image")
-    replace_all(pattern: "oai:tib.eu:kmo-av:sid~", with: "https://av.tib.eu/thumbnail/")
-end
+vacuum()
 
-/* dateCreated: */
-map("html.body.record.metadata.resources.resource.dates.date.Issued", "dateCreated")
+# ---------------@context ----------------------------------
 
-/*description:*/
-do map("html.body.record.metadata.resources.resource.descriptions.description.Abstract", "description")
-  replace_all(pattern: "^\\(de\\)|^\\(en\\)", with: "")
-end
+set_array("@context[]", "https://w3id.org/kim/lrmi-profile/draft/context.jsonld")
+set_hash("@context[].$append", "@language": "de")
 
-do entity("license")
-  do map("html.body.record.metadata.resources.resource.rightslist.rights.rightsuri", "id")
-    regexp(match: '^http[s]?:\\/\\/creativecommons.org\\/(licenses|licences|publicdomain)\\/.*|^http[s]?:\\/\\/www.gnu.org\\/licenses\\/.*|^http[s]?:\\/\\/www.apache.org\\/licenses\\/.*|http[s]?://opensource.org/licenses/MIT|^http[s]?:\\/\\/www.opensource.org\\/licenses\\/BSD.*')
+
+# ---------------id----------------------------------
+# id: Construct actual ID from @id. Picked from header not from record itself.
+
+copy_field("header.identifier.value","id")
+replace_all("id", "oai:tib.eu:kmo-av:sid~", "https://av.tib.eu/media/")
+
+
+# ---------------name----------------------------------
+
+do list(path:"metadata.resources.resource.titles.title", "var": "$i")
+  unless exists("$i.titleType")
+    copy_field("$i.value", "name")
   end
 end
 
-do array ("type")
-  add_field("","LearningResource")
-end
+# ---------------image----------------------------------
 
-/* Add Video always as lRT */
+copy_field("header.identifier.value","image")
+replace_all("image", "oai:tib.eu:kmo-av:sid~", "https://av.tib.eu/thumbnail/")
 
-add_field("@hcrt","https://w3id.org/kim/hcrt/video")
 
-do array('learningResourceType')
-  do entity('')
-    map('@hcrt', 'id')
-    do entity('prefLabel')
-      do map('@hcrt', 'de')
-        lookup(in: 'data/maps/hcrt-de-labels.tsv')
-      end  
-      do map('@hcrt', 'en')
-        lookup(in: 'data/maps/hcrt-en-labels.tsv')
-      end
-    end
+# ---------------dateCreated----------------------------------
+
+do list(path:"metadata.resources.resource.dates.date","var":"$i")
+  if any_equal("$i.dateType", "Issued")
+    copy_field("$i.value","dateCreated")
   end
 end
 
-/* encoding: */
-do array("encoding", flushWith: record)
- do entity("")
-  do map("html.body.record.header.identifier.value","embedUrl")
-    replace_all(pattern: "oai:tib.eu:kmo-av:sid~", with: "https://av.tib.eu/player/")
-  end
-  add_field("type", "MediaObject")
- end
-end
 
-/*publisher:  May exist more than once. */
-do array("publisher")
- do entity("")
-  add_field("type", "Organization")
-  map("html.body.record.metadata.resources.resource.publisher.value", "name")
- end
-end
-/* mainEntityofPage */
+# ---------------description----------------------------------
 
-do array("mainEntityOfPage")
-  do entity("")
-    do map("html.body.record.header.identifier.value","id")
-        replace_all(pattern: "oai:tib.eu:kmo-av:sid~", with: "https://av.tib.eu/media/")
-    end
-    /* Add provider/source information to each resource description */
-    do entity("provider")
-      add_field("id","$[service_id]")
-      add_field("type","Service")
-      add_field("name","$[service_name]")
-    end
+do list(path:"metadata.resources.resource.descriptions.description","var":"$i")
+  if any_equal("$i.descriptionType", "Abstract")
+    copy_field("$i.value","description")
   end
 end
+replace_all("description", "^\\(de\\)|^\\(en\\)", "")
 
-/* inLanguage */
-do array("inLanguage")
-  do map("html.body.record.metadata.resources.resource.language.value")
-    replace_all(pattern: "http://id.loc.gov/vocabulary/iso639-1/", with: "")
+# ---------------license----------------------------------
+
+unless any_equal("metadata.resources.resource.rightsList.rights.rightsURI", "http://rightsstatements.org/vocab/InC/1.0/")
+  copy_field("metadata.resources.resource.rightsList.rights.rightsURI","license.id")
+end
+
+# ------ type --- 
+
+set_array("type[]", "LearningResource")
+
+# ------ learningResourceType --- 
+# only video
+
+set_array("learningResourceType[]")
+add_field("learningResourceType[].$append.id","https://w3id.org/kim/hcrt/video")
+add_field("learningResourceType[].$last.prefLabel.de","Video")
+add_field("learningResourceType[].$last.prefLabel.en","Video")
+
+
+# ------ encoding --- 
+
+set_array("encoding[]")
+copy_field("header.identifier.value","encoding[].$append.embedUrl")
+add_field("encoding[].$last.type", "MediaObject")
+replace_all("encoding[].*.embedUrl", "oai:tib.eu:kmo-av:sid~", "https://av.tib.eu/player/")
+
+
+# ------ publisher --- 
+
+set_array("publisher[]")
+
+do list(path:"metadata.resources.resource.publisher","var":"$i")
+  copy_field("$i.value","publisher[].$append.name")
+  add_field("publisher[].$last.type", "Organization")
+end
+
+# ---------mainEntityOfPage----------------
+
+set_array("mainEntityOfPage[]")
+copy_field("id", "mainEntityOfPage[].$append.id")
+add_field("mainEntityOfPage[].$last.provider.id","$[service_id]")
+add_field("mainEntityOfPage[].$last.provider.type","Service")
+add_field("mainEntityOfPage[].$last.provider.name","$[service_name]")
+
+
+# ---------inLanguage----------------
+
+set_array("inLanguage[]")
+copy_field("metadata.resources.resource.language.value","inLanguage[].$append")
+replace_all("inLanguage[].*", "http://id.loc.gov/vocabulary/iso639-1/", "")
+
+
+# ---------creator----------------
+# TIB does not differentiate between an organisation and a person.
+
+set_array("creator[]")
+do list(path:"metadata.resources.resource.creators.creator", "var":"$i")
+  copy_field("$i.creatorName.value", "creator[].$append.name")
+  add_field("creator[].$last.type", "Person")
+  if any_equal("$i.nameIdentifier.nameIdentifierScheme","ORCID")
+    copy_field("$i.nameIdentifier.value", "creator[].$last.id")
   end
 end
 
-/* TIB does not differentiate between an organisation and a person. */
-do array("creator", flushWith: record)
- do entity("")
- /* If TIB would provide type, we could try. At the moment FIX does not support conditionals so that we only can recognise creators as Person */
-  add_field("type", "Person")
-  do map("html.body.record.metadata.resources.resource.creators.creator.creatorname.value", "name")
-    replace(pattern: "(.+), (.+)", with: "$2 $1")
-  end
- end
-end
+replace_all("creator[].*.name","(.+), (.+)", "$2 $1")
+prepend("creator[].*.id", "http://orcid.org/")
 
-/*All subjects without attributes */
-do entity('keywords[]', flushWith: 'record')
- map('html.body.record.metadata.resources.resource.subjects.subject.value')
-end
-
-/*All subjects with knm or linsearch attribute are transformed to about objects. Duplicate objects should be avoided. kmn and linsearch are almoist identical. */
-do map('html.body.record.metadata.resources.resource.subjects.subject.linsearch*|html.body.record.metadata.resources.resource.subjects.subject.knm','@hochschulfaechersystematik')
-  lookup(in: 'data/maps/tibav-subject-mapping.tsv')
-  unique()
-end
-  
-do array('about', flushWith: record)
-  do entity('', flushWith: '@hochschulfaechersystematik')
-    map('@hochschulfaechersystematik', 'id')
-    do map('@hochschulfaechersystematik', 'prefLabel.de')
-      lookup(in: 'data/maps/subject-labels.tsv')
-    end
+# ---------contributor----------------
+set_array("contributor[]")
+do list(path:"metadata.resources.resource.contributors.contributor", "var":"$i")
+  copy_field("$i.contributorName.value", "contributor[].$append.name")
+  add_field("contributor[].$last.type", "Person")
+  if any_equal("$i.nameIdentifier.nameIdentifierScheme","ORCID")
+    copy_field("$i.nameIdentifier.value", "contributor[].$last.id")
   end
 end
+
+replace_all("contributor[].*.name","(.+), (.+)", "$2 $1")
+prepend("contributor[].*.id", "http://orcid.org/")
+
+
+# ---------keywords----------------
+
+set_array("keywords[]")
+do list(path:"metadata.resources.resource.subjects.subject", "var":"$i")
+  copy_field("$i.value", "keywords[].$append")
+end
+
+# ---------about----------------
+# All subjects with knm or linsearch attribute are transformed to about objects. Duplicate objects should be avoided. kmn and linsearch are almoist identical. 
+
+
+set_array("@hochschulfaechersystematik")
+do list(path:"metadata.resources.resource.subjects.subject", "var":"$i")
+  if any_match("$i.subjectScheme", "knm|linsearch.*")
+    copy_field("$i.value", "@hochschulfaechersystematik.$append")
+  end
+end
+
+trim("@hochschulfaechersystematik.*")
+uniq("@hochschulfaechersystematik")
+lookup("@hochschulfaechersystematik.*","data/maps/tibav-subject-mapping.tsv","sep_char":"\t")
+
+set_array("about[]")
+copy_field("@hochschulfaechersystematik.*","about[].$append.id")
+
+do list(path: "about[]")
+  copy_field("id", "prefLabel.de")
+  lookup("prefLabel.de","data/maps/subject-labels.tsv","sep_char":"\t")
+end
+
+# ------ tidy up --- 
+retain("@context[]","id","image","name","creator[]","contributor[]","sourceOrganization[]", "license","description","dateCreated","inLanguage[]","type[]","learningResourceType[]","keywords[]","about[]", "encoding[]", "publisher[]", "mainEntityOfPage[]")
+vacuum()
