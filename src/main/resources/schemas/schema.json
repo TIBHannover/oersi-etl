@@ -38,8 +38,8 @@
     "dateCreated": {
       "$ref": "dateCreated.json"
     },
-    "encoding": {
-      "$ref": "encoding.json"
+    "datePublished": {
+      "$ref": "datePublished.json"
     },
     "inLanguage": {
       "$ref": "inLanguage.json"
@@ -70,6 +70,15 @@
     },
     "keywords": {
       "$ref": "keywords.json"
+    },
+    "encoding": {
+      "$ref": "encoding.json"
+    },
+    "conditionsOfAccess": {
+      "$ref": "conditionsOfAccess.json"
+    },
+    "isAccessibleForFree": {
+      "$ref": "isAccessibleForFree.json"
     }
   },
   "required": [
