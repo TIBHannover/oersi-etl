@@ -1,80 +1,66 @@
-/* Set up the context */
-do array("@context")
- add_field("","https://w3id.org/kim/lrmi-profile/draft/context.jsonld")
- do entity("")
-  add_field("@language", "de")
- end
-end
+vacuum()
 
+# ---------------@context ----------------------------------
+
+set_array("@context[]", "https://w3id.org/kim/lrmi-profile/draft/context.jsonld")
+set_hash("@context[].$append", "@language": "de")
+
+
+# ---------------id ----------------------------------
+copy_field("@graph[].3.url", "id")
+
+# ---------------name ----------------------------------
 /* Delete the plattform name in the title of the resource */
-map("@graph[].3.url", "id")
-do map( "@graph[].3.name", "name")
-  replace_all(pattern: " - Universitätsverbund digiLL",  with: "")
-end
+copy_field( "@graph[].3.name", "name")
+replace_all("name", " - Universitätsverbund digiLL", "")
 
-map("@graph[].2.url", "image")
+# ---------------image ----------------------------------
+copy_field("@graph[].2.url", "image")
 
-do map("@graph[].3.datePublished", "dateCreated")
-  replace_all(pattern: 'T.*', with: '')
-end
+# ---------------dateCreated ----------------------------------
+copy_field("@graph[].3.datePublished", "dateCreated")
+replace_all("dateCreated", 'T.*', '')
 
-do array("inLanguage")
-  do map("@graph[].3.inLanguage")
-    replace_all(pattern: '-.*', with: '')
-  end
-end
 
-do array("type")
-  add_field("","LearningResource")
-end
+# ---------------inLanguage ----------------------------------
+set_array("inLanguage[]")
+copy_field("@graph[].3.inLanguage", "inLanguage[].$append")
+replace_all("inLanguage[].*", '-.*', '')
 
-do array("publisher")
- do entity("")
-  add_field("type", "Organization")
-  map("@graph[].1.@id","id")
-  map("@graph[].1.name", "name")
- end
-end
+# ------ type --- 
+set_array("type[]", "LearningResource")
+
+# --- publisher ----
+set_array("publisher[]")
+copy_field("@graph[].1.@id","publisher[].$append.id")
+copy_field("@graph[].1.name", "publisher[].$last.name")
+add_field("publisher[].$last.type", "Organization")
+
+# ------ license --- 
 
 /* Add BY-SA 4.0 license as digiLL is saying usual license is CC BY SA) */
 
-do entity("license")
-  add_field("id","https://creativecommons.org/licenses/by-sa/4.0/")
-end
+add_field("license.id","https://creativecommons.org/licenses/by-sa/4.0/")
 
-/* Add Course always as lRT */
+# ------ learningResourceType --- 
 
 add_field("@hcrt","https://w3id.org/kim/hcrt/course")
+# only course
 
-do array('learningResourceType')
-  do entity('')
-    map('@hcrt', 'id')
-    do entity('prefLabel')
-      do map('@hcrt', 'de')
-        lookup(in: 'data/maps/hcrt-de-labels.tsv')
-      end  
-      do map('@hcrt', 'en')
-        lookup(in: 'data/maps/hcrt-en-labels.tsv')
-      end
-    end
-  end
-end
+set_array("learningResourceType[]")
+add_field("learningResourceType[].$append.id","https://w3id.org/kim/hcrt/course")
+add_field("learningResourceType[].$last.prefLabel.de","Kurs")
+add_field("learningResourceType[].$last.prefLabel.en","Course")
 
-do array('mainEntityOfPage')
-  do entity('')
-    map('@graph[].3.url', id)
-    /* Add creation/modification date, converting dateTime (e.g. 2019-07-23T09:26:00Z) to date (2019-07-23) */
-    do map("@graph[].3.dateModified", "dateModified")
-      replace_all(pattern: 'T.*', with: '')
-    end
-    do map("@graph[].3.datePublished", "dateCreated")
-      replace_all(pattern: 'T.*', with: '')
-    end
-    /* Add provider/source information to each resource description */
-    do entity('provider')
-      add_field('id','$[service_id]')
-      add_field('type','Service')
-      add_field('name','$[service_name]')
-    end
-  end
-end
+
+# ---------mainEntityOfPage----------------
+
+set_array("mainEntityOfPage[]")
+copy_field("id", "mainEntityOfPage[].$append.id")
+add_field("mainEntityOfPage[].$last.provider.id","$[service_id]")
+add_field("mainEntityOfPage[].$last.provider.type","Service")
+add_field("mainEntityOfPage[].$last.provider.name","$[service_name]")
+
+# ------ tidy up --- 
+retain("@context[]","id","image","name","creator[]","contributor[]","sourceOrganization[]", "license","description","dateCreated","inLanguage[]","type[]","learningResourceType[]","keywords[]","about[]", "encoding[]", "publisher[]", "mainEntityOfPage[]")
+vacuum()
