@@ -111,7 +111,9 @@ replace_all("inLanguage[].*", "http://id.loc.gov/vocabulary/iso639-1/", "")
 
 set_array("creator[]")
 do list(path:"metadata.resources.resource.creators.creator", "var":"$i")
-  copy_field("$i.creatorName.value", "creator[].$append.name")
+# There might be creators with empty names that are filtered out at the beginning.
+  add_field("creator[].$append.test", "")
+  copy_field("$i.creatorName.value", "creator[].$last.name")
   add_field("creator[].$last.type", "Person")
   if any_equal("$i.nameIdentifier.nameIdentifierScheme","ORCID")
     copy_field("$i.nameIdentifier.value", "creator[].$last.id")
@@ -124,7 +126,9 @@ prepend("creator[].*.id", "http://orcid.org/")
 # ---------contributor----------------
 set_array("contributor[]")
 do list(path:"metadata.resources.resource.contributors.contributor", "var":"$i")
-  copy_field("$i.contributorName.value", "contributor[].$append.name")
+# There might be contributors with empty names that are filtered out at the beginning.
+  add_field("contributor[].$append.test", "")
+  copy_field("$i.contributorName.value", "contributor[].$last.name")
   add_field("contributor[].$last.type", "Person")
   if any_equal("$i.nameIdentifier.nameIdentifierScheme","ORCID")
     copy_field("$i.nameIdentifier.value", "contributor[].$last.id")
