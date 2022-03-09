@@ -17,7 +17,7 @@
       "type": "object",
       "properties": {
         "@language": {
-          "$ref": "language.json"
+          "$ref": "Language.json"
         }
       },
       "additionalProperties": false,
