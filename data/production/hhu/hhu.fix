@@ -1,100 +1,146 @@
-/* Set up the context */
-do array("@context")
- add_field("","https://w3id.org/kim/lrmi-profile/draft/context.jsonld")
- do entity("")
-  add_field("@language", "de")
- end
-end
+vacuum()
 
-/* Map some of the data we have to the oersi model: */
-map("html.head.meta.og:title", "name")
-map("html.head.meta.og:description", "description")
-map("html.head.meta.og:image","image")
+# ---------------@context ----------------------------------
 
-/* Creation-Date comes in as "- recorded at 9/19/2012" */
-do map("*.span.watch-information-date produced", "dateCreated")
-  regexp(match: "- recorded at \\d{1,2}}/\\d{1,2}}/\\d{4}")
-  replace(pattern: "(\\d)/(\\d+)/(\\d\\d\\d\\d)", with: "0$1/$2/$3")
-  replace(pattern: "(\\d+)/(\\d)/(\\d\\d\\d\\d)", with: "$1/0$2/$3")
-  replace(pattern: "- recorded at (\\d\\d)/(\\d\\d)/(\\d\\d\\d\\d)", with: "$3-$1-$2")
-end
+set_array("@context[]", "https://w3id.org/kim/lrmi-profile/draft/context.jsonld")
+set_hash("@context[].$append", "@language": "de")
 
+# ---------------@context ----------------------------------
+copy_field("html.head.meta.*.og:url", "id")
+
+# ---------------name----------------------------------
+copy_field("html.head.meta.*.og:title", "name")
+
+# ---------------description----------------------------------
+copy_field("html.head.meta.*.og:description", "description")
+
+# ---------------image----------------------------------
+copy_field("html.head.meta.*.og:image","image")
+
+
+# ---------------dateCreated----------------------------------
+# /* Creation-Date comes in as "- recorded at 9/19/2012" */
+# /* Creation-Date comes in as "- recorded at 9/19/2012" */
+# do map("*.span.watch-information-date produced", "dateCreated")
+#  regexp(match: "- recorded at \\d{1,2}}/\\d{1,2}}/\\d{4}")
+#  replace(pattern: "(\\d)/(\\d+)/(\\d\\d\\d\\d)", with: "0$1/$2/$3")
+#  replace(pattern: "(\\d+)/(\\d)/(\\d\\d\\d\\d)", with: "$1/0$2/$3")
+#  replace(pattern: "- recorded at (\\d\\d)/(\\d\\d)/(\\d\\d\\d\\d)", with: "$3-$1-$2")
+# end
+
+
+
+
+
+
+set_array("@dateCreated")
+# copy_field("html.body.form.div.div.*.div.div.div.div.*.div.div.*.div.*.div.div.*.span.*.watch-information-date produced", "@dateCreated.$append")
+# do list(path:"@dateCreated", "var": "$i")
+#  if any_match("$i", "- recorded at \\d{1,2}}/\\d{1,2}}/\\d{4}")
+#    replace_all("$i", "(\\d)/(\\d+)/(\\d\\d\\d\\d)", "0$1/$2/$3")
+#    replace_all("$i", "(\\d+)/(\\d)/(\\d\\d\\d\\d)", "$1/0$2/$3")
+#    replace_all("$i", "- recorded at (\\d\\d)/(\\d\\d)/(\\d\\d\\d\\d)", with: "$3-$1-$2")
+#    copy_field("$i", "dateCreated")
+#  end
+# end
+
+# ---------------license----------------------------------
 /*rel = "liscence" cant be directly mapped */
+#do entity("license")
+#   do map("*.a.license", "id")
+#         regexp(match: '^http[s]?:\\/\\/creativecommons.org\\/(licenses|licences|publicdomain)\\/.*|^http[s]?:\\/\\/www.gnu.org\\/licenses\\/.*|^http[s]?:\\/\\/www.apache.org\\/licenses\\/.*|http[s]?://opensource.org/licenses/MIT|^http[s]?:\\/\\/www.opensource.org\\/licenses\\/BSD.*')
+#   end
+# end
 
-do entity("license")
-  do map("*.a.license", "id")
-        regexp(match: '^http[s]?:\\/\\/creativecommons.org\\/(licenses|licences|publicdomain)\\/.*|^http[s]?:\\/\\/www.gnu.org\\/licenses\\/.*|^http[s]?:\\/\\/www.apache.org\\/licenses\\/.*|http[s]?://opensource.org/licenses/MIT|^http[s]?:\\/\\/www.opensource.org\\/licenses\\/BSD.*')
-  end
+
+# does not work
+if any_match("html.body.form.div.div.*.div.div.div.div.*.div.div.*.div.*.div.*.div.*.div.p.a.*.license", '^http[s]?:\\/\\/creativecommons.org\\/(licenses|licences|publicdomain)\\/.*|^http[s]?:\\/\\/www.gnu.org\\/licenses\\/.*|^http[s]?:\\/\\/www.apache.org\\/licenses\\/.*|http[s]?://opensource.org/licenses/MIT|^http[s]?:\\/\\/www.opensource.org\\/licenses\\/BSD.*')
+  copy_field("html.body.form.div.div.*.div.div.div.div.*.div.div.*.div.*.div.*.div.*.div.p.a.*.license", "license.id")
 end
 
-do array("creator", flushWith: record)
- do entity("")
-  add_field("type", "Person")
-  do map("*.p.watch-speaker", "name")
-    replace(pattern: "Apl\\. |\\(apl\\.\\) |Dr\\. med |Dr\\. |Dr\\.'in |Dr |Dr\\.med\\.|Dres\\. |Dr\\.|Prof\\. |Prof\\.'in |Prof\\.|Prof |Jun\\.-|PD |PD\\. |med\\. |rer\\. |pol\\.|nat\\. |dent\\. |em\\. |Ao\\.-|o\\. Univ\\.|Uni\\.-|Univ\\.-|Univ\\. |DI |RA |Dipl\\.|-Ing\\. |-Inform\\. |-Psych\\. |h\\.c\\. |mult\\. |Mag\\. |, MME|; MME|, MScN|M\\. Sc\\. |, MSc| MSc\\.|, M\\.A\\.| M\\.A\\.|, M\\.D\\.|, B\\.A\\.|, MMZ|, Psychoanalytiker|, L\\.L\\.M\\.|, LL\\.M\\.| \\(M\\.A\\.\\)", with: "")
-  end 
- end
-end
 
-do array("sourceOrganization", flushWith: record)
- do entity("")
-  add_field("type", "Organization")
-  add_field("name", "HHU Düsseldorf")
- end
-end
+# # ---------------creator----------------------------------
+# do array("creator", flushWith: record)
+#  do entity("")
+#   add_field("type", "Person")
+#   do map("*.p.watch-speaker", "name")
+#     replace(pattern: "Apl\\. |\\(apl\\.\\) |Dr\\. med |Dr\\. |Dr\\.'in |Dr |Dr\\.med\\.|Dres\\. |Dr\\.|Prof\\. |Prof\\.'in |Prof\\.|Prof |Jun\\.-|PD |PD\\. |med\\. |rer\\. |pol\\.|nat\\. |dent\\. |em\\. |Ao\\.-|o\\. Univ\\.|Uni\\.-|Univ\\.-|Univ\\. |DI |RA |Dipl\\.|-Ing\\. |-Inform\\. |-Psych\\. |h\\.c\\. |mult\\. |Mag\\. |, MME|; MME|, MScN|M\\. Sc\\. |, MSc| MSc\\.|, M\\.A\\.| M\\.A\\.|, M\\.D\\.|, B\\.A\\.|, MMZ|, Psychoanalytiker|, L\\.L\\.M\\.|, LL\\.M\\.| \\(M\\.A\\.\\)", with: "")
+#   end 
+#  end
+# end
 
-map("html.head.meta.og:url", "id")
+# set_array("creator[]")
+# copy_field("html.body.form.div.div.*.div.div.div.div.*.div.div.*.div.*.div.*.div.*.p.watch-speaker","creator[].$append.name")
+# add_field("creator[].$last.type", "Person")
+# replace("creator[].*.name","Apl\\. |\\(apl\\.\\) |Dr\\. med |Dr\\. |Dr\\.'in |Dr |Dr\\.med\\.|Dres\\. |Dr\\.|Prof\\. |Prof\\.'in |Prof\\.|Prof |Jun\\.-|PD |PD\\. |med\\. |rer\\. |pol\\.|nat\\. |dent\\. |em\\. |Ao\\.-|o\\. Univ\\.|Uni\\.-|Univ\\.-|Univ\\. |DI |RA |Dipl\\.|-Ing\\. |-Inform\\. |-Psych\\. |h\\.c\\. |mult\\. |Mag\\. |, MME|; MME|, MScN|M\\. Sc\\. |, MSc| MSc\\.|, M\\.A\\.| M\\.A\\.|, M\\.D\\.|, B\\.A\\.|, MMZ|, Psychoanalytiker|, L\\.L\\.M\\.|, LL\\.M\\.| \\(M\\.A\\.\\)","")
 
-do array ("type")
-  add_field("","LearningResource")
-end
+# ---------------sourceOrganization----------------------------------
+set_array("sourceOrganization[]")
+add_field("sourceOrganization[].$append.type", "Organization")
+add_field("sourceOrganization[].$last.name", "HHU Düsseldorf")
 
-/* Add Video always as lRT */
+# ------ type --- 
 
-add_field("@hcrt","https://w3id.org/kim/hcrt/video")
+set_array("type[]", "LearningResource")
 
-do array('learningResourceType')
-  do entity('')
-    map('@hcrt', 'id')
-    do entity('prefLabel')
-      do map('@hcrt', 'de')
-        lookup(in: 'data/maps/hcrt-de-labels.tsv')
-      end  
-      do map('@hcrt', 'en')
-        lookup(in: 'data/maps/hcrt-en-labels.tsv')
-      end
-    end
-  end
-end
+# ------ learningResourceType --- 
+# only video
 
+set_array("learningResourceType[]")
+add_field("learningResourceType[].$append.id","https://w3id.org/kim/hcrt/video")
+add_field("learningResourceType[].$last.prefLabel.de","Video")
+add_field("learningResourceType[].$last.prefLabel.en","Video")
+
+# ------ encoding --- 
 /* encoding: So far only embedUrl */
-do map("html.body.form.div.div.div.div.div.div.div.div.div.div.div.textarea.value","@embedUrl")
-  regexp(match: "^<iframe.*src='(https:\\/\\/mediathek\\.hhu\\.de\\/embed\\/.*)(' frameborder='0' allowfullscreen><\\/iframe>)$", format: '${1}')
-end
+# /* encoding: So far only embedUrl */
+# do map("html.body.form.div.div.div.div.div.div.div.div.div.div.div.textarea.value","@embedUrl")
+#   regexp(match: "^<iframe.*src='(https:\\/\\/mediathek\\.hhu\\.de\\/embed\\/.*)(' frameborder='0' allowfullscreen><\\/iframe>)$", format: '${1}')
+# end
+# 
+# do array("encoding", flushWith: record)
+#   do entity("")
+#     map("@embedUrl","embedUrl")
+#     do map("@embedUrl", "type")
+#       constant(value: "MediaObject")
+#     end
+#   end
+# end
 
-do array("encoding", flushWith: record)
-  do entity("")
-    map("@embedUrl","embedUrl")
-    do map("@embedUrl", "type")
-      constant(value: "MediaObject")
-    end
-  end
-end
 
-do array("keywords", flushWith: record)
-  map("html.body.form.div.div.div.div.div.div.div.div.div.div.div.ul.li.a.value")
-end
+# set_array("@embedUrl")
+# set_array("encoding[]")
+# copy_field("html.body.form.div.div.*.div.div.div.div.*.div.div.*.div.*.div.*.div.textarea.value","@embedUrl.$append")
 
-do array("mainEntityOfPage")
-  do entity("")
-    do map("html.body.form.action", "id")
-      replace(pattern: "./", with: "https://mediathek.hhu.de/watch/")
-    end
-    /* Add provider/source information to each resource description */
-    do entity("provider")
-      add_field("id","$[service_id]")
-      add_field("type","Service")
-      add_field("name","$[service_name]")
-    end
-  end
-end
+# do list(path:"@embedUrl", "var":"$i")
+#   if any_match("$i", "^<iframe.*src='(https:\\/\\/mediathek\\.hhu\\.de\\/embed\\/.*)(' frameborder='0' allowfullscreen><\\/iframe>)$")
+#     replace_all("$i","^<iframe.*src='(https:\\/\\/mediathek\\.hhu\\.de\\/embed\\/.*)(' frameborder='0' allowfullscreen><\\/iframe>)$",'${1}')
+#     copy_field("$i", "encoding[].$append.embedUrl")
+#     add_field("encoding[].$last.type", "MediaObject")
+#   end
+# end
+
+# ------ keywords --- 
+
+# do array("keywords", flushWith: record)
+#   map("html.body.form.div.div.div.div.div.div.div.div.div.div.div.ul.li.a.value")
+# end
+
+# set_array("keywords[]")
+# do list(path:"html.body.form.div.div.*.div.div.div.div.*.div.div.*.div.*.div.*.div.ul.li.*.a.value","var":"$i")
+#   copy_field("$i","keywords[].$append")
+# end
+
+
+# ---------mainEntityOfPage----------------
+
+set_array("mainEntityOfPage[]")
+copy_field("id", "mainEntityOfPage[].$append.id")
+add_field("mainEntityOfPage[].$last.provider.id","$[service_id]")
+add_field("mainEntityOfPage[].$last.provider.type","Service")
+add_field("mainEntityOfPage[].$last.provider.name","$[service_name]")
+
+
+# ------ tidy up --- 
+retain("@context[]","id","image","name","creator[]","contributor[]","sourceOrganization[]", "license","description","dataCreated","inLanguage[]","type[]","learningResourceType[]","keywords[]","about[]", "encoding[]", "mainEntityOfPage[]")
+vacuum()
