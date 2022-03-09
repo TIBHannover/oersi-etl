@@ -10,11 +10,11 @@ default input_wait = "50";
 | oersi.ErrorCatcher(file_errors)
 | open-http
 | extract-element("script[data-test=model-linked-data]")
+| match(pattern="@(type|id)", replacement="$1")
 | decode-json
 | filter-null-values
-| fix(FLUX_DIR + "hoou.fix", *)
+| metafix(FLUX_DIR + "hoou.fix", *)
 | encode-json
-| oersi.FieldMerger
 | oersi.JsonValidator(output_schema, writeValid=metadata_valid, writeInvalid=metadata_invalid)
 | oersi.OersiWriter(backend_api, user=backend_user, pass=backend_pass, log=metadata_responses)
 ;

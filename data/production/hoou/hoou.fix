@@ -1,121 +1,89 @@
-/* Set up the context */
-do array("@context")
- add_field("","https://w3id.org/kim/lrmi-profile/draft/context.jsonld")
- do entity("")
-  add_field("@language", "de")
- end
+vacuum()
+
+# Following fields are provided:
+# id
+# name
+# image
+# description
+
+
+# ---------------@context ----------------------------------
+
+set_array("@context[]", "https://w3id.org/kim/lrmi-profile/draft/context.jsonld")
+set_hash("@context[].$append", "@language": "de")
+
+
+# ---------------license ----------------------------------
+move_field("license", "@license")
+copy_field("@license", "license.id")
+
+
+# ---------------dateCreated ----------------------------------
+replace_all("dateCreated","T.*", "")
+
+# ---------------dateModified ----------------------------------
+replace_all("dateModified","T.*", "")
+
+
+# ---------------creator ----------------------------------
+copy_field("author[]","creator[]")
+
+replace_all("creator[].*.name", "Apl\\. |\\(apl\\.\\) |Dr\\. med |Dr\\. |Dr\\.'in |Dr |Dr\\.med\\.|Dres\\. |Dr\\.|Prof\\. |Prof\\.'in |Prof\\.|Prof |Jun\\.-|PD |PD\\. |med\\. |rer\\. |pol\\.|nat\\. |dent\\. |em\\. |Ao\\.-|o\\. Univ\\.|Uni\\.-|Univ\\.-|Univ\\. |DI |RA |Dipl\\.|-Ing\\. |-Inform\\. |-Psych\\. |h\\.c\\. |mult\\. |Mag\\. |, MME|; MME|, MScN|M\\. Sc\\. |, MSc| MSc\\.|, M\\.A\\.| M\\.A\\.|, M\\.D\\.|, B\\.A\\.|, MMZ|, Psychoanalytiker|, L\\.L\\.M\\.|, LL\\.M\\.| \\(M\\.A\\.\\)", "")
+
+
+# ---------------sourceOrganization ----------------------------------
+
+replace_all("provider[].*.type",".*","Organization")
+copy_field("provider[]","sourceOrganization[]")
+
+# ---------------keywords----------------------------------
+split_field("keywords",",")
+trim("keywords.*")
+move_field("keywords","keywords[]")
+
+# ---------------about ----------------------------------
+set_array("@about")
+do list(path:"keywords[]", "var":"$i")
+  copy_field("$i","@about.$append")
 end
 
-map("@id", "id")
-
-map("name", "name")
-
-map("image", "image")
-map("description", "description")
-
-do entity("license")
-  do map("license", "id")
-    regexp(match: '^http[s]?:\\/\\/creativecommons.org\\/(licenses|licences|publicdomain)\\/.*|^http[s]?:\\/\\/www.gnu.org\\/licenses\\/.*|^http[s]?:\\/\\/www.apache.org\\/licenses\\/.*|http[s]?://opensource.org/licenses/MIT|^http[s]?:\\/\\/www.opensource.org\\/licenses\\/BSD.*')
-  end
+set_array("about[]")
+do list(path:"@about", "var":"$i")
+  lookup("$i", "data/maps/hoou-subject-mapping.tsv","sep_char":"\t")
+  lookup("$i", "data/maps/subject-url-mapping.tsv","sep_char":"\t")
+  copy_field("$i", "about[].$append.id")
+  copy_field("$i", "about[].$last.prefLabel.de")
 end
+lookup("about[].*.prefLabel.de", "data/maps/subject-labels.tsv","sep_char":"\t")
 
-/* The audicence is created differently now as object as well it is not provided often. */
 
-do map("dateCreated", "dateCreated")
-  replace_all(pattern: "T.*", with: "")
-end
+# ---------------type----------------------------------
+set_array("type[]", "LearningResource")
 
-do map("dateModified", "dateModified")
-  replace_all(pattern: "T.*", with: "")
-end
-
-do array("creator", flushWith: record)
- do entity("", flushWith: "author[].?|author[].??")
-  map("author[].*.@type", "type")
-  do map("author[].*.name", "name")
-    replace(pattern: "Apl\\. |\\(apl\\.\\) |Dr\\. med |Dr\\. |Dr\\.'in |Dr |Dr\\.med\\.|Dres\\. |Dr\\.|Prof\\. |Prof\\.'in |Prof\\.|Prof |Jun\\.-|PD |PD\\. |med\\. |rer\\. |pol\\.|nat\\. |dent\\. |em\\. |Ao\\.-|o\\. Univ\\.|Uni\\.-|Univ\\.-|Univ\\. |DI |RA |Dipl\\.|-Ing\\. |-Inform\\. |-Psych\\. |h\\.c\\. |mult\\. |Mag\\. |, MME|; MME|, MScN|M\\. Sc\\. |, MSc| MSc\\.|, M\\.A\\.| M\\.A\\.|, M\\.D\\.|, B\\.A\\.|, MMZ|, Psychoanalytiker|, L\\.L\\.M\\.|, LL\\.M\\.| \\(M\\.A\\.\\)", with: "")
-  end 
- end
-end
-
-do array("sourceOrganization", flushWith: record)
- do entity("")
-  add_field("type","Organization")
-  map("provider[].*.name", "name")
- end
-end
-
-/* Create array, split provided keyword string and trim blanks */
-do array("keywords")
-  do map("keywords")
-    split(delimiter: ",")
-    trim()
-  end
-end
-
-do map("keywords", "@hochschulfaechersystematik")
-  split(delimiter: ",")
-  trim()
-  lookup(in: "data/maps/hoou-subject-mapping.tsv")
-  lookup(in: "data/maps/subject-url-mapping.tsv")
-end
-
-do array("about", flushWith: record)
- do entity("", flushWith: "@hochschulfaechersystematik")
-  map("@hochschulfaechersystematik", "id")
-  do map("@hochschulfaechersystematik", "prefLabel.de")
-    lookup(in: "data/maps/subject-labels.tsv")
-  end
- end
-end
-
-do array("type")
-  add_field("","LearningResource")
-end
+# ---------------learningResourceType----------------------------------
 
 /* HOOU provides at the moment only Course or CreativeWork as types. Also learningResourceType is set with Video oder Bilder but not very often. */
-do map("@type|learningResourceType", "@hcrt")
-  replace(pattern:"Bilder", with:"Image")
-  lookup(in: "data/maps/en-labels-hcrt-uri.tsv")
-  regexp(match: "https://w3id.org/kim/hcrt/.*")
+set_array("@hcrt")
+copy_field("@type|learningResourceType", "@hcrt.$append")
+replace_all("@hcrt.*","Bilder","Image")
+lookup("@hcrt.*","data/maps/en-labels-hcrt-uri.tsv","sep_char":"\t")
+copy_field("@hcrt.*", "learningResourceType[].$append.id")
+set_array("learningResourceType[]")
+do list(path:"learningResourceType[]")
+  copy_field("id", "prefLabel.de")
+  lookup("prefLabel.de", "data/maps/hcrt-de-labels.tsv","sep_char":"\t")
+  copy_field("id", "prefLabel.en")
+  lookup("prefLabel.en", "data/maps/hcrt-en-labels.tsv","sep_char":"\t")
 end
 
-do array("learningResourceType")
-  do entity("")
-    map("@hcrt", "id")
-    do entity("prefLabel")
-      do map("@hcrt", "de")
-        lookup(in: "data/maps/hcrt-de-labels.tsv")
-      end  
-      do map("@hcrt", "en")
-        lookup(in: "data/maps/hcrt-en-labels.tsv")
-      end
-    end
-  end
-end
 
-do array("mainEntityOfPage")
-  do entity("")
-    map("@id", "id")
-    /* Add provider/source information to each resource description */
-    do entity("provider")
-      add_field("id","$[service_id]")
-      add_field("type","Service")
-      add_field("name","$[service_name]")
-    end
-  end
-end
+# ---------mainEntityOfPage----------------
+set_array("mainEntityOfPage[]")
+copy_field("id", "mainEntityOfPage[].$append.id")
+add_field("mainEntityOfPage[].$last.provider.id","$[service_id]")
+add_field("mainEntityOfPage[].$last.provider.type","Service")
+add_field("mainEntityOfPage[].$last.provider.name","$[service_name]")
 
-/* Only little number of records have audience informations. */
-do map("audience[].*.educationalRole", "@educationalAudienceRole")
-  lookup("Lehrer*in": "teacher", "Schüler*innen": "student", "Student*in": "student")
-end
-
-do array("audience" flushWith: record)
-  do entity("", flushWith:"@educationalAudienceRole")
-    do map("@educationalAudienceRole", "id")
-      compose(prefix: "http://purl.org/dcx/lrmi-vocabs/educationalAudienceRole/")
-      unique()
-    end
-  end
-end
+# ------ tidy up --- 
+retain("@context[]","id","image","name","creator[]","contributor[]","sourceOrganization[]", "license","description","dataCreated","inLanguage[]","type[]","learningResourceType[]","keywords[]","about[]", "encoding[]", "mainEntityOfPage[]")
+vacuum()
