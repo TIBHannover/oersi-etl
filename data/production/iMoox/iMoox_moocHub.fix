@@ -1,102 +1,106 @@
-/* Set up the context */
-do array("@context")
- add_field("","https://w3id.org/kim/lrmi-profile/draft/context.jsonld")
- do entity("")
-  add_field("@language", "de")
- end
+# Filter out all resources that are not free
+
+unless any_match("attributes.access[].","free")
+  reject()
 end
 
-/* id */
-map("attributes.url", "id")
+# Delete all empty values
+vacuum()
 
-/* name */
-map("attributes.name", "name")
+#  ---------------@context ----------------------------------
 
-/*image */
-map("attributes.image.url", "image")
+set_array("@context[]", "https://w3id.org/kim/lrmi-profile/draft/context.jsonld")
+set_hash("@context[].$append", "@language": "de")
 
-/* dateCreated */
-do map("attributes.startDate", "dateCreated")
-  replace(pattern: "T.*", with: "")
+#  ---------------id----------------------------------
+remove_field("id")
+copy_field("attributes.url", "id")
+
+#  ---------------name----------------------------------
+copy_field("attributes.name", "name")
+
+#  ---------------image----------------------------------
+copy_field("attributes.image.url", "image")
+
+#  ---------------dateCreated----------------------------------
+copy_field("attributes.startDate", "dateCreated")
+replace_all("dateCreated", "T.*", "")
+
+#  ---------------description----------------------------------
+paste("description", "attributes.description","attributes.learningobjectives[].*")
+
+
+# /* creator: source data is not consistent, can be a single author or multiple separated by comma or "&amp;". API estimates one object per instructor. Also there is no type even though there are persons and organisations.*/
+# do map("attributes.instructors[].*.name", "@creator")
+#  split(delimiter: ", | &amp; ")
+#  replace(pattern: "Apl\\. |\\(apl\\.\\) |Dr\\. med |Dr\\. |Dr\\.'in |Dr |Dr\\.med\\.|Dres\\. |Dr\\.|Prof\\. |Prof\\.'in |Prof\\.|Prof |Jun\\.-|PD |PD\\. |med\\. |rer\\. |pol\\.|nat\\. |dent\\. |em\\. |Ao\\.-|o\\. Univ\\.|Uni\\.-|Univ\\.-|Univ\\. |DI |RA |Dipl\\.|-Ing\\. |-Inform\\. |-Psych\\. |h\\.c\\. |mult\\. |Mag\\. |, MME|; MME|, MScN|M\\. Sc\\. |, MSc| MSc\\.|, M\\.A\\.| M\\.A\\.|, M\\.D\\.|, B\\.A\\.|, MMZ|, Psychoanalytiker|, L\\.L\\.M\\.|, LL\\.M\\.| \\(M\\.A\\.\\)", with: "")
+#  not_equals(string: '')
+# end
+
+#  ---------------creator----------------------------------
+# source data is not consistent, can be a single author or multiple separated by comma or "&amp;". API estimates one object per instructor. Also there is no type even though there are persons and organisations.*/
+set_array("@creator")
+do list(path: "attributes.instructors[]", "var":"$i")
+  split_field("$i.name", ", | &amp; | / ")
+  do list(path:"$i.name", "var":"$j")
+    copy_field("$j", "@creator.$append")
+  end
+end
+trim("@creator.*")
+replace_all("@creator.*","Apl\\. |\\(apl\\.\\) |Dr\\. med |Dr\\. |Dr\\.'in |Dr |Dr\\.med\\.|Dres\\. |Dr\\.|Prof\\. |Prof\\.'in |Prof\\.|Prof |Jun\\.-|PD |PD\\. |med\\. |rer\\. |pol\\.|nat\\. |dent\\. |em\\. |Ao\\.-|o\\. Univ\\.|Uni\\.-|Univ\\.-|Univ\\. |DI |RA |Dipl\\.|-Ing\\. |-Inform\\. |-Psych\\. |h\\.c\\. |mult\\. |Mag\\. |, MME|; MME|, MScN|M\\. Sc\\. |, MSc| MSc\\.|, M\\.A\\.| M\\.A\\.|, M\\.D\\.|, B\\.A\\.|, MMZ|, Psychoanalytiker|, L\\.L\\.M\\.|, LL\\.M\\.| \\(M\\.A\\.\\)| \\(PhD Student\\)","")
+
+
+set_array("creator[]")
+do list(path:"@creator", "var": "$i")
+  copy_field("$i","creator[].$append.name")
+  add_field("creator[].$last.type", "Person")
 end
 
-/*description */
-do combine(name: "description", value: "${1} ${2}")
-  map("attributes.description", "1")
-  map("attributes.learningobjectives[].*", "2")
+# ------ sourceOrganization --- 
+set_array("sourceOrganization[]")
+do list(path:"attributes.partnerInstitute[]", "var": "$i")
+  copy_field("$i.name", "sourceOrganization[].$append.name")
+  add_field("sourceOrganization[].$last.type", "Organization")
 end
 
-/* creator: source data is not consistent, can be a single author or multiple separated by comma or "&amp;". API estimates one object per instructor. Also there is no type even though there are persons and organisations.*/
-do map("attributes.instructors[].*.name", "@creator")
-  split(delimiter: ", | &amp; ")
-  replace(pattern: "Apl\\. |\\(apl\\.\\) |Dr\\. med |Dr\\. |Dr\\.'in |Dr |Dr\\.med\\.|Dres\\. |Dr\\.|Prof\\. |Prof\\.'in |Prof\\.|Prof |Jun\\.-|PD |PD\\. |med\\. |rer\\. |pol\\.|nat\\. |dent\\. |em\\. |Ao\\.-|o\\. Univ\\.|Uni\\.-|Univ\\.-|Univ\\. |DI |RA |Dipl\\.|-Ing\\. |-Inform\\. |-Psych\\. |h\\.c\\. |mult\\. |Mag\\. |, MME|; MME|, MScN|M\\. Sc\\. |, MSc| MSc\\.|, M\\.A\\.| M\\.A\\.|, M\\.D\\.|, B\\.A\\.|, MMZ|, Psychoanalytiker|, L\\.L\\.M\\.|, LL\\.M\\.| \\(M\\.A\\.\\)", with: "")
-  not_equals(string: '')
-end
-
-do array("creator", flushWith: record)
- do entity("", flushWith: "@creator")
-  add_field("type", "Person")
-  map("@creator", "name")
- end
-end
-
-
-
-/* sourceOrganization */
-do array("sourceOrganization", flushWith: record)
- do entity("")
-  add_field("type", "Organization")
-  map("attributes.partnerInstitute[].*.name", "name")
- end
-end
-
-/* learningResourceType: Add Course always as lRT */
+# ------ learningResourceType --- 
 add_field("@hcrt","https://w3id.org/kim/hcrt/course")
+# only course
 
-do array('learningResourceType')
-  do entity('')
-    map('@hcrt', 'id')
-    do entity('prefLabel')
-      do map('@hcrt', 'de')
-        lookup(in: 'data/maps/hcrt-de-labels.tsv')
-      end  
-      do map('@hcrt', 'en')
-        lookup(in: 'data/maps/hcrt-en-labels.tsv')
-      end
-    end
-  end
-end
+set_array("learningResourceType[]")
+add_field("learningResourceType[].$append.id","https://w3id.org/kim/hcrt/course")
+add_field("learningResourceType[].$last.prefLabel.de","Kurs")
+add_field("learningResourceType[].$last.prefLabel.en","Course")
 
+# ------ inLanguage --- 
 /* inLanguage: The value Mehrsprachig does not represent the estimated language labels. */
-do array("inLanguage")
-  do map("attributes.languages[].*")
-    not_equals(string: "")
-    not_equals(string: "Mehrsprachig")
+set_array("inLanguage[]")
+copy_field("attributes.languages[].*", "inLanguage[].$append")
+
+do list(path:"inLanguage[]","var":"$i")
+  if any_equal("$i", "Mehrsprachig")
+    remove("$i")
   end
 end
 
-/*license */
-do entity("license")
-  map("attributes.courseLicenses[].*.url","id")
-end
+# ------ license ---
+copy_field("attributes.courseLicenses[].*.url","license.id")
 
-/* type */
-do array ("type")
-  add_field("","LearningResource")
-end
+# ------ type --- 
 
-/* mainEntityofPage */
-do array("mainEntityOfPage")
-  do entity("")
-    map("attributes.url", "id")
-    /* Add provider/source information to each resource description */
-    do entity("provider")
-      add_field("id","$[service_id]")
-      add_field("type","Service")
-      add_field("name","$[service_name]")
-    end
-  end
-end
+set_array("type[]", "LearningResource")
+
+# ---------mainEntityOfPage----------------
+
+set_array("mainEntityOfPage[]")
+copy_field("id", "mainEntityOfPage[].$append.id")
+add_field("mainEntityOfPage[].$last.provider.id","$[service_id]")
+add_field("mainEntityOfPage[].$last.provider.type","Service")
+add_field("mainEntityOfPage[].$last.provider.name","$[service_name]")
+
+# ------ tidy up --- 
+retain("@context[]","id","image","name","creator[]","contributor[]","sourceOrganization[]", "license","description","dateCreated","inLanguage[]","type[]","learningResourceType[]","keywords[]","about[]", "encoding[]", "publisher[]", "mainEntityOfPage[]")
+vacuum()
 
 /*missing:*/
 /*kewords*/
