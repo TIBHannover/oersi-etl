@@ -63,16 +63,6 @@ end
 
 replace_all("learningResourceType[].*.inScheme.id", "https://w3id.org/orca.nrw/medientypen/", "https://w3id.org/kim/hcrt/scheme")
 
-
-/*encoding - NEEDS TO BE UPDATED IF ORCA STARTS TO BE A REFERALTORY TOO. */
-
-set_array("encoding[]")
-copy_field("id", "encoding[].$append.contentUrl")
-append("encoding[].*.id", "/data")
-add_field("encoding[].$last.type", "MediaObject")
-
-
-
 # ---------mainEntityOfPage----------------
 set_array("mainEntityOfPage[]")
 copy_field("id", "mainEntityOfPage[].$append.id")
