@@ -153,11 +153,12 @@ end
 # ---------about----------------
 # All subjects with knm or linsearch attribute are transformed to about objects. Duplicate objects should be avoided. kmn and linsearch are almoist identical. 
 
-
 set_array("@hochschulfaechersystematik")
 do list(path:"metadata.resources.resource.subjects.subject", "var":"$i")
-  if any_match("$i.subjectScheme", "knm|linsearch.*")
+  if any_match("$i.subjectScheme", "linsearch.*")
     copy_field("$i.value", "@hochschulfaechersystematik.$append")
+  elsif any_match("$i.subjectScheme", "knm")
+    copy_field("$i.classificationCode", "@hochschulfaechersystematik.$append")
   end
 end
 
