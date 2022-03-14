@@ -47,11 +47,9 @@ end
 
 set_array("sourceOrganization[]")
 set_array("@sourceOrganization")
-do list(path:"attributes.partnerInstitute[]", "var": "$i")
-  split_field("$i.name", ", | &amp; | / |&")
-  do list(path:"$i.name", "var":"$j")
-    copy_field("$j", "@sourceOrganization.$append")
-  end
+split_field("attributes.university", ", | &amp; | / |&")
+do list(path:"attributes.university", "var": "$i")  
+  copy_field("$i", "@sourceOrganization.$append")
 end
 trim("@sourceOrganization.*")
 
