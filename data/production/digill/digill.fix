@@ -61,6 +61,13 @@ add_field("mainEntityOfPage[].$last.provider.id","$[service_id]")
 add_field("mainEntityOfPage[].$last.provider.type","Service")
 add_field("mainEntityOfPage[].$last.provider.name","$[service_name]")
 
+copy_field("@graph[].3.dateModified", "mainEntityOfPage[].$last.dateModified")
+replace_all("mainEntityOfPage[].*.dateModified", 'T.*', '')
+
+copy_field("@graph[].3.datePublished", "mainEntityOfPage[].$last.dateCreated")
+replace_all("mainEntityOfPage[].*.dateCreated", 'T.*', '')
+
+
 # ------ tidy up --- 
 retain("@context[]","id","image","name","creator[]","contributor[]","sourceOrganization[]", "license","description","dateCreated","inLanguage[]","type[]","learningResourceType[]","keywords[]","about[]", "encoding[]", "publisher[]", "mainEntityOfPage[]")
 vacuum()
