@@ -47,11 +47,9 @@ end
 
 set_array("sourceOrganization[]")
 set_array("@sourceOrganization")
-do list(path:"attributes.partnerInstitute[]", "var": "$i")
-  split_field("$i.name", ", | &amp; | / |&")
-  do list(path:"$i.name", "var":"$j")
-    copy_field("$j", "@sourceOrganization.$append")
-  end
+split_field("attributes.university", ", | &amp; | / |&")
+do list(path:"attributes.university", "var": "$i")  
+  copy_field("$i", "@sourceOrganization.$append")
 end
 trim("@sourceOrganization.*")
 
@@ -88,7 +86,7 @@ lookup("about[].*.prefLabel.de", "data/maps/subject-labels.tsv","sep_char":"\t")
 # ------ inLanguage --- 
 # The value Mehrsprachig does not represent the estimated language labels. */
 set_array("inLanguage[]")
-copy_field("attributes.languages[].*", "inLanguage[].$append")
+copy_field("attributes.languages", "inLanguage[].$append")
 
 do list(path:"inLanguage[]","var":"$i")
   if any_equal("$i", "Mehrsprachig")
