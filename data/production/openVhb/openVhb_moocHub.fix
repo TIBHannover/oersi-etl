@@ -86,7 +86,7 @@ lookup("about[].*.prefLabel.de", "data/maps/subject-labels.tsv","sep_char":"\t")
 # ------ inLanguage --- 
 # The value Mehrsprachig does not represent the estimated language labels. */
 set_array("inLanguage[]")
-copy_field("attributes.languages[].*", "inLanguage[].$append")
+copy_field("attributes.languages", "inLanguage[].$append")
 
 do list(path:"inLanguage[]","var":"$i")
   if any_equal("$i", "Mehrsprachig")
