@@ -8,7 +8,7 @@ service_name = "ORCA.nrw";
 
 // First API call  needs Password + contentType is unfortunatly researchData
 "https://api.paideia.hbz-nrw.de/resource?contentType=researchData&from=0&until=100000"
-| open-http(auth=orca_auth, accept="application/json")
+| open-http(auth="lobid:bie3ohShai5shahx", accept="application/json")
 | as-records
 | decode-json(recordPath="$")
 // Filters out any resource that is not public

@@ -3,8 +3,8 @@ service_id = "https://oerworldmap.org/resource/urn:uuid:10c5092a-152d-4cc9-a823-
 service_name = "TIB AV-Portal";
 
 
-"https://getinfo.tib.eu/oai/intern/repository/tib"
-| open-oaipmh(metadataPrefix="datacite", setSpec="kmo-av")
+FLUX_DIR + "test.xml"
+| open-file
 | decode-xml
 | handle-generic-xml(emitNamespace="true")
 | fix(FLUX_DIR + "tibav.fix", *)

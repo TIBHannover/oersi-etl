@@ -107,58 +107,58 @@ copy_field("metadata.mods:mods.mods:language.mods:languageTerm.value","inLanguag
 # ---------------type ----------------------------------
 set_array("type[]", "LearningResource")
 
-# ---------------learningResourceType ----------------------------------
-set_array("learningResourceType[]")
-set_array("@lRT")
-do list(path:"metadata.mods:mods.mods:genre","var":"$i") 
-  if any_match("$i.authorityURI","https://duepublico.uni-due.de/api/v1/classifications/mir_genres")
-    lookup("$i.valueURI", "data/maps/duepublico-hcrt.tsv","sep_char":"\t")
-    copy_field("$i.valueURI", "@lRT.$append")
-  end
-end
-do list(path:"metadata.mods:mods.mods:typeOfResource","var":"$i")
-  lookup("$i.value", "data/maps/duepublico_typeOfResource-hcrt.tsv","sep_char":"\t")
-  copy_field("$i.value", "@lRT.$append")
-end
-uniq("@lRT")
-
-do list(path: "@lRT", "var":"$i")
-  copy_field("$i","learningResourceType[].$append.id")
-  copy_field("$i","learningResourceType[].$last.prefLabel.de")
-  copy_field("$i","learningResourceType[].$last.prefLabel.en")
-end
-
-lookup("learningResourceType[].*.prefLabel.de", "data/maps/hcrt-de-labels.tsv","sep_char":"\t")
-lookup("learningResourceType[].*.prefLabel.en", "data/maps/hcrt-en-labels.tsv","sep_char":"\t")
+# # ---------------learningResourceType ----------------------------------
+# set_array("learningResourceType[]")
+# set_array("@lRT")
+# do list(path:"metadata.mods:mods.mods:genre","var":"$i") 
+#   if any_match("$i.authorityURI","https://duepublico.uni-due.de/api/v1/classifications/mir_genres")
+#     lookup("$i.valueURI", "data/maps/duepublico-hcrt.tsv","sep_char":"\t")
+#     copy_field("$i.valueURI", "@lRT.$append")
+#   end
+# end
+# do list(path:"metadata.mods:mods.mods:typeOfResource","var":"$i")
+#   lookup("$i.value", "data/maps/duepublico_typeOfResource-hcrt.tsv","sep_char":"\t")
+#   copy_field("$i.value", "@lRT.$append")
+# end
+# uniq("@lRT")
+# 
+# do list(path: "@lRT", "var":"$i")
+#   copy_field("$i","learningResourceType[].$append.id")
+#   copy_field("$i","learningResourceType[].$last.prefLabel.de")
+#   copy_field("$i","learningResourceType[].$last.prefLabel.en")
+# end
+# 
+# lookup("learningResourceType[].*.prefLabel.de", "data/maps/hcrt-de-labels.tsv","sep_char":"\t")
+# lookup("learningResourceType[].*.prefLabel.en", "data/maps/hcrt-en-labels.tsv","sep_char":"\t")
 
 # ---------------keywords----------------------------------
 set_array("keywords[]")
 # TODO: Keywords seem to be tokenized in the data mostly, but some are concatinated. Need to split and add to the array.
 copy_field("metadata.mods:mods.mods:subject.mods:topic.*.value","keywords[].$append")
 
-#  ------------about------------------------------------
-set_array("about[]")
-do list(path:"metadata.mods:mods.mods:classification","var":"$i")
-  if any_equal("$i.authorityURI","https://duepublico.uni-due.de/api/v1/classifications/destatis")
-    lookup("$i.valueURI", "data/maps/destatisPersonal2destatisStudierende.tsv","sep_char":"\t")
-    copy_field("$i.valueURI","about[].$append.id")
-    copy_field("$i.valueURI","about[].$last.prefLabel.de")
-  end
-end
+# #  ------------about------------------------------------
+# set_array("about[]")
+# do list(path:"metadata.mods:mods.mods:classification","var":"$i")
+#   if any_equal("$i.authorityURI","https://duepublico.uni-due.de/api/v1/classifications/destatis")
+#     lookup("$i.valueURI", "data/maps/destatisPersonal2destatisStudierende.tsv","sep_char":"\t")
+#     copy_field("$i.valueURI","about[].$append.id")
+#     copy_field("$i.valueURI","about[].$last.prefLabel.de")
+#   end
+# end
+# 
+# lookup("about[].*.prefLabel.de", "data/maps/subject-labels.tsv","sep_char":"\t")
 
-lookup("about[].*.prefLabel.de", "data/maps/subject-labels.tsv","sep_char":"\t")
 
-
-# -------isPartOf---------
-set_array("isPartOf[]")
-do list(path: "metadata.mods:mods.mods:relatedItem", "var": "$i")
-  if any_equal("$i.type","host")
-    copy_field("$i.xlink:href", "isPartOf[].$append.id")
-    paste("isPartOf[].$last.name","$i.mods:titleInfo.mods:nonSort.value","$i.mods:titleInfo.mods:title.value")
-  end
-end
-
-prepend("isPartOf[].*.id", "https://duepublico2.uni-due.de/receive/")
+# # -------isPartOf---------
+# set_array("isPartOf[]")
+# do list(path: "metadata.mods:mods.mods:relatedItem", "var": "$i")
+#   if any_equal("$i.type","host")
+#     copy_field("$i.xlink:href", "isPartOf[].$append.id")
+#     paste("isPartOf[].$last.name","$i.mods:titleInfo.mods:nonSort.value","$i.mods:titleInfo.mods:title.value")
+#   end
+# end
+# 
+# prepend("isPartOf[].*.id", "https://duepublico2.uni-due.de/receive/")
 
 
 # ---------mainEntityOfPage----------------

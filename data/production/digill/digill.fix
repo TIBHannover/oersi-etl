@@ -64,8 +64,10 @@ add_field("mainEntityOfPage[].$last.provider.name","$[service_name]")
 copy_field("@graph[].3.dateModified", "mainEntityOfPage[].$last.dateModified")
 replace_all("mainEntityOfPage[].*.dateModified", 'T.*', '')
 
-copy_field("@graph[].3.datePublished", "mainEntityOfPage[].$last.dateCreated")
-replace_all("mainEntityOfPage[].*.dateCreated", 'T.*', '')
+
+# This seems not to work with the new path handling. It does not replace. It has something to to with the similar move in line 20ff
+# copy_field("@graph[].3.datePublished", "mainEntityOfPage[].$last.dateCreated")
+# replace_all("mainEntityOfPage[].*.dateCreated", 'T.*', '')
 
 
 # ------ tidy up --- 

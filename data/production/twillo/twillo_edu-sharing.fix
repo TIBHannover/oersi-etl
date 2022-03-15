@@ -31,6 +31,7 @@ else
   copy_field("@internal_id", "id")
 end
 
+# Replace_all does not work here.
 #  ---------mainEntityOfPage----------------
 set_array("mainEntityOfPage[]")
 copy_field("@internal_id", "mainEntityOfPage[].$append.id")

@@ -1,3 +1,6 @@
+# workflow crashed with multiple psotitins prepend, replace_all with creator/contributor and trim with @hochschulfaechersystematik.
+# Cant identify the resons.
+
 if exists ("metadata.error")
   reject()
 end
