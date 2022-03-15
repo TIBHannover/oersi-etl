@@ -21,11 +21,11 @@ copy_field("@graph[].2.url", "image")
 copy_field("@graph[].3.datePublished", "dateCreated")
 replace_all("dateCreated", 'T.*', '')
 
-
-# ---------------inLanguage ----------------------------------
-set_array("inLanguage[]")
-copy_field("@graph[].3.inLanguage", "inLanguage[].$append")
-replace_all("inLanguage[].*", '-.*', '')
+# This does not work with the new path handling.
+# # ---------------inLanguage ----------------------------------
+# set_array("inLanguage[]")
+# copy_field("@graph[].3.inLanguage", "inLanguage[].$append")
+# replace_all("inLanguage[].*", '-.*', '')
 
 # ------ type --- 
 set_array("type[]", "LearningResource")
