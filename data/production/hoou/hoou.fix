@@ -18,8 +18,8 @@ move_field("license", "@license")
 copy_field("@license", "license.id")
 
 
-# ---------------dateCreated ----------------------------------
-replace_all("dateCreated","T.*", "")
+# ---------------datePublished----------------------------------
+replace_all("datePublished","T.*", "")
 
 # ---------------dateModified ----------------------------------
 replace_all("dateModified","T.*", "")
@@ -85,5 +85,5 @@ add_field("mainEntityOfPage[].$last.provider.type","Service")
 add_field("mainEntityOfPage[].$last.provider.name","$[service_name]")
 
 # ------ tidy up --- 
-retain("@context[]","id","image","name","creator[]","contributor[]","sourceOrganization[]", "license","description","dataCreated","inLanguage[]","type[]","learningResourceType[]","keywords[]","about[]", "encoding[]", "mainEntityOfPage[]")
+retain("@context[]","id","image","name","creator[]","contributor[]","sourceOrganization[]", "license","description","datePublished","dateModified", "inLanguage[]","type[]","learningResourceType[]","keywords[]","about[]", "encoding[]", "mainEntityOfPage[]")
 vacuum()
