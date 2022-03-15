@@ -83,6 +83,11 @@ copy_field("attributes.courseLicenses[].*.url","license.id")
 
 set_array("type[]", "LearningResource")
 
+# ------ about --- 
+set_array("about[]")
+add_field("about[].$append.id", "https://w3id.org/kim/hochschulfaechersystematik/n172")
+add_field("about[].$last.prefLabel.de", "Verwaltungswissenschaft/-wesen")
+
 # ---------mainEntityOfPage----------------
 
 set_array("mainEntityOfPage[]")
@@ -97,4 +102,3 @@ vacuum()
 
 /*missing:*/
 /*kewords*/
-/*about*/
