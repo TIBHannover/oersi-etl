@@ -32,14 +32,14 @@ add_field("sourceOrganization[].$append.name", "Ruhr-Universität Bochum")
 add_field("sourceOrganization[].$last.type","Organization")
 
 # ------------learningResourceType-----
-lookup("learningResourceType", "data/maps/openRubLearningResourceTypes.tsv", "sep_char":"\t")
-lookup("learningResourceType", "data/maps/hcrt-de-labels-to-uri.tsv", "sep_char":"\t")
+lookup("learningResourceType", "data/maps/openRubLearningResourceTypes.tsv", "sep_char":"\t", delete:"true")
+lookup("learningResourceType", "data/maps/hcrt-de-labels-to-uri.tsv", "sep_char":"\t", delete:"true")
 set_array("learningResourceType[]")
 copy_field("learningResourceType", "learningResourceType[].$append.id")
 copy_field("learningResourceType", "learningResourceTypeDE")
 move_field("learningResourceType", "learningResourceTypeEN")
-lookup("learningResourceTypeDE", "data/maps/hcrt-de-labels.tsv", "sep_char":"\t")
-lookup("learningResourceTypeEN", "data/maps/hcrt-en-labels.tsv", "sep_char":"\t")
+lookup("learningResourceTypeDE", "data/maps/hcrt-de-labels.tsv", "sep_char":"\t", delete:"true")
+lookup("learningResourceTypeEN", "data/maps/hcrt-en-labels.tsv", "sep_char":"\t", delete:"true")
 move_field("learningResourceTypeDE", "learningResourceType[].$last.prefLabel.de")
 move_field("learningResourceTypeEN", "learningResourceType[].$last.prefLabel.en")
 
@@ -50,12 +50,12 @@ unless exists("fields[]")
     set_array("fields[]")
     move_field("fields", "fields[].$append")
 end
-lookup("fields[].*", "data/maps/destatisLabels-to-uri.tsv","sep_char":"\t")
+lookup("fields[].*", "data/maps/destatisLabels-to-uri.tsv","sep_char":"\t", delete:"true")
 do list(path: "fields[]", "var": "$f")
     copy_field("$f", "about[].$append.id")
     copy_field("$f", "about[].$last.prefLabel.de")
 end
-lookup("about[].*.prefLabel.de", "data/maps/subject-labels.tsv","sep_char":"\t")
+lookup("about[].*.prefLabel.de", "data/maps/subject-labels.tsv","sep_char":"\t", delete:"true")
 remove_field('fields[]')
 
 
