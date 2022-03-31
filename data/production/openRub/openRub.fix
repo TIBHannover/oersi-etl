@@ -19,6 +19,7 @@ remove_field("type")
 set_array("type[]", "LearningResource")
 
 # ---------description---------
+# delete all HTML tags
 replace_all("description", '\\w*[^>]*?\\w*=\\"(.*?)\\">', " ")
 replace_all("description", '\\w*[^>]*?\\w*=\\"(.*?)\\" \\w*=\\"(.*?)\\>', " ")
 replace_all("description", '<\\w*>|</\\w*>', " ")
@@ -32,30 +33,34 @@ add_field("sourceOrganization[].$append.name", "Ruhr-Universität Bochum")
 add_field("sourceOrganization[].$last.type","Organization")
 
 # ------------learningResourceType-----
-lookup("learningResourceType", "data/maps/openRubLearningResourceTypes.tsv", "sep_char":"\t")
-lookup("learningResourceType", "data/maps/hcrt-de-labels-to-uri.tsv", "sep_char":"\t")
+
+
+lookup("learningResourceType", "data/maps/openRubLearningResourceTypes.tsv", "sep_char":"\t", delete:"true")
+lookup("learningResourceType", "data/maps/hcrt-de-labels-to-uri.tsv", "sep_char":"\t", delete:"true")
+
 set_array("learningResourceType[]")
 copy_field("learningResourceType", "learningResourceType[].$append.id")
-copy_field("learningResourceType", "learningResourceTypeDE")
-move_field("learningResourceType", "learningResourceTypeEN")
-lookup("learningResourceTypeDE", "data/maps/hcrt-de-labels.tsv", "sep_char":"\t")
-lookup("learningResourceTypeEN", "data/maps/hcrt-en-labels.tsv", "sep_char":"\t")
-move_field("learningResourceTypeDE", "learningResourceType[].$last.prefLabel.de")
-move_field("learningResourceTypeEN", "learningResourceType[].$last.prefLabel.en")
+do list(path:"learningResourceType[]")
+  copy_field("id", "prefLabel.de")
+  lookup("prefLabel.de", "data/maps/hcrt-de-labels.tsv","sep_char":"\t", delete:"true")
+  copy_field("id", "prefLabel.en")
+  lookup("prefLabel.en", "data/maps/hcrt-en-labels.tsv","sep_char":"\t", delete:"true")
+end
+
 
 # ------about----
 # sometimes the "fields"-element is not an array and therefore has no brackets "[]". The transformation mechanism handles this:
 set_array("about[]")
 unless exists("fields[]")
-    set_array("fields[]")
-    move_field("fields", "fields[].$append")
+  set_array("fields[]")
+  move_field("fields", "fields[].$append")
 end
-lookup("fields[].*", "data/maps/destatisLabels-to-uri.tsv","sep_char":"\t")
+lookup("fields[].*", "data/maps/destatisLabels-to-uri.tsv","sep_char":"\t", delete:"true")
 do list(path: "fields[]", "var": "$f")
-    copy_field("$f", "about[].$append.id")
-    copy_field("$f", "about[].$last.prefLabel.de")
+  copy_field("$f", "about[].$append.id")
+  copy_field("$f", "about[].$last.prefLabel.de")
 end
-lookup("about[].*.prefLabel.de", "data/maps/subject-labels.tsv","sep_char":"\t")
+lookup("about[].*.prefLabel.de", "data/maps/subject-labels.tsv","sep_char":"\t", delete:"true")
 remove_field('fields[]')
 
 
@@ -65,3 +70,7 @@ copy_field("id", "mainEntityOfPage[].$append.id")
 add_field("mainEntityOfPage[].$last.provider.id","$[service_id]")
 add_field("mainEntityOfPage[].$last.provider.type","Service")
 add_field("mainEntityOfPage[].$last.provider.name","$[service_name]")
+
+# ------ tidy up --- 
+retain("@context[]","id","image","name","creator[]","contributor[]","sourceOrganization[]", "license","description","dateCreated","inLanguage[]","type[]","learningResourceType[]","keywords[]","about[]", "encoding[]", "publisher[]", "mainEntityOfPage[]")
+vacuum()

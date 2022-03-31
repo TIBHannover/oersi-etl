@@ -26,14 +26,14 @@ do list(path: "creator[]", "var": "$i")
 	copy_field("$i.affiliation.id", "$i.affiliation.name")
 end
 
-lookup("creator[].*.affiliation.name", "data/maps/orcaUni.tsv", "sep_char":"\t")
+lookup("creator[].*.affiliation.name", "data/maps/orcaUni.tsv", "sep_char":"\t", delete:"true")
 
 do list(path: "contributor[]", "var": "$i")
 	copy_field("$i.affiliation.id", "$i.affiliation.name")
 end
 
 
-lookup("contributor[].*.affiliation.name", "data/maps/orcaUni.tsv", "sep_char":"\t")
+lookup("contributor[].*.affiliation.name", "data/maps/orcaUni.tsv", "sep_char":"\t", delete:"true")
 
 
 # ------------ sourceOrganization -------------
@@ -49,16 +49,16 @@ do list(path: "@sourceOrga", "var": "$i")
 	add_field("sourceOrganization[].$last.type", "Organization")
 end
 	
-lookup("sourceOrganization[].*.name", "data/maps/orcaUni.tsv", "sep_char":"\t")
+lookup("sourceOrganization[].*.name", "data/maps/orcaUni.tsv", "sep_char":"\t", delete:"true")
 
 
 do list(path: "learningResourceType[]")
-	lookup("id","data/maps/orcaMedienId-hcrt.tsv", "sep_char":"\t")
+	lookup("id","data/maps/orcaMedienId-hcrt.tsv", "sep_char":"\t", delete:"true")
 	remove_field("prefLabel") # do not know if that is necessary, when rewriten
 	copy_field("id", "prefLabel.de")
-	lookup("prefLabel.de","data/maps/hcrt-de-labels.tsv", "sep_char":"\t")
+	lookup("prefLabel.de","data/maps/hcrt-de-labels.tsv", "sep_char":"\t", delete:"true")
 	copy_field("id", "prefLabel.en")
-	lookup("prefLabel.en","data/maps/hcrt-en-labels.tsv", "sep_char":"\t")
+	lookup("prefLabel.en","data/maps/hcrt-en-labels.tsv", "sep_char":"\t", delete:"true")
 end
 
 replace_all("learningResourceType[].*.inScheme.id", "https://w3id.org/orca.nrw/medientypen/", "https://w3id.org/kim/hcrt/scheme")

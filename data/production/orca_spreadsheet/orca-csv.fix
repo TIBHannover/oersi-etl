@@ -31,14 +31,14 @@ copy_field("Lizenz", "license.id")
 
 # ------ creator --- 
 set_array("creator[]")
+copy_field("Urheber1_Name", "creator[].$append.name")
 copy_field("Urheber1_Typ", "creator[].1.type")
-copy_field("Urheber1_Name", "creator[].1.name")
 copy_field("Urheber1_Hochschule-RoRID","creator[].1.@affiliation")
 copy_field("Urheber1_ORCID","creator[].1.id")
 copy_field("Urheber1_Grad", "creator[].1.honoricPrefix")
 
+copy_field("Urheber2_Name", "creator[].$append.name")
 copy_field("Urheber2_Typ", "creator[].2.type")
-copy_field("Urheber2_Name", "creator[].2.name")
 copy_field("Urheber2_Hochschule-RoRID","creator[].2.@affiliation")
 copy_field("Urheber2_ORCID","creator[].2.id")
 copy_field("Urheber2_Grad", "creator[].2.honoricPrefix")
@@ -47,21 +47,21 @@ set_array("@sourceOrga")
 do list(path:"creator[]", "var":"$i")
   copy_field("$i.@affiliation", "$i.affiliation.id")
   copy_field("$i.@affiliation", "$i.affiliation.name")
-  lookup("$i.affiliation.name", "data/maps/orcaUni.tsv","sep_char":"\t")
+  lookup("$i.affiliation.name", "data/maps/orcaUni.tsv","sep_char":"\t", delete:"true")
   add_field("$i.affiliation.type", "Organization")
   move_field("$i.@affiliation", "@sourceOrga.$append")
 end
 
 /* Contributor */
 set_array("contributor[]")
+copy_field("Beitragende1.Name", "contributor[].$append.name")
 copy_field("Beitragende1.Typ", "contributor[].1.type")
-copy_field("Beitragende1.Name", "contributor[].1.name")
 copy_field("Beitragende1.Hochschule-RoRID","contributor[].1.@affiliation")
 copy_field("Beitragende1.ORCID","contributor[].1.id")
 copy_field("Beitragende1.Grad", "contributor[].1.honoricPrefix")
 
+copy_field("Beitragende2_Name", "contributor[].$append.name")
 copy_field("Beitragende2_Typ", "contributor[].2.type")
-copy_field("Beitragende2_Name", "contributor[].2.name")
 copy_field("Beitragende2_Hochschule-RoRID","contributor[].2.@affiliation")
 copy_field("Beitragende2_ORCID","contributor[].2.id")
 copy_field("Beitragende2_Grad", "contributor[].2.honoricPrefix")
@@ -69,7 +69,7 @@ copy_field("Beitragende2_Grad", "contributor[].2.honoricPrefix")
 do list(path:"contributor[]", "var":"$i")
   copy_field("$i.@affiliation", "$i.affiliation.id")
   copy_field("$i.@affiliation", "$i.affiliation.name")
-  lookup("$i.affiliation.name", "data/maps/orcaUni.tsv","sep_char":"\t")
+  lookup("$i.affiliation.name", "data/maps/orcaUni.tsv","sep_char":"\t", delete:"true")
   add_field("$i.affiliation.type", "Organization")
   move_field("$i.@affiliation", "@sourceOrga.$append")
 end
@@ -85,7 +85,7 @@ do list(path:"@sourceOrga", "var": "$i")
   add_field("sourceOrganization[].$last.type", "Organization")
 end
 
-lookup("sourceOrganization[].*.name", "data/maps/orcaUni.tsv","sep_char":"\t")
+lookup("sourceOrganization[].*.name", "data/maps/orcaUni.tsv","sep_char":"\t", delete:"true")
 
 # ------ type --- 
 set_array("type[]", "LearningResource")
@@ -96,16 +96,16 @@ copy_field("Medientyp", "@hcrt")
 split_field("@hcrt", ";")
 trim("@hcrt.*")
 uniq("@hcrt")
-lookup("@hcrt.*","data/maps/orcaLabels-hcrt.tsv","sep_char":"\t")
+lookup("@hcrt.*","data/maps/orcaLabels-hcrt.tsv","sep_char":"\t", delete:"true")
 
 set_array("learningResourceType[]")
 copy_field("@hcrt.*", "learningResourceType[].$append.id")
 
 do list(path:"learningResourceType[]")
   copy_field("id", "prefLabel.de")
-  lookup("prefLabel.de", "data/maps/hcrt-de-labels.tsv","sep_char":"\t")
+  lookup("prefLabel.de", "data/maps/hcrt-de-labels.tsv","sep_char":"\t", delete:"true")
   copy_field("id", "prefLabel.en")
-  lookup("prefLabel.en", "data/maps/hcrt-en-labels.tsv","sep_char":"\t")
+  lookup("prefLabel.en", "data/maps/hcrt-en-labels.tsv","sep_char":"\t", delete:"true")
 end
 
 # ------ about ------
@@ -114,7 +114,7 @@ copy_field("Fachbereich", "@hochschulfaechersystematik")
 split_field("@hochschulfaechersystematik", ";")
 trim("@hochschulfaechersystematik.*")
 uniq("@hochschulfaechersystematik")
-lookup("@hochschulfaechersystematik.*","data/maps/destatisLabels-to-uri.tsv","sep_char":"\t")
+lookup("@hochschulfaechersystematik.*","data/maps/destatisLabels-to-uri.tsv","sep_char":"\t", delete:"true")
 
 
 set_array("about[]")
@@ -122,7 +122,7 @@ copy_field("@hochschulfaechersystematik.*","about[].$append.id")
 
 do list(path: "about[]")
   copy_field("id", "prefLabel.de")
-  lookup("prefLabel.de","data/maps/subject-labels.tsv","sep_char":"\t")
+  lookup("prefLabel.de","data/maps/subject-labels.tsv","sep_char":"\t", delete:"true")
 end
 
 # ------ inLanguage------

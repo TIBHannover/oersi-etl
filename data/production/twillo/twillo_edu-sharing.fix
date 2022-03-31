@@ -35,9 +35,9 @@ end
 set_array("mainEntityOfPage[]")
 copy_field("@internal_id", "mainEntityOfPage[].$append.id")
 copy_field("node.modifiedAt", "mainEntityOfPage[].$last.dateModified")
-replace_all("mainEntityOfPage[].$last.dateModified","T.+Z","")
+replace_all("mainEntityOfPage[].*.dateModified","T.+Z","")
 copy_field("node.createdAt", "mainEntityOfPage[].$last.dateCreated")
-replace_all("mainEntityOfPage[].$last.dateCreated","T.+Z","")
+replace_all("mainEntityOfPage[].*.dateCreated","T.+Z","")
 add_field("mainEntityOfPage[].$last.provider.id","$[service_id]")
 add_field("mainEntityOfPage[].$last.provider.type","Service")
 add_field("mainEntityOfPage[].$last.provider.name","$[service_name]")
@@ -57,7 +57,7 @@ do list(path:"@hochschulfaechersystematik[]", "var":"$i")
   copy_field("$i", "about[].$append.id")
   copy_field("$i", "about[].$last.prefLabel.de")
 end
-lookup("about[].*.prefLabel.de", "data/maps/subject-labels.tsv","sep_char":"\t")
+lookup("about[].*.prefLabel.de", "data/maps/subject-labels.tsv","sep_char":"\t", delete:"true")
 
 #  ---------------creator----------------------------------
 set_array("creator[]")
@@ -138,8 +138,8 @@ do list(path:"node.properties.ccm:educationallearningresourcetype[]", "var": "$i
   end
 end
  
-lookup("learningResourceType[].*.prefLabel.de", "data/maps/hcrt-de-labels.tsv","sep_char":"\t")
-lookup("learningResourceType[].*.prefLabel.en", "data/maps/hcrt-en-labels.tsv","sep_char":"\t")
+lookup("learningResourceType[].*.prefLabel.de", "data/maps/hcrt-de-labels.tsv","sep_char":"\t", delete:"true")
+lookup("learningResourceType[].*.prefLabel.en", "data/maps/hcrt-en-labels.tsv","sep_char":"\t", delete:"true")
  
 #  ---------------keywords----------------------------------
 copy_field("node.properties.cclom:general_keyword[]", "keywords[]")
