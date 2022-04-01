@@ -8,6 +8,9 @@ if any_equal ("header.status", "deleted")
   reject()
 end
 
+# Delete all empty values
+vacuum()
+
 # ---------------@context ----------------------------------
 
 set_array("@context[]", "https://w3id.org/kim/lrmi-profile/draft/context.jsonld")
@@ -80,11 +83,17 @@ set_array("sourceOrganization[]")
 do list(path:"metadata.mods:mods.mods:name","var":"$i")
   if any_match("$i.mods:role.mods:roleTerm.*.value","his")
     unless exists("$i.mods:displayForm.value")
-      lookup("$i.valueURI","data/maps/duepublico-corporate.tsv","sep_char":"\t")
-      copy_field("$i.valueURI","sourceOrganization[].$append.name")           
+      lookup("$i.valueURI","data/maps/duepublico-corporate.tsv","sep_char":"\t", delete:"true") 
+      copy_field("$i.valueURI","sourceOrganization[].$append.name")         
     end
-    add_field("sourceOrganization[].$last.type", "Organization")
+    if exists("$i.mods:displayForm.value")
+      copy_field("$i.mods:displayForm.value","sourceOrganization[].$append.name")
+    end
   end
+end
+
+do list(path:"sourceOrganization[]")
+  add_field("type", "Organization")
 end
 
 add_field("sourceOrganization[].$append.name", "Universität Duisburg-Essen")
@@ -95,7 +104,7 @@ copy_field("metadata.mods:mods.mods:abstract.*.value","description")
 
 # -----------license----------
 copy_field("metadata.mods:mods.mods:accessCondition.xlink:href","license.id")
-lookup("license.id","data/maps/duepublico-licenses.tsv","sep_char":"\t") 
+lookup("license.id","data/maps/duepublico-licenses.tsv","sep_char":"\t", delete:"true") 
 
 #  ------------dataCreated------------------------------------
 copy_field("metadata.mods:mods.mods:originInfo.mods:dateIssued.value","dataCreated")
@@ -112,12 +121,12 @@ set_array("learningResourceType[]")
 set_array("@lRT")
 do list(path:"metadata.mods:mods.mods:genre","var":"$i") 
   if any_match("$i.authorityURI","https://duepublico.uni-due.de/api/v1/classifications/mir_genres")
-    lookup("$i.valueURI", "data/maps/duepublico-hcrt.tsv","sep_char":"\t")
+    lookup("$i.valueURI", "data/maps/duepublico-hcrt.tsv","sep_char":"\t", delete:"true")
     copy_field("$i.valueURI", "@lRT.$append")
   end
 end
 do list(path:"metadata.mods:mods.mods:typeOfResource","var":"$i")
-  lookup("$i.value", "data/maps/duepublico_typeOfResource-hcrt.tsv","sep_char":"\t")
+  lookup("$i.value", "data/maps/duepublico_typeOfResource-hcrt.tsv","sep_char":"\t", delete:"true")
   copy_field("$i.value", "@lRT.$append")
 end
 uniq("@lRT")
@@ -128,8 +137,8 @@ do list(path: "@lRT", "var":"$i")
   copy_field("$i","learningResourceType[].$last.prefLabel.en")
 end
 
-lookup("learningResourceType[].*.prefLabel.de", "data/maps/hcrt-de-labels.tsv","sep_char":"\t")
-lookup("learningResourceType[].*.prefLabel.en", "data/maps/hcrt-en-labels.tsv","sep_char":"\t")
+lookup("learningResourceType[].*.prefLabel.de", "data/maps/hcrt-de-labels.tsv","sep_char":"\t", delete:"true")
+lookup("learningResourceType[].*.prefLabel.en", "data/maps/hcrt-en-labels.tsv","sep_char":"\t", delete:"true")
 
 # ---------------keywords----------------------------------
 set_array("keywords[]")
@@ -140,13 +149,13 @@ copy_field("metadata.mods:mods.mods:subject.mods:topic.*.value","keywords[].$app
 set_array("about[]")
 do list(path:"metadata.mods:mods.mods:classification","var":"$i")
   if any_equal("$i.authorityURI","https://duepublico.uni-due.de/api/v1/classifications/destatis")
-    lookup("$i.valueURI", "data/maps/destatisPersonal2destatisStudierende.tsv","sep_char":"\t")
+    lookup("$i.valueURI", "data/maps/destatisPersonal2destatisStudierende.tsv","sep_char":"\t", delete:"true")
     copy_field("$i.valueURI","about[].$append.id")
     copy_field("$i.valueURI","about[].$last.prefLabel.de")
   end
 end
 
-lookup("about[].*.prefLabel.de", "data/maps/subject-labels.tsv","sep_char":"\t")
+lookup("about[].*.prefLabel.de", "data/maps/subject-labels.tsv","sep_char":"\t", delete:"true")
 
 
 # -------isPartOf---------
