@@ -1,6 +1,6 @@
 https://w3id.org/kim/hcrt/application	Softwareanwendung
 https://w3id.org/kim/hcrt/assessment	Lernkontrolle
-https://w3id.org/kim/hcrt/audio	Tonaufnahme
+https://w3id.org/kim/hcrt/audio	Audio
 https://w3id.org/kim/hcrt/case_study	Fallstudie
 https://w3id.org/kim/hcrt/course	Kurs
 https://w3id.org/kim/hcrt/data	Daten
@@ -22,4 +22,5 @@ https://w3id.org/kim/hcrt/textbook	Lehrbuch
 https://w3id.org/kim/hcrt/video	Video
 https://w3id.org/kim/hcrt/web_page	Webseite
 https://w3id.org/kim/hcrt/worksheet	Arbeitsmaterial
+https://w3id.org/kim/hcrt/sheet_music	Musiknoten
 https://w3id.org/kim/hcrt/other	Sonstiges
