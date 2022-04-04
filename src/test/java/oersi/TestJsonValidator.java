@@ -46,7 +46,7 @@ public final class TestJsonValidator {
             "id", "https://example.org/oer", //
             "name", "Beispielkurs", //
             "@context", Arrays.asList( //
-                    "https://w3id.org/kim/lrmi-profile/draft/context.jsonld", //
+                    "https://w3id.org/kim/amb/draft/context.jsonld", //
                     ImmutableMap.of("@language", "de")),
             "type", Arrays.asList("LearningResource"), //
             "mainEntityOfPage", Arrays.asList(ImmutableMap.of( //

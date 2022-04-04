@@ -11,7 +11,7 @@ vacuum()
 
 # ---------------@context ----------------------------------
 
-set_array("@context[]", "https://w3id.org/kim/lrmi-profile/draft/context.jsonld")
+set_array("@context[]", "https://w3id.org/kim/amb/draft/context.jsonld")
 set_hash("@context[].$append", "@language": "de")
 
 
