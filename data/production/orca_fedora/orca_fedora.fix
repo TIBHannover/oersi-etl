@@ -76,6 +76,21 @@ remove_field("inLanguage[]")
 set_array("inLanguage[]", "de")
 
 
+# ---------------@context ----------------------------------
+
+set_array("@context[]", "https://w3id.org/kim/amb/draft/context.jsonld")
+# resource is german therefore prefer de if multiple or no inLanguage are available
+if any_equal("inLanguage[]","de")
+  set_hash("@context[].$append", "@language": "de")
+elsif any_equal("inLanguage[]","en")
+  set_hash("@context[].$append", "@language": "en")
+else
+  copy_field("inLanguage[].1", "@context[].$append.@language")
+end
+unless exists("inLanguage[]")
+  set_hash("@context[].$append", "@language": "de")
+end
+
 # --- retain needs the exact name as it enters, so creator[]
 retain("@context[]","id","image","name", "license", "creator[]","contributor[]","sourceOrganization[]","description","inLanguage[]","type[]","learningResourceType[]","keywords[]","about[]", "encoding[]", "mainEntityOfPage[]" )
 vacuum()

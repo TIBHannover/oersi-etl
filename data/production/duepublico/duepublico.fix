@@ -11,11 +11,6 @@ end
 # Delete all empty values
 vacuum()
 
-# ---------------@context ----------------------------------
-
-set_array("@context[]", "https://w3id.org/kim/amb/draft/context.jsonld")
-set_hash("@context[].$append", "@language": "de")
-
 # --------------id ----------------------------------------
 do list("path": "metadata.mods:mods.mods:identifier", "var": "$i")
   if all_match("$i.value","https://duepublico2.uni-due.de/receive/.*")
@@ -177,6 +172,20 @@ add_field("mainEntityOfPage[].$last.provider.id","$[service_id]")
 add_field("mainEntityOfPage[].$last.provider.type","Service")
 add_field("mainEntityOfPage[].$last.provider.name","$[service_name]")
 
+# ---------------@context ----------------------------------
+
+set_array("@context[]", "https://w3id.org/kim/amb/draft/context.jsonld")
+# resource is german therefore prefer de if multiple or no inLanguage are available
+if any_equal("inLanguage[]","de")
+  set_hash("@context[].$append", "@language": "de")
+elsif any_equal("inLanguage[]","en")
+  set_hash("@context[].$append", "@language": "en")
+else
+  copy_field("inLanguage[].1", "@context[].$append.@language")
+end
+unless exists("inLanguage[]")
+  set_hash("@context[].$append", "@language": "de")
+end
 
 # ---------tidy up!----------------
 retain("@context[]","id","image","name","creator[]","contributor[]","sourceOrganization[]", "license","description","dataCreated","inLanguage[]","type[]","learningResourceType[]","keywords[]","about[]", "isPartOf[]", "mainEntityOfPage[]", "encoding[]")

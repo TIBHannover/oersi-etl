@@ -1,7 +1,6 @@
-# ---------------@context ----------------------------------
 
-set_array("@context[]", "https://w3id.org/kim/amb/draft/context.jsonld")
-set_hash("@context[].$append", "@language": "de")
+# --------Delete all emtpy values-------
+vacuum()
 
 #  ------------id------------------------------------
 replace_all("id", '(.*?)/lernangebot', "https://open.ruhr-uni-bochum.de/lernangebot")
@@ -70,6 +69,22 @@ copy_field("id", "mainEntityOfPage[].$append.id")
 add_field("mainEntityOfPage[].$last.provider.id","$[service_id]")
 add_field("mainEntityOfPage[].$last.provider.type","Service")
 add_field("mainEntityOfPage[].$last.provider.name","$[service_name]")
+
+# ---------------@context ----------------------------------
+
+set_array("@context[]", "https://w3id.org/kim/amb/draft/context.jsonld")
+# resource is german therefore prefer de if multiple or no inLanguage are available
+if any_equal("inLanguage[]","de")
+  set_hash("@context[].$append", "@language": "de")
+elsif any_equal("inLanguage[]","en")
+  set_hash("@context[].$append", "@language": "en")
+else
+  copy_field("inLanguage[].1", "@context[].$append.@language")
+end
+unless exists("inLanguage[]")
+  set_hash("@context[].$append", "@language": "de")
+end
+
 
 # ------ tidy up --- 
 retain("@context[]","id","image","name","creator[]","contributor[]","sourceOrganization[]", "license","description","dateCreated","inLanguage[]","type[]","learningResourceType[]","keywords[]","about[]", "encoding[]", "publisher[]", "mainEntityOfPage[]")

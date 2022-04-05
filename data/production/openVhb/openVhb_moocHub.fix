@@ -7,11 +7,6 @@ end
 # Delete all empty values
 vacuum()
 
-#  ---------------@context ----------------------------------
-
-set_array("@context[]", "https://w3id.org/kim/amb/draft/context.jsonld")
-set_hash("@context[].$append", "@language": "de")
-
 #  ---------------id----------------------------------
 remove_field("id")
 copy_field("attributes.url", "id")
@@ -126,6 +121,22 @@ replace_all("description", '<\\w*>|</\\w*>|<!--(.*?)-->', " ")
 replace_all("description", '<br />', " ")
 replace_all("description", '  ', " ")
 trim("description")
+
+# ---------------@context ----------------------------------
+
+set_array("@context[]", "https://w3id.org/kim/amb/draft/context.jsonld")
+# resource is german therefore prefer de if multiple or no inLanguage are available
+if any_equal("inLanguage[]","de")
+  set_hash("@context[].$append", "@language": "de")
+elsif any_equal("inLanguage[]","en")
+  set_hash("@context[].$append", "@language": "en")
+else
+  copy_field("inLanguage[].1", "@context[].$append.@language")
+end
+unless exists("inLanguage[]")
+  set_hash("@context[].$append", "@language": "de")
+end
+
 
 
 # ------ tidy up --- 
