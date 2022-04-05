@@ -55,7 +55,7 @@ unless exists("fields[]")
   set_array("fields[]")
   move_field("fields", "fields[].$append")
 end
-lookup("fields[].*", "data/maps/destatisLabels-to-uri.tsv","sep_char":"\t", delete:"true")
+lookup("fields[].*", "data/maps/openRubFields2Destatis.tsv","sep_char":"\t", delete:"true")
 do list(path: "fields[]", "var": "$f")
   copy_field("$f", "about[].$append.id")
   copy_field("$f", "about[].$last.prefLabel.de")
