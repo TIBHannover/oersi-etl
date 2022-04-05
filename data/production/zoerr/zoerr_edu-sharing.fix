@@ -1,10 +1,6 @@
 # Delete all empty values
 vacuum()
 
-#  ---------------@context ----------------------------------
-
-set_array("@context[]", "https://w3id.org/kim/amb/draft/context.jsonld")
-set_hash("@context[].$append", "@language": "de")
 
 #  ---------------name ----------------------------------
 copy_field("node.title", "name")
@@ -81,7 +77,7 @@ do list(path:"creator[]")
 end
 
 /*
-#  ---------------contributor----------------------------------
+TODO:#  ---------------contributor----------------------------------
 set_array("contributor[]")
 do list(path:"node.properties.ccm:lifecyclecontributer_author[]", "var": "$i")
   if any_match("$i", "^BEGIN:VCARD[\\s\\S]*FN:(.+)\r\n[\\s\\S]*\r\nEND:VCARD$")
@@ -157,6 +153,22 @@ unless exists('node.properties.ccm:wwwurl[].1')
   copy_field("node.mimetype", "encoding[].$last.encodingFormat")
   copy_field("node.size", "encoding[].$last.contentSize")
 end
+
+# ---------------@context ----------------------------------
+
+set_array("@context[]", "https://w3id.org/kim/amb/draft/context.jsonld")
+# resource is german therefore prefer de if multiple or no inLanguage are available
+if any_equal("inLanguage[]","de")
+  set_hash("@context[].$append", "@language": "de")
+elsif any_equal("inLanguage[]","en")
+  set_hash("@context[].$append", "@language": "en")
+else
+  copy_field("inLanguage[].1", "@context[].$append.@language")
+end
+unless exists("inLanguage[]")
+  set_hash("@context[].$append", "@language": "de")
+end
+
 
 retain("@context[]","id","image","name","creator[]","contributor[]","sourceOrganization[]", "license","description","dataCreated","inLanguage[]","type[]","learningResourceType[]","keywords[]","about[]", "encoding[]", "mainEntityOfPage[]")
 vacuum()
