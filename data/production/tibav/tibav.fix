@@ -109,7 +109,7 @@ do list(path:"metadata.resources.resource.creators.creator", "var":"$i")
 # There might be creators with empty names that are filtered out at the beginning.
   add_field("creator[].$append.test", "")
   copy_field("$i.creatorName.value", "creator[].$last.name")
-  if any_equals ("$i.creatorName.nameType","Organizational")
+  if any_equal("$i.creatorName.nameType","Organizational")
     add_field("creator[].$last.type", "Organization")
   else
     add_field("creator[].$last.type", "Person")
@@ -130,7 +130,7 @@ do list(path:"metadata.resources.resource.contributors.contributor", "var":"$i")
 # There might be contributors with empty names that are filtered out at the beginning.
   add_field("contributor[].$append.test", "")
   copy_field("$i.contributorName.value", "contributor[].$last.name")
-  if any_equals ("$i.contributorName.nameType","Organizational")
+  if any_equal("$i.contributorName.nameType","Organizational")
     add_field("contributor[].$last.type", "Organization")
   else
     add_field("contributor[].$last.type", "Person")
@@ -145,7 +145,7 @@ end
 # contributors have functions in parenthesis these need to be deleted
 replace_all("contributor[].*.name","(.+), (.+)", "$2 $1")
 replace_all("contributor[].*.name","\\(.+\\)", "")
-replace_all("contributor[].*.name","  ", "")
+replace_all("contributor[].*.name","  ", " ")
 prepend("contributor[].*.id", "http://orcid.org/")
 
 
