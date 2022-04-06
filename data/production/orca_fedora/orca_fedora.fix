@@ -1,11 +1,5 @@
 # The data build mostly on AMB-profil. We only need some adjustments.
 
-# ---------------@context ----------------------------------
-
-set_array("@context[]", "https://w3id.org/kim/amb/draft/context.jsonld")
-set_hash("@context[].$append", "@language": "de")
-
-
 # -------  image ----
 #There are no pictures there at the moment
 unless exists("image")
