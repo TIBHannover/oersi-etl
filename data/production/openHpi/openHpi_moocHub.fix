@@ -98,7 +98,8 @@ elsif any_equal("inLanguage[]","en")
 else
   copy_field("inLanguage[].1", "@context[].$append.@language")
 end
-unless exists("inLanguage[]")
+# resources without inLanguage-Values set default to de
+unless exists("inLanguage[].1")
   set_hash("@context[].$append", "@language": "de")
 end
 
