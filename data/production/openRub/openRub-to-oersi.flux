@@ -10,7 +10,7 @@ default input_wait = "50";
 | extract-element("script[type=application/ld+json]")
 | match(pattern="@(type|id)", replacement="$1")
 | decode-json(recordPath="$.@graph")
-| metafix(FLUX_DIR + "openRub.fix", *)
+| fix(FLUX_DIR + "openRub.fix", *)
 | encode-json(prettyPrinting="true")
 | oersi.JsonValidator(output_schema, writeValid=metadata_valid, writeInvalid=metadata_invalid)
 | oersi.OersiWriter(backend_api, user=backend_user, pass=backend_pass, log=metadata_responses)

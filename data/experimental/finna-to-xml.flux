@@ -2,7 +2,7 @@
 | open-http(accept="application/json")
 | as-lines
 | decode-json
-| fix("map('records[].*.fullRecord')")
+| org.metafacture.metamorph.Metafix("map('records[].*.fullRecord')")
 | literal-to-object
 | write(FLUX_DIR + "finna.xml", header="<records>\n", footer="\n</records>", separator="\n")
 ;

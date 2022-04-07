@@ -9,7 +9,7 @@ default input_wait = "50";
 | oersi.SitemapReader(wait=input_wait, limit=input_limit)
 | open-http
 | decode-html(attrValsAsSubfields="&p.class&a.class&div.class&span.class")
-| fix(FLUX_DIR + "hhu.fix", *)
+| org.metafacture.metamorph.Metafix(FLUX_DIR + "hhu.fix", *)
 | encode-json
 | oersi.FieldMerger
 | oersi.JsonValidator(output_schema, writeValid=metadata_valid, writeInvalid=metadata_invalid)

@@ -2,11 +2,11 @@
 | open-http(accept="application/json")
 | as-lines
 | decode-json
-| fix("map('records[].*.fullRecord')")
+| org.metafacture.metamorph.Metafix("map('records[].*.fullRecord')")
 | literal-to-object
 | read-string
 | decode-html(attrValsAsSubfields="title.lang&description.lang")
-| fix("
+| org.metafacture.metamorph.Metafix("
 map('*.title.en', 'name')
 map('*.description.en', 'description')")
 | encode-json

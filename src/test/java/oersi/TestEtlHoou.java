@@ -68,7 +68,7 @@ public class TestEtlHoou {
         String flux = String.format("\"%s\""//
                 + "|open-file"//
                 + "|decode-html"//
-                + "|metafix(\"%s\")"//
+                + "|fix(\"%s\")"//
                 + "|encode-json(prettyPrinting=\"false\")"//
                 + "|write(\"%s\");", getClass().getResource(url).getFile(), fix, out);
         LOG.info("Running Flux: {}", flux);

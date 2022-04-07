@@ -13,7 +13,7 @@ default input_wait = "50";
 do map('*.h3.productcost')
     regexp(match: 'free|kostenlos')
 end")
-| fix(FLUX_DIR + "oncampus.fix", *)
+| org.metafacture.metamorph.Metafix(FLUX_DIR + "oncampus.fix", *)
 | encode-json
 | oersi.FieldMerger
 | oersi.JsonValidator(output_schema, writeValid=metadata_valid, writeInvalid=metadata_invalid)
