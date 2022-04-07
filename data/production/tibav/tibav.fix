@@ -122,7 +122,7 @@ do list(path:"metadata.resources.resource.creators.creator", "var":"$i")
 end
 
 replace_all("creator[].*.name","(.+), (.+)", "$2 $1")
-prepend("creator[].*.id", "http://orcid.org/")
+prepend("creator[].*.id", "https://orcid.org/")
 
 # ---------contributor----------------
 set_array("contributor[]")
@@ -146,7 +146,7 @@ end
 replace_all("contributor[].*.name","(.+), (.+)", "$2 $1")
 replace_all("contributor[].*.name","\\(.+\\)", "")
 replace_all("contributor[].*.name","  ", " ")
-prepend("contributor[].*.id", "http://orcid.org/")
+prepend("contributor[].*.id", "https://orcid.org/")
 
 
 # ---------keywords----------------
