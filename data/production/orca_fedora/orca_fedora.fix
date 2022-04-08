@@ -23,6 +23,9 @@ end
 lookup("creator[].*.affiliation.name", "data/maps/orcaUni.tsv", "sep_char":"\t", delete:"true")
 
 do list(path: "contributor[]", "var": "$i")
+	unless any_contain("$i.id","orcid")
+		remove_field("$i.id")
+	end
 	copy_field("$i.affiliation.id", "$i.affiliation.name")
 end
 
