@@ -17,6 +17,9 @@ replace_all("id", ".*orca\\:", "https://www.orca.nrw/content/")
 # ------- creator/contributor-affiliation ------
 
 do list(path: "creator[]", "var": "$i")
+	unless any_contain("$i.id","orcid")
+		remove_field("$i.id")
+	end
 	copy_field("$i.affiliation.id", "$i.affiliation.name")
 end
 
