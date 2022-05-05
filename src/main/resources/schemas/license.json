@@ -1,10 +1,27 @@
 {
   "$id": "resource:/schemas/license.json",
-  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$schema": "http[s]?://json-schema.org/draft-07/schema#",
   "title": "License",
   "description": "An object that links to an open source license. Public Domain, Creative Commons, GNU, Apache, MIT and BSD are allowed",
   "type": "object",
   "properties": {
+    "licenseGroup": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "format": "uri",
+          "enum": [
+            "https://w3id.org/kim/license/publicDomain",
+            "https://w3id.org/kim/license/attribution",
+            "https://w3id.org/kim/license/shareAlike",
+            "https://w3id.org/kim/license/noDerivatives",
+            "https://w3id.org/kim/license/nonCommercial",
+            "https://w3id.org/kim/license/nonCommercial-noDerivatives"
+          ]
+        }
+      }
+    },
     "id": {
       "type": "string",
       "format": "uri",
@@ -29,10 +46,169 @@
           "description": "BSD License",
           "pattern": "^http[s]?:\/\/www.opensource.org\/licenses\/BSD.*"
         }
+      ],
+      "oneOf": [
+        {
+          "if": {
+            "properties": {
+              "id": {
+                "pattern": "^http[s]?://creativecommons.org/publicdomain/zero/1.0|http[s]?://creativecommons.org/publicdomain/mark/1.0"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "licenseGroup": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "enum": [
+                      "https://w3id.org/kim/license/publicDomain"
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "id": {
+                "pattern": "^http[s]?:\/\/creativecommons.org\/licenses\/by\/.*|http[s]?:\/\/www.gnu.org\/licenses\/fdl-.*|http[s]?:\/\/opensource.org\/licenses\/MIT|http[s]?:\/\/apache.org\/licenses\/.*"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "licenseGroup": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "enum": [
+                      "https://w3id.org/kim/license/attribution"
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "id": {
+                "pattern": "^http[s]?:\/\/creativecommons.org\/licenses\/by-sa\/.*|http[s]?:\/\/www.gnu.org\/licenses\/gpl-.*|http[s]?:\/\/www.gnu.org\/licenses\/lgpl-.*|http[s]?:\/\/www.gnu.org\/licenses\/agpl-.*"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "licenseGroup": {
+                "properties": {
+                  "id": {
+                    "enum": [
+                      "https://w3id.org/kim/license/shareAlike"
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "id": {
+                "pattern": "^http[s]?:\/\/creativecommons.org\/licenses\/by-sa\/.*|http[s]?:\/\/www.gnu.org\/licenses\/gpl-.*"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "licenseGroup": {
+                "properties": {
+                  "id": {
+                    "enum": [
+                      "https://w3id.org/kim/license/shareAlike"
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "id": {
+                "pattern": "^http[s]?:\/\/creativecommons.org\/licenses\/by-nd\/.*"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "licenseGroup": {
+                "properties": {
+                  "id": {
+                    "enum": [
+                      "https://w3id.org/kim/license/noDerivatives"
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "id": {
+                "pattern": "http[s]?:\/\/creativecommons.org\/licenses\/by-nc\/.*|http[s]?:\/\/creativecommons.org\/licenses\/by-nc-sa\/.*"	
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "licenseGroup": {
+                "properties": {
+                  "id": {
+                    "enum": [
+                      "https://w3id.org/kim/license/nonCommercial"
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "id": {
+                "pattern": "http[s]?:\/\/creativecommons.org\/licenses\/by-nc-nd\/.*"	
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "licenseGroup": {
+                "properties": {
+                  "id": {
+                    "enum": [
+                      "https://w3id.org/kim/license/nonCommercial-noDerivatives"
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        }
       ]
     }
   },
   "required": [
-    "id"
+    "id",
+    "licenseGroup"
   ]
 }
