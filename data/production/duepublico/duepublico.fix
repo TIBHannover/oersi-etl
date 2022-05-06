@@ -117,13 +117,11 @@ set_array("@lRT")
 do list(path:"metadata.mods:mods.mods:genre","var":"$i") 
   if any_match("$i.authorityURI","https://duepublico.uni-due.de/api/v1/classifications/mir_genres")
     lookup("$i.valueURI", "data/maps/duepublico-hcrt.tsv","sep_char":"\t", delete:"true")
-# TODO: This seems to break. 
     copy_field("$i.valueURI", "@lRT.$append")
   end
 end
 do list(path:"metadata.mods:mods.mods:typeOfResource","var":"$i")
   lookup("$i.value", "data/maps/duepublico_typeOfResource-hcrt.tsv","sep_char":"\t", delete:"true")
-# TODO: This seems to break.  
   copy_field("$i.value", "@lRT.$append")
 end
 uniq("@lRT")
