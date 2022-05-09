@@ -72,6 +72,7 @@ copy_field("attributes.languages[].*", "inLanguage[].$append")
 
 do list(path:"inLanguage[]","var":"$i")
   if any_equal("$i", "Mehrsprachig")
+  # TODO: This breaks now. 
     remove("$i")
   end
 end
