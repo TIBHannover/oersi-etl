@@ -46,7 +46,7 @@ copy_field("node.properties.cclom:general_description[].*", "description") # eve
 #  ---------------about----------------------------------
 set_array("@hochschulfaechersystematik[]")
 copy_field("node.properties.ccm:taxonid[].*", "@hochschulfaechersystematik[].$append")
-filter("@hochschulfaechersystematik[].*", "^https://w3id.org/kim/hochschulfaechersystematik/.*")
+filter("@hochschulfaechersystematik[]", "^https://w3id.org/kim/hochschulfaechersystematik/.*")
  
 set_array("about[]")
 do list(path:"@hochschulfaechersystematik[]", "var":"$i")
