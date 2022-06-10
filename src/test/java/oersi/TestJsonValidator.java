@@ -40,7 +40,7 @@ import com.google.common.collect.ImmutableMap;
  */
 public final class TestJsonValidator {
 
-    private static final String SCHEMA = "resource:/schemas/schema.json";
+    private static final String SCHEMA = "/schemas/schema.json";
     private static final Map<String, Object> JSON_INVALID = ImmutableMap.of("key", "val");
     private static final Map<String, Object> JSON_VALID = ImmutableMap.of(//
             "id", "https://example.org/oer", //

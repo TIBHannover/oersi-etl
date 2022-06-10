@@ -2,24 +2,22 @@ package oersi;
 
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.List;
 import java.util.stream.Collectors;
-import java.util.stream.StreamSupport;
 
+import org.everit.json.schema.Schema;
+import org.everit.json.schema.ValidationException;
+import org.everit.json.schema.loader.SchemaClient;
+import org.everit.json.schema.loader.SchemaLoader;
+import org.json.JSONException;
+import org.json.JSONObject;
+import org.json.JSONTokener;
 import org.metafacture.framework.MetafactureException;
 import org.metafacture.framework.ObjectReceiver;
 import org.metafacture.framework.helpers.DefaultObjectPipe;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.github.fge.jsonschema.core.exceptions.ProcessingException;
-import com.github.fge.jsonschema.core.report.LogLevel;
-import com.github.fge.jsonschema.core.report.ProcessingMessage;
-import com.github.fge.jsonschema.core.report.ProcessingReport;
-import com.github.fge.jsonschema.main.JsonSchema;
-import com.github.fge.jsonschema.main.JsonSchemaFactory;
 
 /**
  * Validate JSON against a given schema, pass only valid input to the receiver.
@@ -29,17 +27,20 @@ import com.github.fge.jsonschema.main.JsonSchemaFactory;
 public final class JsonValidator extends DefaultObjectPipe<String, ObjectReceiver<String>> {
 
     private static final Logger LOG = LoggerFactory.getLogger(JsonValidator.class);
-    private final ObjectMapper mapper = new ObjectMapper();
-    private JsonSchema schema;
+    private Schema schema;
     private long fail = 0;
     private long success = 0;
     private FileWriter writeInvalid = null;
     private FileWriter writeValid = null;
 
     public JsonValidator(final String url) {
-        try {
-            schema = JsonSchemaFactory.byDefault().getJsonSchema(url);
-        } catch (ProcessingException e) {
+        try (InputStream inputStream = getClass().getResourceAsStream(url)) {
+            schema = SchemaLoader.builder()//
+                    .schemaJson(new JSONObject(new JSONTokener(inputStream)))//
+                    .schemaClient(SchemaClient.classPathAwareClient())//
+                    .resolutionScope("classpath://schemas/")//
+                    .build().load().build();
+        } catch (IOException | JSONException e) {
             throw new MetafactureException(e.getMessage(), e);
         }
     }
@@ -62,31 +63,29 @@ public final class JsonValidator extends DefaultObjectPipe<String, ObjectReceive
 
     @Override
     public void process(final String json) {
+        JSONObject object = new JSONObject(json);
         try {
-            JsonNode node = mapper.readTree(json);
-            ProcessingReport report = schema.validate(node);
-            if (report.isSuccess()) {
-                getReceiver().process(json);
-                success++;
-                write(json, writeValid);
-            } else {
-                List<String> errorMessages = StreamSupport.stream(report.spliterator(), false)
-                        .filter(message -> message.getLogLevel() == LogLevel.ERROR)
-                        .map(ProcessingMessage::getMessage).collect(Collectors.toList());
-                LOG.info("Invalid JSON: {} in {}", errorMessages, node.get("id"));
-                LOG.debug("Full validation report for {}\n{}", json, report);
-                fail++;
-                write(json, writeInvalid);
-            }
-        } catch (IOException | ProcessingException e) {
-            throw new MetafactureException(e.getMessage(), e);
+            schema.validate(object); // throws ValidationException if invalid
+            getReceiver().process(json);
+            success++;
+            write(json, writeValid);
+        } catch (ValidationException e) {
+            List<String> errorMessages = e.getCausingExceptions().stream()
+                    .map(ValidationException::getMessage).collect(Collectors.toList());
+            LOG.info("Invalid JSON: {} in {}", errorMessages, object.opt("id"));
+            fail++;
+            write(json, writeInvalid);
         }
     }
 
-    private void write(final String json, FileWriter to) throws IOException {
+    private void write(final String json, FileWriter to) {
         if (to != null) {
-            to.append(json);
-            to.append("\n");
+            try {
+                to.append(json);
+                to.append("\n");
+            } catch (IOException e) {
+                throw new MetafactureException(e.getMessage(), e);
+            }
         }
     }
 
