@@ -1,5 +1,5 @@
 {
-  "$id": "resource:/schemas/type.json",
+  "$id": "type.json",
   "$schema": "http://json-schema.org/draft-07/schema#",
   "title": "Type",
   "description": "The type (rdf:type / @type) of the learning resource, taken from sub-classes of sdo:CreativeWork.",

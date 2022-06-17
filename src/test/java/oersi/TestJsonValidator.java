@@ -15,7 +15,9 @@
  */
 package oersi;
 
+import java.io.Serializable;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 
 import org.junit.After;
@@ -40,20 +42,32 @@ import com.google.common.collect.ImmutableMap;
  */
 public final class TestJsonValidator {
 
-    private static final String SCHEMA = "resource:/schemas/schema.json";
-    private static final Map<String, Object> JSON_INVALID = ImmutableMap.of("key", "val");
-    private static final Map<String, Object> JSON_VALID = ImmutableMap.of(//
+    private static final String SCHEMA = "/schemas/schema.json";
+    private static final List<Serializable> CONTEXT = Arrays.asList( //
+            "https://w3id.org/kim/amb/draft/context.jsonld", //
+            ImmutableMap.of("@language", "de"));
+    private static final ImmutableMap<String, String> PROVIDER = ImmutableMap.of(//
+            "id", "https://example.org/oer-provider.html", //
+            "name", "example");
+    private static final Map<String, Object> JSON_INVALID_SHORT = ImmutableMap.of("key", "val");
+    private static final Map<String, Object> JSON_INVALID_LONG = ImmutableMap.of(//
             "id", "https://example.org/oer", //
             "name", "Beispielkurs", //
-            "@context", Arrays.asList( //
-                    "https://w3id.org/kim/amb/draft/context.jsonld", //
-                    ImmutableMap.of("@language", "de")),
+            "@context", CONTEXT, //
             "type", Arrays.asList("LearningResource"), //
             "mainEntityOfPage", Arrays.asList(ImmutableMap.of( //
                     "id", "https://example.org/oer-description.html", //
-                    "provider", ImmutableMap.of(//
-                            "id", "https://example.org/oer-provider.html", //
-                            "name", "example"))));
+                    "dateModified", "June 2022", //
+                    "provider", PROVIDER)));
+    private static final Map<String, Object> JSON_VALID = ImmutableMap.of(//
+            "id", "https://example.org/oer", //
+            "name", "Beispielkurs", //
+            "@context", CONTEXT, "type", //
+            Arrays.asList("LearningResource"), //
+            "mainEntityOfPage", Arrays.asList(ImmutableMap.of( //
+                    "id", "https://example.org/oer-description.html", //
+                    "dateModified", "2022-06-10", //
+                    "provider", PROVIDER)));
     private static final ObjectMapper MAPPER = new ObjectMapper();
 
     private JsonValidator validator;
@@ -78,8 +92,14 @@ public final class TestJsonValidator {
     }
 
     @Test
-    public void testShouldInvalidate() throws JsonProcessingException {
-        validator.process(MAPPER.writeValueAsString(JSON_INVALID));
+    public void testShouldInvalidateShort() throws JsonProcessingException {
+        validator.process(MAPPER.writeValueAsString(JSON_INVALID_SHORT));
+        inOrder.verifyNoMoreInteractions();
+    }
+
+    @Test
+    public void testShouldInvalidateLong() throws JsonProcessingException {
+        validator.process(MAPPER.writeValueAsString(JSON_INVALID_LONG));
         inOrder.verifyNoMoreInteractions();
     }
 
@@ -91,7 +111,7 @@ public final class TestJsonValidator {
     @Test(expected = MetafactureException.class)
     public void testShouldCatchMissingOutputFile() throws JsonProcessingException {
         validator.setWriteValid("");
-        validator.process(MAPPER.writeValueAsString(JSON_INVALID));
+        validator.process(MAPPER.writeValueAsString(JSON_INVALID_SHORT));
     }
 
     @After
