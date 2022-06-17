@@ -1,4 +1,4 @@
-service_id = "https://oerworldmap.org/resource/urn:uuid:DUMMI";
+service_id = "https://detmoldmusictools.de/";
 service_name = "detmoldMusicTools";
 
 default input_limit = "-1"; // 'default': is overridden by command-line/properties value
