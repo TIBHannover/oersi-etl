@@ -1,0 +1,40 @@
+
+# Provided metadata is AMB valid only additional fields are added.
+
+# --------Delete all emtpy values-------
+vacuum()
+
+# ---------learningResourceType----------------
+do list(path:"learningResourceType[]")
+  copy_field("id", "prefLabel.de")
+  lookup("prefLabel.de", "data/maps/hcrt-de-labels.tsv","sep_char":"\t", delete:"true")
+  copy_field("id", "prefLabel.en")
+  lookup("prefLabel.en", "data/maps/hcrt-en-labels.tsv","sep_char":"\t", delete:"true")
+end
+
+# ---------about----------------
+do list(path:"about[]")
+  copy_field("id", "prefLabel.de")
+  lookup("prefLabel.de", "data/maps/subject-labels.tsv","sep_char":"\t", delete:"true")
+end
+
+# ------ sourceOrganization --- 
+
+set_array("sourceOrganization[]")
+add_field("sourceOrganization[].$append.name", "Hochschule für Musik Detmold")
+add_field("sourceOrganization[].$last.type", "Organization")
+
+# ------ image --- 
+
+add_field("image", "https://detmoldmusictools.de/files/coursemanager/course/3/course-icon/Bildschirmfoto_2014-10-24_um_12.51.57.png")
+
+
+# ---------mainEntityOfPage----------------
+set_array("mainEntityOfPage[]")
+copy_field("id", "mainEntityOfPage[].$append.id")
+add_field("mainEntityOfPage[].$last.provider.id","$[service_id]")
+add_field("mainEntityOfPage[].$last.provider.type","Service")
+add_field("mainEntityOfPage[].$last.provider.name","$[service_name]")
+
+# ------ tidy up --- 
+vacuum()
