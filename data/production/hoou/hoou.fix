@@ -5,6 +5,7 @@ vacuum()
 # name
 # image
 # description
+# sourceOrganization
 
 # ---------------license ----------------------------------
 move_field("license", "@license")
@@ -26,7 +27,6 @@ replace_all("creator[].*.name", "Apl\\. |\\(apl\\.\\) |Dr\\. med |Dr\\. |Dr\\.'i
 
 # ---------------sourceOrganization ----------------------------------
 
-copy_field("provider[]","sourceOrganization[]")
 replace_all("sourceOrganization[].*.type","^.*$","Organization")
 
 # ---------------keywords----------------------------------
