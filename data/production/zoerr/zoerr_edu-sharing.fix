@@ -70,7 +70,7 @@ end
 do list(path:"creator[]")
   if any_match("name", "^BEGIN:VCARD[\\s\\S]*X-ORCID:https\\\\://(.+)\r\n[\\s\\S]*")
     copy_field("name", "id")
-    replace_all("id","^BEGIN:VCARD[\\s\\S]*X-ORCID:https\\\\://(.+)\r\n[\\s\\S]*", "$1")
+    replace_all("id","^BEGIN:VCARD[\\s\\S]*X-ORCID:https\\\\://(.+)\r\n[\\s\\S]*", "https://$1")
   end
   replace_all("name","^BEGIN:VCARD[\\s\\S]*FN:(.+)\r\n[\\s\\S]*", "$1")
   replace_all("name","^BEGIN:VCARD\r\nORG:(.+)\r\n[\\s\\S]*", "$1")
