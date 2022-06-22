@@ -26,8 +26,8 @@ replace_all("creator[].*.name", "Apl\\. |\\(apl\\.\\) |Dr\\. med |Dr\\. |Dr\\.'i
 
 # ---------------sourceOrganization ----------------------------------
 
-replace_all("provider[].*.type",".*","Organization")
 copy_field("provider[]","sourceOrganization[]")
+replace_all("sourceOrganization[].*.type","^.*$","Organization")
 
 # ---------------keywords----------------------------------
 split_field("keywords",",")
