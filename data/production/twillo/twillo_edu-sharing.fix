@@ -69,7 +69,7 @@ end
 do list(path:"creator[]")
   if any_match("name", "^BEGIN:VCARD[\\s\\S]*X-ORCID:(.+)\n[\\s\\S]+END:VCARD$")
     copy_field("name", "id")
-    replace_all("id","^BEGIN:VCARD[\\s\\S]*X-ORCID:(.+)\n[\\s\\S]*\nEND:VCARD$", "$1")
+    replace_all("id","^BEGIN:VCARD[\\s\\S]*X-ORCID:(.+)\n[\\s\\S]*\nEND:VCARD$", "https://orcid.org/$1")
   end
   replace_all("name","^BEGIN:VCARD[\\s\\S]*FN:(.+)\n[\\s\\S]*\nEND:VCARD$", "$1")
   replace_all("name","^BEGIN:VCARD\nORG:(.+)\n[\\s\\S]*\nEND:VCARD$", "$1")
