@@ -18,10 +18,13 @@ replace_all("id", "oai:tib.eu:kmo-av:sid~", "https://av.tib.eu/media/")
 
 
 # ---------------name----------------------------------
+# The json-validator created an error due to duplicated element "name". Therefore the two conditionals should prevent a duplicate elemente.
 
-do list(path:"metadata.resources.resource.titles.title", "var": "$i")
-  unless exists("$i.titleType")
-    copy_field("$i.value", "name")
+unless exists("name")
+  do list(path:"metadata.resources.resource.titles.title", "var": "$i")
+    unless exists("$i.titleType")
+      copy_field("$i.value", "name")
+    end
   end
 end
 
