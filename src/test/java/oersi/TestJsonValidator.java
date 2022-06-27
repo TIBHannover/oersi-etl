@@ -50,6 +50,8 @@ public final class TestJsonValidator {
             "id", "https://example.org/oer-provider.html", //
             "name", "example");
     private static final Map<String, Object> JSON_INVALID_SHORT = ImmutableMap.of("key", "val");
+    private static final String JSON_INVALID_DUPLICATE_KEY = "{\"key\":\"val\",\"key\":\"val\"}";
+    private static final String JSON_INVALID_SYNTAX_ERROR = "{\"key1\":\"val\",\"key2\":\"val\"";
     private static final Map<String, Object> JSON_INVALID_LONG = ImmutableMap.of(//
             "id", "https://example.org/oer", //
             "name", "Beispielkurs", //
@@ -94,6 +96,18 @@ public final class TestJsonValidator {
     @Test
     public void testShouldInvalidateShort() throws JsonProcessingException {
         validator.process(MAPPER.writeValueAsString(JSON_INVALID_SHORT));
+        inOrder.verifyNoMoreInteractions();
+    }
+
+    @Test
+    public void testShouldInvalidateDuplicateKey() throws JsonProcessingException {
+        validator.process(JSON_INVALID_DUPLICATE_KEY);
+        inOrder.verifyNoMoreInteractions();
+    }
+
+    @Test
+    public void testShouldInvalidateSyntaxError() throws JsonProcessingException {
+        validator.process(JSON_INVALID_SYNTAX_ERROR);
         inOrder.verifyNoMoreInteractions();
     }
 
