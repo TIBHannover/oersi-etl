@@ -3,8 +3,6 @@ package oersi;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.List;
-import java.util.stream.Collectors;
 
 import org.everit.json.schema.Schema;
 import org.everit.json.schema.ValidationException;
@@ -63,19 +61,27 @@ public final class JsonValidator extends DefaultObjectPipe<String, ObjectReceive
 
     @Override
     public void process(final String json) {
-        JSONObject object = new JSONObject(json);
+        JSONObject object = null;
+        try {
+            object = new JSONObject(json); // throws JSONException on syntax error
+        } catch (JSONException e) {
+            handleInvalid(json, null, e.getMessage());
+        }
         try {
             schema.validate(object); // throws ValidationException if invalid
             getReceiver().process(json);
             success++;
             write(json, writeValid);
         } catch (ValidationException e) {
-            List<String> errorMessages = e.getCausingExceptions().stream()
-                    .map(ValidationException::getMessage).collect(Collectors.toList());
-            LOG.info("Invalid JSON: {} in {}", errorMessages, object.opt("id"));
-            fail++;
-            write(json, writeInvalid);
+            handleInvalid(json, object, e.getAllMessages().toString());
         }
+    }
+
+    private void handleInvalid(final String json, final JSONObject object,
+            final String errorMessage) {
+        LOG.info("Invalid JSON: {} in {}", errorMessage, object != null ? object.opt("id") : json);
+        fail++;
+        write(json, writeInvalid);
     }
 
     private void write(final String json, FileWriter to) {
