@@ -48,11 +48,11 @@ end
 
 /* Contributor */
 set_array("contributor[]")
-copy_field("Beitragende1.Name", "contributor[].$append.name")
-copy_field("Beitragende1.Typ", "contributor[].1.type")
-copy_field("Beitragende1.Hochschule-RoRID","contributor[].1.@affiliation")
-copy_field("Beitragende1.ORCID","contributor[].1.id")
-copy_field("Beitragende1.Grad", "contributor[].1.honoricPrefix")
+copy_field("Beitragende1_Name", "contributor[].$append.name")
+copy_field("Beitragende1_Typ", "contributor[].1.type")
+copy_field("Beitragende1_Hochschule-RoRID","contributor[].1.@affiliation")
+copy_field("Beitragende1_ORCID","contributor[].1.id")
+copy_field("Beitragende1_Grad", "contributor[].1.honoricPrefix")
 
 copy_field("Beitragende2_Name", "contributor[].$append.name")
 copy_field("Beitragende2_Typ", "contributor[].2.type")
@@ -85,15 +85,17 @@ lookup("sourceOrganization[].*.name", "data/maps/orcaUni.tsv","sep_char":"\t", d
 set_array("type[]", "LearningResource")
 
 # ------ learningResourceType */
+set_array("learningResourceType[]")
 
 copy_field("Medientyp", "@hcrt")
 split_field("@hcrt", ";")
 trim("@hcrt.*")
 uniq("@hcrt")
-lookup("@hcrt.*","data/maps/orcaLabels-hcrt.tsv","sep_char":"\t", delete:"true")
 
-set_array("learningResourceType[]")
-copy_field("@hcrt.*", "learningResourceType[].$append.id")
+do list(path:"@hcrt", "var":"$i")
+  lookup("$i","data/maps/orcaLabels-hcrt.tsv","sep_char":"\t", delete:"true")
+  copy_field("$i", "learningResourceType[].$append.id")
+end
 
 do list(path:"learningResourceType[]")
   copy_field("id", "prefLabel.de")
@@ -121,8 +123,11 @@ end
 
 # ------ inLanguage------
 set_array("inLanguage[]")
-copy_field("Sprache", "inLanguage[].$append")
-
+split_field("Sprache",";")
+do list(path:"Sprache", "var":"$i")
+  copy_field("$i", "inLanguage[]")
+end
+trim("inLanguage[].*")
 
 # ------ keywords ------
 
