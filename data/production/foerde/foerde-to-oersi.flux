@@ -12,7 +12,7 @@ default input_wait = "50";
 | as-lines
 | decode-json
 // edu-sharing version 6.0
-| metafix(FLUX_DIR + "foerde_edu-sharing.fix", *) // '*': pass all flux variables to the fix
+| fix(FLUX_DIR + "foerde_edu-sharing.fix", *) // '*': pass all flux variables to the fix
 | encode-json
 | oersi.JsonValidator(output_schema, writeValid=metadata_valid, writeInvalid=metadata_invalid)
 | oersi.OersiWriter(backend_api, user=backend_user, pass=backend_pass, log=metadata_responses)

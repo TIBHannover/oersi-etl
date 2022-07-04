@@ -6,12 +6,6 @@ unless any_equal("node.properties.ccm:educontextname_DISPLAYNAME[]", "Hochschule
   reject()
 end
 
-
-#  ---------------@context ----------------------------------
-
-set_array("@context[]", "https://w3id.org/kim/lrmi-profile/draft/context.jsonld")
-set_hash("@context[].$append", "@language": "de")
-
 #  ---------------name ----------------------------------
 copy_field("node.title", "name")
 
@@ -41,9 +35,9 @@ end
 set_array("mainEntityOfPage[]")
 copy_field("@internal_id", "mainEntityOfPage[].$append.id")
 copy_field("node.modifiedAt", "mainEntityOfPage[].$last.dateModified")
-replace_all("mainEntityOfPage[].$last.dateModified","T.+Z","")
+replace_all("mainEntityOfPage[].*.dateModified","T.+Z","")
 copy_field("node.createdAt", "mainEntityOfPage[].$last.dateCreated")
-replace_all("mainEntityOfPage[].$last.dateCreated","T.+Z","")
+replace_all("mainEntityOfPage[].*.dateCreated","T.+Z","")
 add_field("mainEntityOfPage[].$last.provider.id","$[service_id]")
 add_field("mainEntityOfPage[].$last.provider.type","Service")
 add_field("mainEntityOfPage[].$last.provider.name","$[service_name]")
@@ -63,7 +57,7 @@ do list(path:"@hochschulfaechersystematik[]", "var":"$i")
   copy_field("$i", "about[].$append.id")
   copy_field("$i", "about[].$last.prefLabel.de")
 end
-lookup("about[].*.prefLabel.de", "data/maps/subject-labels.tsv","sep_char":"\t")
+lookup("about[].*.prefLabel.de", "data/maps/subject-labels.tsv","sep_char":"\t", delete:"true")
 
 #  ---------------creator----------------------------------
 set_array("creator[]")
@@ -112,7 +106,7 @@ end
 #  ---------------sourceOrganization----------------------------------      
 set_array("sourceOrganization[]")
 do list(path:"node.properties.ccm:university_DISPLAYNAME[]", "var": "$i")
-  unless any_equal("$i", "null null|- Alle -")
+  unless any_match("$i", "null null|- Alle -")
     copy_field("$i", "sourceOrganization[].$append.name")
     add_field("sourceOrganization[].$last.type", "Organization")
   end
@@ -136,7 +130,7 @@ set_array("type[]", "LearningResource")
  
 # ---------------learningResourceType----------------------------------
 copy_field("node.properties.ccm:educationallearningresourcetype_DISPLAYNAME[]", "@learningResourceType[]")
-lookup("@learningResourceType[].*","data/maps/foerdeLeardningResourceTypes.tsv","sep_char":"\t")
+lookup("@learningResourceType[].*","data/maps/foerdeLeardningResourceTypes.tsv","sep_char":"\t", delete:"true")
 
 
 
@@ -149,8 +143,8 @@ do list(path:"@learningResourceType", "var": "$i")
   end
 end
  
-lookup("learningResourceType[].*.prefLabel.de", "data/maps/hcrt-de-labels.tsv","sep_char":"\t")
-lookup("learningResourceType[].*.prefLabel.en", "data/maps/hcrt-en-labels.tsv","sep_char":"\t")
+lookup("learningResourceType[].*.prefLabel.de", "data/maps/hcrt-de-labels.tsv","sep_char":"\t", delete:"true")
+lookup("learningResourceType[].*.prefLabel.en", "data/maps/hcrt-en-labels.tsv","sep_char":"\t", delete:"true")
  
 #  ---------------keywords----------------------------------
 copy_field("node.properties.cclom:general_keyword[]", "keywords[]")
@@ -162,6 +156,22 @@ unless exists('node.properties.ccm:wwwurl[].1')
   copy_field("node.downloadUrl", "encoding[].$last.contentUrl")
   copy_field("node.mimetype", "encoding[].$last.encodingFormat")
   copy_field("node.size", "encoding[].$last.contentSize")
+end
+
+# ---------------@context ----------------------------------
+
+set_array("@context[]", "https://w3id.org/kim/amb/draft/context.jsonld")
+# resource is german therefore prefer de if multiple or no inLanguage are available
+if any_equal("inLanguage[]","de")
+  set_hash("@context[].$append", "@language": "de")
+elsif any_equal("inLanguage[]","en")
+  set_hash("@context[].$append", "@language": "en")
+else
+  copy_field("inLanguage[].1", "@context[].$append.@language")
+end
+# resources without inLanguage-Values set default to de
+unless exists("inLanguage[].1")
+  set_hash("@context[].$append", "@language": "de")
 end
 
 
