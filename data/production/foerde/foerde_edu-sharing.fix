@@ -54,9 +54,9 @@ copy_field("node.properties.cclom:general_description[].*", "description") # eve
 
 
 #  ---------------about----------------------------------
-set_array("@hochschulfaechersystematik[]")
-copy_field("node.properties.ccm:taxonid[].*", "@hochschulfaechersystematik[].$append")
-filter("@hochschulfaechersystematik[].*", "^https://w3id.org/kim/hochschulfaechersystematik/.*")
+
+copy_field("node.properties.ccm:taxonid_DISPLAYNAME[]", "@hochschulfaechersystematik[]")
+lookup("@hochschulfaechersystematik[].*","data/maps/foerdeSubjects.tsv","sep_char":"\t")
  
 set_array("about[]")
 do list(path:"@hochschulfaechersystematik[]", "var":"$i")
@@ -135,8 +135,13 @@ replace_all("inLanguage[].*","unknown", "de")
 set_array("type[]", "LearningResource")
  
 # ---------------learningResourceType----------------------------------
+copy_field("node.properties.ccm:educationallearningresourcetype_DISPLAYNAME[]", "@learningResourceType[]")
+lookup("@learningResourceType[].*","data/maps/foerdeLeardningResourceTypes.tsv","sep_char":"\t")
+
+
+
 set_array("learningResourceType[]")
-do list(path:"node.properties.ccm:educationallearningresourcetype[]", "var": "$i")
+do list(path:"@learningResourceType", "var": "$i")
   unless any_equal("$i", "null null")
     copy_field("$i", "learningResourceType[].$append.id")
     copy_field("$i", "learningResourceType[].$last.prefLabel.de")
@@ -158,6 +163,7 @@ unless exists('node.properties.ccm:wwwurl[].1')
   copy_field("node.mimetype", "encoding[].$last.encodingFormat")
   copy_field("node.size", "encoding[].$last.contentSize")
 end
+
 
 retain("@context[]","id","image","name","creator[]","contributor[]","sourceOrganization[]", "license","description","dataCreated","inLanguage[]","type[]","learningResourceType[]","keywords[]","about[]", "encoding[]", "mainEntityOfPage[]")
 vacuum()
