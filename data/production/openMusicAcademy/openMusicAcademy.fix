@@ -1,0 +1,34 @@
+
+# Provided metadata is AMB valid only additional fields are added.
+
+# --------Delete all emtpy values-------
+vacuum()
+
+# ---------learningResourceType----------------
+do list(path:"learningResourceType[]")
+  remove_field("prefLabel")
+  copy_field("id", "prefLabel.de")
+  lookup("prefLabel.de", "data/maps/hcrt-de-labels.tsv","sep_char":"\t", delete:"true")
+  copy_field("id", "prefLabel.en")
+  lookup("prefLabel.en", "data/maps/hcrt-en-labels.tsv","sep_char":"\t", delete:"true")
+end
+
+# ---------about----------------
+do list(path:"about[]")
+  remove_field("prefLabel")
+  copy_field("id", "prefLabel.de")
+  lookup("prefLabel.de", "data/maps/subject-labels.tsv","sep_char":"\t", delete:"true")
+end
+
+# ---------mainEntityOfPage----------------
+set_array("mainEntityOfPage[]")
+copy_field("id", "mainEntityOfPage[].$append.id")
+add_field("mainEntityOfPage[].$last.provider.id","$[service_id]")
+add_field("mainEntityOfPage[].$last.provider.type","Service")
+add_field("mainEntityOfPage[].$last.provider.name","$[service_name]")
+
+# boolean field "isAccessibleForFree" is not decoded/encoded correctly, but will be set automatically
+remove_field("isAccessibleForFree")
+
+# ------ tidy up --- 
+vacuum()
