@@ -1,8 +1,13 @@
 # Delete all empty values
 vacuum()
 
-
+# Filter out any non higher ed oer
 unless any_equal("node.properties.ccm:educontextname_DISPLAYNAME[]", "Hochschule")
+  reject()
+end
+
+# Filter out useless ressources
+if any_match("node.title|name", "Nutzungsbedingungen.htm|Erklärfilm fOERde")
   reject()
 end
 
@@ -135,7 +140,7 @@ copy_field("node.properties.ccm:educationallearningresourcetype_DISPLAYNAME[]", 
 
 
 set_array("learningResourceType[]")
-do list(path:"@learningResourceType", "var": "$i")
+do list(path:"@learningResourceType[]", "var": "$i")
   unless any_equal("$i", "null null")
     copy_field("$i", "learningResourceType[].$append.id")
     copy_field("$i", "learningResourceType[].$last.prefLabel.de")
