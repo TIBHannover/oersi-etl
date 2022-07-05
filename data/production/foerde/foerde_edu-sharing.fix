@@ -1,0 +1,179 @@
+# Delete all empty values
+vacuum()
+
+
+unless any_equal("node.properties.ccm:educontextname_DISPLAYNAME[]", "Hochschule")
+  reject()
+end
+
+#  ---------------name ----------------------------------
+copy_field("node.title", "name")
+
+# If title is not set select name
+unless exists("name")
+  copy_field("node.name", "name")
+end  
+
+#  ---------------image----------------------------------
+copy_field("node.preview.url", "image")
+
+#  ---------------id----------------------------------
+copy_field("node.properties.ccm:wwwurl[].1", "@external_id")
+trim("@external_id")
+replace_all("@external_id", "\\u00a0", "") /* %A0 / &nbsp; */
+
+copy_field("node.ref.id", "@internal_id")
+prepend("@internal_id","https://$[service_domain]/edu-sharing/components/render/")
+
+if exists("@external_id")
+  copy_field("@external_id", "id")
+else
+  copy_field("@internal_id", "id")
+end
+
+#  ---------mainEntityOfPage----------------
+set_array("mainEntityOfPage[]")
+copy_field("@internal_id", "mainEntityOfPage[].$append.id")
+copy_field("node.modifiedAt", "mainEntityOfPage[].$last.dateModified")
+replace_all("mainEntityOfPage[].*.dateModified","T.+Z","")
+copy_field("node.createdAt", "mainEntityOfPage[].$last.dateCreated")
+replace_all("mainEntityOfPage[].*.dateCreated","T.+Z","")
+add_field("mainEntityOfPage[].$last.provider.id","$[service_id]")
+add_field("mainEntityOfPage[].$last.provider.type","Service")
+add_field("mainEntityOfPage[].$last.provider.name","$[service_name]")
+
+
+# ---------------description----------------------------------
+copy_field("node.properties.cclom:general_description[].*", "description") # eventuell nur .1 nicht .*
+
+
+#  ---------------about----------------------------------
+lookup("node.properties.ccm:taxonid_DISPLAYNAME[].*","data/maps/foerdeSubjects.tsv","sep_char":"\t", delete:"true")
+copy_field("node.properties.ccm:taxonid_DISPLAYNAME[]", "@hochschulfaechersystematik[]")
+
+ 
+set_array("about[]")
+do list(path:"@hochschulfaechersystematik[]", "var":"$i")
+  copy_field("$i", "about[].$append.id")
+  copy_field("$i", "about[].$last.prefLabel.de")
+end
+lookup("about[].*.prefLabel.de", "data/maps/subject-labels.tsv","sep_char":"\t", delete:"true")
+
+#  ---------------creator----------------------------------
+set_array("creator[]")
+do list(path:"node.properties.ccm:lifecyclecontributer_author[]", "var": "$i")
+  if any_match("$i", "^BEGIN:VCARD[\\s\\S]*FN:(.+)\n[\\s\\S]*\nEND:VCARD$")
+    copy_field("$i", "creator[].$append.name")
+    add_field("creator[].$last.type", "Person")
+  elsif any_match("$i", "^BEGIN:VCARD\nORG:(.+)\n[\\s\\S]*\nEND:VCARD$")
+    copy_field("$i", "creator[].$append.name")
+    add_field("creator[].$last.type", "Organization")
+  end
+end
+
+do list(path:"creator[]")
+  if any_match("name", "^BEGIN:VCARD[\\s\\S]*X-ORCID:(.+)\n[\\s\\S]+END:VCARD$")
+    copy_field("name", "id")
+    replace_all("id","^BEGIN:VCARD[\\s\\S]*X-ORCID:(.+)\n[\\s\\S]*\nEND:VCARD$", "$1")
+  end
+  replace_all("name","^BEGIN:VCARD[\\s\\S]*FN:(.+)\n[\\s\\S]*\nEND:VCARD$", "$1")
+  replace_all("name","^BEGIN:VCARD\nORG:(.+)\n[\\s\\S]*\nEND:VCARD$", "$1")
+end
+
+/*
+#  ---------------contributor----------------------------------
+set_array("contributor[]")
+do list(path:"node.properties.ccm:lifecyclecontributer_author[]", "var": "$i")
+  if any_match("$i", "^BEGIN:VCARD[\\s\\S]*FN:(.+)\n[\\s\\S]*\nEND:VCARD$")
+    copy_field("$i", "contributor[].$append.name")
+    add_field("contributor[].$last.type", "Person")
+  elsif any_match("$i", "^BEGIN:VCARD\nORG:(.+)\n[\\s\\S]*\nEND:VCARD$")
+    copy_field("$i", "contributor[].$append.name")
+    add_field("contributor[].$last.type", "Organization")
+  end
+end
+
+do list(path:"contributor[]")
+  if any_match("name", "^BEGIN:VCARD[\\s\\S]*X-ORCID:(.+)\n[\\s\\S]+END:VCARD$")
+    copy_field("name", "id")
+    replace_all("id","^BEGIN:VCARD[\\s\\S]*X-ORCID:(.+)\n[\\s\\S]*\nEND:VCARD$", "$1")
+  end
+  replace_all("name","^BEGIN:VCARD[\\s\\S]*FN:(.+)\n[\\s\\S]*\nEND:VCARD$", "$1")
+  replace_all("name","^BEGIN:VCARD\nORG:(.+)\n[\\s\\S]*\nEND:VCARD$", "$1")
+end
+*/
+
+#  ---------------sourceOrganization----------------------------------      
+set_array("sourceOrganization[]")
+do list(path:"node.properties.ccm:university_DISPLAYNAME[]", "var": "$i")
+  unless any_match("$i", "null null|- Alle -")
+    copy_field("$i", "sourceOrganization[].$append.name")
+    add_field("sourceOrganization[].$last.type", "Organization")
+  end
+end
+
+#  ---------------license----------------------------------
+copy_field("node.properties.virtual:licenseurl[].1", "license.id")
+filter("license.id","^http[s]?:\\/\\/creativecommons.org\\/(licenses|licences|publicdomain)\\/.*|^http[s]?:\\/\\/www.gnu.org\\/licenses\\/.*|^http[s]?:\\/\\/www.apache.org\\/licenses\\/.*|http[s]?://opensource.org/licenses/MIT|^http[s]?:\\/\\/www.opensource.org\\/licenses\\/BSD.*")
+ 
+ 
+# ---------------inLanguage----------------------------------
+set_array("inLanguage[]")
+copy_field("node.properties.cclom:general_language[].*", "inLanguage[].$append")
+
+replace_all("inLanguage[].*","_..$", "") /* remove country suffixes eg. _DE */
+replace_all("inLanguage[].*","^$", "de") /* empty strings default to 'de' */
+replace_all("inLanguage[].*","unknown", "de")
+
+# ---------------type----------------------------------
+set_array("type[]", "LearningResource")
+ 
+# ---------------learningResourceType----------------------------------
+
+lookup("node.properties.ccm:educationallearningresourcetype_DISPLAYNAME[].*","data/maps/foerdeLeardningResourceTypes.tsv","sep_char":"\t", delete:"true")
+copy_field("node.properties.ccm:educationallearningresourcetype_DISPLAYNAME[]", "@learningResourceType[]")
+
+
+set_array("learningResourceType[]")
+do list(path:"@learningResourceType", "var": "$i")
+  unless any_equal("$i", "null null")
+    copy_field("$i", "learningResourceType[].$append.id")
+    copy_field("$i", "learningResourceType[].$last.prefLabel.de")
+    copy_field("$i", "learningResourceType[].$last.prefLabel.en")
+  end
+end
+ 
+lookup("learningResourceType[].*.prefLabel.de", "data/maps/hcrt-de-labels.tsv","sep_char":"\t", delete:"true")
+lookup("learningResourceType[].*.prefLabel.en", "data/maps/hcrt-en-labels.tsv","sep_char":"\t", delete:"true")
+ 
+#  ---------------keywords----------------------------------
+copy_field("node.properties.cclom:general_keyword[]", "keywords[]")
+
+# ---------------encoding----------------------------------
+unless exists('node.properties.ccm:wwwurl[].1')
+  set_array("encoding[]")
+  add_field("encoding[].$append.type", "MediaObject")
+  copy_field("node.downloadUrl", "encoding[].$last.contentUrl")
+  copy_field("node.mimetype", "encoding[].$last.encodingFormat")
+  copy_field("node.size", "encoding[].$last.contentSize")
+end
+
+# ---------------@context ----------------------------------
+
+set_array("@context[]", "https://w3id.org/kim/amb/draft/context.jsonld")
+# resource is german therefore prefer de if multiple or no inLanguage are available
+if any_equal("inLanguage[]","de")
+  set_hash("@context[].$append", "@language": "de")
+elsif any_equal("inLanguage[]","en")
+  set_hash("@context[].$append", "@language": "en")
+else
+  copy_field("inLanguage[].1", "@context[].$append.@language")
+end
+# resources without inLanguage-Values set default to de
+unless exists("inLanguage[].1")
+  set_hash("@context[].$append", "@language": "de")
+end
+
+
+retain("@context[]","id","image","name","creator[]","contributor[]","sourceOrganization[]", "license","description","dataCreated","inLanguage[]","type[]","learningResourceType[]","keywords[]","about[]", "encoding[]", "mainEntityOfPage[]")
+vacuum()
