@@ -4,6 +4,11 @@
 # --------Delete all emtpy values-------
 vacuum()
 
+# --------Filter out administrative and info pages-------
+if any_match("name", ".*(Datenschutz|Nutzungshinweise|OMA|Neues Dokument|Open Music Academy).*")
+  reject()
+end
+
 # ---------learningResourceType----------------
 do list(path:"learningResourceType[]")
   remove_field("prefLabel")
@@ -29,6 +34,16 @@ add_field("mainEntityOfPage[].$last.provider.name","$[service_name]")
 
 # boolean field "isAccessibleForFree" is not decoded/encoded correctly, but will be set automatically
 remove_field("isAccessibleForFree")
+
+# ---------ceator/contributor----------------
+# delete all creator/contributor with name "mani-prod"
+
+do list(path:"creator[]|contributor[]", "var":"$i")
+  if any_equal("$i.name", "mani-prod")
+    remove_field("$i.name")
+    remove_field("$i.type")
+  end
+end
 
 # ------ tidy up --- 
 vacuum()
