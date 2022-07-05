@@ -48,9 +48,9 @@ copy_field("node.properties.cclom:general_description[].*", "description") # eve
 
 
 #  ---------------about----------------------------------
-
+lookup("node.properties.ccm:taxonid_DISPLAYNAME[].*","data/maps/foerdeSubjects.tsv","sep_char":"\t", delete:"true")
 copy_field("node.properties.ccm:taxonid_DISPLAYNAME[]", "@hochschulfaechersystematik[]")
-lookup("@hochschulfaechersystematik[].*","data/maps/foerdeSubjects.tsv","sep_char":"\t")
+
  
 set_array("about[]")
 do list(path:"@hochschulfaechersystematik[]", "var":"$i")
@@ -129,9 +129,9 @@ replace_all("inLanguage[].*","unknown", "de")
 set_array("type[]", "LearningResource")
  
 # ---------------learningResourceType----------------------------------
-copy_field("node.properties.ccm:educationallearningresourcetype_DISPLAYNAME[]", "@learningResourceType[]")
-lookup("@learningResourceType[].*","data/maps/foerdeLeardningResourceTypes.tsv","sep_char":"\t", delete:"true")
 
+lookup("node.properties.ccm:educationallearningresourcetype_DISPLAYNAME[].*","data/maps/foerdeLeardningResourceTypes.tsv","sep_char":"\t", delete:"true")
+copy_field("node.properties.ccm:educationallearningresourcetype_DISPLAYNAME[]", "@learningResourceType[]")
 
 
 set_array("learningResourceType[]")
