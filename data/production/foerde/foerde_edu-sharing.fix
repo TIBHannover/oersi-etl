@@ -163,6 +163,13 @@ unless exists('node.properties.ccm:wwwurl[].1')
   copy_field("node.size", "encoding[].$last.contentSize")
 end
 
+# ------ sourceOrganization --- 
+
+set_array("sourceOrganization[]")
+
+add_field("sourceOrganization[].$append.name", "Christian-Albrechts-Universität zu Kiel")
+add_field("sourceOrganization[].$last.type", "Organization")
+
 # ---------------@context ----------------------------------
 
 set_array("@context[]", "https://w3id.org/kim/amb/draft/context.jsonld")
