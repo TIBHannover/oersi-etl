@@ -169,6 +169,7 @@ set_array("sourceOrganization[]")
 
 add_field("sourceOrganization[].$append.name", "Christian-Albrechts-Universität zu Kiel")
 add_field("sourceOrganization[].$last.type", "Organization")
+add_field("sourceOrganization[].$last.id", "https://ror.org/04v76ef78")
 
 # ---------------@context ----------------------------------
 
