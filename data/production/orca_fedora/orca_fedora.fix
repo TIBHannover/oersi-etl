@@ -20,7 +20,26 @@ do list(path: "creator[]", "var": "$i")
 	unless any_contain("$i.id","orcid")
 		remove_field("$i.id")
 	end
+	# dirty workaround until source is fixed
+	if any_contain("$i.honoricPrefix","https://d-nb.info/standards/elementset/gnd#academicDegree/")
+		replace_all("$i.honoricPrefix","https://d-nb.info/standards/elementset/gnd#academicDegree/","")
+		replace_all("$i.honoricPrefix","unknown","")
+	end
+	# dirty workaround until source is fixed
+	unless exists("$i.affiliation.id")
+		copy_field("$i.affiliation","$i.affiliationObject.id")
+		remove_field("$i.affiliation")
+		move_field("$i.affiliationObject.id","$i.affiliation.id")
+	end
 	copy_field("$i.affiliation.id", "$i.affiliation.name")
+	# dirty workaround until source is fixed default type Organization
+	unless exists("$i.affiliation.type")
+		add_field("$i.affiliation.type", "Organization")
+	end
+	# dirty workaround until source is fixed default type Person
+	unless exists("$i.type")
+		add_field("$i.type", "Person")
+	end
 end
 
 lookup("creator[].*.affiliation.name", "data/maps/orcaUni.tsv", "sep_char":"\t", delete:"true")
@@ -29,7 +48,26 @@ do list(path: "contributor[]", "var": "$i")
 	unless any_contain("$i.id","orcid")
 		remove_field("$i.id")
 	end
+	# dirty workaround until source is fixed
+	if any_contain("$i.honoricPrefix","https://d-nb.info/standards/elementset/gnd#academicDegree/")
+		replace_all("$i.honoricPrefix","https://d-nb.info/standards/elementset/gnd#academicDegree/","")
+		replace_all("$i.honoricPrefix","unknown","")
+	end
+	# dirty workaround until source is fixed
+	unless exists("$i.affiliation.id")
+		copy_field("$i.affiliation","$i.affiliationObject.id")
+		remove_field("$i.affiliation")
+		move_field("$i.affiliationObject.id","$i.affiliation.id")
+	end
 	copy_field("$i.affiliation.id", "$i.affiliation.name")
+	# dirty workaround until source is fixed default type Organization
+	unless exists("$i.affiliation.type")
+		add_field("$i.affiliation.type", "Organization")
+	end
+	# dirty workaround until source is fixed default type Person
+	unless exists("$i.type")
+		add_field("$i.type", "Person")
+	end
 end
 
 
@@ -53,10 +91,6 @@ lookup("sourceOrganization[].*.name", "data/maps/orcaUni.tsv", "sep_char":"\t", 
 
 
 do list(path: "learningResourceType[]")
-	lookup("id","data/maps/orcaMedienId-hcrt.tsv", "sep_char":"\t", delete:"true")
-	remove_field("prefLabel") # do not know if that is necessary, when rewriten
-	copy_field("id", "prefLabel.de")
-	lookup("prefLabel.de","data/maps/hcrt-de-labels.tsv", "sep_char":"\t", delete:"true")
 	copy_field("id", "prefLabel.en")
 	lookup("prefLabel.en","data/maps/hcrt-en-labels.tsv", "sep_char":"\t", delete:"true")
 end
