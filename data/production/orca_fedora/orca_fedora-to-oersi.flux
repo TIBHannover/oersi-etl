@@ -6,7 +6,7 @@ service_domain = "https://www.orca.nrw";
 service_id = "https://oerworldmap.org/resource/urn:uuid:31c24f26-1a96-4664-8d6d-71fdddb8b1f5";
 service_name = "ORCA.nrw";
 
-// First API call  needs Password + contentType is unfortunatly researchData
+// First API call, result lists all public ressources
 "https://api.paideia.hbz-nrw.de/search/public_orca2/_search"
 | open-http(accept="application/json")
 | as-records
@@ -15,7 +15,7 @@ service_name = "ORCA.nrw";
 // Filters out any resource that is not public
 | fix(FLUX_DIR +  "filter.fix")
 | literal-to-object
-// Second API call doest NOT need password
+// Second API call, result is single OER
 | template("https://api.paideia.hbz-nrw.de/resource/${o}/lrmiData") // local test: FLUX_DIR + "resources/${o}.json"
 | catch-object-exception
 | open-http(accept="application/json") // local test: open-file
