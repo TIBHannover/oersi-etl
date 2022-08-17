@@ -153,10 +153,14 @@ public class ETL {
                 countSuccess = errored.get(false).size() + "";
             }
         }
-        LOG.info(
-                "Import channel {}, SUCCESS: {}, FAIL-PROCESS: {}, FAIL-VALIDATION: {}, FAIL-WRITE: {}, DURATION: {}",
-                flux.getName(), countSuccess, countFailProcess, countInvalid, countFailWrite,
-                formatTime(end));
+        String errorDetails = String.format("FAIL-PROCESS: %s, FAIL-VALIDATION: %s, FAIL-WRITE: %s",
+                countFailProcess, countInvalid, countFailWrite);
+        if (notAvailable.equals(countSuccess) || Integer.valueOf(countSuccess) == 0) {
+            throw new IllegalStateException(
+                    String.format("No data fully processed: %s, %s", countSuccess, errorDetails));
+        }
+        LOG.info("Import channel {}, SUCCESS: {}, {}, DURATION: {}", flux.getName(), countSuccess,
+                errorDetails, formatTime(end));
     }
 
     static Object[] maskCredentials(List<String> args) {

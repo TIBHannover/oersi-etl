@@ -45,6 +45,15 @@ public class TestEtl {
         assertTrue("Output file must exist: " + ETL.OUT_FILE, ETL.OUT_FILE.exists());
     }
 
+    @Test
+    public void testConvertMainFailEmptyOutput() throws IOException {
+        Files.deleteIfExists(Paths.get(ETL.OUT_FILE.toURI()));
+        assertFalse(ETL.OUT_FILE.exists());
+        ETL.main(new String[] { "src/test/resources/failing-empty-output.flux" });
+        assertTrue("No data should be written to output file: " + ETL.OUT_FILE,
+                Files.readAllLines(Paths.get(ETL.OUT_FILE.toURI())).isEmpty());
+    }
+
     public void testConvertMainFailFixNotFound() throws IOException {
         Files.deleteIfExists(Paths.get(ETL.OUT_FILE.toURI()));
         assertFalse(ETL.OUT_FILE.exists());
