@@ -3,9 +3,7 @@
 # -------  image ----
 #There are no pictures there at the moment
 unless exists("image")
-  copy_field("id", "image")
-  prepend("image", "https://api.edoweb-test.hbz-nrw.de/tools/thumby?url=")
-  append("image","/data&size=250")
+  add_field("image","https://www.orca.nrw/sites/default/files/bilder/orca-nrw-logo_400.jpg")
 end
 
 
