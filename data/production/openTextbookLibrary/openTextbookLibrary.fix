@@ -1,0 +1,163 @@
+# Filter out all resources that are not free
+
+#  ---------------id----------------------------------
+copy_field("85640.u", "id")
+
+#  ---------------name----------------------------------
+copy_field("245??.a", "name")
+
+#  ---------------image----------------------------------
+add_field("image", "https://open.umn.edu/assets/library/otl_logo-2a2de26f4902d62ddb8a5d3ceb5d9c2af80b8bf36ee04b5b23ade2a453b25da0.png")
+
+#  ---------------dateCreated----------------------------------
+copy_field("264 4.c", "dateCreated")
+
+# Only the year is provided.
+replace_all("dateCreated", "^©(\\d*).*", "$1-01-01")
+
+
+#  ---------------description----------------------------------
+copy_field("5200 .a", "description")
+
+#  ---------------creator----------------------------------
+# provides editors and authors which I transform both to creators
+
+set_array("creator[]")
+do list(path:"100??|700??", "var": "$i")
+  copy_field("$i.a","creator[].$append.name")
+  add_field("creator[].$last.type", "Person")
+end
+
+replace_all("creator[].*.name","(.+), (.+)", "$2 $1")
+
+do list(path:"110??|710??", "var": "$i")
+  unless all_equal("$i.a", "Open Textbook Library")
+    paste("creator[].$append.name", "$i.a", "$i.b")
+    add_field("creator[].$last.type", "Organization")
+  end
+end
+
+
+# ------ sourceOrganization --- 
+
+set_array("sourceOrganization[]")
+# sourceOrganization Should OpenHPI always be the sourceOrganization?
+
+do list(path:"attributes.partnerInstitute[]", "var": "$i")
+  copy_field("$i.name", "sourceOrganization[].$append.name")
+  add_field("sourceOrganization[].$last.type", "Organization")
+end
+
+
+# ------ publisher --- 
+set_array("publisher[]")
+add_field("publisher[].$append.name", "University of Minnesota’s College of Education and Human Development")
+add_field("publisher[].$last.type", "Organization")
+
+add_field("publisher[].$append.name", "Open Textbook Library")
+add_field("publisher[].$last.type", "Organization")
+
+
+# ------ learningResourceType --- 
+set_array("learningResourceType[]")
+add_field("learningResourceType[].$append.id","https://w3id.org/kim/hcrt/text")
+add_field("learningResourceType[].$last.prefLabel.de","Textdokument")
+add_field("learningResourceType[].$last.prefLabel.en","Text")
+
+add_field("learningResourceType[].$append.id","https://w3id.org/kim/hcrt/textbook")
+add_field("learningResourceType[].$last.prefLabel.de","Lehrbuch")
+add_field("learningResourceType[].$last.prefLabel.en","Textbook")
+
+# ------ inLanguage --- 
+/* inLanguage: The value Mehrsprachig does not represent the estimated language labels. */
+set_array("inLanguage[]")
+copy_field("546  .a", "inLanguage[].$append")
+
+put_map("languageMap",
+  "In English.": "en",
+  "In French.": "fr",
+  "In German.": "de",
+  "In Japanese.": "ja",
+  "In Polish.": "pl",
+  "In Portuguese.": "pt",
+  "In Spanish.": "es",
+  "In Traditional Chinese.": "zh"
+)
+
+lookup("inLanguage[].*","languageMap")
+
+# ------ license ---
+put_map("licenseMap",
+"Attribution": "https://creativecommons.org/licenses/by/4.0/",
+"Attribution-NoDerivs": "https://creativecommons.org/licenses/by-nd/4.0/",
+"Attribution-NonCommercial": "https://creativecommons.org/licenses/by-nc/4.0/",
+"Attribution-NonCommercial-NoDerivs": "https://creativecommons.org/licenses/by-nc-nd/4.0/",
+"Attribution-NonCommercial-ShareAlike": "https://creativecommons.org/licenses/by-nc-sa/4.0/",
+"Attribution-ShareAlike": "https://creativecommons.org/licenses/by-sa/4.0/",
+"Free Documentation License (GNU)": "https://www.gnu.org/licenses/fdl-1.3.html",
+"No Rights Reserved": "https://creativecommons.org/publicdomain/zero/1.0/"
+)
+
+copy_field("542??.f","license.id")
+lookup("license.id","licenseMap")
+
+# ------ type --- 
+
+set_array("type[]", "LearningResource")
+
+# ------ keywords ---
+set_array("keywords[]")
+do list(path:"650??","var":"$i")
+    move_field("$i.a", "keywords[].$append")
+end
+uniq("keywords[]")
+
+# ------ about --- 
+
+set_array("@hochschulfaechersystematik")
+do list(path:"keywords[]","var":"$i")
+    move_field("$i", "@hochschulfaechersystematik.$append")
+end
+
+lookup("@hochschulfaechersystematik.*","data/maps/subjectMappingOpenTextbooks.tsv","sep_char":"\t", delete:"true")
+
+set_array("about[]")
+copy_field("@hochschulfaechersystematik.*","about[].$append.id")
+
+do list(path: "about[]")
+  copy_field("id", "prefLabel.de")
+  lookup("id","data/maps/subject-labels-to-URI.tsv","sep_char":"\t", delete:"true")
+end
+
+# ---------mainEntityOfPage----------------
+
+set_array("mainEntityOfPage[]")
+copy_field("id", "mainEntityOfPage[].$append.id")
+add_field("mainEntityOfPage[].$last.provider.id","$[service_id]")
+add_field("mainEntityOfPage[].$last.provider.type","Service")
+add_field("mainEntityOfPage[].$last.provider.name","$[service_name]")
+
+# ---------------@context ----------------------------------
+
+set_array("@context[]", "https://w3id.org/kim/amb/draft/context.jsonld")
+# resource is german therefore prefer de if multiple or no inLanguage are available
+if any_equal("inLanguage[]","de")
+  set_hash("@context[].$append", "@language": "de")
+elsif any_equal("inLanguage[]","en")
+  set_hash("@context[].$append", "@language": "en")
+else
+  copy_field("inLanguage[].1", "@context[].$append.@language")
+end
+# resources without inLanguage-Values set default to de
+unless exists("inLanguage[].1")
+  set_hash("@context[].$append", "@language": "de")
+end
+
+
+# ------ tidy up --- 
+retain("@context[]","id","image","name","creator[]","contributor[]","sourceOrganization[]", "license","description","dateCreated","inLanguage[]","type[]","learningResourceType[]","keywords[]","about[]", "encoding[]", "publisher[]", "mainEntityOfPage[]")
+vacuum()
+
+/*missing:*/
+/*kewords*/
+/*about*/
