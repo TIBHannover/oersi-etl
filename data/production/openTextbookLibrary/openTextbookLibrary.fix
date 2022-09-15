@@ -29,6 +29,7 @@ do list(path:"100??|700??", "var": "$i")
 end
 
 replace_all("creator[].*.name","(.+), (.+)", "$2 $1")
+replace_all("creator[].*.name","  ", " ")
 
 do list(path:"110??|710??", "var": "$i")
   unless all_equal("$i.a", "Open Textbook Library")
