@@ -61,9 +61,6 @@ add_field("publisher[].$last.type", "Organization")
 
 # ------ learningResourceType --- 
 set_array("learningResourceType[]")
-add_field("learningResourceType[].$append.id","https://w3id.org/kim/hcrt/text")
-add_field("learningResourceType[].$last.prefLabel.de","Textdokument")
-add_field("learningResourceType[].$last.prefLabel.en","Text")
 
 add_field("learningResourceType[].$append.id","https://w3id.org/kim/hcrt/textbook")
 add_field("learningResourceType[].$last.prefLabel.de","Lehrbuch")
