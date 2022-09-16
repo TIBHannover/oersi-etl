@@ -29,22 +29,22 @@ dependencies {
     // This dependency is used internally, and not exposed to consumers on their own compile classpath.
     implementation 'com.google.guava:guava:26.0-jre'
     implementation 'org.jooq:joox-java-6:1.6.0'
-    implementation 'org.metafacture:metafacture-io:5.3.3-rc2'
-    implementation 'org.metafacture:metafacture-plumbing:5.3.3-rc2'
-    implementation 'org.metafacture:metafacture-strings:5.3.3-rc2'
-    implementation 'org.metafacture:metafacture-triples:5.3.3-rc2'
-    implementation 'org.metafacture:metafacture-formatting:5.3.3-rc2'
-    implementation 'org.metafacture:metafacture-monitoring:5.3.3-rc2'
-    implementation ('org.metafacture:metafacture-runner:5.3.3-rc2'){
+    implementation 'org.metafacture:metafacture-io:5.3.3-rc1'
+    implementation 'org.metafacture:metafacture-plumbing:5.3.3-rc1'
+    implementation 'org.metafacture:metafacture-strings:5.3.3-rc1'
+    implementation 'org.metafacture:metafacture-triples:5.3.3-rc1'
+    implementation 'org.metafacture:metafacture-formatting:5.3.3-rc1'
+    implementation 'org.metafacture:metafacture-monitoring:5.3.3-rc1'
+    implementation ('org.metafacture:metafacture-runner:5.3.3-rc1'){
         exclude group: 'org.antlr', module: 'antlr'
     }
-    implementation 'org.metafacture:metafacture-json:5.3.3-rc2'
-    implementation 'org.metafacture:metafacture-html:5.3.3-rc2'
-    implementation 'org.metafacture:metafacture-elasticsearch:5.3.3-rc2'
-    implementation 'org.metafacture:metafacture-xml:5.3.3-rc2'
+    implementation 'org.metafacture:metafacture-json:5.3.3-rc1'
+    implementation 'org.metafacture:metafacture-html:5.3.3-rc1'
+    implementation 'org.metafacture:metafacture-elasticsearch:5.3.3-rc1'
+    implementation 'org.metafacture:metafacture-xml:5.3.3-rc1'
     implementation 'org.metafacture:metafacture-fix:0.2.0-rc2'
     implementation 'org.metafacture:metafix:0.3.0'
-    implementation('org.metafacture:metafacture-biblio:5.3.3-rc2') {
+    implementation('org.metafacture:metafacture-biblio:5.3.3-rc1') {
         exclude group: 'xml-apis', module: 'xml-apis'
     }
     // Required after upgrade to Gradle 7.2 in metafacture-fix:
@@ -52,8 +52,9 @@ dependencies {
     implementation "org.antlr:antlr-runtime:3.2"
     implementation 'com.fasterxml.jackson.core:jackson-databind:2.9.10.4'
     implementation 'com.github.erosb:everit-json-schema:1.14.1'
-    implementation 'org.slf4j:slf4j-api:1.7.32'
-    implementation 'org.apache.logging.log4j:log4j-core:2.17.0'
+    implementation 'org.slf4j:slf4j-api:1.7.36'
+    implementation 'org.slf4j:slf4j-log4j12:1.7.33'
+    implementation 'org.apache.logging.log4j:log4j-core:2.18.0'
     implementation 'org.apache.commons:commons-text:1.9'
 
     // Test frameworks:
