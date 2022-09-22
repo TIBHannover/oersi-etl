@@ -47,8 +47,10 @@ end
 
 
 do list(path: "learningResourceType[]")
-  copy_field("id", "prefLabel.en")
-  lookup("prefLabel.en","data/maps/hcrt-en-labels.tsv", "sep_char":"\t", delete:"true")
+  unless exists ("prefLabel.en") # filter out if en-Label already exists
+    copy_field("id", "prefLabel.en")
+    lookup("prefLabel.en","data/maps/hcrt-en-labels.tsv", "sep_char":"\t", delete:"true")
+  end
 end
 
 replace_all("learningResourceType[].*.inScheme.id", "https://w3id.org/orca.nrw/medientypen/", "https://w3id.org/kim/hcrt/scheme")
