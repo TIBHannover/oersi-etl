@@ -151,7 +151,8 @@ copy_field("metadata.inlined.catalog.*.metadata.terms:learningResourceType_id.va
 split_field("@hcrt", ";")
 trim("@hcrt.*")
 uniq("@hcrt")
-lookup("@hcrt.*","data/maps/orcaMedienId-hcrt.tsv","sep_char":"\t", delete:"true")
+lookup("@hcrt.*","data/maps/orcaMedienId-hcrt.tsv","sep_char":"\t") # sometimes the old vocab and sometimes the hcrt is used.
+
 
 set_array("learningResourceType[]")
 copy_field("@hcrt.*", "learningResourceType[].$append.id")
