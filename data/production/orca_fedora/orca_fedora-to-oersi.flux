@@ -7,7 +7,7 @@ service_id = "https://oerworldmap.org/resource/urn:uuid:31c24f26-1a96-4664-8d6d-
 service_name = "ORCA.nrw";
 
 // First API call, result lists all public ressources
-"https://api.paideia.hbz-nrw.de/search/public_orca2/_search"
+"https://api.paideia.hbz-nrw.de/search/public_orca2/_search?size=10000"
 | open-http(accept="application/json")
 | as-records
 | match(pattern="_(id)", replacement="$1")
