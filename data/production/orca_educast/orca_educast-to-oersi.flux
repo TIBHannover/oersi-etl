@@ -3,7 +3,7 @@ service_id = "https://oerworldmap.org/resource/urn:uuid:31c24f26-1a96-4664-8d6d-
 service_name = "ORCA.nrw";
 XML_FILE = FLUX_DIR + "orca_educast-metafacture.xml";
 
-"https://dist.orca.educast.cloud/oaipmh/default" //Prod-System: https://dist.orca.educast.cloud/oaipmh/default
+"https://api.orca.educast.cloud/oaipmh/default" //Prod-System: https://dist.orca.educast.cloud/oaipmh/default
 | open-oaipmh(metadataPrefix="matterhorn-inlined", setSpec="oersi")
 | as-lines
 | write(XML_FILE)
