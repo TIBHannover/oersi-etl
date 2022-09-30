@@ -26,7 +26,7 @@ do list(path:"about[]")
 end
 
 # ---------------conditionsOfAccess----------------------------------
-add_field("conditionsOfAccess","http://w3id.org/kim/conditionsOfAccess/no_login") 
+add_field("conditionsOfAccess.id","http://w3id.org/kim/conditionsOfAccess/no_login") 
 
 # ---------mainEntityOfPage----------------
 set_array("mainEntityOfPage[]")
