@@ -83,6 +83,9 @@ set_array("about[]")
 add_field("about[].$append.id", "https://w3id.org/kim/hochschulfaechersystematik/n172")
 add_field("about[].$last.prefLabel.de", "Verwaltungswissenschaft/-wesen")
 
+# ---------------conditionsOfAccess----------------------------------
+add_field("conditionsOfAccess","http://w3id.org/kim/conditionsOfAccess/login") 
+
 # ---------mainEntityOfPage----------------
 
 set_array("mainEntityOfPage[]")
@@ -108,7 +111,7 @@ unless exists("inLanguage[].1")
 end
 
 # ------ tidy up --- 
-retain("@context[]","id","image","name","creator[]","contributor[]","sourceOrganization[]", "license","description","dateCreated","inLanguage[]","type[]","learningResourceType[]","keywords[]","about[]", "encoding[]", "publisher[]", "mainEntityOfPage[]")
+retain("@context[]","id","image","name","creator[]","contributor[]","sourceOrganization[]", "license","description","dateCreated","inLanguage[]","type[]","learningResourceType[]","keywords[]","about[]", "encoding[]", "publisher[]", "mainEntityOfPage[]","conditionsOfAccess")
 vacuum()
 
 /*missing:*/

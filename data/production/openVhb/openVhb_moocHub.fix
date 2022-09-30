@@ -23,6 +23,8 @@ copy_field("attributes.moocProvider.logo", "image")
 copy_field("attributes.startDate", "dateCreated")
 replace_all("dateCreated", "T.*", "")
 
+# ---------------conditionsOfAccess----------------------------------
+add_field("conditionsOfAccess","http://w3id.org/kim/conditionsOfAccess/login")
 
 #  ---------------creator----------------------------------
 # source data is not consistent, can be a single author or multiple separated by comma or "&amp;". API estimates one object per instructor. Also there is no type even though there are persons and organisations.*/
@@ -141,5 +143,5 @@ end
 
 
 # ------ tidy up --- 
-retain("@context[]","id","image","name","creator[]","contributor[]","sourceOrganization[]", "license","description","dateCreated","inLanguage[]","type[]","learningResourceType[]","keywords[]","about[]", "encoding[]", "publisher[]", "mainEntityOfPage[]")
+retain("@context[]","id","image","name","creator[]","contributor[]","sourceOrganization[]", "license","description","dateCreated","inLanguage[]","type[]","learningResourceType[]","keywords[]","about[]", "encoding[]", "publisher[]", "mainEntityOfPage[]","conditionsOfAccess")
 vacuum()

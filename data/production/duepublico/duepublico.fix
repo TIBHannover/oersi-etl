@@ -164,6 +164,9 @@ end
 
 prepend("isPartOf[].*.id", "https://duepublico2.uni-due.de/receive/")
 
+# ---------------conditionsOfAccess----------------------------------
+add_field("conditionsOfAccess","http://w3id.org/kim/conditionsOfAccess/no_login") 
+
 
 # ---------mainEntityOfPage----------------
 set_array("mainEntityOfPage[]")
@@ -189,5 +192,5 @@ unless exists("inLanguage[].1")
 end
 
 # ---------tidy up!----------------
-retain("@context[]","id","image","name","creator[]","contributor[]","sourceOrganization[]", "license","description","dataCreated","inLanguage[]","type[]","learningResourceType[]","keywords[]","about[]", "isPartOf[]", "mainEntityOfPage[]", "encoding[]")
+retain("@context[]","id","image","name","creator[]","contributor[]","sourceOrganization[]", "license","description","dataCreated","inLanguage[]","type[]","learningResourceType[]","keywords[]","about[]", "isPartOf[]", "mainEntityOfPage[]", "encoding[]","conditionsOfAccess")
 vacuum()

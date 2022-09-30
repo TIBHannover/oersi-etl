@@ -62,6 +62,9 @@ do array('learningResourceType')
   end
 end
 
+
+add_field("conditionsOfAccess","http://w3id.org/kim/conditionsOfAccess/login")
+
 do array("keywords", flushWith: record)
   map("html.body.div.div.div.div.section.section.div.a.value")
 end

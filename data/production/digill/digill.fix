@@ -62,6 +62,9 @@ replace_all("mainEntityOfPage[].*.dateModified", 'T.*', '')
 copy_field("@graph[].3.datePublished", "mainEntityOfPage[].$last.dateCreated")
 replace_all("mainEntityOfPage[].*.dateCreated", 'T.*', '')
 
+# ---------------conditionsOfAccess----------------------------------
+add_field("conditionsOfAccess","http://w3id.org/kim/conditionsOfAccess/no_login") 
+
 # ---------------@context ----------------------------------
 
 set_array("@context[]", "https://w3id.org/kim/amb/draft/context.jsonld")
@@ -79,5 +82,5 @@ unless exists("inLanguage[].1")
 end
 
 # ------ tidy up --- 
-retain("@context[]","id","image","name","creator[]","contributor[]","sourceOrganization[]", "license","description","dateCreated","inLanguage[]","type[]","learningResourceType[]","keywords[]","about[]", "encoding[]", "publisher[]", "mainEntityOfPage[]")
+retain("@context[]","id","image","name","creator[]","contributor[]","sourceOrganization[]", "license","description","dateCreated","inLanguage[]","type[]","learningResourceType[]","keywords[]","about[]", "encoding[]", "publisher[]", "mainEntityOfPage[]","conditionsOfAccess")
 vacuum()

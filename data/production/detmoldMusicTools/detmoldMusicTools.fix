@@ -28,6 +28,8 @@ add_field("sourceOrganization[].$last.type", "Organization")
 
 add_field("image", "https://detmoldmusictools.de/files/coursemanager/course/3/course-icon/Bildschirmfoto_2014-10-24_um_12.51.57.png")
 
+# ---------------conditionsOfAccess----------------------------------
+add_field("conditionsOfAccess","http://w3id.org/kim/conditionsOfAccess/no_login") 
 
 # ---------mainEntityOfPage----------------
 set_array("mainEntityOfPage[]")

@@ -85,6 +85,8 @@ do array("encoding", flushWith: record)
   end
 end
 
+add_field("conditionsOfAccess","http://w3id.org/kim/conditionsOfAccess/no_login")
+
 do array("keywords", flushWith: record)
   map("html.body.form.div.div.div.div.div.div.div.div.div.div.div.ul.li.a.value")
 end

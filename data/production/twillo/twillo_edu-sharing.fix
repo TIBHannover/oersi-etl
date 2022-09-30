@@ -148,6 +148,9 @@ unless exists('node.properties.ccm:wwwurl[].1')
   copy_field("node.size", "encoding[].$last.contentSize")
 end
 
+# ---------------conditionsOfAccess----------------------------------
+add_field("conditionsOfAccess","http://w3id.org/kim/conditionsOfAccess/no_login")
+
 # ---------------@context ----------------------------------
 
 set_array("@context[]", "https://w3id.org/kim/amb/draft/context.jsonld")
@@ -165,5 +168,5 @@ unless exists("inLanguage[].1")
 end
 
 
-retain("@context[]","id","image","name","creator[]","contributor[]","sourceOrganization[]", "license","description","dataCreated","inLanguage[]","type[]","learningResourceType[]","keywords[]","about[]", "encoding[]", "mainEntityOfPage[]")
+retain("@context[]","id","image","name","creator[]","contributor[]","sourceOrganization[]", "license","description","dataCreated","inLanguage[]","type[]","learningResourceType[]","keywords[]","about[]", "encoding[]", "mainEntityOfPage[]","conditionsOfAccess")
 vacuum()

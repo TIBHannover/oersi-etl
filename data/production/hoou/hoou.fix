@@ -71,6 +71,9 @@ do list(path:"learningResourceType[]")
   lookup("prefLabel.en", "data/maps/hcrt-en-labels.tsv","sep_char":"\t", delete:"true")
 end
 
+# ---------------conditionsOfAccess----------------------------------
+add_field("conditionsOfAccess","http://w3id.org/kim/conditionsOfAccess/no_login")
+
 
 # ---------mainEntityOfPage----------------
 set_array("mainEntityOfPage[]")
