@@ -63,7 +63,7 @@ copy_field("@graph[].3.datePublished", "mainEntityOfPage[].$last.dateCreated")
 replace_all("mainEntityOfPage[].*.dateCreated", 'T.*', '')
 
 # ---------------conditionsOfAccess----------------------------------
-add_field("conditionsOfAccess","http://w3id.org/kim/conditionsOfAccess/no_login") 
+add_field("conditionsOfAccess.id","http://w3id.org/kim/conditionsOfAccess/no_login") 
 
 # ---------------@context ----------------------------------
 

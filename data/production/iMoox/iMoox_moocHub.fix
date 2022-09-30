@@ -94,7 +94,7 @@ add_field("mainEntityOfPage[].$last.provider.type","Service")
 add_field("mainEntityOfPage[].$last.provider.name","$[service_name]")
 
 # ---------------conditionsOfAccess----------------------------------
-add_field("conditionsOfAccess","http://w3id.org/kim/conditionsOfAccess/login")
+add_field("conditionsOfAccess.id","http://w3id.org/kim/conditionsOfAccess/login")
 
 # ---------------@context ----------------------------------
 

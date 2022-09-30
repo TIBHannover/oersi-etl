@@ -113,7 +113,7 @@ copy_field("node.properties.virtual:licenseurl[].1", "license.id")
 filter("license.id","^http[s]?:\\/\\/creativecommons.org\\/(licenses|licences|publicdomain)\\/.*|^http[s]?:\\/\\/www.gnu.org\\/licenses\\/.*|^http[s]?:\\/\\/www.apache.org\\/licenses\\/.*|http[s]?://opensource.org/licenses/MIT|^http[s]?:\\/\\/www.opensource.org\\/licenses\\/BSD.*")
 
 # ---------------conditionsOfAccess----------------------------------
-add_field("conditionsOfAccess","http://w3id.org/kim/conditionsOfAccess/no_login") 
+add_field("conditionsOfAccess.id","http://w3id.org/kim/conditionsOfAccess/no_login") 
  
 # ---------------inLanguage----------------------------------
 set_array("inLanguage[]")

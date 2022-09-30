@@ -24,7 +24,7 @@ copy_field("attributes.startDate", "dateCreated")
 replace_all("dateCreated", "T.*", "")
 
 # ---------------conditionsOfAccess----------------------------------
-add_field("conditionsOfAccess","http://w3id.org/kim/conditionsOfAccess/login")
+add_field("conditionsOfAccess.id","http://w3id.org/kim/conditionsOfAccess/login")
 
 #  ---------------creator----------------------------------
 # source data is not consistent, can be a single author or multiple separated by comma or "&amp;". API estimates one object per instructor. Also there is no type even though there are persons and organisations.*/

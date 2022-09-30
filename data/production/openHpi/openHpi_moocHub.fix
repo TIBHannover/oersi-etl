@@ -80,7 +80,7 @@ copy_field("attributes.courseLicenses[].*.url","license.id")
 set_array("type[]", "LearningResource")
 
 # ---------------conditionsOfAccess----------------------------------
-add_field("conditionsOfAccess","http://w3id.org/kim/conditionsOfAccess/no_login") 
+add_field("conditionsOfAccess.id","http://w3id.org/kim/conditionsOfAccess/no_login") 
 
 # ---------mainEntityOfPage----------------
 
