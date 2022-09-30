@@ -164,5 +164,5 @@ end
 
 
 # ------ tidy up --- 
-retain("@context[]","id","image","name","creator[]","contributor[]","sourceOrganization[]", "license","description","dataCreated","inLanguage[]","type[]","learningResourceType[]","keywords[]","about[]", "encoding[]", "mainEntityOfPage[]","conditionsOfAccess")
+include ("../../sharedFixes/retain.fix")
 vacuum()

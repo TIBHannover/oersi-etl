@@ -204,5 +204,5 @@ unless exists("inLanguage[].1")
 end
 
 # ------ tidy up --- 
-retain("@context[]","id","image","name","creator[]","contributor[]","sourceOrganization[]", "license","description","dateCreated","inLanguage[]","type[]","learningResourceType[]","keywords[]","about[]", "encoding[]", "publisher[]", "mainEntityOfPage[]","conditionsOfAccess")
+include ("../../sharedFixes/retain.fix")
 vacuum()
