@@ -9,6 +9,8 @@ end
 
 vacuum()
 
+include ("../../sharedFixes/macros.fix")
+
 
 # ---------------id----------------------------------
 # id: Construct actual ID from @id. Picked from header not from record itself.

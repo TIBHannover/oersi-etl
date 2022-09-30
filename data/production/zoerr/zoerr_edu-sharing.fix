@@ -1,6 +1,7 @@
 # Delete all empty values
 vacuum()
 
+include ("../../sharedFixes/macros.fix")
 
 #  ---------------name ----------------------------------
 copy_field("node.title", "name")

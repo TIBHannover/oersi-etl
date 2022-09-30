@@ -11,6 +11,8 @@ end
 # Delete all empty values
 vacuum()
 
+include ("../../sharedFixes/macros.fix")
+
 # --------------id ----------------------------------------
 do list("path": "metadata.mods:mods.mods:identifier", "var": "$i")
   if all_match("$i.value","https://duepublico2.uni-due.de/receive/.*")

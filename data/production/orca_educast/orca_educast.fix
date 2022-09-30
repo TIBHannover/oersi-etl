@@ -2,6 +2,7 @@
 # --------Delete all emtpy values-------
 vacuum()
 
+include ("../../sharedFixes/macros.fix")
 
 # ------ id --- 
 copy_field("metadata.inlined.catalog.*.metadata.terms:id.value", "id")

@@ -1,6 +1,8 @@
 # Delete all empty values
 vacuum()
 
+include ("../../sharedFixes/macros.fix")
+
 # ---------------id ----------------------------------
 copy_field("@graph[].3.url", "id")
 

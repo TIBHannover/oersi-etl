@@ -2,6 +2,9 @@
 # --------Delete all emtpy values-------
 vacuum()
 
+
+include ("../../sharedFixes/macros.fix")
+
 #  ------------id------------------------------------
 replace_all("id", '(.*?)/lernangebot', "https://open.ruhr-uni-bochum.de/lernangebot")
 

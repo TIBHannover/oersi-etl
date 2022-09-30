@@ -4,6 +4,9 @@
 # --------Delete all emtpy values-------
 vacuum()
 
+
+include ("../../sharedFixes/macros.fix")
+
 # --------Filter out administrative and info pages-------
 if any_match("name", ".*(Datenschutz|Nutzungshinweise|OMA|Neues Dokument|Open Music Academy).*")
   reject()

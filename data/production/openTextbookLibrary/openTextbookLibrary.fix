@@ -1,4 +1,9 @@
-# Filter out all resources that are not free
+
+# --------Delete all emtpy values-------
+vacuum()
+
+include ("../../sharedFixes/macros.fix")
+
 
 #  ---------------id----------------------------------
 copy_field("85640.u", "id")
