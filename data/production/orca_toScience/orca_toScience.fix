@@ -38,11 +38,11 @@ end
 
 set_array("sourceOrganization[]")
 do list(path:"creator[]|contributor[]","var":"$i")
-#  unless in("$i.affiliation.name","sourceOrganization[].*.name")
-    copy_field("$i.affiliation.name", "sourceOrganization[].$append.name")
-    copy_field("$i.affiliation.id", "sourceOrganization[].$last.id")
-    copy_field("$i.affiliation.type", "sourceOrganization[].$last.type")
-#  end
+unless in("$i.affiliation.name","sourceOrganization[].*.name")
+  copy_field("$i.affiliation.name", "sourceOrganization[].$append.name")
+  copy_field("$i.affiliation.id", "sourceOrganization[].$last.id")
+  copy_field("$i.affiliation.type", "sourceOrganization[].$last.type")
+end
 end
 
 
