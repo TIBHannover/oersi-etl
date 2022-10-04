@@ -37,6 +37,7 @@ deploy:
      - build/install/oersi-etl/lib/*
      - data/maps/*
      - data/production/*
+     - data/sharedFixes/*
 
 sonar:
   image: gradle:jdk11
