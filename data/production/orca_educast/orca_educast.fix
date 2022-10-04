@@ -2,6 +2,7 @@
 # --------Delete all emtpy values-------
 vacuum()
 
+include ("../../sharedFixes/macros.fix")
 
 # ------ id --- 
 copy_field("metadata.inlined.catalog.*.metadata.terms:id.value", "id")
@@ -237,5 +238,5 @@ end
 add_field("conditionsOfAccess.id","http://w3id.org/kim/conditionsOfAccess/no_login") 
 
 # ------ tidy up --- 
-retain("@context[]","id","image","name","creator[]","contributor[]","sourceOrganization[]", "license","description","dataCreated","inLanguage[]","type[]","learningResourceType[]","keywords[]","about[]", "encoding[]", "mainEntityOfPage[]","conditionsOfAccess")
+include ("../../sharedFixes/retain.fix")
 vacuum()

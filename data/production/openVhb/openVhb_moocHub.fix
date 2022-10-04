@@ -7,6 +7,8 @@ end
 # Delete all empty values
 vacuum()
 
+include ("../../sharedFixes/macros.fix")
+
 #  ---------------id----------------------------------
 remove_field("id")
 copy_field("attributes.url", "id")
@@ -30,7 +32,7 @@ add_field("conditionsOfAccess.id","http://w3id.org/kim/conditionsOfAccess/login"
 # source data is not consistent, can be a single author or multiple separated by comma or "&amp;". API estimates one object per instructor. Also there is no type even though there are persons and organisations.*/
 set_array("@creator")
 copy_field("attributes.instructors[].*.name", "@creator.$append")
-replace_all("@creator.*","Apl\\. |\\(apl\\.\\) |Dr\\. med |Dr\\. |Dr\\.'in |Dr |Dr\\.med\\.|Dres\\. |Dr\\.|Prof\\. |Prof\\.'in |Prof\\.|Prof |Jun\\.-|PD |PD\\. |med\\. |rer\\. |pol\\.|nat\\. |dent\\. |em\\. |Ao\\.-|o\\. Univ\\.|Uni\\.-|Univ\\.-|Univ\\. |DI |RA |Dipl\\.|-Ing\\. |-Inform\\. |-Psych\\. |h\\.c\\. |mult\\. |Mag\\. |, MME|; MME|, MScN|M\\. Sc\\. |, MSc| MSc\\.|, M\\.A\\.| M\\.A\\.|, M\\.D\\.|, B\\.A\\.|, MMZ|, Psychoanalytiker|, L\\.L\\.M\\.|, LL\\.M\\.| \\(M\\.A\\.\\)| \\(PhD Student\\)","")
+call_macro("deleteAcademicTitles", field: "@creator.*")
 
 
 set_array("creator[]")
@@ -143,5 +145,5 @@ end
 
 
 # ------ tidy up --- 
-retain("@context[]","id","image","name","creator[]","contributor[]","sourceOrganization[]", "license","description","dateCreated","inLanguage[]","type[]","learningResourceType[]","keywords[]","about[]", "encoding[]", "publisher[]", "mainEntityOfPage[]","conditionsOfAccess")
+include ("../../sharedFixes/retain.fix")
 vacuum()
