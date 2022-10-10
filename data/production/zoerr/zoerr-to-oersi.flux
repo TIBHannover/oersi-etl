@@ -8,6 +8,7 @@ default input_wait = "50";
 
 "https://www.zoerr.de/edu-sharing/eduservlet/sitemap?from=" + input_from
 | oersi.SitemapReader(wait=input_wait,limit=input_limit,urlPattern=".*/components/.*",findAndReplace="https://www.zoerr.de/edu-sharing/components/render/(.*)`https://www.zoerr.de/edu-sharing/rest/node/v1/nodes/-home-/$1/metadata?propertyFilter=-all-")
+| oersi.ErrorCatcher(file_errors)
 | open-http(accept="application/json")
 | oersi.ErrorCatcher(file_errors)
 | as-lines
