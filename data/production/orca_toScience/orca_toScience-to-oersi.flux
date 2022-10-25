@@ -17,7 +17,6 @@ service_name = "ORCA.nrw";
 | literal-to-object
 // Second API call, result is single OER
 | template("https://api.paideia.hbz-nrw.de/resource/${o}/lrmiData") // local test: FLUX_DIR + "resources/${o}.json"
-| catch-object-exception
 | open-http(accept="application/json") // local test: open-file
 | as-records
 | decode-json
