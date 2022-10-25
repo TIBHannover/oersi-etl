@@ -38,13 +38,13 @@ end
 
 set_array("sourceOrganization[]")
 do list(path:"creator[]|contributor[]","var":"$i")
-unless in("$i.affiliation.name","sourceOrganization[].*.name")
-  copy_field("$i.affiliation.name", "sourceOrganization[].$append.name")
-  copy_field("$i.affiliation.id", "sourceOrganization[].$last.id")
-  copy_field("$i.affiliation.type", "sourceOrganization[].$last.type")
+  unless in("$i.affiliation.name","sourceOrganization[].*.name")
+    copy_field("$i.affiliation.name", "sourceOrganization[].$append.name")
+  end
 end
+do list(path:"sourceOrganization[]" , "var":"$i")
+  add_field("$i.type", "Organization")
 end
-
 
 do list(path: "learningResourceType[]")
   unless exists ("prefLabel.en") # filter out if en-Label already exists
