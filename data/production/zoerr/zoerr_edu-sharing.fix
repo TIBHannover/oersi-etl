@@ -158,7 +158,7 @@ unless exists('node.properties.ccm:wwwurl[].1')
 end
 
 # ---------------datePublished----------------------------------
-copy_field("node.properties.cm:ccm:published_dateISO8601[].1", "datePublished")
+copy_field("node.properties.ccm:published_dateISO8601[].1", "datePublished")
 replace_all("datePublished", "T.+Z", "")
 
 # ---------------@context ----------------------------------
