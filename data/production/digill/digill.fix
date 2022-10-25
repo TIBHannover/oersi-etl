@@ -4,24 +4,24 @@ vacuum()
 include ("../../sharedFixes/macros.fix")
 
 # ---------------id ----------------------------------
-copy_field("@graph[].3.url", "id")
+copy_field("@graph[].1.url", "id")
 
 # ---------------name ----------------------------------
 /* Delete the plattform name in the title of the resource */
-copy_field( "@graph[].3.name", "name")
+copy_field( "@graph[].1.name", "name")
 replace_all("name", " - Universitätsverbund digiLL", "")
 
 # ---------------image ----------------------------------
 copy_field("@graph[].2.url", "image")
 
 # ---------------dateCreated ----------------------------------
-copy_field("@graph[].3.datePublished", "dateCreated")
+copy_field("@graph[].1.datePublished", "dateCreated")
 replace_all("dateCreated", 'T.*', '')
 
 
 # ---------------inLanguage ----------------------------------
 set_array("inLanguage[]")
-copy_field("@graph[].3.inLanguage", "inLanguage[].$append")
+copy_field("@graph[].1.inLanguage", "inLanguage[].$append")
 replace_all("inLanguage[].*", '-.*', '')
 
 # ------ type --- 
@@ -29,8 +29,8 @@ set_array("type[]", "LearningResource")
 
 # --- publisher ----
 set_array("publisher[]")
-copy_field("@graph[].1.@id","publisher[].$append.id")
-copy_field("@graph[].1.name", "publisher[].$last.name")
+copy_field("@graph[].4.@id","publisher[].$append.id")
+copy_field("@graph[].4.name", "publisher[].$last.name")
 add_field("publisher[].$last.type", "Organization")
 
 # ------ license --- 
@@ -58,10 +58,10 @@ add_field("mainEntityOfPage[].$last.provider.id","$[service_id]")
 add_field("mainEntityOfPage[].$last.provider.type","Service")
 add_field("mainEntityOfPage[].$last.provider.name","$[service_name]")
 
-copy_field("@graph[].3.dateModified", "mainEntityOfPage[].$last.dateModified")
+copy_field("@graph[].1.dateModified", "mainEntityOfPage[].$last.dateModified")
 replace_all("mainEntityOfPage[].*.dateModified", 'T.*', '')
 
-copy_field("@graph[].3.datePublished", "mainEntityOfPage[].$last.dateCreated")
+copy_field("@graph[].1.datePublished", "mainEntityOfPage[].$last.dateCreated")
 replace_all("mainEntityOfPage[].*.dateCreated", 'T.*', '')
 
 # ---------------conditionsOfAccess----------------------------------

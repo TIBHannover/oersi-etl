@@ -66,6 +66,9 @@ lookup("about[].*.prefLabel.de", "data/maps/subject-labels.tsv","sep_char":"\t",
 remove_field('fields[]')
 
 
+# ---------------conditionsOfAccess----------------------------------
+add_field("conditionsOfAccess.id","http://w3id.org/kim/conditionsOfAccess/no_login")
+
 # ---------mainEntityOfPage----------------
 set_array("mainEntityOfPage[]")
 copy_field("id", "mainEntityOfPage[].$append.id")
