@@ -15,6 +15,7 @@
  */
 package oersi;
 
+import static com.github.tomakehurst.wiremock.client.WireMock.stubFor;
 import static org.junit.Assert.assertNotNull;
 
 import java.util.Arrays;
@@ -22,6 +23,7 @@ import java.util.Collection;
 
 import org.json.JSONObject;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
@@ -35,10 +37,12 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 
+import com.github.tomakehurst.wiremock.client.WireMock;
+import com.github.tomakehurst.wiremock.core.WireMockConfiguration;
+import com.github.tomakehurst.wiremock.junit.WireMockRule;
+
 /**
  * Tests for {@link JsonApiReader}.
- *
- * TODO: mock apis to avoid using network resources
  *
  * @author Fabian Steeg
  *
@@ -46,12 +50,14 @@ import org.mockito.MockitoAnnotations;
 @RunWith(Parameterized.class)
 public final class TestJsonApiReader {
 
-    private static final int LIMIT = 15;
     private static final Object[][] PARAMS = new Object[][] { //
-            { "https://www.zoerr.de/edu-sharing/rest/search/v1/queriesV2/-home-/-default-/ngsearch?maxItems=10&skipCount=0&propertyFilter=-all-", //
+            { "/test/path?skipCount=0&maxItems=10", //
                     Method.POST, "{\"criterias\":[],\"facettes\":[]}", "nodes", "skipCount=", 10 },
-            { "https://open.umn.edu/opentextbooks/textbooks?page=1", //
+            { "/test/path?page=1", //
                     Method.GET, null, "data", "page=", 1 } };
+
+    private static final int REQUEST_LIMIT = 20;
+    private static final int EXISTING_RECORDS = 15;
 
     @Parameterized.Parameters(name = "{0}")
     public static Collection<Object[]> siteMaps() {
@@ -64,6 +70,8 @@ public final class TestJsonApiReader {
     private String recordPath;
     private String pageParam;
     private int stepSize;
+    private JsonApiReader reader;
+    private InOrder inOrder;
 
     public TestJsonApiReader(String url, HttpOpener.Method method, String body, String recordPath,
             String pageParam, int stepSize) {
@@ -79,14 +87,20 @@ public final class TestJsonApiReader {
     private ObjectReceiver<String> receiver;
     @Captor
     private ArgumentCaptor<String> captor;
-    private JsonApiReader reader;
-    private InOrder inOrder;
+
+    @Rule
+    public WireMockRule wireMockRule = new WireMockRule(WireMockConfiguration.wireMockConfig()
+            .jettyAcceptors(Runtime.getRuntime().availableProcessors()).dynamicPort());
 
     @Before
     public void setup() {
-        MockitoAnnotations.initMocks(this);
+        initMocks();
+        initReader();
+    }
+
+    private void initReader() {
         reader = new JsonApiReader();
-        reader.setLimit(LIMIT);
+        reader.setLimit(REQUEST_LIMIT);
         reader.setWait(0);
         reader.setMethod(method);
         reader.setBody(body);
@@ -94,13 +108,32 @@ public final class TestJsonApiReader {
         reader.setPageParam(pageParam);
         reader.setStepSize(stepSize);
         reader.setReceiver(receiver);
+    }
+
+    private void initMocks() {
+        MockitoAnnotations.initMocks(this);
+        // Mock POST API with 'skipCount=' query param and results in 'nodes':
+        stubFor(WireMock.request("POST", WireMock.urlEqualTo("/test/path?skipCount=0&maxItems=10"))
+                .willReturn(WireMock.ok().withBody("{\"nodes\":[{},{},{},{},{},{},{},{},{},{}]}")));
+        stubFor(WireMock.request("POST", WireMock.urlEqualTo("/test/path?skipCount=10&maxItems=10"))
+                .willReturn(WireMock.ok().withBody("{\"nodes\":[{},{},{},{},{}]}")));
+        stubFor(WireMock.request("POST", WireMock.urlEqualTo("/test/path?skipCount=20&maxItems=10"))
+                .willReturn(WireMock.ok().withBody("{\"nodes\":[]}")));
+        // Mock GET API with 'page=' query param and results in 'data':
+        stubFor(WireMock.request("GET", WireMock.urlEqualTo("/test/path?page=1"))
+                .willReturn(WireMock.ok().withBody("{\"data\":[{},{},{},{},{},{},{},{},{},{}]}")));
+        stubFor(WireMock.request("GET", WireMock.urlEqualTo("/test/path?page=2"))
+                .willReturn(WireMock.ok().withBody("{\"data\":[{},{},{},{},{}]}")));
+        stubFor(WireMock.request("GET", WireMock.urlEqualTo("/test/path?page=3"))
+                .willReturn(WireMock.ok().withBody("{\"data\":[]}")));
         inOrder = Mockito.inOrder(receiver);
     }
 
     @Test
     public void testShouldProcess() {
-        reader.process(url);
-        inOrder.verify(receiver, Mockito.calls(LIMIT)).process(captor.capture());
+        reader.process(wireMockRule.baseUrl() + url);
+        inOrder.verify(receiver, Mockito.calls(EXISTING_RECORDS)).process(captor.capture());
         assertNotNull(new JSONObject(captor.getValue()));
     }
+
 }
