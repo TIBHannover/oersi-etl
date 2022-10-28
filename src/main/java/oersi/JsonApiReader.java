@@ -22,8 +22,10 @@ import java.util.Scanner;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.metafacture.framework.MetafactureException;
 import org.metafacture.framework.ObjectReceiver;
 import org.metafacture.framework.helpers.DefaultObjectPipe;
+import org.metafacture.framework.helpers.DefaultObjectReceiver;
 import org.metafacture.io.HttpOpener;
 import org.metafacture.io.HttpOpener.Method;
 import org.slf4j.Logger;
@@ -104,7 +106,7 @@ public final class JsonApiReader extends DefaultObjectPipe<String, ObjectReceive
     }
 
     private ObjectReceiver<Reader> responseReceiver(final String url) {
-        return new ObjectReceiver<Reader>() {
+        return new DefaultObjectReceiver<Reader>() {
             @Override
             public void process(Reader obj) {
                 try {
@@ -112,31 +114,22 @@ public final class JsonApiReader extends DefaultObjectPipe<String, ObjectReceive
                     JSONObject jsonObject = new JSONObject(jsonString);
                     JSONArray jsonArray = jsonObject.getJSONArray(recordPath);
                     for (int i = 0; i < Math.min(limit, jsonArray.length())
-                            && totalProcessed < limit; i++) {
+                            && totalProcessed < limit; i++, totalProcessed++) {
                         String jsonRecord = jsonArray.get(i).toString();
                         LOG.trace("Processing record {}", jsonRecord);
                         getReceiver().process(jsonRecord);
-                        totalProcessed++;
                     }
-                    if (totalProcessed < limit) {
+                    if (totalProcessed < limit && jsonArray.length() > 0) {
                         Thread.sleep(wait);
                         tryNextPage(url, stepSize);
                     }
                 } catch (JSONException | IOException e) {
-                    e.printStackTrace();
+                    throw new MetafactureException(e);
                 } catch (InterruptedException e) {
-                    e.printStackTrace();
+                    Thread.currentThread().interrupt();
+                    throw new MetafactureException(e);
                 }
             }
-
-            @Override
-            public void resetStream() {
-            }
-
-            @Override
-            public void closeStream() {
-            }
-
         };
     }
 
