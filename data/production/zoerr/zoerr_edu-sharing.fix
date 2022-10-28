@@ -4,7 +4,11 @@ vacuum()
 include ("../../sharedFixes/macros.fix")
 
 #  ---------------name ----------------------------------
-#copy_field("title", "name")
+
+if exists("title")
+  move_field("name", "@name")
+  copy_field("title", "name")
+end
 
 #  ---------------image----------------------------------
 copy_field("preview.url", "image")
@@ -105,8 +109,12 @@ do list(path:"properties.ccm:university_DISPLAYNAME[]", "var": "$i")
 end
 
 #  ---------------license----------------------------------
-copy_field("license.url", "license.id")
-filter("license.id","^http[s]?:\\/\\/creativecommons.org\\/(licenses|licences|publicdomain)\\/.*|^http[s]?:\\/\\/www.gnu.org\\/licenses\\/.*|^http[s]?:\\/\\/www.apache.org\\/licenses\\/.*|http[s]?://opensource.org/licenses/MIT|^http[s]?:\\/\\/www.opensource.org\\/licenses\\/BSD.*")
+if exists("license.url")
+  copy_field("license.url", "license.id")
+  filter("license.id","^http[s]?:\\/\\/creativecommons.org\\/(licenses|licences|publicdomain)\\/.*|^http[s]?:\\/\\/www.gnu.org\\/licenses\\/.*|^http[s]?:\\/\\/www.apache.org\\/licenses\\/.*|http[s]?://opensource.org/licenses/MIT|^http[s]?:\\/\\/www.opensource.org\\/licenses\\/BSD.*")
+else
+  remove_field("license")
+end
 
 # ---------------conditionsOfAccess----------------------------------
 add_field("conditionsOfAccess.id","http://w3id.org/kim/conditionsOfAccess/no_login") 
@@ -145,11 +153,13 @@ copy_field("properties.cclom:general_keyword[]", "keywords[]")
 
 # ---------------encoding----------------------------------
 unless exists('properties.ccm:wwwurl[].1')
-  set_array("encoding[]")
-  add_field("encoding[].$append.type", "MediaObject")
-  copy_field("downloadUrl", "encoding[].$last.contentUrl")
-  copy_field("mimetype", "encoding[].$last.encodingFormat")
-  copy_field("size", "encoding[].$last.contentSize")
+  if exists("downloadUrl")
+    set_array("encoding[]")
+    add_field("encoding[].$append.type", "MediaObject")
+    copy_field("downloadUrl", "encoding[].$last.contentUrl")
+    copy_field("mimetype", "encoding[].$last.encodingFormat")
+    copy_field("size", "encoding[].$last.contentSize")
+  end
 end
 
 # ---------------datePublished----------------------------------
