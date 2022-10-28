@@ -36,6 +36,7 @@ move_field("keywords","keywords[]")
 
 # ---------------about ----------------------------------
 move_field("about[]","@about")
+uniq("@about")
 
 set_array("about[]")
 do list(path:"@about", "var":"$i")
@@ -61,6 +62,7 @@ copy_field("type|learningResourceType", "@hcrt.$append")
 replace_all("@hcrt.*","textbook","Textbook")
 replace_all("@hcrt.*","course","Course")
 lookup("@hcrt.*","data/maps/en-labels-hcrt-uri.tsv","sep_char":"\t", delete:"true")
+uniq("@hcrt")
 
 copy_field("@hcrt.*", "learningResourceType[].$append.id")
 
