@@ -85,7 +85,7 @@ public final class TestJsonApiReader {
 
     private void initReader() {
         reader = new JsonApiReader();
-        reader.setLimit(REQUEST_LIMIT);
+        reader.setTotalLimit(REQUEST_LIMIT);
         reader.setWait(0);
         reader.setMethod(method);
         reader.setBody(body);

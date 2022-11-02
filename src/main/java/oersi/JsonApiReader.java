@@ -27,7 +27,7 @@ public final class JsonApiReader extends DefaultObjectPipe<String, ObjectReceive
 
     private static final Logger LOG = LoggerFactory.getLogger(JsonApiReader.class);
     private static final String JSON = "application/json";
-    private int limit = Integer.MAX_VALUE;
+    private int totalLimit = Integer.MAX_VALUE;
     private int totalProcessed = 0;
     private int wait = 1000;
 
@@ -58,8 +58,8 @@ public final class JsonApiReader extends DefaultObjectPipe<String, ObjectReceive
         this.recordPath = recordPath;
     }
 
-    public void setLimit(final int limit) {
-        this.limit = limit < 0 ? Integer.MAX_VALUE : limit;
+    public void setTotalLimit(final int totalLimit) {
+        this.totalLimit = totalLimit < 0 ? Integer.MAX_VALUE : totalLimit;
     }
 
     public void setWait(final int wait) {
@@ -98,13 +98,13 @@ public final class JsonApiReader extends DefaultObjectPipe<String, ObjectReceive
                     String jsonString = CharStreams.toString(obj);
                     JSONObject jsonObject = new JSONObject(jsonString);
                     JSONArray jsonArray = jsonObject.getJSONArray(recordPath);
-                    for (int i = 0; i < Math.min(limit, jsonArray.length())
-                            && totalProcessed < limit; i++, totalProcessed++) {
+                    for (int i = 0; i < Math.min(totalLimit, jsonArray.length())
+                            && totalProcessed < totalLimit; i++, totalProcessed++) {
                         String jsonRecord = jsonArray.get(i).toString();
                         LOG.trace("Processing record {}", jsonRecord);
                         getReceiver().process(jsonRecord);
                     }
-                    if (totalProcessed < limit && jsonArray.length() > 0) {
+                    if (totalProcessed < totalLimit && jsonArray.length() > 0) {
                         Thread.sleep(wait);
                         tryNextPage(url, stepSize);
                     }
@@ -120,7 +120,7 @@ public final class JsonApiReader extends DefaultObjectPipe<String, ObjectReceive
 
     private void tryNextPage(final String url, int currentPageSize) {
         boolean pagingIsSupported = url.contains(pageParam);
-        boolean isDone = currentPageSize == 0 || limit <= currentPageSize;
+        boolean isDone = currentPageSize == 0 || totalLimit <= currentPageSize;
         if (pagingIsSupported && !isDone) {
             String substring = url.substring(url.indexOf(pageParam) + pageParam.length())
                     .split("&")[0];
