@@ -54,6 +54,11 @@ set_array("type[]", "LearningResource")
 set_array("inLanguage[]")
 copy_field("workExample.inLanguage","inLanguage[].$append")
 
+# ---------------publisher----------------------------------
+set_array("publisher[]")
+copy_field("publisher.name","publisher[].$append.name")
+copy_field("publisher.type","publisher[].$last.type")
+
 # ---------------learningResourceType----------------------------------
 
 set_array("@hcrt")

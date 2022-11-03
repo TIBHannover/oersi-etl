@@ -52,7 +52,7 @@ set_array("type[]", "LearningResource")
 
 # ---------------inLanguage----------------------------------
 set_array("inLanguage[]")
-copy_field("workExample.inLanguage","inLanguage[].$append")
+copy_field("inLanguage","inLanguage[].$append")
 
 # ---------------learningResourceType----------------------------------
 
