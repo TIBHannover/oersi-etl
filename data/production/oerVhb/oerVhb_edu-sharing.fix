@@ -60,23 +60,39 @@ lookup("about[].*.prefLabel.de", "data/maps/subject-labels.tsv","sep_char":"\t",
 #  ---------------creator----------------------------------
 set_array("creator[]")
 do list(path:"properties.ccm:lifecyclecontributer_author[]", "var": "$i")
-  if any_match("$i", "^BEGIN:VCARD[\\s\\S]*FN:(.+)\r\n[\\s\\S]*")
+  if any_match("$i", "^BEGIN:VCARD[\\s\\S]*FN:(.+)\n[\\s\\S]*\nEND:VCARD$")
     copy_field("$i", "creator[].$append.name")
     add_field("creator[].$last.type", "Person")
-  elsif any_match("$i", "^BEGIN:VCARD\r\nORG:(.+)\r\n[\\s\\S]*")
+  elsif any_match("$i", "^BEGIN:VCARD\nORG:(.+)\n[\\s\\S]*\nEND:VCARD$")
     copy_field("$i", "creator[].$append.name")
     add_field("creator[].$last.type", "Organization")
   end
 end
 
 do list(path:"creator[]")
-  if any_match("name", "^BEGIN:VCARD[\\s\\S]*X-ORCID:https\\\\://(.+)\r\n[\\s\\S]*")
+  if any_match("name", "^BEGIN:VCARD[\\s\\S]*X-ORCID:(.+)\n[\\s\\S]+END:VCARD$")
     copy_field("name", "id")
-    replace_all("id","^BEGIN:VCARD[\\s\\S]*X-ORCID:https\\\\://(.+)\r\n[\\s\\S]*", "https://$1")
+    replace_all("id","^BEGIN:VCARD[\\s\\S]*X-ORCID:(.+)\n[\\s\\S]*\nEND:VCARD$", "https://orcid.org/$1")
   end
-  replace_all("name","^BEGIN:VCARD[\\s\\S]*FN:(.+)\r\n[\\s\\S]*", "$1")
-  replace_all("name","^BEGIN:VCARD\r\nORG:(.+)\r\n[\\s\\S]*", "$1")
+  replace_all("name","^BEGIN:VCARD[\\s\\S]*FN:(.+)\n[\\s\\S]*\nEND:VCARD$", "$1")
+  replace_all("name","^BEGIN:VCARD\nORG:(.+)\n[\\s\\S]*\nEND:VCARD$", "$1")
 end
+
+unless exists("creator[].1.name")
+  do list(path:"properties.ccm:author_freetext[]","var":"$i")
+    copy_field("$i", "@freetextcreator")
+  end
+end
+replace_all("@freetextcreator", ", ?|\n| & ", "; ")
+split_field("@freetextcreator", "; ")
+replace_all("@freetextcreator.*", ".+:|\\([^)]+\\)", "")
+do list(path:"@freetextcreator","var":"$i")
+  unless any_equal("$i","")
+    copy_field("$i", "creator[].$append.name")
+    add_field("creator[].$last.type", "Person")
+  end
+end
+
 
 /*
 TODO:#  ---------------contributor----------------------------------
