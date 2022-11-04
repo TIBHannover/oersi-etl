@@ -46,7 +46,9 @@ copy_field("properties.cclom:general_description[].*", "description") # eventuel
 #  ---------------about----------------------------------
 set_array("@hochschulfaechersystematik[]")
 copy_field("properties.ccm:taxonid[].*", "@hochschulfaechersystematik[].$append")
+lookup("@hochschulfaechersystematik[].*", "data/maps/oerVhb2Destatis.tsv","sep_char":"\t", delete:"true")
 filter("@hochschulfaechersystematik[]", "^https://w3id.org/kim/hochschulfaechersystematik/.*")
+uniq("@hochschulfaechersystematik[]")
  
 set_array("about[]")
 do list(path:"@hochschulfaechersystematik[]", "var":"$i")
