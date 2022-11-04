@@ -1,0 +1,16 @@
+application	https://w3id.org/kim/hcrt/application
+audio	https://w3id.org/kim/hcrt/audio
+task	https://w3id.org/kim/hcrt/drill_and_practice
+image	https://w3id.org/kim/hcrt/image
+experiment	https://w3id.org/kim/hcrt/experiment
+case_study	https://w3id.org/kim/hcrt/case_study
+map	https://w3id.org/kim/hcrt/map
+assessment	https://w3id.org/kim/hcrt/assessment
+educational_game	https://w3id.org/kim/hcrt/educational_game
+reference_book	https://w3id.org/kim/hcrt/index
+presentation	https://w3id.org/kim/hcrt/slide
+simulation	https://w3id.org/kim/hcrt/simulation
+script	https://w3id.org/kim/hcrt/script
+text	https://w3id.org/kim/hcrt/text
+video	https://w3id.org/kim/hcrt/video
+wiki	https://w3id.org/kim/hcrt/web_page

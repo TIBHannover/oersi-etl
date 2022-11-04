@@ -1,0 +1,190 @@
+# Delete all empty values
+vacuum()
+
+include ("../../sharedFixes/macros.fix")
+
+#  ---------------name ----------------------------------
+
+if exists("title")
+  move_field("name", "@name")
+  copy_field("title", "name")
+end
+
+#  ---------------image----------------------------------
+copy_field("preview.url", "image")
+
+#  ---------------id----------------------------------
+copy_field("properties.ccm:wwwurl[].1", "@external_id")
+trim("@external_id")
+replace_all("@external_id", "\\u00a0", "") /* %A0 / &nbsp; */
+
+copy_field("ref.id", "@internal_id")
+prepend("@internal_id","https://$[service_domain]/edu-sharing/components/render/")
+
+if exists("@external_id")
+  copy_field("@external_id", "id")
+else
+  copy_field("@internal_id", "id")
+end
+
+#  ---------mainEntityOfPage----------------
+set_array("mainEntityOfPage[]")
+copy_field("@internal_id", "mainEntityOfPage[].$append.id")
+copy_field("modifiedAt", "mainEntityOfPage[].$last.dateModified")
+replace_all("mainEntityOfPage[].*.dateModified","T.+Z","")
+copy_field("createdAt", "mainEntityOfPage[].$last.dateCreated")
+replace_all("mainEntityOfPage[].*.dateCreated","T.+Z","")
+add_field("mainEntityOfPage[].$last.provider.id","$[service_id]")
+add_field("mainEntityOfPage[].$last.provider.type","Service")
+add_field("mainEntityOfPage[].$last.provider.name","$[service_name]")
+
+
+# ---------------description----------------------------------
+copy_field("properties.cclom:general_description[].*", "description") # eventuell nur .1 nicht .*
+
+
+#  ---------------about----------------------------------
+set_array("@hochschulfaechersystematik[]")
+copy_field("properties.ccm:taxonid[].*", "@hochschulfaechersystematik[].$append")
+filter("@hochschulfaechersystematik[]", "^https://w3id.org/kim/hochschulfaechersystematik/.*")
+ 
+set_array("about[]")
+do list(path:"@hochschulfaechersystematik[]", "var":"$i")
+  copy_field("$i", "about[].$append.id")
+  copy_field("$i", "about[].$last.prefLabel.de")
+end
+lookup("about[].*.prefLabel.de", "data/maps/subject-labels.tsv","sep_char":"\t", delete:"true")
+
+#  ---------------creator----------------------------------
+set_array("creator[]")
+do list(path:"properties.ccm:lifecyclecontributer_author[]", "var": "$i")
+  if any_match("$i", "^BEGIN:VCARD[\\s\\S]*FN:(.+)\r\n[\\s\\S]*")
+    copy_field("$i", "creator[].$append.name")
+    add_field("creator[].$last.type", "Person")
+  elsif any_match("$i", "^BEGIN:VCARD\r\nORG:(.+)\r\n[\\s\\S]*")
+    copy_field("$i", "creator[].$append.name")
+    add_field("creator[].$last.type", "Organization")
+  end
+end
+
+do list(path:"creator[]")
+  if any_match("name", "^BEGIN:VCARD[\\s\\S]*X-ORCID:https\\\\://(.+)\r\n[\\s\\S]*")
+    copy_field("name", "id")
+    replace_all("id","^BEGIN:VCARD[\\s\\S]*X-ORCID:https\\\\://(.+)\r\n[\\s\\S]*", "https://$1")
+  end
+  replace_all("name","^BEGIN:VCARD[\\s\\S]*FN:(.+)\r\n[\\s\\S]*", "$1")
+  replace_all("name","^BEGIN:VCARD\r\nORG:(.+)\r\n[\\s\\S]*", "$1")
+end
+
+/*
+TODO:#  ---------------contributor----------------------------------
+set_array("contributor[]")
+do list(path:"properties.ccm:lifecyclecontributer_author[]", "var": "$i")
+  if any_match("$i", "^BEGIN:VCARD[\\s\\S]*FN:(.+)\r\n[\\s\\S]*\r\nEND:VCARD$")
+    copy_field("$i", "contributor[].$append.name")
+    add_field("contributor[].$last.type", "Person")
+  elsif any_match("$i", "^BEGIN:VCARD\r\nORG:(.+)\r\n[\\s\\S]*\r\nEND:VCARD$")
+    copy_field("$i", "contributor[].$append.name")
+    add_field("contributor[].$last.type", "Organization")
+  end
+end
+
+do list(path:"contributor[]")
+  if any_match("name", "^BEGIN:VCARD[\\s\\S]*X-ORCID:(.+)\r\n[\\s\\S]+END:VCARD$")
+    copy_field("name", "id")
+    replace_all("id","^BEGIN:VCARD[\\s\\S]*X-ORCID:(.+)\r\n[\\s\\S]*\r\nEND:VCARD$", "$1")
+  end
+  replace_all("name","^BEGIN:VCARD[\\s\\S]*FN:(.+)\r\n[\\s\\S]*\r\nEND:VCARD$", "$1")
+  replace_all("name","^BEGIN:VCARD\r\nORG:(.+)\r\n[\\s\\S]*\r\nEND:VCARD$", "$1")
+end
+*/
+
+#  ---------------sourceOrganization----------------------------------      
+set_array("sourceOrganization[]")
+do list(path:"properties.ccm:university_DISPLAYNAME[]", "var": "$i")
+  unless any_match("$i", "null null|- Alle -")
+    copy_field("$i", "sourceOrganization[].$append.name")
+    add_field("sourceOrganization[].$last.type", "Organization")
+  end
+end
+
+#  ---------------license----------------------------------
+if exists("license.url")
+  move_field("license.url", "license.id")
+  filter("license.id","^http[s]?:\\/\\/creativecommons.org\\/(licenses|licences|publicdomain)\\/.*|^http[s]?:\\/\\/www.gnu.org\\/licenses\\/.*|^http[s]?:\\/\\/www.apache.org\\/licenses\\/.*|http[s]?://opensource.org/licenses/MIT|^http[s]?:\\/\\/www.opensource.org\\/licenses\\/BSD.*")
+else
+  remove_field("license")
+  copy_field("properties.virtual:licenseurl[].1", "license.id")
+  filter("license.id","^http[s]?:\\/\\/creativecommons.org\\/(licenses|licences|publicdomain)\\/.*|^http[s]?:\\/\\/www.gnu.org\\/licenses\\/.*|^http[s]?:\\/\\/www.apache.org\\/licenses\\/.*|http[s]?://opensource.org/licenses/MIT|^http[s]?:\\/\\/www.opensource.org\\/licenses\\/BSD.*")  
+end
+
+# ---------------conditionsOfAccess----------------------------------
+add_field("conditionsOfAccess.id","http://w3id.org/kim/conditionsOfAccess/no_login") 
+ 
+# ---------------inLanguage----------------------------------
+set_array("inLanguage[]")
+copy_field("properties.cclom:general_language[].*", "inLanguage[].$append")
+
+replace_all("inLanguage[].*","_..$", "") /* remove country suffixes eg. _DE */
+replace_all("inLanguage[].*","^$", "de") /* empty strings default to 'de' */
+replace_all("inLanguage[].*","unknown", "de")
+
+# ---------------type----------------------------------
+set_array("type[]", "LearningResource")
+ 
+# ---------------learningResourceType----------------------------------
+
+# Youtube Videos seem to have the labels instead of the id. 
+set_array("learningResourceType[]")
+do list(path:"properties.ccm:educationallearningresourcetype[]", "var": "$i")
+  unless any_equal("$i", "null null")
+    if all_equal("$i", "Video")
+      replace_all("$i", "Video", "https://w3id.org/kim/hcrt/video")
+    end
+    lookup("$i", "data/maps/oerVhbHcrt.tsv","sep_char":"\t", delete:"true")
+    copy_field("$i", "learningResourceType[].$append.id")
+    copy_field("$i", "learningResourceType[].$last.prefLabel.de")
+    copy_field("$i", "learningResourceType[].$last.prefLabel.en")
+  end
+end
+ 
+lookup("learningResourceType[].*.prefLabel.de", "data/maps/hcrt-de-labels.tsv","sep_char":"\t", delete:"true")
+lookup("learningResourceType[].*.prefLabel.en", "data/maps/hcrt-en-labels.tsv","sep_char":"\t", delete:"true")
+ 
+#  ---------------keywords----------------------------------
+copy_field("properties.cclom:general_keyword[]", "keywords[]")
+
+# ---------------encoding----------------------------------
+unless exists('properties.ccm:wwwurl[].1')
+  if exists("downloadUrl")
+    set_array("encoding[]")
+    add_field("encoding[].$append.type", "MediaObject")
+    copy_field("downloadUrl", "encoding[].$last.contentUrl")
+    copy_field("mimetype", "encoding[].$last.encodingFormat")
+    copy_field("size", "encoding[].$last.contentSize")
+  end
+end
+
+# ---------------datePublished----------------------------------
+copy_field("properties.ccm:published_dateISO8601[].1", "datePublished")
+replace_all("datePublished", "T.+Z", "")
+
+# ---------------@context ----------------------------------
+
+set_array("@context[]", "https://w3id.org/kim/amb/draft/context.jsonld")
+# resource is german therefore prefer de if multiple or no inLanguage are available
+if any_equal("inLanguage[]","de")
+  set_hash("@context[].$append", "@language": "de")
+elsif any_equal("inLanguage[]","en")
+  set_hash("@context[].$append", "@language": "en")
+else
+  copy_field("inLanguage[].1", "@context[].$append.@language")
+end
+# resources without inLanguage-Values set default to de
+unless exists("inLanguage[].1")
+  set_hash("@context[].$append", "@language": "de")
+end
+
+
+include ("../../sharedFixes/retain.fix")
+vacuum()
