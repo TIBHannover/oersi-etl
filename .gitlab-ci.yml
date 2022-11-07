@@ -38,6 +38,9 @@ deploy:
      - data/maps/*
      - data/production/*
      - data/sharedFixes/*
+  only:
+    - branches
+    - tags
 
 sonar:
   image: gradle:jdk11

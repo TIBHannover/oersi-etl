@@ -6,13 +6,10 @@ default input_limit = "-1"; // 'default': is overridden by command-line/properti
 default input_from = "0";
 default input_wait = "50";
 
-"https://www.zoerr.de/edu-sharing/eduservlet/sitemap?from=" + input_from
-| oersi.SitemapReader(wait=input_wait,limit=input_limit,urlPattern=".*/components/.*",findAndReplace="https://www.zoerr.de/edu-sharing/components/render/(.*)`https://www.zoerr.de/edu-sharing/rest/node/v1/nodes/-home-/$1/metadata?propertyFilter=-all-")
-| oersi.ErrorCatcher(file_errors)
-| open-http(accept="application/json")
-| oersi.ErrorCatcher(file_errors)
-| as-lines
+"https://www.zoerr.de/edu-sharing/rest/search/v1/queriesV2/-home-/-default-/ngsearch?maxItems=10&skipCount=0&propertyFilter=-all-"
+| oersi.JsonApiReader(method="post", body="{\"criterias\": [], \"facettes\": []}", recordPath="nodes", pageParam="skipCount=", stepSize="10", totalLimit=input_limit)
 | decode-json
+| filter-null-values
 // edu-sharing version 6.0
 | fix(FLUX_DIR + "zoerr_edu-sharing.fix", *) // '*': pass all flux variables to the fix
 | encode-json
