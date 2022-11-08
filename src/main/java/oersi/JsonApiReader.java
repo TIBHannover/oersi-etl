@@ -3,20 +3,22 @@ package oersi;
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
 import java.util.regex.Pattern;
 
-import org.json.JSONArray;
 import org.json.JSONObject;
-import org.json.JSONTokener;
 import org.metafacture.framework.MetafactureException;
 import org.metafacture.framework.ObjectReceiver;
 import org.metafacture.framework.helpers.DefaultObjectPipe;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import com.jayway.jsonpath.JsonPath;
 
 /**
  * Reads from a JSON web API and emits records as JSON strings.
@@ -82,15 +84,16 @@ public final class JsonApiReader extends DefaultObjectPipe<String, ObjectReceive
         LOG.debug("Processing JSON API from URL {}", url);
         try {
             HttpURLConnection connection = openUrlConnection(url);
-            JSONObject jsonObject = new JSONObject(new JSONTokener(connection.getInputStream()));
-            JSONArray jsonArray = jsonObject.getJSONArray(recordPath);
-            for (int i = 0; i < Math.min(totalLimit, jsonArray.length())
+            String jsonString = new String(connection.getInputStream().readAllBytes(),
+                    StandardCharsets.UTF_8);
+            List<Map<String, Object>> jsonArray = JsonPath.read(jsonString, recordPath);
+            for (int i = 0; i < Math.min(totalLimit, jsonArray.size())
                     && totalProcessed < totalLimit; i++, totalProcessed++) {
-                String jsonRecord = jsonArray.get(i).toString();
+                Map<String, Object> jsonRecord = jsonArray.get(i);
                 LOG.trace("Processing record {}", jsonRecord);
-                getReceiver().process(jsonRecord);
+                getReceiver().process(new JSONObject(jsonRecord).toString());
             }
-            if (totalProcessed < totalLimit && jsonArray.length() > 0) {
+            if (totalProcessed < totalLimit && !jsonArray.isEmpty()) {
                 Thread.sleep(wait);
                 tryNextPage(url, stepSize);
             }
@@ -116,19 +119,26 @@ public final class JsonApiReader extends DefaultObjectPipe<String, ObjectReceive
     }
 
     private void tryNextPage(final String url, int currentPageSize) {
-        boolean pagingIsSupported = url.contains(pageParam);
-        boolean isDone = currentPageSize == 0 || totalLimit <= currentPageSize;
-        if (pagingIsSupported && !isDone) {
-            String substring = url.substring(url.indexOf(pageParam) + pageParam.length())
-                    .split("&")[0];
-            try (Scanner scanner = new Scanner(substring)) {
+        if (currentPageSize == 0 || totalLimit <= currentPageSize) {
+            return;
+        }
+        boolean useQueryParamForPaging = pageParam.endsWith("=");
+        if (useQueryParamForPaging) {
+            try (Scanner scanner = new Scanner(
+                    url.substring(url.indexOf(pageParam) + pageParam.length()).split("&")[0])) {
                 if (scanner.hasNextInt()) {
                     int lastFrom = scanner.nextInt();
                     int nextFrom = lastFrom + currentPageSize;
-                    String replace = url.replace(pageParam + lastFrom, pageParam + nextFrom);
-                    process(replace);
+                    process(url.replace(pageParam + lastFrom, pageParam + nextFrom));
                 }
             }
+        } else {
+            JSONObject jsonBody = new JSONObject(body);
+            int lastFrom = jsonBody.getInt(pageParam);
+            int nextFrom = lastFrom + currentPageSize;
+            jsonBody.put(pageParam, nextFrom);
+            body = jsonBody.toString();
+            process(url);
         }
     }
 
