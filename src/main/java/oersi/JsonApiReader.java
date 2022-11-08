@@ -2,8 +2,6 @@ package oersi;
 
 import java.io.IOException;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.ProtocolException;
 import java.net.URL;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -14,6 +12,7 @@ import java.util.regex.Pattern;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.json.JSONTokener;
+import org.metafacture.framework.MetafactureException;
 import org.metafacture.framework.ObjectReceiver;
 import org.metafacture.framework.helpers.DefaultObjectPipe;
 import org.slf4j.Logger;
@@ -96,15 +95,14 @@ public final class JsonApiReader extends DefaultObjectPipe<String, ObjectReceive
                 tryNextPage(url, stepSize);
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            throw new MetafactureException(e);
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
-            e.printStackTrace();
+            throw new MetafactureException(e);
         }
     }
 
-    private HttpURLConnection openUrlConnection(final String url)
-            throws IOException, MalformedURLException, ProtocolException {
+    private HttpURLConnection openUrlConnection(final String url) throws IOException {
         HttpURLConnection connection = (HttpURLConnection) new URL(url).openConnection();
         connection.setRequestMethod(method.toUpperCase());
         connection.addRequestProperty("accept", JSON);

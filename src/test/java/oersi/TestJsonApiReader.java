@@ -90,6 +90,7 @@ public final class TestJsonApiReader {
         reader.setRecordPath(recordPath);
         reader.setPageParam(pageParam);
         reader.setStepSize(stepSize);
+        reader.setHeader("x:123\ny:456");
         reader.setReceiver(receiver);
     }
 
