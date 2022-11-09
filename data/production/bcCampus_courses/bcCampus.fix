@@ -35,7 +35,6 @@ trim("keywords.*")
 move_field("keywords","keywords[]")
 
 # ---------------about ----------------------------------
-move_field("about[]","@about")
 # about element exists but needs to be adjusted to OERSI specific `about`-element
 
 set_array("@about")
