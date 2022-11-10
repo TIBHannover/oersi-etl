@@ -167,7 +167,6 @@ end
 
 # ---------------datePublished----------------------------------
 copy_field("properties.ccm:published_dateISO8601[].1", "datePublished")
-replace_all("datePublished", "T.+Z", "")
 
 # ---------------@context ----------------------------------
 
