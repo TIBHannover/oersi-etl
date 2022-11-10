@@ -13,8 +13,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.metafacture.framework.ObjectReceiver;
-import org.metafacture.io.HttpOpener;
-import org.metafacture.io.HttpOpener.Method;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
 import org.mockito.InOrder;
@@ -37,9 +35,9 @@ public final class TestJsonApiReader {
 
     private static final Object[][] PARAMS = new Object[][] { //
             { "/test/path?skipCount=0&maxItems=10", //
-                    Method.POST, "{\"criterias\":[],\"facettes\":[]}", "nodes", "skipCount=", 10 },
+                    "post", "{\"criterias\":[],\"facettes\":[]}", "nodes", "skipCount=", 10 },
             { "/test/path?page=1", //
-                    Method.GET, null, "data", "page=", 1 } };
+                    "get", null, "data", "page=", 1 } };
 
     private static final int REQUEST_LIMIT = 20;
     private static final int EXISTING_RECORDS = 15;
@@ -50,7 +48,7 @@ public final class TestJsonApiReader {
     }
 
     private String url;
-    private Method method;
+    private String method;
     private String body;
     private String recordPath;
     private String pageParam;
@@ -58,7 +56,7 @@ public final class TestJsonApiReader {
     private JsonApiReader reader;
     private InOrder inOrder;
 
-    public TestJsonApiReader(String url, HttpOpener.Method method, String body, String recordPath,
+    public TestJsonApiReader(String url, String method, String body, String recordPath,
             String pageParam, int stepSize) {
         this.url = url;
         this.method = method;
@@ -92,6 +90,7 @@ public final class TestJsonApiReader {
         reader.setRecordPath(recordPath);
         reader.setPageParam(pageParam);
         reader.setStepSize(stepSize);
+        reader.setHeader("x:123\ny:456");
         reader.setReceiver(receiver);
     }
 
