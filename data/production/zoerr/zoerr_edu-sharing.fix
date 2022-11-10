@@ -2,27 +2,12 @@
 vacuum()
 
 include ("../../sharedFixes/macros.fix")
-include ("../../sharedFixes/eduSharingMacros.fix")
 
-# --- reuse edu-sharing macros -------- 
-call_macro("name")
-call_macro("image")
-call_macro("id")
-call_macro("mainEntityOfPage")
-call_macro("description")
-call_macro("aboutDestatis") # about
-call_macro("sourceOrganization")
-call_macro("license")
-call_macro("conditionsOfAccess")
-call_macro("inLanguage")
-call_macro("keywords")
-call_macro("datePublished")
-
-# ---------------type----------------------------------
-call_macro("type")
+# --- reuse edu-sharing default template -------- 
+include ("../../sharedFixes/eduSharingDefault.fix")
 
 #  ---------------creator----------------------------------
-set_array("creator[]")
+set_array("creator[]") # set_array is desctructive and deletes existing creator-element
 do list(path:"properties.ccm:lifecyclecontributer_author[]", "var": "$i")
   if any_match("$i", "^BEGIN:VCARD[\\s\\S]*FN:(.+)\r\n[\\s\\S]*")
     copy_field("$i", "creator[].$append.name")
@@ -71,7 +56,7 @@ end
 # ---------------learningResourceType----------------------------------
 
 # Youtube Videos seem to have the labels instead of the id. 
-set_array("learningResourceType[]")
+set_array("learningResourceType[]")  # set_array is desctructive and deletes existing learningResourceType-element
 do list(path:"properties.ccm:educationallearningresourcetype[]", "var": "$i")
   unless any_equal("$i", "null null")
     if all_equal("$i", "Video")
@@ -85,12 +70,6 @@ end
  
 lookup("learningResourceType[].*.prefLabel.de", "data/maps/hcrt-de-labels.tsv","sep_char":"\t", delete:"true")
 lookup("learningResourceType[].*.prefLabel.en", "data/maps/hcrt-en-labels.tsv","sep_char":"\t", delete:"true")
- 
-
-
-# ---------------@context ----------------------------------
-
-call_macro("contextRessourceInGerman")
 
 
 include ("../../sharedFixes/retain.fix")

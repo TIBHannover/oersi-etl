@@ -2,28 +2,9 @@
 vacuum()
 
 include ("../../sharedFixes/macros.fix")
-include ("../../sharedFixes/eduSharingMacros.fix")
 
-# --- reuse edu-sharing macros -------- 
-call_macro("name")
-call_macro("image")
-call_macro("id")
-call_macro("mainEntityOfPage")
-call_macro("description")
-call_macro("aboutDestatis") # about
-call_macro("sourceOrganization")
-call_macro("license")
-call_macro("conditionsOfAccess")
-call_macro("inLanguage")
-call_macro("keywords")
-call_macro("datePublished")
-call_macro("dateCreated")
-call_macro("creatorTwilloStyle")
-call_macro("learningResourceTypeHcrt") # learningResourceType
-
-# ---------------type----------------------------------
-call_macro("type")
-
+# --- reuse edu-sharing default template -------- 
+include ("../../sharedFixes/eduSharingDefault.fix")
 
 /*
 TODO:#  ---------------contributor----------------------------------
@@ -47,10 +28,7 @@ do list(path:"contributor[]")
   replace_all("name","^BEGIN:VCARD\nORG:(.+)\n[\\s\\S]*\nEND:VCARD$", "$1")
 end
 */
-
-# ---------------@context ----------------------------------
-call_macro("contextRessourceInGerman")
-
+ 
 
 include ("../../sharedFixes/retain.fix")
 vacuum()
