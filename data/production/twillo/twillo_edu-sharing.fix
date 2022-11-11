@@ -6,29 +6,14 @@ include ("../../sharedFixes/macros.fix")
 # --- reuse edu-sharing default template -------- 
 include ("../../sharedFixes/eduSharingDefault.fix")
 
-/*
-TODO:#  ---------------contributor----------------------------------
-set_array("contributor[]")
-do list(path:"properties.ccm:lifecyclecontributer_author[]", "var": "$i")
-  if any_match("$i", "^BEGIN:VCARD[\\s\\S]*FN:(.+)\n[\\s\\S]*\nEND:VCARD$")
-    copy_field("$i", "contributor[].$append.name")
-    add_field("contributor[].$last.type", "Person")
-  elsif any_match("$i", "^BEGIN:VCARD\nORG:(.+)\n[\\s\\S]*\nEND:VCARD$")
-    copy_field("$i", "contributor[].$append.name")
-    add_field("contributor[].$last.type", "Organization")
-  end
-end
+# ---------------sourceOrganization[].*.id----------------------------------
 
-do list(path:"contributor[]")
-  if any_match("name", "^BEGIN:VCARD[\\s\\S]*X-ORCID:(.+)\n[\\s\\S]+END:VCARD$")
-    copy_field("name", "id")
-    replace_all("id","^BEGIN:VCARD[\\s\\S]*X-ORCID:(.+)\n[\\s\\S]*\nEND:VCARD$", "$1")
-  end
-  replace_all("name","^BEGIN:VCARD[\\s\\S]*FN:(.+)\n[\\s\\S]*\nEND:VCARD$", "$1")
-  replace_all("name","^BEGIN:VCARD\nORG:(.+)\n[\\s\\S]*\nEND:VCARD$", "$1")
-end
-*/
- 
+copy_field("properties.ccm:university[].1", "sourceOrganization[].1.id")
+copy_field("properties.ccm:university[].2", "sourceOrganization[].2.id")
+copy_field("properties.ccm:university[].3", "sourceOrganization[].3.id")
+copy_field("properties.ccm:university[].4", "sourceOrganization[].4.id")
+copy_field("properties.ccm:university[].5", "sourceOrganization[].5.id")
+
 # ---------------dateCreated----------------------------------
 
 copy_field("properties.cm:document_createdISO8601[].1", "dateCreated")

@@ -28,29 +28,6 @@ do list(path:"creator[]")
   replace_all("name","^BEGIN:VCARD\r\nORG:(.+)\r\n[\\s\\S]*", "$1")
 end
 
-/*
-TODO:#  ---------------contributor----------------------------------
-set_array("contributor[]")
-do list(path:"properties.ccm:lifecyclecontributer_author[]", "var": "$i")
-  if any_match("$i", "^BEGIN:VCARD[\\s\\S]*FN:(.+)\r\n[\\s\\S]*\r\nEND:VCARD$")
-    copy_field("$i", "contributor[].$append.name")
-    add_field("contributor[].$last.type", "Person")
-  elsif any_match("$i", "^BEGIN:VCARD\r\nORG:(.+)\r\n[\\s\\S]*\r\nEND:VCARD$")
-    copy_field("$i", "contributor[].$append.name")
-    add_field("contributor[].$last.type", "Organization")
-  end
-end
-
-do list(path:"contributor[]")
-  if any_match("name", "^BEGIN:VCARD[\\s\\S]*X-ORCID:(.+)\r\n[\\s\\S]+END:VCARD$")
-    copy_field("name", "id")
-    replace_all("id","^BEGIN:VCARD[\\s\\S]*X-ORCID:(.+)\r\n[\\s\\S]*\r\nEND:VCARD$", "$1")
-  end
-  replace_all("name","^BEGIN:VCARD[\\s\\S]*FN:(.+)\r\n[\\s\\S]*\r\nEND:VCARD$", "$1")
-  replace_all("name","^BEGIN:VCARD\r\nORG:(.+)\r\n[\\s\\S]*\r\nEND:VCARD$", "$1")
-end
-*/
-
 # ---------------datePublished----------------------------------
 
 copy_field("properties.ccm:published_dateISO8601[].1", "datePublished")
