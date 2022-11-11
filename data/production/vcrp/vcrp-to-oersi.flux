@@ -1,4 +1,4 @@
-service_domain = "https://openedu-rlp.de";
+service_domain = "openedu-rlp.de";
 service_id = "https://openedu-rlp.de/edu-sharing/";
 service_name = "VCRP";
 
