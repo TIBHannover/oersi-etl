@@ -30,9 +30,33 @@
           "pattern": "^http[s]?:\/\/www.opensource.org\/licenses\/BSD.*"
         }
       ]
+    },
+    "isPartOf": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "format": "uri",
+          "enum": [
+            "https://w3id.org/kim/license/publicDomain",
+            "https://w3id.org/kim/license/attribution",
+            "https://w3id.org/kim/license/shareAlike",
+            "https://w3id.org/kim/license/noDerivatives",
+            "https://w3id.org/kim/license/nonCommercial",
+            "https://w3id.org/kim/license/nonCommercial-noDerivatives"
+          ]
+        },
+        "type": {
+          "type": "string",
+          "enum": [
+            "Collection"
+          ]
+        }
+      }
     }
   },
   "required": [
-    "id"
+    "id",
+    "isPartOf"
   ]
 }
