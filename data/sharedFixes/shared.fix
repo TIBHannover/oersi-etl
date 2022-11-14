@@ -1,0 +1,17 @@
+
+# --- licenseGroup -------
+
+if exists ("license.id")
+  copy_field("license.id","license.isPartOf.id")
+  replace_all("license.isPartOf.id","http[s]?:\\/\\/creativecommons.org\\/publicdomain\\/.*","https://w3id.org/kim/license/publicDomain")
+  replace_all("license.isPartOf.id","http[s]?:\\/\\/creativecommons.org\\/licenses\\/by\\/.*|http[s]?:\\/\\/www.gnu.org\\/licenses\\/fdl-.*|http[s]?:\\/\\/opensource.org\\/licenses\\/MIT|http[s]?:\\/\\/apache.org\\/licenses\\/.*|http[s]?:\\/\\/www.opensource.org\\/licenses\\/BSD.*", "https://w3id.org/kim/license/attribution")
+  replace_all("license.isPartOf.id","http[s]?:\\/\\/creativecommons.org\\/licenses\\/by-sa\\/.*|http[s]?:\\/\\/www.gnu.org\\/licenses\\/gpl-.*|http[s]?:\\/\\/www.gnu.org\\/licenses\\/lgpl-.*|http[s]?:\\/\\/www.gnu.org\\/licenses\\/agpl-.*","https://w3id.org/kim/license/shareAlike")
+  replace_all("license.isPartOf.id","http[s]?:\\/\\/creativecommons.org\\/licenses\\/by-nd\\/.*","https://w3id.org/kim/license/noDerivatives")
+  replace_all("license.isPartOf.id","http[s]?:\\/\\/creativecommons.org\\/licenses\\/by-nc\\/.*|http[s]?:\\/\\/creativecommons.org\\/licenses\\/by-nc-sa\\/.*","https://w3id.org/kim/license/nonCommercial")
+  replace_all("license.isPartOf.id","http[s]?:\\/\\/creativecommons.org\\/licenses\\/by-nc-nd\\/.*","https://w3id.org/kim/license/nonCommercial-noDerivatives")
+  add_field("license.isPartOf.type","Collection")  
+end
+
+# --- retaim -------
+# defines which elements to keep
+retain("@context[]","id","image","name","creator[]","contributor[]","sourceOrganization[]", "license","description","datePublished","dateCreated","dateModified","inLanguage[]","type[]","learningResourceType[]","keywords[]","about[]", "encoding[]", "publisher[]", "isPartOf[]", "mainEntityOfPage[]","conditionsOfAccess")

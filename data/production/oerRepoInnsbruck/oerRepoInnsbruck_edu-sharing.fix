@@ -23,5 +23,5 @@ end
 lookup("about[].*.prefLabel.de", "data/maps/subject-labels.tsv","sep_char":"\t", delete:"true")
 
 
-include ("../../sharedFixes/retain.fix")
+include ("../../sharedFixes/shared.fix")
 vacuum()
