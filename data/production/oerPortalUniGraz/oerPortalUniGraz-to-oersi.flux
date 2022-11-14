@@ -1,4 +1,4 @@
-service_domain="oer-portal.uni-graz.at/edu-sharing/";
+service_domain="oer-portal.uni-graz.at";
 service_id="https://oer-portal.uni-graz.at/edu-sharing/";
 service_name="OER Portal Uni Graz";
 

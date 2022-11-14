@@ -1,4 +1,4 @@
-service_domain="oer-repo.uibk.ac.at/edu-sharing/";
+service_domain="oer-repo.uibk.ac.at";
 service_id="https://oer-repo.uibk.ac.at/edu-sharing/";
 service_name="Universität Innsbruck OER Repositorium";
 
