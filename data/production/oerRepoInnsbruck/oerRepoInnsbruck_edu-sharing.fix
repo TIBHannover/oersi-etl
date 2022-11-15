@@ -11,7 +11,6 @@ include ("../../sharedFixes/eduSharingDefault.fix")
  
 set_array("@hochschulfaechersystematik[]")
 copy_field("properties.ccm:taxonid[].*", "@hochschulfaechersystematik[].$append")
-prepend("@hochschulfaechersystematik[].*"
 lookup("@hochschulfaechersystematik[].*", "data/maps/oefos2destatis.tsv","sep_char":"\t", delete:"true")
 uniq("@hochschulfaechersystematik[]")
 
