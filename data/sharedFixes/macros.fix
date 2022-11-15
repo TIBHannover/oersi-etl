@@ -1,3 +1,25 @@
 do put_macro("deleteAcademicTitles")
   replace_all("$[field]","Apl\\. |\\(apl\\.\\) |Dr\\. med |Dr\\. |Dr\\.'in |Dr |Dr\\.med\\.|Dres\\. |Dr\\.|Prof\\. |Prof\\.'in |Prof\\.|Prof |Jun\\.-|PD |PD\\. |med\\. |rer\\. |pol\\.|nat\\. |dent\\. |em\\. |Ao\\.-|o\\. Univ\\.|Uni\\.-|Univ\\.-|Univ\\. |DI |RA |Dipl\\.|-Ing\\. |-Inform\\. |-Psych\\. |h\\.c\\. |mult\\. |Mag\\. |, MME|; MME|, MScN|M\\. Sc\\. |, MSc|MSc\\.|, M\\.A\\.|M\\.A\\.|, M\\.D\\.|, B\\.A\\.|, MMZ|, Psychoanalytiker|, L\\.L\\.M\\.|, LL\\.M\\.|\\(M\\.A\\.\\)|\\(PhD Student\\)|M\\. Eng\\.|LL\\.M\\.","")
 end
+
+# ---------------@context ----------------------------------
+do put_macro("contextRessourceInGerman")
+  set_array("@context[]", "https://w3id.org/kim/amb/draft/context.jsonld")
+  # resource is german therefore prefer de if multiple or no inLanguage are available
+  if any_equal("inLanguage[]","de")
+    set_hash("@context[].$append", "@language": "de")
+  elsif any_equal("inLanguage[]","en")
+    set_hash("@context[].$append", "@language": "en")
+  else
+    copy_field("inLanguage[].1", "@context[].$append.@language")
+  end
+  # resources without inLanguage-Values set default to de
+  unless exists("inLanguage[].1")
+    set_hash("@context[].$append", "@language": "de")
+  end
+end
+
+# ---------------type----------------------------------
+do put_macro("type")
+  set_array("type[]", "LearningResource")
+end
