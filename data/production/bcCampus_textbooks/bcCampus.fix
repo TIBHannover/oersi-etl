@@ -61,6 +61,7 @@ copy_field("workExample.inLanguage","inLanguage[].$append")
 
 # ---------------publisher----------------------------------
 set_array("publisher[]")
+trim("publisher.name")
 copy_field("publisher.name","publisher[].$append.name")
 copy_field("publisher.type","publisher[].$last.type")
 
