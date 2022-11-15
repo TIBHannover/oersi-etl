@@ -36,6 +36,7 @@ public final class JsonApiReader extends DefaultObjectPipe<String, ObjectReceive
     private String recordPath;
     private String body;
     private String pageParam;
+    private boolean pageInBody;
     private String method;
     private int stepSize;
     private final Map<String, String> headers = new HashMap<>();
@@ -50,6 +51,10 @@ public final class JsonApiReader extends DefaultObjectPipe<String, ObjectReceive
 
     public void setPageParam(String pageParam) {
         this.pageParam = pageParam;
+    }
+
+    public void setPageInBody(boolean pageInBody) {
+        this.pageInBody = pageInBody;
     }
 
     public void setRecordPath(String recordPath) {
@@ -122,23 +127,23 @@ public final class JsonApiReader extends DefaultObjectPipe<String, ObjectReceive
         if (currentPageSize == 0 || totalLimit <= currentPageSize) {
             return;
         }
-        boolean useQueryParamForPaging = pageParam.endsWith("=");
-        if (useQueryParamForPaging) {
-            try (Scanner scanner = new Scanner(
-                    url.substring(url.indexOf(pageParam) + pageParam.length()).split("&")[0])) {
-                if (scanner.hasNextInt()) {
-                    int lastFrom = scanner.nextInt();
-                    int nextFrom = lastFrom + currentPageSize;
-                    process(url.replace(pageParam + lastFrom, pageParam + nextFrom));
-                }
-            }
-        } else {
+        if (pageInBody) {
             JSONObject jsonBody = new JSONObject(body);
             int lastFrom = jsonBody.getInt(pageParam);
             int nextFrom = lastFrom + currentPageSize;
             jsonBody.put(pageParam, nextFrom);
             body = jsonBody.toString();
             process(url);
+        } else {
+            try (Scanner scanner = new Scanner(
+                    url.substring(url.indexOf(pageParam) + pageParam.length() + 1).split("&")[0])) {
+                if (scanner.hasNextInt()) {
+                    int lastFrom = scanner.nextInt();
+                    int nextFrom = lastFrom + currentPageSize;
+                    String param = pageParam + "=";
+                    process(url.replace(param + lastFrom, param + nextFrom));
+                }
+            }
         }
     }
 

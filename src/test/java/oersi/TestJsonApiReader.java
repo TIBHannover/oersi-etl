@@ -36,11 +36,11 @@ public final class TestJsonApiReader {
 
     private static final Object[][] PARAMS = new Object[][] { //
             { "/test/path?skipCount=0&maxItems=10", //
-                    "post", "{\"criterias\":[],\"facettes\":[]}", "nodes", "skipCount=", 10 },
+                    "post", "{\"criterias\":[],\"facettes\":[]}", "nodes", "skipCount", false, 10 },
             { "/test/path", //
-                    "post", "{\"from\":0}", "hits.hits", "from", 10 },
+                    "post", "{\"from\":0}", "hits.hits", "from", true, 10 },
             { "/test/path?page=1", //
-                    "get", null, "data", "page=", 1 } };
+                    "get", null, "data", "page", false, 1 } };
 
     private static final int REQUEST_LIMIT = 20;
     private static final int EXISTING_RECORDS = 15;
@@ -55,17 +55,19 @@ public final class TestJsonApiReader {
     private String body;
     private String recordPath;
     private String pageParam;
+    private boolean pageInBody;
     private int stepSize;
     private JsonApiReader reader;
     private InOrder inOrder;
 
     public TestJsonApiReader(String url, String method, String body, String recordPath,
-            String pageParam, int stepSize) {
+            String pageParam, boolean pageInBody, int stepSize) {
         this.url = url;
         this.method = method;
         this.body = body;
         this.recordPath = recordPath;
         this.pageParam = pageParam;
+        this.pageInBody = pageInBody;
         this.stepSize = stepSize;
     }
 
@@ -92,6 +94,7 @@ public final class TestJsonApiReader {
         reader.setBody(body);
         reader.setRecordPath(recordPath);
         reader.setPageParam(pageParam);
+        reader.setPageInBody(pageInBody);
         reader.setStepSize(stepSize);
         reader.setHeader("x:123\ny:456");
         reader.setReceiver(receiver);
