@@ -9,8 +9,6 @@ copy_field("oer_permalink", "id")
 #  ---------------name----------------------------------
 if exists("title")
   copy_field("title", "name")
-elsif exists("filename")
-  copy_field("filename", "name")
 else
   copy_field("displayname", "name")
 end
@@ -35,6 +33,8 @@ do list(path:"@creator", "var": "$i")
   add_field("creator[].$last.type", "Person")
 end
 
+#  ---------------license----------------------------------
+
 put_map("license",
   "CC BY-ND 4.0 Int.":"https://creativecommons.org/licenses/by-nd/4.0/",
   "CC0 1.0 Universell":"https://creativecommons.org/publicdomain/zero/1.0/",
@@ -49,6 +49,7 @@ move_field("license","@license")
 copy_field("@license","license.id")
 lookup("license.id","license")
 
+#  ---------------learningResourceType----------------------------------
 
 put_map("lRT",
   "Mediathek":"https://w3id.org/kim/hcrt/other",
@@ -78,6 +79,8 @@ copy_field("resourcetype","learningResourceType[].$last.prefLabel.en")
 lookup("learningResourceType[].*.prefLabel.de", "data/maps/hcrt-de-labels.tsv","sep_char":"\t", delete:"true")
 lookup("learningResourceType[].*.prefLabel.en", "data/maps/hcrt-en-labels.tsv","sep_char":"\t", delete:"true")
 
+# ---------------description----------------------------------
+copy_field("comment","description")
 
 # ---------------conditionsOfAccess----------------------------------
 add_field("conditionsOfAccess.id","http://w3id.org/kim/conditionsOfAccess/no_login") 
@@ -109,6 +112,20 @@ unless exists("inLanguage[].1")
   set_hash("@context[].$append", "@language": "de")
 end
 
+
+# Filter incomplete records.
+
+unless exists ("name")
+  reject()
+end
+
+unless exists ("license")
+  reject()
+end
+
+unless exists ("creator[]")
+  reject()
+end
 
 # ------ tidy up --- 
 include ("../../sharedFixes/retain.fix")

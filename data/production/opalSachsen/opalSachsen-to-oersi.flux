@@ -1,6 +1,6 @@
-service_domain = "https://bildungsportal.sachsen.de";
+service_domain = "bildungsportal.sachsen.de";
 service_id = "https://bildungsportal.sachsen.de";
-service_name = "eGov-Campus";
+service_name = "Bildungsportal Sachsen OPAL";
 
 "https://bildungsportal.sachsen.de/opal/oer/content.json"
 | open-http(accept="application/json")
