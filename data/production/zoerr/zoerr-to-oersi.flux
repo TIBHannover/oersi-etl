@@ -7,7 +7,7 @@ default input_from = "0";
 default input_wait = "50";
 
 "https://www.zoerr.de/edu-sharing/rest/search/v1/queriesV2/-home-/-default-/ngsearch?maxItems=10&skipCount=0&propertyFilter=-all-"
-| oersi.JsonApiReader(method="post", body="{\"criterias\": [], \"facettes\": []}", recordPath="nodes", pageParam="skipCount", stepSize="10", totalLimit=input_limit)
+| oersi.JsonApiReader(method="post", body="{\"resolveCollections\": false, \"criterias\": [], \"facettes\": []}", recordPath="nodes", pageParam="skipCount", stepSize="10", totalLimit=input_limit)
 | decode-json
 | filter-null-values
 // edu-sharing version 6.0
