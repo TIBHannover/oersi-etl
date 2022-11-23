@@ -94,6 +94,7 @@ public class ETL {
         File fileInvalid = new File(fluxDir, name + "-invalid.json");
         File fileValid = new File(fluxDir, name + "-metadata.json");
         File fileResponses = new File(fluxDir, name + "-responses.json");
+        Stream.of(fileProcessErrors, fileInvalid, fileValid, fileResponses).forEach(File::delete);
         List<String> fullVars = setUpVars(flux, vars, fileProcessErrors, fileInvalid, fileValid,
                 fileResponses);
         long start = System.currentTimeMillis();

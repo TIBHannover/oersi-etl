@@ -4,6 +4,7 @@ import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -60,6 +61,17 @@ public class TestEtl {
         ETL.main(new String[] { "src/test/resources/local-hoou-to-oersi.flux",
                 "data/production/oersi.properties" });
         assertTrue("Output file must exist: " + ETL.OUT_FILE, ETL.OUT_FILE.exists());
+    }
+
+    @Test
+    public void testConvertMainResetErrors() throws IOException {
+        File errors = new File(ETL.DATA_DIR, "failing-errors.txt");
+        Files.deleteIfExists(Paths.get(errors.toURI()));
+        assertFalse(errors.exists()); // no errors, will now run flux writing errors:
+        ETL.main(new String[] { "src/test/resources/failing-write-errors.flux" });
+        assertTrue(errors.exists()); // got errors, now without errors, same base name:
+        ETL.main(new String[] { "src/test/resources/failing-fix-not-found.flux" });
+        assertFalse(errors.exists()); // no errors, both write to same base name file
     }
 
     @Test
