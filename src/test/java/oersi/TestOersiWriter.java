@@ -29,7 +29,7 @@ public final class TestOersiWriter {
         MockitoAnnotations.initMocks(this);
         oersiWriter = new OersiWriter(API);
         HttpClientMock httpClientMock = new HttpClientMock();
-        httpClientMock.onPost(API).doReturnStatus(400);
+        httpClientMock.onPost(API + "/bulk").doReturnStatus(400);
         oersiWriter.client = httpClientMock;
     }
 
@@ -45,6 +45,7 @@ public final class TestOersiWriter {
 
     @Test
     public void testShouldResetCounts() throws JsonProcessingException {
+        oersiWriter.setBulkSize(1);
         oersiWriter.process("{}");
         Assert.assertEquals(1, oersiWriter.fail);
         oersiWriter.resetStream();
@@ -60,5 +61,6 @@ public final class TestOersiWriter {
     public void testShouldCatchConnectionRefused() {
         oersiWriter = new OersiWriter("http://invalid");
         oersiWriter.process("{}");
+        oersiWriter.closeStream();
     }
 }
