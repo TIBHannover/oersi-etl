@@ -102,6 +102,11 @@ else
   filter("license.id","^http[s]?:\\/\\/creativecommons.org\\/(licenses|licences|publicdomain)\\/.*|^http[s]?:\\/\\/www.gnu.org\\/licenses\\/.*|^http[s]?:\\/\\/www.apache.org\\/licenses\\/.*|http[s]?://opensource.org/licenses/MIT|^http[s]?:\\/\\/www.opensource.org\\/licenses\\/BSD.*")  
 end
 
+unless any_match("properties.ccm:commonlicense_key[]","^CC_.*")
+  copy_field("properties.ccm:commonlicense_key[].1", "license.id")
+  replace_all("license.id","MIT", "https://opensource.org/licenses/MIT")
+  replace_all("license.id","GPL3", "https://www.gnu.org/licenses/gpl-3.0")
+end
 
 # ---------------conditionsOfAccess----------------------------------
 
