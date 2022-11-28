@@ -122,9 +122,11 @@ public final class OersiWriter implements ObjectReceiver<String> {
                 logWriter.append("\n");
             }
             if (response.statusCode() == 200) {
-                success++;
+                JSONObject jsonResponse = new JSONObject(response.body());
+                success += jsonResponse.getInt("success");
+                fail += jsonResponse.getInt("failed");
             } else {
-                fail++;
+                fail += bulkSize;
             }
             bulk.clear();
         } catch (IOException e) {

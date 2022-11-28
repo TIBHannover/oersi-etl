@@ -22,12 +22,14 @@ import com.pgssoft.httpclient.HttpClientMock;
 public final class TestOersiWriter {
 
     private static final String API = "http://localhost";
+    private static final int BULK_SIZE = 20;
     private OersiWriter oersiWriter;
 
     @Before
     public void setup() {
         MockitoAnnotations.initMocks(this);
         oersiWriter = new OersiWriter(API);
+        oersiWriter.setBulkSize(BULK_SIZE);
         HttpClientMock httpClientMock = new HttpClientMock();
         httpClientMock.onPost(API + "/bulk").doReturnStatus(400);
         oersiWriter.client = httpClientMock;
@@ -41,6 +43,7 @@ public final class TestOersiWriter {
         oersiWriter.process("{}");
         oersiWriter.closeStream();
         Assert.assertTrue(Files.readAllLines(file.toPath()).size() > 0);
+        Assert.assertEquals(BULK_SIZE, oersiWriter.fail);
     }
 
     @Test
