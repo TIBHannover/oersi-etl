@@ -2,12 +2,12 @@ service_domain = "https://open.umn.edu/opentextbooks/";
 service_id = "https://open.umn.edu/opentextbooks/";
 service_name = "Open Textbook Library";
 
+default input_limit = "-1"; // 'default': is overridden by command-line/properties value
 
-// Data is provided as MARC21-Dum.
-"https://open.umn.edu/opentextbooks/download.mrc"
-| open-http
-| as-records
-| decode-marc21
+
+"https://open.umn.edu/opentextbooks/textbooks?page=1"
+| oersi.JsonApiReader(method="get", recordPath="data", pageParam="page", stepSize="1", totalLimit="-1")
+| decode-json
 | fix(FLUX_DIR + "openTextbookLibrary.fix",*)
 | encode-json
 | oersi.JsonValidator(output_schema, writeValid=metadata_valid, writeInvalid=metadata_invalid)
