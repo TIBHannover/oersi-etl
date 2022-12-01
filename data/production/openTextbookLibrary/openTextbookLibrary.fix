@@ -5,53 +5,44 @@ include ("../../sharedFixes/macros.fix")
 
 
 #  ---------------id----------------------------------
-copy_field("85640.u", "id")
+move_field("id","internalId")
+copy_field("url", "id")
 
 #  ---------------name----------------------------------
-copy_field("245??.a", "name")
+copy_field("title", "name")
 
 #  ---------------image----------------------------------
 add_field("image", "https://open.umn.edu/assets/library/otl_logo-66d61fb9408c6c6685163b06fe4c48a64f4b423e3de657ff90725f95c5225954.png")
 
 #  ---------------dateCreated----------------------------------
-copy_field("264 4.c", "dateCreated")
+copy_field("copyright_year", "dateCreated")
 
 # Only the year is provided.
-replace_all("dateCreated", "^©(\\d*).*", "$1-01-01")
+replace_all("dateCreated", "^(\\d*).*", "$1-01-01")
 
 
 #  ---------------description----------------------------------
-copy_field("5200 .a", "description")
+# exists
 
 #  ---------------creator----------------------------------
 # provides editors and authors which I transform both to creators
 
+
 set_array("creator[]")
-do list(path:"100??|700??", "var": "$i")
-  copy_field("$i.a","creator[].$append.name")
-  add_field("creator[].$last.type", "Person")
-end
-
-replace_all("creator[].*.name","(.+), (.+)", "$2 $1")
-replace_all("creator[].*.name","  ", " ")
-
-do list(path:"110??|710??", "var": "$i")
-  unless all_equal("$i.a", "Open Textbook Library")
-    paste("creator[].$append.name", "$i.a", "$i.b")
+do list(path:"contributors[]", "var": "$i")
+  paste("creator[].$append.name", "$i.first_name", "$i.last_name")
+  if all_equal("$i.corporate", "true")
     add_field("creator[].$last.type", "Organization")
+  else
+    add_field("creator[].$last.type", "Person")
+  end
+  copy_field("$i.title", "creator[].$last.honorificPrefix")
+  copy_field("$i.location","creator[].$last.affiliation.name")
+  if exists("$i.location")
+    add_field("creator[].$last.affiliation.type", "Organization")
   end
 end
-
-
-# ------ sourceOrganization --- 
-
-set_array("sourceOrganization[]")
-# sourceOrganization Should OpenHPI always be the sourceOrganization?
-
-do list(path:"attributes.partnerInstitute[]", "var": "$i")
-  copy_field("$i.name", "sourceOrganization[].$append.name")
-  add_field("sourceOrganization[].$last.type", "Organization")
-end
+  
 
 
 # ------ publisher --- 
@@ -62,6 +53,19 @@ add_field("publisher[].$last.type", "Organization")
 add_field("publisher[].$append.name", "Open Textbook Library")
 add_field("publisher[].$last.type", "Organization")
 
+do list(path:"publishers[]", "var":"$i")
+  unless all_equal("$i.name","Independent")
+    copy_field("$i.name","publisher[].$append.name")
+    add_field("publisher[].$last.type", "Organization")
+  end
+end
+
+unless exists("creator.1.name")
+  if any_match("publisher[].*.name", "University of Minnesota Libraries Publishing")
+    add_field("creator[].$append.name", "University of Minnesota Libraries Publishing")
+    add_field("creator[].$last.type", "Organization")
+  end
+end
 
 # ------ learningResourceType --- 
 set_array("learningResourceType[]")
@@ -73,22 +77,24 @@ add_field("learningResourceType[].$last.prefLabel.en","Textbook")
 # ------ inLanguage --- 
 /* inLanguage: The value Mehrsprachig does not represent the estimated language labels. */
 set_array("inLanguage[]")
-copy_field("546  .a", "inLanguage[].$append")
+copy_field("language", "inLanguage[].$append")
 
 put_map("languageMap",
-  "In English.": "en",
-  "In French.": "fr",
-  "In German.": "de",
-  "In Japanese.": "ja",
-  "In Polish.": "pl",
-  "In Portuguese.": "pt",
-  "In Spanish.": "es",
-  "In Traditional Chinese.": "zh"
+  "eng": "en",
+  "fre": "fr",
+  "ger": "de",
+  "jpn": "ja",
+  "pol": "pl",
+  "por": "pt",
+  "spa": "es",
+  "chi-trad": "zh"
 )
 
 lookup("inLanguage[].*","languageMap")
 
 # ------ license ---
+move_field("license","@license")
+
 put_map("licenseMap",
 "Attribution": "https://creativecommons.org/licenses/by/4.0/",
 "Attribution-NoDerivs": "https://creativecommons.org/licenses/by-nd/4.0/",
@@ -100,7 +106,7 @@ put_map("licenseMap",
 "No Rights Reserved": "https://creativecommons.org/publicdomain/zero/1.0/"
 )
 
-copy_field("542??.f","license.id")
+copy_field("@license","license.id")
 lookup("license.id","licenseMap")
 
 # ------ type --- 
@@ -109,8 +115,8 @@ set_array("type[]", "LearningResource")
 
 # ------ keywords ---
 set_array("keywords[]")
-do list(path:"650??","var":"$i")
-    move_field("$i.a", "keywords[].$append")
+do list(path:"subjects[]","var":"$i")
+    move_field("$i.name", "keywords[].$append")
 end
 uniq("keywords[]")
 
@@ -158,11 +164,7 @@ unless exists("inLanguage[].1")
   set_hash("@context[].$append", "@language": "de")
 end
 
-
 # ------ tidy up --- 
 include ("../../sharedFixes/retain.fix")
 vacuum()
 
-/*missing:*/
-/*kewords*/
-/*about*/
