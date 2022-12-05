@@ -12,13 +12,14 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
 import java.util.Properties;
 import java.util.TimeZone;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import org.antlr.runtime.RecognitionException;
+import org.apache.commons.lang3.tuple.ImmutablePair;
+import org.json.JSONObject;
 import org.metafacture.runner.Flux;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -148,12 +149,15 @@ public class ETL {
         }
         if (responses.exists()) {
             try (Stream<String> allResponses = Files.lines(responses.toPath())) {
-                Map<Boolean, List<String>> errored = allResponses
-                        .collect(Collectors.partitioningBy(s -> s.contains("\"error\"")));
-                countFailWrite = errored.get(true).size() + "";
-                countSuccess = errored.get(false).size() + "";
+                ImmutablePair<Integer, Integer> successAndFailed = allResponses.map(JSONObject::new)
+                        .map(r -> ImmutablePair.of(r.getInt("success"), r.getInt("failed")))
+                        .reduce(ImmutablePair.of(0, 0), (all, current) -> ImmutablePair
+                                .of(all.left + current.left, all.right + current.right));
+                countSuccess = String.valueOf(successAndFailed.left);
+                countFailWrite = String.valueOf(successAndFailed.right);
             }
         }
+
         String errorDetails = String.format("FAIL-PROCESS: %s, FAIL-VALIDATION: %s, FAIL-WRITE: %s",
                 countFailProcess, countInvalid, countFailWrite);
         if (notAvailable.equals(countSuccess) || Integer.valueOf(countSuccess) == 0) {

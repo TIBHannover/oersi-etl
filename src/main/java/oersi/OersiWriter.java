@@ -9,6 +9,8 @@ import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
 import org.metafacture.framework.MetafactureException;
 import org.metafacture.framework.ObjectReceiver;
 import org.slf4j.Logger;
@@ -29,6 +31,8 @@ public final class OersiWriter implements ObjectReceiver<String> {
     private String url;
     private String user;
     private String pass;
+    private int bulkSize = 25;
+    private JSONArray bulk = new JSONArray();
     private FileWriter logWriter = null;
 
     HttpClient client;
@@ -43,7 +47,7 @@ public final class OersiWriter implements ObjectReceiver<String> {
             }
         };
         client = HttpClient.newBuilder().authenticator(auth).build();
-        this.url = url;
+        this.url = url + "/bulk";
     }
 
     public void setUser(String user) {
@@ -52,6 +56,10 @@ public final class OersiWriter implements ObjectReceiver<String> {
 
     public void setPass(String pass) {
         this.pass = pass;
+    }
+
+    public void setBulkSize(int bulkSize) {
+        this.bulkSize = bulkSize;
     }
 
     public void setLog(String log) {
@@ -68,38 +76,24 @@ public final class OersiWriter implements ObjectReceiver<String> {
 
     @Override
     public void process(final String obj) {
-        HttpRequest request = HttpRequest.newBuilder()//
-                .uri(URI.create(url))//
-                .setHeader("content-type", TYPE)//
-                .POST(HttpRequest.BodyPublishers.ofString(obj)).build();
-        try {
-            HttpResponse<String> response = client.send(request,
-                    HttpResponse.BodyHandlers.ofString());
-            if (logWriter != null) {
-                logWriter.append(response.body());
-                logWriter.append("\n");
-            }
-            if (response.statusCode() == 200) {
-                success++;
-            } else {
-                fail++;
-            }
-        } catch (IOException e) {
-            throw new MetafactureException(e.getMessage(), e);
-        } catch (InterruptedException e) {
-            Thread.currentThread().interrupt();
-            throw new MetafactureException(e.getMessage(), e);
+        if (bulk.length() < bulkSize) {
+            bulk.put(new JSONObject(obj));
+        }
+        if (bulk.length() == bulkSize) {
+            postBulk();
         }
     }
 
     @Override
     public void resetStream() {
+        postBulk();
         fail = 0;
         success = 0;
     }
 
     @Override
     public void closeStream() {
+        postBulk();
         if (logWriter != null) {
             try {
                 logWriter.close();
@@ -110,4 +104,36 @@ public final class OersiWriter implements ObjectReceiver<String> {
         LOG.debug("Success: {}, Fail: {}", success, fail);
     }
 
+    private void postBulk() {
+        if (bulk.length() == 0) {
+            return;
+        }
+        String requestBody = bulk.toString();
+        LOG.debug("Posting to {}: {}", url, requestBody);
+        HttpRequest request = HttpRequest.newBuilder()//
+                .uri(URI.create(url))//
+                .setHeader("content-type", TYPE)//
+                .POST(HttpRequest.BodyPublishers.ofString(requestBody)).build();
+        try {
+            HttpResponse<String> response = client.send(request,
+                    HttpResponse.BodyHandlers.ofString());
+            if (logWriter != null) {
+                logWriter.append(response.body());
+                logWriter.append("\n");
+            }
+            if (response.statusCode() == 200) {
+                JSONObject jsonResponse = new JSONObject(response.body());
+                success += jsonResponse.getInt("success");
+                fail += jsonResponse.getInt("failed");
+            } else {
+                fail += bulkSize;
+            }
+            bulk.clear();
+        } catch (IOException e) {
+            throw new MetafactureException(e.getMessage(), e);
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+            throw new MetafactureException(e.getMessage(), e);
+        }
+    }
 }
