@@ -8,6 +8,17 @@ vacuum()
 
 include ("../../sharedFixes/macros.fix")
 
+# ---------------id ----------------------------------
+copy_field("isBasedOn", "@external_id")
+move_field("id", "@internal_id")
+
+
+if exists("@external_id")
+  copy_field("@external_id", "id")
+else
+  copy_field("@internal_id", "id")
+end
+
 # ---------------license ----------------------------------
 move_field("license", "@license")
 copy_field("@license", "license.id")
@@ -90,7 +101,7 @@ add_field("conditionsOfAccess.id","http://w3id.org/kim/conditionsOfAccess/no_log
 
 # ---------mainEntityOfPage----------------
 set_array("mainEntityOfPage[]")
-copy_field("id", "mainEntityOfPage[].$append.id")
+copy_field("@internal_id", "mainEntityOfPage[].$append.id")
 add_field("mainEntityOfPage[].$last.provider.id","$[service_id]")
 add_field("mainEntityOfPage[].$last.provider.type","Service")
 add_field("mainEntityOfPage[].$last.provider.name","$[service_name]")
