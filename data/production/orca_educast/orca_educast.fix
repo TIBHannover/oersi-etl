@@ -1,3 +1,10 @@
+if exists ("metadata.error")
+  reject()
+end
+
+if any_equal ("header.status", "deleted")
+  reject()
+end
 
 # --------Delete all emtpy values-------
 vacuum()
