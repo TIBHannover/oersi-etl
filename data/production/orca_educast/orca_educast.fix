@@ -1,3 +1,10 @@
+if exists ("metadata.error")
+  reject()
+end
+
+if any_equal ("header.status", "deleted")
+  reject()
+end
 
 # --------Delete all emtpy values-------
 vacuum()
@@ -95,11 +102,13 @@ copy_field("metadata.inlined.catalog.*.metadata.terms:creator_10_honoricPrefix.v
 
 set_array("@sourceOrga")
 do list(path:"creator[]", "var":"$i")
-  copy_field("$i.@affiliation", "$i.affiliation.id")
-  copy_field("$i.@affiliation", "$i.affiliation.name")
-  lookup("$i.affiliation.name", "data/maps/orcaUni.tsv","sep_char":"\t", delete:"true")
-  add_field("$i.affiliation.type", "Organization")
-  move_field("$i.@affiliation", "@sourceOrga.$append")
+  if exists("$i.@affiliation")
+    copy_field("$i.@affiliation", "$i.affiliation.id")
+    copy_field("$i.@affiliation", "$i.affiliation.name")
+    lookup("$i.affiliation.name", "data/maps/orcaUni.tsv","sep_char":"\t", delete:"true")
+    add_field("$i.affiliation.type", "Organization")
+    move_field("$i.@affiliation", "@sourceOrga.$append")
+  end
 end
 
 # -------contributor -----
@@ -122,12 +131,56 @@ copy_field("metadata.inlined.catalog.*.metadata.terms:contributor_3_affiliation_
 copy_field("metadata.inlined.catalog.*.metadata.terms:contributor_3_id.value","contributor[].3.id")
 copy_field("metadata.inlined.catalog.*.metadata.terms:contributor_3_honoricPrefix.value", "contributor[].3.honorificPrefix")
 
+copy_field("metadata.inlined.catalog.*.metadata.terms:contributor_4_name.value", "contributor[].$append.name")
+copy_field("metadata.inlined.catalog.*.metadata.terms:contributor_4_type.value", "contributor[].4.type")
+copy_field("metadata.inlined.catalog.*.metadata.terms:contributor_4_affiliation_id.value","contributor[].4.@affiliation")
+copy_field("metadata.inlined.catalog.*.metadata.terms:contributor_4_id.value","contributor[].4.id")
+copy_field("metadata.inlined.catalog.*.metadata.terms:contributor_4_honoricPrefix.value", "contributor[].4.honorificPrefix")
+
+copy_field("metadata.inlined.catalog.*.metadata.terms:contributor_5_name.value", "contributor[].$append.name")
+copy_field("metadata.inlined.catalog.*.metadata.terms:contributor_5_type.value", "contributor[].5.type")
+copy_field("metadata.inlined.catalog.*.metadata.terms:contributor_5_affiliation_id.value","contributor[].5.@affiliation")
+copy_field("metadata.inlined.catalog.*.metadata.terms:contributor_5_id.value","contributor[].5.id")
+copy_field("metadata.inlined.catalog.*.metadata.terms:contributor_5_honoricPrefix.value", "contributor[].5.honorificPrefix")
+
+copy_field("metadata.inlined.catalog.*.metadata.terms:contributor_6_name.value", "contributor[].$append.name")
+copy_field("metadata.inlined.catalog.*.metadata.terms:contributor_6_type.value", "contributor[].6.type")
+copy_field("metadata.inlined.catalog.*.metadata.terms:contributor_6_affiliation_id.value","contributor[].6.@affiliation")
+copy_field("metadata.inlined.catalog.*.metadata.terms:contributor_6_id.value","contributor[].6.id")
+copy_field("metadata.inlined.catalog.*.metadata.terms:contributor_6_honoricPrefix.value", "contributor[].6.honorificPrefix")
+
+copy_field("metadata.inlined.catalog.*.metadata.terms:contributor_7_name.value", "contributor[].$append.name")
+copy_field("metadata.inlined.catalog.*.metadata.terms:contributor_7_type.value", "contributor[].7.type")
+copy_field("metadata.inlined.catalog.*.metadata.terms:contributor_7_affiliation_id.value","contributor[].7.@affiliation")
+copy_field("metadata.inlined.catalog.*.metadata.terms:contributor_7_id.value","contributor[].7.id")
+copy_field("metadata.inlined.catalog.*.metadata.terms:contributor_7_honoricPrefix.value", "contributor[].7.honorificPrefix")
+
+copy_field("metadata.inlined.catalog.*.metadata.terms:contributor_8_name.value", "contributor[].$append.name")
+copy_field("metadata.inlined.catalog.*.metadata.terms:contributor_8_type.value", "contributor[].8.type")
+copy_field("metadata.inlined.catalog.*.metadata.terms:contributor_8_affiliation_id.value","contributor[].8.@affiliation")
+copy_field("metadata.inlined.catalog.*.metadata.terms:contributor_8_id.value","contributor[].8.id")
+copy_field("metadata.inlined.catalog.*.metadata.terms:contributor_8_honoricPrefix.value", "contributor[].8.honorificPrefix")
+
+copy_field("metadata.inlined.catalog.*.metadata.terms:contributor_9_name.value", "contributor[].$append.name")
+copy_field("metadata.inlined.catalog.*.metadata.terms:contributor_9_type.value", "contributor[].9.type")
+copy_field("metadata.inlined.catalog.*.metadata.terms:contributor_9_affiliation_id.value","contributor[].9.@affiliation")
+copy_field("metadata.inlined.catalog.*.metadata.terms:contributor_9_id.value","contributor[].9.id")
+copy_field("metadata.inlined.catalog.*.metadata.terms:contributor_9_honoricPrefix.value", "contributor[].9.honorificPrefix")
+
+copy_field("metadata.inlined.catalog.*.metadata.terms:contributor_10_name.value", "contributor[].$append.name")
+copy_field("metadata.inlined.catalog.*.metadata.terms:contributor_10_type.value", "contributor[].10.type")
+copy_field("metadata.inlined.catalog.*.metadata.terms:contributor_10_affiliation_id.value","contributor[].10.@affiliation")
+copy_field("metadata.inlined.catalog.*.metadata.terms:contributor_10_id.value","contributor[].10.id")
+copy_field("metadata.inlined.catalog.*.metadata.terms:contributor_10_honoricPrefix.value", "contributor[].10.honorificPrefix")
+
 do list(path:"contributor[]", "var":"$i")
-  copy_field("$i.@affiliation", "$i.affiliation.id")
-  copy_field("$i.@affiliation", "$i.affiliation.name")
-  lookup("$i.affiliation.name", "data/maps/orcaUni.tsv","sep_char":"\t", delete:"true")
-  add_field("$i.affiliation.type", "Organization")
-  move_field("$i.@affiliation", "@sourceOrga.$append")
+  if exists("$i.@affiliation")
+    copy_field("$i.@affiliation", "$i.affiliation.id")
+    copy_field("$i.@affiliation", "$i.affiliation.name")
+    lookup("$i.affiliation.name", "data/maps/orcaUni.tsv","sep_char":"\t", delete:"true")
+    add_field("$i.affiliation.type", "Organization")
+    move_field("$i.@affiliation", "@sourceOrga.$append")
+  end
 end
 
 
