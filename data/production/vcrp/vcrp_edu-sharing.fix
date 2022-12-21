@@ -9,3 +9,7 @@ include ("../../sharedFixes/eduSharingDefault.fix")
 
 include ("../../sharedFixes/retain.fix")
 vacuum()
+
+unless exists("about[]")
+	reject()
+end
