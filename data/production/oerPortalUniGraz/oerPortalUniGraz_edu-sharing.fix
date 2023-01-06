@@ -6,6 +6,11 @@ include ("../../sharedFixes/macros.fix")
 # --- reuse edu-sharing default template -------- 
 include ("../../sharedFixes/eduSharingDefault.fix")
 
+# --- inLanguage -------- 
+unless exists("inLanguage[].1")
+  add_field("inLanguage[].$append","de")
+end
+
 #  ---------------about----------------------------------
 # add instance specific subject mapping
 
