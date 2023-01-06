@@ -1,0 +1,169 @@
+if exists ("metadata.error")
+  reject()
+end
+
+if any_equal ("header.status", "deleted")
+  reject()
+end
+
+# Delete all empty values
+vacuum()
+
+# ---------------id----------------------------------
+
+copy_field("metadata.resource.datacite:identifier.value", "id")
+
+
+# ---------------name----------------------------------
+# The json-validator created an error due to duplicated element "name". Therefore the two conditionals should prevent a duplicate elemente.
+
+unless exists("name")
+  do list(path:"metadata.resource.datacite:titles.datacite:title", "var": "$i")
+    unless exists("$i.titleType")
+      copy_field("$i.value", "name")
+    end
+  end
+end
+
+# ---------------dateCreated----------------------------------
+
+do list(path:"metadata.resource.datacite:dates.datacite:date","var":"$i")
+  if any_equal("$i.dateType", "Issued")
+    copy_field("$i.value","dateCreated")
+  end
+end
+replace_all("dateCreated","^(\\d{4})$","$1-01-01")
+
+
+# ---------------creator----------------------------------
+set_array("creator[]")
+do list(path: "metadata.resource.datacite:creators.datacite:creator", "var": "$i")
+  unless all_equal("$i.contributorType","Other")
+    add_field("creator[].$append.test", "")
+    copy_field("$i.datacite:creatorName.value", "creator[].$last.name")
+    if any_equal("$i.datacite:creatorName.nameType","Organizational")
+      add_field("creator[].$last.type", "Organization")
+    else
+      add_field("creator[].$last.type", "Person")
+    end
+    do list(path:"$i.datacite:nameIdentifier", "var":"$j")
+      if any_equal("$j.nameIdentifierScheme","ORCID")
+        copy_field("$j.value", "creator[].$last.id")
+      end
+    end
+  end
+end
+
+
+replace_all("creator[].*.name","(.+), (.+)", "$2 $1")
+prepend("creator[].*.id", "https://orcid.org/")
+trim("creator[].*.id")
+
+
+
+# ---------------contributors----------------------------------
+set_array("contributor[]")
+do list(path: "metadata.resource.datacite:contributors.datacite:contributor", "var": "$i")
+  unless all_equal("$i.contributorType","Other")
+    add_field("contributor[].$append.test", "")
+    copy_field("$i.datacite:contributorName.value", "contributor[].$last.name")
+    if any_equal("$i.datacite:contributorName.nameType","Organizational")
+      add_field("contributor[].$last.type", "Organization")
+    else
+      add_field("contributor[].$last.type", "Person")
+    end
+    do list(path:"$i.datacite:nameIdentifier", "var":"$j")
+      if any_equal("$j.nameIdentifierScheme","ORCID")
+        copy_field("$j.value", "contributor[].$last.id")
+      end
+    end
+  end
+end
+
+
+replace_all("contributor[].*.name","(.+), (.+)", "$2 $1")
+prepend("contributor[].*.id", "https://orcid.org/")
+trim("contributor[].*.id")
+
+# ---------------license----------------------------------
+
+unless any_equal("metadata.resource.licenseCondition.uri","http://rightsstatements.org/vocab/InC/1.0/")
+  copy_field("metadata.resource.licenseCondition.uri","license.id")
+end
+
+# ------ type --- 
+
+set_array("type[]", "LearningResource")
+
+# ---------mainEntityOfPage----------------
+
+set_array("mainEntityOfPage[]")
+copy_field("id", "mainEntityOfPage[].$append.id")
+add_field("mainEntityOfPage[].$last.provider.id","$[service_id]")
+add_field("mainEntityOfPage[].$last.provider.type","Service")
+add_field("mainEntityOfPage[].$last.provider.name","$[service_name]")
+
+# ---------inLanguage----------------
+
+set_array("inLanguage[]")
+do list(path: "metadata.resource.dc:language", "var":"$i")
+  copy_field("$i.value","inLanguage[].$append")
+end  
+lookup("inLanguage[].*",
+  "fra": "fr",
+  "deu":"de",
+  "eng": "en"
+  )
+
+# ---------keywords----------------
+
+set_array("keywords[]")
+do list(path:"metadata.resource.datacite:subjects.datacite:subject", "var":"$i")
+  copy_field("$i.value", "keywords[].$append")
+end
+
+
+
+# ------ encoding --- 
+
+set_array("encoding[]")
+if exists("metadata.resource.file")
+  copy_field("metadata.resource.file.value","encoding[].$append.contentUrl")
+  copy_field("metadata.resource.file.mimeType","encoding[].$last.mimeType")
+  add_field("encoding[].$last.type", "MediaObject")
+end
+replace_all("encoding[].*.embedUrl", "oai:tib.eu:kmo-av:sid~", "https://av.tib.eu/player/")
+
+# -------isPartOf/hasPart---------
+set_array("isPartOf[]")
+set_array("hasPart[]")
+do list(path: "metadata.resource.datacite:relatedIdentifiers.datacite:relatedIdentifier", "var": "$i")
+  if any_equal("$i.relationType","IsPartOf")
+    copy_field("$i.value", "isPartOf[].$append.id")
+  elsif any_equal("$i.relationType","HasPart")
+    copy_field("$i.value", "hasPart[].$append.id")
+  end
+end
+
+prepend("isPartOf[].*.id", "https://duepublico2.uni-due.de/receive/")
+
+# ---------------@context ----------------------------------
+
+set_array("@context[]", "https://w3id.org/kim/amb/draft/context.jsonld")
+# resource is german therefore prefer de if multiple or no inLanguage are available
+if any_equal("inLanguage[]","de")
+  set_hash("@context[].$append", "@language": "de")
+elsif any_equal("inLanguage[]","en")
+  set_hash("@context[].$append", "@language": "en")
+else
+  copy_field("inLanguage[].1", "@context[].$append.@language")
+end
+# resources without inLanguage-Values set default to de
+unless exists("inLanguage[].1")
+  set_hash("@context[].$append", "@language": "de")
+end
+
+# ------ tidy up --- 
+include ("../../sharedFixes/retain.fix")
+vacuum()
+
