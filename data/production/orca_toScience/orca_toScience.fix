@@ -71,6 +71,8 @@ add_field("mainEntityOfPage[].$last.provider.name","$[service_name]")
 remove_field("inLanguage[]")
 set_array("inLanguage[]", "de")
 
+# ------ type --- 
+set_array("type[]", "LearningResource")
 
 # ---------------@context ----------------------------------
 
