@@ -1,0 +1,7 @@
+# Filters all that are not set to public
+
+unless any_match("id", "^orca:[0-9a-fA-F]{8}\\b-[0-9a-fA-F]{4}\\b-[0-9a-fA-F]{4}\\b-[0-9a-fA-F]{4}\\b-[0-9a-fA-F]{12}$")
+    reject()
+end
+
+retain("id")

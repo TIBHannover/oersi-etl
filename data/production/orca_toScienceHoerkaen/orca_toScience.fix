@@ -1,0 +1,95 @@
+# The data build mostly on AMB-profil. We only need some adjustments.
+
+# -------  image ----
+#There are no pictures there at the moment
+unless exists("image")
+  add_field("image","https://www.orca.nrw/sites/default/files/bilder/orca-nrw-logo_400.jpg")
+end
+
+
+# -------  id ----
+# Needs ajustment to link to the landingPage and not to fedora
+replace_all("id", ".*orca\\:", "https://www.orca.nrw/content/")
+
+
+# ------- creator/contributor-affiliation ------
+
+do list(path: "creator[]", "var": "$i")
+  unless any_contain("$i.id","orcid")
+    remove_field("$i.id")
+  end
+  # dirty workaround until source is fixed
+  replace_all("$i.honoricPrefix","Keine Angabe","")
+  move_field("$i.honoricPrefix","$i.honorificPrefix")  
+end
+
+do list(path: "contributor[]", "var": "$i")
+  unless any_contain("$i.id","orcid")
+    remove_field("$i.id")
+  end
+  # dirty workaround until source is fixed
+  replace_all("$i.honoricPrefix","Keine Angabe","")
+  move_field("$i.honoricPrefix","$i.honorificPrefix")  
+end
+
+
+
+# ------------ sourceOrganization -------------
+
+set_array("sourceOrganization[]")
+do list(path:"creator[]|contributor[]","var":"$i")
+  unless in("$i.affiliation.name","sourceOrganization[].*.name")
+    copy_field("$i.affiliation.name", "sourceOrganization[].$append.name")
+  end
+end
+do list(path:"sourceOrganization[]" , "var":"$i")
+  add_field("$i.type", "Organization")
+end
+
+do list(path: "learningResourceType[]")
+  unless exists ("prefLabel.en") # filter out if en-Label already exists
+    copy_field("id", "prefLabel.en")
+    lookup("prefLabel.en","data/maps/hcrt-en-labels.tsv", "sep_char":"\t", delete:"true")
+  end
+end
+
+replace_all("learningResourceType[].*.inScheme.id", "https://w3id.org/orca.nrw/medientypen/", "https://w3id.org/kim/hcrt/scheme")
+
+# ---------------conditionsOfAccess----------------------------------
+add_field("conditionsOfAccess.id","http://w3id.org/kim/conditionsOfAccess/no_login")
+
+
+# ---------mainEntityOfPage----------------
+set_array("mainEntityOfPage[]")
+copy_field("id", "mainEntityOfPage[].$append.id")
+add_field("mainEntityOfPage[].$last.provider.id","$[service_id]")
+add_field("mainEntityOfPage[].$last.provider.type","Service")
+add_field("mainEntityOfPage[].$last.provider.name","$[service_name]")
+
+# ------------ inLanguage -------------
+# needs to be patched
+remove_field("inLanguage[]")
+set_array("inLanguage[]", "de")
+
+# ------ type --- 
+set_array("type[]", "LearningResource")
+
+# ---------------@context ----------------------------------
+
+set_array("@context[]", "https://w3id.org/kim/amb/draft/context.jsonld")
+# resource is german therefore prefer de if multiple or no inLanguage are available
+if any_equal("inLanguage[]","de")
+  set_hash("@context[].$append", "@language": "de")
+elsif any_equal("inLanguage[]","en")
+  set_hash("@context[].$append", "@language": "en")
+else
+  copy_field("inLanguage[].1", "@context[].$append.@language")
+end
+# resources without inLanguage-Values set default to de
+unless exists("inLanguage[].1")
+  set_hash("@context[].$append", "@language": "de")
+end
+
+# --- retain needs the exact name as it enters, so creator[]
+include ("../../sharedFixes/retain.fix")
+vacuum()
