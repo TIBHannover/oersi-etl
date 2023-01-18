@@ -9,7 +9,7 @@ end
 #  ---------------image----------------------------------
 
 if exists("originalId")
-  paste("image","~https://oer-portal.uni-graz.at/edu-sharing/preview?nodeId=", "originalId", join_char:"")
+  paste("image","~https://$[service_domain]/edu-sharing/preview?nodeId=", "originalId", join_char:"")
 else
   copy_field("preview.url", "image")
 end
@@ -159,7 +159,7 @@ unless exists("properties.ccm:wwwurl[].1")
     set_array("encoding[]")
     add_field("encoding[].$append.type", "MediaObject")
     if exists("originalId")
-      paste("encoding[].$last.contentUrl","~https://oer-portal.uni-graz.at/edu-sharing/eduservlet/download?nodeId=", "originalId", join_char:"")
+      paste("encoding[].$last.contentUrl","~https://$[service_domain]/edu-sharing/eduservlet/download?nodeId=", "originalId", join_char:"")
     else
       copy_field("downloadUrl", "encoding[].$last.contentUrl")
     end
