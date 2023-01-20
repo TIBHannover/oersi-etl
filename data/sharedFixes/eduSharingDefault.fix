@@ -14,6 +14,8 @@ else
   copy_field("preview.url", "image")
 end
 
+
+
 #  ---------------id----------------------------------
 
 copy_field("properties.ccm:wwwurl[].1", "@external_id")
@@ -23,11 +25,14 @@ replace_all("@external_id", "\\u00a0", "") /* %A0 / &nbsp; */
 copy_field("ref.id", "@internal_id")
 prepend("@internal_id","https://$[service_domain]/edu-sharing/components/render/")
 
+copy_field("originalId", "@originalId_id")
+prepend("@originalId_id","https://$[service_domain]/edu-sharing/components/render/")
+
 if exists("@external_id")
   copy_field("@external_id", "id")
 # prefer this originalId as id if collection item
 elsif exists("originalId")
-  paste("id","~https://$[service_domain]/edu-sharing/components/render/", "originalId", join_char:"")
+  copy_field("@originalId_id", "id")
 else
   copy_field("@internal_id", "id")
 end
@@ -37,7 +42,7 @@ end
 
 set_array("mainEntityOfPage[]")
 if exists("originalId")
-  copy_field("id", "mainEntityOfPage[].$append.id")
+  copy_field("@originalId_id", "mainEntityOfPage[].$append.id")
 else
   copy_field("@internal_id", "mainEntityOfPage[].$append.id")
 end
