@@ -6,6 +6,18 @@ include ("../../sharedFixes/macros.fix")
 # --- reuse edu-sharing default template -------- 
 include ("../../sharedFixes/eduSharingDefault.fix")
 
+# -----  additional creator
+
+if any_equal("properties.ccm:lifecyclecontributer_author[].*", "BEGIN:VCARD\nURL:https://pep.uni-graz.at/de/\nORG:Internationales Zentrum für Professionalisierung der Elementarpädagogik\nN:;\nTITLE:\nX-ES-LOM-CONTRIBUTE-DATE:\nVERSION:3.0\nEND:VCARD")
+  add_field("creator[].$append.name", "Internationales Zentrum für Professionalisierung der Elementarpädagogik")
+  add_field("creator[].$last.type", "Organization")
+end
+
+if any_equal("properties.ccm:author_freetext[].*", "Universität Graz")
+  add_field("creator[].$append.name", "Universität Graz")
+  add_field("creator[].$last.type", "Organization")
+end
+
 # --- inLanguage -------- 
 unless exists("inLanguage[].1")
   add_field("inLanguage[].$append","de")
