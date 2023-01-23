@@ -152,6 +152,8 @@ do list(path: "about[]", "var":"$i")
   lookup("$i.prefLabel.de", "data/maps/subject-labels.tsv","sep_char":"\t", delete:"true")
 end
 
+uniq("about[]")
+
 # ------ encoding --- 
 
 set_array("encoding[]")
