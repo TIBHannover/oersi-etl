@@ -8,12 +8,7 @@ end
 
 #  ---------------image----------------------------------
 
-if exists("originalId")
-  paste("image","~https://$[service_domain]/edu-sharing/preview?nodeId=", "originalId", join_char:"")
-else
-  copy_field("preview.url", "image")
-end
-
+copy_field("preview.url", "image")
 
 
 #  ---------------id----------------------------------
@@ -25,14 +20,8 @@ replace_all("@external_id", "\\u00a0", "") /* %A0 / &nbsp; */
 copy_field("ref.id", "@internal_id")
 prepend("@internal_id","https://$[service_domain]/edu-sharing/components/render/")
 
-copy_field("originalId", "@originalId_id")
-prepend("@originalId_id","https://$[service_domain]/edu-sharing/components/render/")
-
 if exists("@external_id")
   copy_field("@external_id", "id")
-# prefer this originalId as id if collection item
-elsif exists("originalId")
-  copy_field("@originalId_id", "id")
 else
   copy_field("@internal_id", "id")
 end
@@ -41,11 +30,7 @@ end
 #  ---------mainEntityOfPage----------------
 
 set_array("mainEntityOfPage[]")
-if exists("originalId")
-  copy_field("@originalId_id", "mainEntityOfPage[].$append.id")
-else
-  copy_field("@internal_id", "mainEntityOfPage[].$append.id")
-end
+copy_field("@internal_id", "mainEntityOfPage[].$append.id")
 copy_field("modifiedAt", "mainEntityOfPage[].$last.dateModified")
 copy_field("createdAt", "mainEntityOfPage[].$last.dateCreated")
 add_field("mainEntityOfPage[].$last.provider.id","$[service_id]")
@@ -163,11 +148,7 @@ unless exists("properties.ccm:wwwurl[].1")
   if exists("downloadUrl")
     set_array("encoding[]")
     add_field("encoding[].$append.type", "MediaObject")
-    if exists("originalId")
-      paste("encoding[].$last.contentUrl","~https://$[service_domain]/edu-sharing/eduservlet/download?nodeId=", "originalId", join_char:"")
-    else
-      copy_field("downloadUrl", "encoding[].$last.contentUrl")
-    end
+    copy_field("downloadUrl", "encoding[].$last.contentUrl")
     copy_field("mimetype", "encoding[].$last.encodingFormat")
     copy_field("size", "encoding[].$last.contentSize")
   end
