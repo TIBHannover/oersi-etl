@@ -95,6 +95,21 @@ end
 
 set_array("type[]", "LearningResource")
 
+# ------------learningResourceType-----
+
+set_array("learningResourceType[]")
+
+do list(path:"metadata.resource.resourceType","var":"$i")
+  copy_field("$i.uri", "learningResourceType[].$append.id")
+end
+do list(path:"learningResourceType[]","var":"$i")
+  lookup("$i.id", "data/maps/coarResource2hcrt.tsv","sep_char":"\t", delete:"true")  
+  copy_field("$i.id", "$i.prefLabel.de")
+  lookup("$i.prefLabel.de", "data/maps/hcrt-de-labels.tsv","sep_char":"\t", delete:"true")
+  copy_field("$i.id", "$i.prefLabel.en")
+  lookup("$i.prefLabel.en", "data/maps/hcrt-en-labels.tsv","sep_char":"\t", delete:"true")
+end
+
 # ---------mainEntityOfPage----------------
 
 set_array("mainEntityOfPage[]")
@@ -162,7 +177,6 @@ if exists("metadata.resource.file")
   copy_field("metadata.resource.file.mimeType","encoding[].$last.mimeType")
   add_field("encoding[].$last.type", "MediaObject")
 end
-replace_all("encoding[].*.embedUrl", "oai:tib.eu:kmo-av:sid~", "https://av.tib.eu/player/")
 
 # -------isPartOf/hasPart---------
 set_array("isPartOf[]")
@@ -175,7 +189,6 @@ do list(path: "metadata.resource.datacite:relatedIdentifiers.datacite:relatedIde
   end
 end
 
-prepend("isPartOf[].*.id", "https://duepublico2.uni-due.de/receive/")
 
 # ---------------@context ----------------------------------
 
@@ -196,4 +209,3 @@ end
 # ------ tidy up --- 
 include ("../../sharedFixes/retain.fix")
 vacuum()
-
