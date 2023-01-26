@@ -22,6 +22,11 @@ prepend("@internal_id","https://$[service_domain]/edu-sharing/components/render/
 
 if exists("@external_id")
   copy_field("@external_id", "id")
+# prefer this originalId as id if collection item
+elsif exists("originalId")
+  copy_field("originalId", "id")
+  prepend("id","https://$[service_domain]/edu-sharing/components/render/")
+  paste("mainEntityOfPage[].1.id","id")
 else
   copy_field("@internal_id", "id")
 end
