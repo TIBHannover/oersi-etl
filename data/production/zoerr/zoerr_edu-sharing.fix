@@ -6,6 +6,21 @@ include ("../../sharedFixes/macros.fix")
 # --- reuse edu-sharing default template -------- 
 include ("../../sharedFixes/eduSharingDefault.fix")
 
+# -----id-----
+
+remove_field("id")
+
+if exists("@external_id")
+  copy_field("@external_id", "id")
+# prefer this originalId as id if collection item
+elsif exists("originalId")
+  copy_field("originalId", "id")
+  prepend("id","https://$[service_domain]/edu-sharing/components/render/")
+  paste("mainEntityOfPage[].1.id","id")
+else
+  copy_field("@internal_id", "id")
+end
+
 
 #  ---------------creator----------------------------------
 set_array("creator[]") # set_array is desctructive and deletes existing creator-element
