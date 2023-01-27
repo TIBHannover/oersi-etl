@@ -50,8 +50,6 @@ sonar:
       - .sonar/cache
   script:
     - ./gradlew check jacocoTestReport sonarqube --info
-  # workaround for gitlab-connectivity problems
-  allow_failure: true
   only:
     - merge_requests
     - develop
