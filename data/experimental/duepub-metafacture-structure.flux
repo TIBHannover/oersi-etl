@@ -13,7 +13,7 @@ XML_FILE
 | open-file
 | decode-xml
 | handle-generic-xml(emitNamespace="true")
-| metafix(FLUX_DIR + "empty.fix")
+| fix(FLUX_DIR + "empty.fix")
 | flatten
 //| morph(FLUX_DIR + "uniqueFields.xml") //This MORPH unqiues the fields in a record.
 |	stream-to-triples

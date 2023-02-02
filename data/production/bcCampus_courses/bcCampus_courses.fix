@@ -1,0 +1,110 @@
+vacuum()
+
+# Following fields are provided:
+# id
+# name
+# description
+
+
+include ("../../sharedFixes/macros.fix")
+
+# ---------------license ----------------------------------
+move_field("license", "@license")
+copy_field("@license", "license.id")
+
+# ---------------dateCreated----------------------------------
+replace_all("dateCreated","T.*", "")
+
+# ---------------datePublished----------------------------------
+replace_all("datePublished","T.*", "")
+
+# ---------------dateModified ----------------------------------
+replace_all("dateModified","T.*", "")
+
+
+# ---------------creator ----------------------------------
+copy_field("author[]","creator[]")
+
+# ---------------sourceOrganization ----------------------------------
+
+replace_all("sourceOrganization[].*.type","^.*$","Organization")
+
+# ---------------keywords----------------------------------
+split_field("keywords",",")
+trim("keywords.*")
+move_field("keywords","keywords[]")
+
+# ---------------about ----------------------------------
+# about element exists but needs to be adjusted to OERSI specific `about`-element
+
+set_array("@about")
+do list(path: "about[]", "var":"$i")
+  lookup("$i", "data/maps/bcCampusSubjects2DestatisLabels.tsv","sep_char":"\t", delete:"true")
+  move_field("$i", "@about.$append")
+end
+uniq("@about")
+
+set_array("about[]")
+do list(path:"@about", "var":"$i")
+  copy_field("$i", "about[].$append.id")
+  copy_field("$i", "about[].$last.prefLabel.de")
+end
+lookup("about[].*.id", "data/maps/subject-labels-to-URI.tsv","sep_char":"\t", delete:"true")
+
+
+# ---------------type----------------------------------
+set_array("type[]", "LearningResource")
+
+# ---------------inLanguage----------------------------------
+set_array("inLanguage[]")
+copy_field("inLanguage","inLanguage[].$append")
+
+# ---------------learningResourceType----------------------------------
+
+set_array("@hcrt")
+set_array("learningResourceType[]")
+copy_field("type|learningResourceType", "@hcrt.$append")
+replace_all("@hcrt.*","textbook","Textbook")
+replace_all("@hcrt.*","course","Course")
+lookup("@hcrt.*","data/maps/en-labels-hcrt-uri.tsv","sep_char":"\t", delete:"true")
+uniq("@hcrt")
+
+copy_field("@hcrt.*", "learningResourceType[].$append.id")
+
+do list(path:"learningResourceType[]")
+  copy_field("id", "prefLabel.de")
+  lookup("prefLabel.de", "data/maps/hcrt-de-labels.tsv","sep_char":"\t", delete:"true")
+  copy_field("id", "prefLabel.en")
+  lookup("prefLabel.en", "data/maps/hcrt-en-labels.tsv","sep_char":"\t", delete:"true")
+end
+
+# ---------------conditionsOfAccess----------------------------------
+add_field("conditionsOfAccess.id","http://w3id.org/kim/conditionsOfAccess/no_login")
+
+
+# ---------mainEntityOfPage----------------
+set_array("mainEntityOfPage[]")
+copy_field("id", "mainEntityOfPage[].$append.id")
+add_field("mainEntityOfPage[].$last.provider.id","$[service_id]")
+add_field("mainEntityOfPage[].$last.provider.type","Service")
+add_field("mainEntityOfPage[].$last.provider.name","$[service_name]")
+
+# ---------------@context ----------------------------------
+
+set_array("@context[]", "https://w3id.org/kim/amb/draft/context.jsonld")
+# resource is german therefore prefer de if multiple or no inLanguage are available
+if any_equal("inLanguage[]","de")
+  set_hash("@context[].$append", "@language": "de")
+elsif any_equal("inLanguage[]","en")
+  set_hash("@context[].$append", "@language": "en")
+else
+  copy_field("inLanguage[].1", "@context[].$append.@language")
+end
+# resources without inLanguage-Values set default to de
+unless exists("inLanguage[].1")
+  set_hash("@context[].$append", "@language": "en") #english as default
+end
+
+# ------ tidy up --- 
+include ("../../sharedFixes/retain.fix")
+vacuum()

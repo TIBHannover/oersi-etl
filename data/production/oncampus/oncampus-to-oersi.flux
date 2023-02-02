@@ -9,8 +9,9 @@ default input_wait = "50";
 | oersi.SitemapReader(wait=input_wait,limit=input_limit)
 | open-http
 | decode-html(attrValsAsSubfields="&h3.class")
-| metafix(FLUX_DIR + "oncampus.fix", *)
-| encode-json
-| oersi.JsonValidator(output_schema, writeValid=metadata_valid, writeInvalid=metadata_invalid)
-| oersi.OersiWriter(backend_api, user=backend_user, pass=backend_pass, log=metadata_responses)
+| fix(FLUX_DIR + "oncampus.fix", *)
+| encode-json(prettyPrinting="true")
+| print
+//| oersi.JsonValidator(output_schema, writeValid=metadata_valid, writeInvalid=metadata_invalid)
+//| oersi.OersiWriter(backend_api, user=backend_user, pass=backend_pass, log=metadata_responses)
 ;

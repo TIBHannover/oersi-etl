@@ -1,0 +1,55 @@
+# Delete all empty values
+vacuum()
+
+include ("../../sharedFixes/macros.fix")
+
+# --- reuse edu-sharing default template -------- 
+include ("../../sharedFixes/eduSharingDefault.fix")
+
+# -----  additional creator
+
+if any_equal("properties.ccm:lifecyclecontributer_author[].*", "BEGIN:VCARD\nURL:https://pep.uni-graz.at/de/\nORG:Internationales Zentrum für Professionalisierung der Elementarpädagogik\nN:;\nTITLE:\nX-ES-LOM-CONTRIBUTE-DATE:\nVERSION:3.0\nEND:VCARD")
+  add_field("creator[].$append.name", "Internationales Zentrum für Professionalisierung der Elementarpädagogik")
+  add_field("creator[].$last.type", "Organization")
+end
+
+if any_equal("properties.ccm:author_freetext[].*", "Universität Graz")
+  add_field("creator[].$append.name", "Universität Graz")
+  add_field("creator[].$last.type", "Organization")
+end
+
+# --- inLanguage -------- 
+unless exists("inLanguage[].1")
+  add_field("inLanguage[].$append","de")
+end
+
+#  ---------------about----------------------------------
+# add instance specific subject mapping
+
+set_array("@hochschulfaechersystematik[]")
+copy_field("properties.ccm:taxonid[].*", "@hochschulfaechersystematik[].$append")
+prepend("@hochschulfaechersystematik[].*", "https://w3id.org/oerbase/vocabs/oefos2012/")
+lookup("@hochschulfaechersystematik[].*", "data/maps/oefos2destatis.tsv","sep_char":"\t", delete:"true")
+uniq("@hochschulfaechersystematik[]")
+
+set_array("about[]")
+do list(path:"@hochschulfaechersystematik[]", "var":"$i")
+  copy_field("$i", "about[].$append.id")
+  copy_field("$i", "about[].$last.prefLabel.de")
+end
+lookup("about[].*.prefLabel.de", "data/maps/subject-labels.tsv","sep_char":"\t", delete:"true")
+
+#  ---------------learningResourceType----------------------------------
+# add instance specific learningResourceType mapping for study and report others are HCRT
+
+do list(path:"learningResourceType[]", "var":"$i")
+  if any_match("$i.id",".*(study|report).*")
+    replace_all("$i.id",".*","https://w3id.org/kim/hcrt/text")
+    add_field("$i.prefLabel.de","Textdokument")
+    add_field("$i.prefLabel.en","Text")
+  end
+end
+
+
+include ("../../sharedFixes/retain.fix")
+vacuum()

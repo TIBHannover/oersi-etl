@@ -12,13 +12,14 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
 import java.util.Properties;
 import java.util.TimeZone;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import org.antlr.runtime.RecognitionException;
+import org.apache.commons.lang3.tuple.ImmutablePair;
+import org.json.JSONObject;
 import org.metafacture.runner.Flux;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -94,6 +95,7 @@ public class ETL {
         File fileInvalid = new File(fluxDir, name + "-invalid.json");
         File fileValid = new File(fluxDir, name + "-metadata.json");
         File fileResponses = new File(fluxDir, name + "-responses.json");
+        Stream.of(fileProcessErrors, fileInvalid, fileValid, fileResponses).forEach(File::delete);
         List<String> fullVars = setUpVars(flux, vars, fileProcessErrors, fileInvalid, fileValid,
                 fileResponses);
         long start = System.currentTimeMillis();
@@ -147,16 +149,23 @@ public class ETL {
         }
         if (responses.exists()) {
             try (Stream<String> allResponses = Files.lines(responses.toPath())) {
-                Map<Boolean, List<String>> errored = allResponses
-                        .collect(Collectors.partitioningBy(s -> s.contains("\"error\"")));
-                countFailWrite = errored.get(true).size() + "";
-                countSuccess = errored.get(false).size() + "";
+                ImmutablePair<Integer, Integer> successAndFailed = allResponses.map(JSONObject::new)
+                        .map(r -> ImmutablePair.of(r.getInt("success"), r.getInt("failed")))
+                        .reduce(ImmutablePair.of(0, 0), (all, current) -> ImmutablePair
+                                .of(all.left + current.left, all.right + current.right));
+                countSuccess = String.valueOf(successAndFailed.left);
+                countFailWrite = String.valueOf(successAndFailed.right);
             }
         }
-        LOG.info(
-                "Import channel {}, SUCCESS: {}, FAIL-PROCESS: {}, FAIL-VALIDATION: {}, FAIL-WRITE: {}, DURATION: {}",
-                flux.getName(), countSuccess, countFailProcess, countInvalid, countFailWrite,
-                formatTime(end));
+
+        String errorDetails = String.format("FAIL-PROCESS: %s, FAIL-VALIDATION: %s, FAIL-WRITE: %s",
+                countFailProcess, countInvalid, countFailWrite);
+        if (notAvailable.equals(countSuccess) || Integer.valueOf(countSuccess) == 0) {
+            throw new IllegalStateException(
+                    String.format("No data fully processed: %s, %s", countSuccess, errorDetails));
+        }
+        LOG.info("Import channel {}, SUCCESS: {}, {}, DURATION: {}", flux.getName(), countSuccess,
+                errorDetails, formatTime(end));
     }
 
     static Object[] maskCredentials(List<String> args) {

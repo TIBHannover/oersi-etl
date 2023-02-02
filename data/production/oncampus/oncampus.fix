@@ -1,5 +1,3 @@
-# Path?
-
 # unless any_match("html.body.div.*.div.*.div.*.div.*.section.*.div.*.div.div.*.h3.productcost","free|kostenlos")
 #  reject()
 # end
@@ -9,6 +7,12 @@
 set_array("@context[]", "https://w3id.org/kim/lrmi-profile/draft/context.jsonld")
 set_hash("@context[].$append", "@language": "de")
 
+# do array("@context")
+#  add_field("","https://w3id.org/kim/amb/draft/context.jsonld")
+#  do entity("")
+#   add_field("@language", "de")
+#  end
+# end
 
 #  ---------------id----------------------------------
 copy_field("html.head.meta.*.og:url", "id")
@@ -31,7 +35,8 @@ copy_field("html.head.meta.*.og:image","image")
 #     regexp(match: '^http[s]?:\\/\\/creativecommons.org\\/(licenses|licences|publicdomain)\\/.*|^http[s]?:\\/\\/www.gnu.org\\/licenses\\/.*|^http[s]?:\\/\\/www.apache.org\\/licenses\\/.*|http[s]?://opensource.org/licenses/MIT|^http[s]?:\\/\\/www.opensource.org\\/licenses\\/BSD.*')
 #   end
 # end
-# copy_field("html.body.div.*.div.*.div.div.*.section.*.section.*.section.div.*.section.p.*.a.license|html.body.div.*.div.*.div.div.section.*.section.*.section.div.*.section.p.*.a.license", "license.id")
+
+copy_field("html.body.div.*.div.*.div.div.*.section.*.section.*.section.div.*.section.p.*.a.license|html.body.div.*.div.*.div.div.section.*.section.*.section.div.*.section.p.*.a.license", "license.id")
 
 #  ---------------creator----------------------------------
 
@@ -43,13 +48,14 @@ copy_field("html.head.meta.*.og:image","image")
 #   end
 #  end
 # end
-# set_array("creator[]")
-# copy_field("html.body.div.*.div.*.div.div.*.section.*.section.section.div.*.h4.value", "creator[].$append.name")
+
+set_array("creator[]")
+copy_field("html.body.div.*.div.*.div.div.*.section.*.section.section.div.*.h4.value", "creator[].$append.name")
 # add_field("creator[].$last.type", "Person")
 # replace_all("creator[].*.name","Apl\\. |\\(apl\\.\\) |Dr\\. med |Dr\\. |Dr\\.'in |Dr |Dr\\.med\\.|Dres\\. |Dr\\.|Prof\\. |Prof\\.'in |Prof\\.|Prof |Jun\\.-|PD |PD\\. |med\\. |rer\\. |pol\\.|nat\\. |dent\\. |em\\. |Ao\\.-|o\\. Univ\\.|Uni\\.-|Univ\\.-|Univ\\. |DI |RA |Dipl\\.|-Ing\\. |-Inform\\. |-Psych\\. |h\\.c\\. |mult\\. |Mag\\. |, MME|; MME|, MScN|M\\. Sc\\. |, MSc| MSc\\.|, M\\.A\\.| M\\.A\\.|, M\\.D\\.|, B\\.A\\.|, MMZ|, Psychoanalytiker|, L\\.L\\.M\\.|, LL\\.M\\.| \\(M\\.A\\.\\)", "")
 
-
 #  ---------------inLanguage----------------------------------
+
 # do array("inLanguage")
 #   do map("html.body.div.div.div.div.section.div.div.div.div.div.div.span.value")
 #     regexp(match: "Deutsch|English")
@@ -57,7 +63,8 @@ copy_field("html.head.meta.*.og:image","image")
 #     replace(pattern: "English", with: "en")
 #   end
 # end
-# set_array("inLanguage[]")
+
+set_array("inLanguage[]")
 # set_array("@inLanguage")
 # copy_field("PATH??", "@inLanguage.$append")
 # do list(path: "@inLanguage", "var": "$i")
@@ -81,6 +88,20 @@ add_field("learningResourceType[].$append.id","https://w3id.org/kim/hcrt/course"
 add_field("learningResourceType[].$last.prefLabel.de","Kurs")
 add_field("learningResourceType[].$last.prefLabel.en","Course")
 
+# do array('learningResourceType')
+#   do entity('')
+#     map('@hcrt', 'id')
+#     do entity('prefLabel')
+#       do map('@hcrt', 'de')
+#         lookup(in: 'data/maps/hcrt-de-labels.tsv')
+#       end  
+#       do map('@hcrt', 'en')
+#         lookup(in: 'data/maps/hcrt-en-labels.tsv')
+#       end
+#     end
+#   end
+# end
+
 # ---------mainEntityOfPage----------------
 
 set_array("mainEntityOfPage[]")
@@ -89,6 +110,25 @@ add_field("mainEntityOfPage[].$last.provider.id","$[service_id]")
 add_field("mainEntityOfPage[].$last.provider.type","Service")
 add_field("mainEntityOfPage[].$last.provider.name","$[service_name]")
 
+# do array("mainEntityOfPage")
+#   do entity("")
+#     do map("html.head.meta.og:url", "id")
+#       replace(pattern: "\\?lang=fa", with: "")
+#     end
+#     do entity("provider")
+#       add_field("id","$[service_id]")
+#       add_field("type","Service")
+#       add_field("name","$[service_name]")
+#     end
+#   end
+# end
+
+add_field("conditionsOfAccess.id","http://w3id.org/kim/conditionsOfAccess/login")
+
+# do array("keywords", flushWith: record)
+#   map("html.body.div.div.div.div.section.section.div.a.value")
+# end
+
 # ------ tidy up --- 
-retain("@context[]","id","image","name","creator[]","contributor[]","sourceOrganization[]", "license","description","dateCreated","inLanguage[]","type[]","learningResourceType[]","keywords[]","about[]", "encoding[]", "publisher[]", "mainEntityOfPage[]")
+retain("@context[]","id","image","name","creator[]","contributor[]","sourceOrganization[]", "license","description","dateCreated","inLanguage[]","type[]","learningResourceType[]","keywords[]","about[]", "encoding[]", "publisher[]", "mainEntityOfPage[]", "conditionsOfAccess")
 vacuum()

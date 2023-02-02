@@ -36,6 +36,7 @@
 - [ ] `license`
 - [ ] `inlanguage`
 - [ ] `sourceOrganization`
+- [ ] `conditionsOfAccess`
 
 #### Important for display purposes
 

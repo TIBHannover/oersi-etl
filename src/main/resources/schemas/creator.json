@@ -1,5 +1,5 @@
 {
-  "$id": "resource:/schemas/creator.json",
+  "$id": "creator.json",
   "$schema": "http://json-schema.org/draft-07/schema#",
   "title": "Creator",
   "description": "The creator(s) of the learning resource",
@@ -23,6 +23,13 @@
       "name": {
         "title": "Name",
         "type": "string"
+      },
+      "honorificPrefix": {
+        "title": "Academic title",
+        "type": "string"
+      },
+      "affiliation": {
+        "$ref": "affiliation.json"
       }
     },
     "required": [

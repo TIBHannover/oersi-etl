@@ -5,21 +5,20 @@ vacuum()
 # name
 # image
 # description
+# sourceOrganization
 
 
-# ---------------@context ----------------------------------
-
-set_array("@context[]", "https://w3id.org/kim/lrmi-profile/draft/context.jsonld")
-set_hash("@context[].$append", "@language": "de")
-
+include ("../../sharedFixes/macros.fix")
 
 # ---------------license ----------------------------------
 move_field("license", "@license")
 copy_field("@license", "license.id")
 
-
-# ---------------dateCreated ----------------------------------
+# ---------------dateCreated----------------------------------
 replace_all("dateCreated","T.*", "")
+
+# ---------------datePublished----------------------------------
+replace_all("datePublished","T.*", "")
 
 # ---------------dateModified ----------------------------------
 replace_all("dateModified","T.*", "")
@@ -27,14 +26,11 @@ replace_all("dateModified","T.*", "")
 
 # ---------------creator ----------------------------------
 copy_field("author[]","creator[]")
-
-replace_all("creator[].*.name", "Apl\\. |\\(apl\\.\\) |Dr\\. med |Dr\\. |Dr\\.'in |Dr |Dr\\.med\\.|Dres\\. |Dr\\.|Prof\\. |Prof\\.'in |Prof\\.|Prof |Jun\\.-|PD |PD\\. |med\\. |rer\\. |pol\\.|nat\\. |dent\\. |em\\. |Ao\\.-|o\\. Univ\\.|Uni\\.-|Univ\\.-|Univ\\. |DI |RA |Dipl\\.|-Ing\\. |-Inform\\. |-Psych\\. |h\\.c\\. |mult\\. |Mag\\. |, MME|; MME|, MScN|M\\. Sc\\. |, MSc| MSc\\.|, M\\.A\\.| M\\.A\\.|, M\\.D\\.|, B\\.A\\.|, MMZ|, Psychoanalytiker|, L\\.L\\.M\\.|, LL\\.M\\.| \\(M\\.A\\.\\)", "")
-
+call_macro("deleteAcademicTitles", field: "creator[].*.name")
 
 # ---------------sourceOrganization ----------------------------------
 
-replace_all("provider[].*.type",".*","Organization")
-copy_field("provider[]","sourceOrganization[]")
+replace_all("sourceOrganization[].*.type","^.*$","Organization")
 
 # ---------------keywords----------------------------------
 split_field("keywords",",")
@@ -49,12 +45,12 @@ end
 
 set_array("about[]")
 do list(path:"@about", "var":"$i")
-  lookup("$i", "data/maps/hoou-subject-mapping.tsv","sep_char":"\t")
-  lookup("$i", "data/maps/subject-url-mapping.tsv","sep_char":"\t")
+  lookup("$i", "data/maps/hoou-subject-mapping.tsv","sep_char":"\t", delete:"true")
+  lookup("$i", "data/maps/subject-url-mapping.tsv","sep_char":"\t", delete:"true")
   copy_field("$i", "about[].$append.id")
   copy_field("$i", "about[].$last.prefLabel.de")
 end
-lookup("about[].*.prefLabel.de", "data/maps/subject-labels.tsv","sep_char":"\t")
+lookup("about[].*.prefLabel.de", "data/maps/subject-labels.tsv","sep_char":"\t", delete:"true")
 
 
 # ---------------type----------------------------------
@@ -64,17 +60,22 @@ set_array("type[]", "LearningResource")
 
 /* HOOU provides at the moment only Course or CreativeWork as types. Also learningResourceType is set with Video oder Bilder but not very often. */
 set_array("@hcrt")
-copy_field("@type|learningResourceType", "@hcrt.$append")
-replace_all("@hcrt.*","Bilder","Image")
-lookup("@hcrt.*","data/maps/en-labels-hcrt-uri.tsv","sep_char":"\t")
-copy_field("@hcrt.*", "learningResourceType[].$append.id")
 set_array("learningResourceType[]")
+copy_field("type|learningResourceType", "@hcrt.$append")
+replace_all("@hcrt.*","Bilder","Image")
+lookup("@hcrt.*","data/maps/en-labels-hcrt-uri.tsv","sep_char":"\t", delete:"true")
+
+copy_field("@hcrt.*", "learningResourceType[].$append.id")
+
 do list(path:"learningResourceType[]")
   copy_field("id", "prefLabel.de")
-  lookup("prefLabel.de", "data/maps/hcrt-de-labels.tsv","sep_char":"\t")
+  lookup("prefLabel.de", "data/maps/hcrt-de-labels.tsv","sep_char":"\t", delete:"true")
   copy_field("id", "prefLabel.en")
-  lookup("prefLabel.en", "data/maps/hcrt-en-labels.tsv","sep_char":"\t")
+  lookup("prefLabel.en", "data/maps/hcrt-en-labels.tsv","sep_char":"\t", delete:"true")
 end
+
+# ---------------conditionsOfAccess----------------------------------
+add_field("conditionsOfAccess.id","http://w3id.org/kim/conditionsOfAccess/no_login")
 
 
 # ---------mainEntityOfPage----------------
@@ -84,6 +85,22 @@ add_field("mainEntityOfPage[].$last.provider.id","$[service_id]")
 add_field("mainEntityOfPage[].$last.provider.type","Service")
 add_field("mainEntityOfPage[].$last.provider.name","$[service_name]")
 
+# ---------------@context ----------------------------------
+
+set_array("@context[]", "https://w3id.org/kim/amb/draft/context.jsonld")
+# resource is german therefore prefer de if multiple or no inLanguage are available
+if any_equal("inLanguage[]","de")
+  set_hash("@context[].$append", "@language": "de")
+elsif any_equal("inLanguage[]","en")
+  set_hash("@context[].$append", "@language": "en")
+else
+  copy_field("inLanguage[].1", "@context[].$append.@language")
+end
+# resources without inLanguage-Values set default to de
+unless exists("inLanguage[].1")
+  set_hash("@context[].$append", "@language": "de")
+end
+
 # ------ tidy up --- 
-retain("@context[]","id","image","name","creator[]","contributor[]","sourceOrganization[]", "license","description","dataCreated","inLanguage[]","type[]","learningResourceType[]","keywords[]","about[]", "encoding[]", "mainEntityOfPage[]")
+include ("../../sharedFixes/retain.fix")
 vacuum()
