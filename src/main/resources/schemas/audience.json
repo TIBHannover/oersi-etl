@@ -1,5 +1,5 @@
 {
-  "$id": "resource:/schemas/audience.json",
+  "$id": "audience.json",
   "$schema": "http://json-schema.org/draft-07/schema#",
   "title": "Intended Audience",
   "description": "The audience the educational resource is intended for.",

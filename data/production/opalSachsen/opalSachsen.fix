@@ -1,0 +1,132 @@
+# Delete all empty values
+vacuum()
+
+include ("../../sharedFixes/macros.fix")
+
+#  ---------------id----------------------------------
+copy_field("oer_permalink", "id")
+
+#  ---------------name----------------------------------
+if exists("title")
+  copy_field("title", "name")
+else
+  copy_field("displayname", "name")
+end
+
+
+#  ---------------image----------------------------------
+copy_field("attributes.image.url", "image")
+
+#  ---------------dateCreated----------------------------------
+copy_field("attributes.startDate", "dateCreated")
+replace_all("dateCreated", "T.*", "")
+
+
+#  ---------------creator----------------------------------
+# source data is not consistent, can be a single author or multiple separated by comma or "&amp;". API estimates one object per instructor. Also there is no type even though there are persons and organisations.*/
+set_array("@creator")
+move_field("creator", "@creator.$append")
+
+set_array("creator[]")
+do list(path:"@creator", "var": "$i")
+  copy_field("$i","creator[].$append.name")
+  add_field("creator[].$last.type", "Person")
+end
+
+#  ---------------license----------------------------------
+
+put_map("license",
+  "CC BY-ND 4.0 Int.":"https://creativecommons.org/licenses/by-nd/4.0/",
+  "CC0 1.0 Universell":"https://creativecommons.org/publicdomain/zero/1.0/",
+  "CC BY-NC-SA 4.0 Int.":"https://creativecommons.org/licenses/by-nc-sa/4.0/",
+  "CC BY 4.0 Int.":"https://creativecommons.org/licenses/by/4.0/",
+  "CC BY-NC 4.0 Int.":"https://creativecommons.org/licenses/by-nc/4.0/",
+  "CC BY-SA 4.0 Int.":"https://creativecommons.org/licenses/by-sa/4.0/",
+  "CC BY-NC-ND 4.0 Int.":"https://creativecommons.org/licenses/by-nc-nd/4.0/"
+)
+
+move_field("license","@license")
+copy_field("@license","license.id")
+lookup("license.id","license")
+
+#  ---------------learningResourceType----------------------------------
+
+put_map("lRT",
+  "Mediathek":"https://w3id.org/kim/hcrt/other",
+  "PDF-Datei":"https://w3id.org/kim/hcrt/text",
+  "Portfoliovorlage":"https://w3id.org/kim/hcrt/other",
+  "Lernkartei":"https://w3id.org/kim/hcrt/other",
+  "Glossar":"https://w3id.org/kim/hcrt/other",
+  "Podcast":"https://w3id.org/kim/hcrt/audio",
+  "CP-Lerninhalt":"https://w3id.org/kim/hcrt/other",
+  "Frage":"https://w3id.org/kim/hcrt/other",
+  "Wiki":"https://w3id.org/kim/hcrt/web_page",
+  "Blog":"https://w3id.org/kim/hcrt/web_page",
+  "Ressourcenordner":"https://w3id.org/kim/hcrt/other",
+  "Fragebogen":"https://w3id.org/kim/hcrt/questionnaire",
+  "SCORM-Inhalt":"https://w3id.org/kim/hcrt/other",
+  "Test":"https://w3id.org/kim/hcrt/assessment",
+  "Kurs":"https://w3id.org/kim/hcrt/course"
+  )
+
+lookup("resourcetype", "lRT")
+
+set_array("learningResourceType[]")
+copy_field("resourcetype","learningResourceType[].$append.id")
+copy_field("resourcetype","learningResourceType[].$last.prefLabel.de")
+copy_field("resourcetype","learningResourceType[].$last.prefLabel.en")
+
+lookup("learningResourceType[].*.prefLabel.de", "data/maps/hcrt-de-labels.tsv","sep_char":"\t", delete:"true")
+lookup("learningResourceType[].*.prefLabel.en", "data/maps/hcrt-en-labels.tsv","sep_char":"\t", delete:"true")
+
+# ---------------description----------------------------------
+copy_field("comment","description")
+
+# ---------------conditionsOfAccess----------------------------------
+add_field("conditionsOfAccess.id","http://w3id.org/kim/conditionsOfAccess/no_login") 
+
+# ---------------type ----------------------------------
+set_array("type[]", "LearningResource")
+
+# ---------mainEntityOfPage----------------
+
+set_array("mainEntityOfPage[]")
+copy_field("id", "mainEntityOfPage[].$append.id")
+add_field("mainEntityOfPage[].$last.provider.id","$[service_id]")
+add_field("mainEntityOfPage[].$last.provider.type","Service")
+add_field("mainEntityOfPage[].$last.provider.name","$[service_name]")
+
+# ---------------@context ----------------------------------
+
+set_array("@context[]", "https://w3id.org/kim/amb/draft/context.jsonld")
+# resource is german therefore prefer de if multiple or no inLanguage are available
+if any_equal("inLanguage[]","de")
+  set_hash("@context[].$append", "@language": "de")
+elsif any_equal("inLanguage[]","en")
+  set_hash("@context[].$append", "@language": "en")
+else
+  copy_field("inLanguage[].1", "@context[].$append.@language")
+end
+# resources without inLanguage-Values set default to de
+unless exists("inLanguage[].1")
+  set_hash("@context[].$append", "@language": "de")
+end
+
+
+# Filter incomplete records.
+
+unless exists ("name")
+  reject()
+end
+
+unless exists ("license")
+  reject()
+end
+
+unless exists ("creator[]")
+  reject()
+end
+
+# ------ tidy up --- 
+include ("../../sharedFixes/retain.fix")
+vacuum()

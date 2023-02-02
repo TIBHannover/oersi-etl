@@ -1,5 +1,5 @@
 {
-  "$id": "resource:/schemas/hasPart.json",
+  "$id": "hasPart.json",
   "$schema": "http://json-schema.org/draft-07/schema#",
   "title": "Has part",
   "description": "Resources that are part of the described learning resource",

@@ -1,6 +1,6 @@
 /* Set up the context */
 do array("@context")
- add_field("","https://w3id.org/kim/lrmi-profile/draft/context.jsonld")
+ add_field("","https://w3id.org/kim/amb/draft/context.jsonld")
  do entity("")
   add_field("@language", "de")
  end
@@ -61,6 +61,9 @@ do array('learningResourceType')
     end
   end
 end
+
+
+add_field("conditionsOfAccess.id","http://w3id.org/kim/conditionsOfAccess/login")
 
 do array("keywords", flushWith: record)
   map("html.body.div.div.div.div.section.section.div.a.value")

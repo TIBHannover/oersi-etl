@@ -9,7 +9,7 @@ service_name = "vhb";
 | decode-json(recordPath="$.data")
 | filter-null-values
 // openVhb is partner of MoocHub, we use their moocHub metadata with added infos for OERSI.
-| metafix(FLUX_DIR + "openVhb_moocHub.fix", *)
+| fix(FLUX_DIR + "openVhb_moocHub.fix", *)
 | encode-json
 | oersi.JsonValidator(output_schema, writeValid=metadata_valid, writeInvalid=metadata_invalid)
 | oersi.OersiWriter(backend_api, user=backend_user, pass=backend_pass, log=metadata_responses)

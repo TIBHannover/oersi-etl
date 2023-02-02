@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "resource:/schemas/schema.json",
+  "$id": "schema.json",
   "title": "OER",
   "description": "This is a generic JSON schema for describing an Open Educational Resource with schema.org. This is a stricter but compatible version of the LRMI schema (https://dini-ag-kim.github.io/lrmi-profile/draft/schemas/schema.json)",
   "type": "object",
@@ -38,8 +38,8 @@
     "dateCreated": {
       "$ref": "dateCreated.json"
     },
-    "encoding": {
-      "$ref": "encoding.json"
+    "datePublished": {
+      "$ref": "datePublished.json"
     },
     "inLanguage": {
       "$ref": "inLanguage.json"
@@ -70,6 +70,15 @@
     },
     "keywords": {
       "$ref": "keywords.json"
+    },
+    "encoding": {
+      "$ref": "encoding.json"
+    },
+    "conditionsOfAccess": {
+      "$ref": "conditionsOfAccess.json"
+    },
+    "isAccessibleForFree": {
+      "$ref": "isAccessibleForFree.json"
     }
   },
   "required": [

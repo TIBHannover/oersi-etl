@@ -1,0 +1,55 @@
+
+# Provided metadata is AMB valid only additional fields are added.
+
+# --------Delete all emtpy values-------
+vacuum()
+
+
+include ("../../sharedFixes/macros.fix")
+
+# --------Filter out administrative and info pages-------
+if any_match("name", ".*(Datenschutz|Nutzungshinweise|OMA|Neues Dokument|Open Music Academy).*")
+  reject()
+end
+
+# ---------learningResourceType----------------
+do list(path:"learningResourceType[]")
+  remove_field("prefLabel")
+  copy_field("id", "prefLabel.de")
+  lookup("prefLabel.de", "data/maps/hcrt-de-labels.tsv","sep_char":"\t", delete:"true")
+  copy_field("id", "prefLabel.en")
+  lookup("prefLabel.en", "data/maps/hcrt-en-labels.tsv","sep_char":"\t", delete:"true")
+end
+
+# ---------about----------------
+do list(path:"about[]")
+  remove_field("prefLabel")
+  copy_field("id", "prefLabel.de")
+  lookup("prefLabel.de", "data/maps/subject-labels.tsv","sep_char":"\t", delete:"true")
+end
+
+# ---------------conditionsOfAccess----------------------------------
+add_field("conditionsOfAccess.id","http://w3id.org/kim/conditionsOfAccess/no_login") 
+
+# ---------mainEntityOfPage----------------
+set_array("mainEntityOfPage[]")
+copy_field("id", "mainEntityOfPage[].$append.id")
+add_field("mainEntityOfPage[].$last.provider.id","$[service_id]")
+add_field("mainEntityOfPage[].$last.provider.type","Service")
+add_field("mainEntityOfPage[].$last.provider.name","$[service_name]")
+
+# boolean field "isAccessibleForFree" is not decoded/encoded correctly, but will be set automatically
+remove_field("isAccessibleForFree")
+
+# ---------ceator/contributor----------------
+# delete all creator/contributor with name "mani-prod"
+
+do list(path:"creator[]|contributor[]", "var":"$i")
+  if any_equal("$i.name", "mani-prod")
+    remove_field("$i.name")
+    remove_field("$i.type")
+  end
+end
+
+# ------ tidy up --- 
+vacuum()

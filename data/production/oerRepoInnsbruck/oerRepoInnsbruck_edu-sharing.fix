@@ -1,0 +1,48 @@
+# Delete all empty values
+vacuum()
+
+include ("../../sharedFixes/macros.fix")
+
+# --- reuse edu-sharing default template -------- 
+include ("../../sharedFixes/eduSharingDefault.fix")
+
+#  ---------------creator----------------------------------
+set_array("creator[]") # set_array is desctructive and deletes existing creator-element
+do list(path:"properties.ccm:lifecyclecontributer_author[]", "var": "$i")
+  if any_match("$i", "^BEGIN:VCARD[\\s\\S]*FN:(.+)\r\n[\\s\\S]*")
+    copy_field("$i", "creator[].$append.name")
+    add_field("creator[].$last.type", "Person")
+  elsif any_match("$i", "^BEGIN:VCARD\r\nORG:(.+)\r\n[\\s\\S]*")
+    copy_field("$i", "creator[].$append.name")
+    add_field("creator[].$last.type", "Organization")
+  end
+end
+
+do list(path:"creator[]")
+  if any_match("name", "^BEGIN:VCARD[\\s\\S]*X-ORCID:https\\\\://(.+)\r\n[\\s\\S]*")
+    copy_field("name", "id")
+    replace_all("id","^BEGIN:VCARD[\\s\\S]*X-ORCID:https\\\\://(.+)\r\n[\\s\\S]*", "https://$1")
+    replace_all("id", " ", "")
+  end
+  replace_all("name","^BEGIN:VCARD[\\s\\S]*FN:(.+)\r\n[\\s\\S]*", "$1")
+  replace_all("name","^BEGIN:VCARD\r\nORG:(.+)\r\n[\\s\\S]*", "$1")
+end
+
+#  ---------------about----------------------------------
+# add instance specific subject mapping
+ 
+set_array("@hochschulfaechersystematik[]")
+copy_field("properties.ccm:taxonid[].*", "@hochschulfaechersystematik[].$append")
+lookup("@hochschulfaechersystematik[].*", "data/maps/oefos2destatis.tsv","sep_char":"\t", delete:"true")
+uniq("@hochschulfaechersystematik[]")
+
+set_array("about[]")
+do list(path:"@hochschulfaechersystematik[]", "var":"$i")
+  copy_field("$i", "about[].$append.id")
+  copy_field("$i", "about[].$last.prefLabel.de")
+end
+lookup("about[].*.prefLabel.de", "data/maps/subject-labels.tsv","sep_char":"\t", delete:"true")
+
+
+include ("../../sharedFixes/retain.fix")
+vacuum()

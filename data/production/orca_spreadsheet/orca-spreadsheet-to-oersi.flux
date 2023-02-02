@@ -7,7 +7,7 @@ service_name = "ORCA.nrw";
 | as-lines
 | match(pattern="(Urheber\\d|Beitragende\\d)\\.", replacement="$1_")
 | decode-csv(hasHeader="true")
-| metafix(FLUX_DIR + "orca-csv.fix", *)
+| fix(FLUX_DIR + "orca-csv.fix", *)
 | encode-json
 | oersi.JsonValidator(output_schema, writeValid=metadata_valid, writeInvalid=metadata_invalid)
 | oersi.OersiWriter(backend_api, user=backend_user, pass=backend_pass, log=metadata_responses)

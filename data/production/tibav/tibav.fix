@@ -9,10 +9,7 @@ end
 
 vacuum()
 
-# ---------------@context ----------------------------------
-
-set_array("@context[]", "https://w3id.org/kim/lrmi-profile/draft/context.jsonld")
-set_hash("@context[].$append", "@language": "de")
+include ("../../sharedFixes/macros.fix")
 
 
 # ---------------id----------------------------------
@@ -23,10 +20,13 @@ replace_all("id", "oai:tib.eu:kmo-av:sid~", "https://av.tib.eu/media/")
 
 
 # ---------------name----------------------------------
+# The json-validator created an error due to duplicated element "name". Therefore the two conditionals should prevent a duplicate elemente.
 
-do list(path:"metadata.resources.resource.titles.title", "var": "$i")
-  unless exists("$i.titleType")
-    copy_field("$i.value", "name")
+unless exists("name")
+  do list(path:"metadata.resources.resource.titles.title", "var": "$i")
+    unless exists("$i.titleType")
+      copy_field("$i.value", "name")
+    end
   end
 end
 
@@ -114,14 +114,20 @@ do list(path:"metadata.resources.resource.creators.creator", "var":"$i")
 # There might be creators with empty names that are filtered out at the beginning.
   add_field("creator[].$append.test", "")
   copy_field("$i.creatorName.value", "creator[].$last.name")
-  add_field("creator[].$last.type", "Person")
-  if any_equal("$i.nameIdentifier.nameIdentifierScheme","ORCID")
-    copy_field("$i.nameIdentifier.value", "creator[].$last.id")
+  if any_equal("$i.creatorName.nameType","Organizational")
+    add_field("creator[].$last.type", "Organization")
+  else
+    add_field("creator[].$last.type", "Person")
+  end
+  do list(path:"$i.nameIdentifier", "var":"$j")
+    if any_equal("$j.nameIdentifierScheme","ORCID")
+      copy_field("$j.value", "creator[].$last.id")
+    end
   end
 end
 
 replace_all("creator[].*.name","(.+), (.+)", "$2 $1")
-prepend("creator[].*.id", "http://orcid.org/")
+prepend("creator[].*.id", "https://orcid.org/")
 
 # ---------contributor----------------
 set_array("contributor[]")
@@ -129,14 +135,23 @@ do list(path:"metadata.resources.resource.contributors.contributor", "var":"$i")
 # There might be contributors with empty names that are filtered out at the beginning.
   add_field("contributor[].$append.test", "")
   copy_field("$i.contributorName.value", "contributor[].$last.name")
-  add_field("contributor[].$last.type", "Person")
-  if any_equal("$i.nameIdentifier.nameIdentifierScheme","ORCID")
-    copy_field("$i.nameIdentifier.value", "contributor[].$last.id")
+  if any_equal("$i.contributorName.nameType","Organizational")
+    add_field("contributor[].$last.type", "Organization")
+  else
+    add_field("contributor[].$last.type", "Person")
+  end
+  do list(path:"$i.nameIdentifier", "var":"$j")
+    if any_equal("$j.nameIdentifierScheme","ORCID")
+      copy_field("$j.value", "contributor[].$last.id")
+    end
   end
 end
 
+# contributors have functions in parenthesis these need to be deleted
 replace_all("contributor[].*.name","(.+), (.+)", "$2 $1")
-prepend("contributor[].*.id", "http://orcid.org/")
+replace_all("contributor[].*.name","\\(.+\\)", "")
+replace_all("contributor[].*.name","  ", " ")
+prepend("contributor[].*.id", "https://orcid.org/")
 
 
 # ---------keywords----------------
@@ -149,26 +164,47 @@ end
 # ---------about----------------
 # All subjects with knm or linsearch attribute are transformed to about objects. Duplicate objects should be avoided. kmn and linsearch are almoist identical. 
 
-
 set_array("@hochschulfaechersystematik")
 do list(path:"metadata.resources.resource.subjects.subject", "var":"$i")
-  if any_match("$i.subjectScheme", "knm|linsearch.*")
+  if any_match("$i.subjectScheme", "linsearch.*")
     copy_field("$i.value", "@hochschulfaechersystematik.$append")
+  elsif any_match("$i.subjectScheme", "knm")
+    copy_field("$i.classificationCode", "@hochschulfaechersystematik.$append")
   end
 end
 
 trim("@hochschulfaechersystematik.*")
 uniq("@hochschulfaechersystematik")
-lookup("@hochschulfaechersystematik.*","data/maps/tibav-subject-mapping.tsv","sep_char":"\t")
+lookup("@hochschulfaechersystematik.*","data/maps/tibav-subject-mapping.tsv","sep_char":"\t", delete:"true")
 
 set_array("about[]")
 copy_field("@hochschulfaechersystematik.*","about[].$append.id")
 
 do list(path: "about[]")
   copy_field("id", "prefLabel.de")
-  lookup("prefLabel.de","data/maps/subject-labels.tsv","sep_char":"\t")
+  lookup("prefLabel.de","data/maps/subject-labels.tsv","sep_char":"\t", delete:"true")
+end
+
+# ---------------conditionsOfAccess----------------------------------
+add_field("conditionsOfAccess.id","http://w3id.org/kim/conditionsOfAccess/no_login")
+
+
+# ---------------@context ----------------------------------
+
+set_array("@context[]", "https://w3id.org/kim/amb/draft/context.jsonld")
+# resource is german therefore prefer de if multiple or no inLanguage are available
+if any_equal("inLanguage[]","de")
+  set_hash("@context[].$append", "@language": "de")
+elsif any_equal("inLanguage[]","en")
+  set_hash("@context[].$append", "@language": "en")
+else
+  copy_field("inLanguage[].1", "@context[].$append.@language")
+end
+# resources without inLanguage-Values set default to de
+unless exists("inLanguage[].1")
+  set_hash("@context[].$append", "@language": "de")
 end
 
 # ------ tidy up --- 
-retain("@context[]","id","image","name","creator[]","contributor[]","sourceOrganization[]", "license","description","dateCreated","inLanguage[]","type[]","learningResourceType[]","keywords[]","about[]", "encoding[]", "publisher[]", "mainEntityOfPage[]")
+include ("../../sharedFixes/retain.fix")
 vacuum()

@@ -1,0 +1,170 @@
+# --------Delete all emtpy values-------
+vacuum()
+
+include ("../../sharedFixes/macros.fix")
+
+
+#  ---------------id----------------------------------
+move_field("id","internalId")
+copy_field("url", "id")
+
+#  ---------------name----------------------------------
+copy_field("title", "name")
+
+#  ---------------image----------------------------------
+add_field("image", "https://open.umn.edu/assets/library/otl_logo-66d61fb9408c6c6685163b06fe4c48a64f4b423e3de657ff90725f95c5225954.png")
+
+#  ---------------dateCreated----------------------------------
+copy_field("copyright_year", "dateCreated")
+
+# Only the year is provided.
+replace_all("dateCreated", "^(\\d*).*", "$1-01-01")
+
+
+#  ---------------description----------------------------------
+# exists
+
+#  ---------------creator----------------------------------
+# provides editors and authors which I transform both to creators
+
+
+set_array("creator[]")
+do list(path:"contributors[]", "var": "$i")
+  paste("creator[].$append.name", "$i.first_name", "$i.last_name")
+  if all_equal("$i.corporate", "true")
+    add_field("creator[].$last.type", "Organization")
+  else
+    add_field("creator[].$last.type", "Person")
+  end
+  copy_field("$i.title", "creator[].$last.honorificPrefix")
+  copy_field("$i.location","creator[].$last.affiliation.name")
+  if exists("$i.location")
+    add_field("creator[].$last.affiliation.type", "Organization")
+  end
+end
+  
+
+
+# ------ publisher --- 
+set_array("publisher[]")
+add_field("publisher[].$append.name", "University of Minnesota’s College of Education and Human Development")
+add_field("publisher[].$last.type", "Organization")
+
+add_field("publisher[].$append.name", "Open Textbook Library")
+add_field("publisher[].$last.type", "Organization")
+
+do list(path:"publishers[]", "var":"$i")
+  unless all_equal("$i.name","Independent")
+    copy_field("$i.name","publisher[].$append.name")
+    add_field("publisher[].$last.type", "Organization")
+  end
+end
+
+unless exists("creator.1.name")
+  if any_match("publisher[].*.name", "University of Minnesota Libraries Publishing")
+    add_field("creator[].$append.name", "University of Minnesota Libraries Publishing")
+    add_field("creator[].$last.type", "Organization")
+  end
+end
+
+# ------ learningResourceType --- 
+set_array("learningResourceType[]")
+
+add_field("learningResourceType[].$append.id","https://w3id.org/kim/hcrt/textbook")
+add_field("learningResourceType[].$last.prefLabel.de","Lehrbuch")
+add_field("learningResourceType[].$last.prefLabel.en","Textbook")
+
+# ------ inLanguage --- 
+/* inLanguage: The value Mehrsprachig does not represent the estimated language labels. */
+set_array("inLanguage[]")
+copy_field("language", "inLanguage[].$append")
+
+put_map("languageMap",
+  "eng": "en",
+  "fre": "fr",
+  "ger": "de",
+  "jpn": "ja",
+  "pol": "pl",
+  "por": "pt",
+  "spa": "es",
+  "chi-trad": "zh"
+)
+
+lookup("inLanguage[].*","languageMap")
+
+# ------ license ---
+move_field("license","@license")
+
+put_map("licenseMap",
+"Attribution": "https://creativecommons.org/licenses/by/4.0/",
+"Attribution-NoDerivs": "https://creativecommons.org/licenses/by-nd/4.0/",
+"Attribution-NonCommercial": "https://creativecommons.org/licenses/by-nc/4.0/",
+"Attribution-NonCommercial-NoDerivs": "https://creativecommons.org/licenses/by-nc-nd/4.0/",
+"Attribution-NonCommercial-ShareAlike": "https://creativecommons.org/licenses/by-nc-sa/4.0/",
+"Attribution-ShareAlike": "https://creativecommons.org/licenses/by-sa/4.0/",
+"Free Documentation License (GNU)": "https://www.gnu.org/licenses/fdl-1.3.html",
+"No Rights Reserved": "https://creativecommons.org/publicdomain/zero/1.0/"
+)
+
+copy_field("@license","license.id")
+lookup("license.id","licenseMap")
+
+# ------ type --- 
+
+set_array("type[]", "LearningResource")
+
+# ------ keywords ---
+set_array("keywords[]")
+do list(path:"subjects[]","var":"$i")
+    move_field("$i.name", "keywords[].$append")
+end
+uniq("keywords[]")
+
+# ------ about --- 
+
+set_array("@hochschulfaechersystematik")
+do list(path:"keywords[]","var":"$i")
+    move_field("$i", "@hochschulfaechersystematik.$append")
+end
+
+lookup("@hochschulfaechersystematik.*","data/maps/subjectMappingOpenTextbooks.tsv","sep_char":"\t", delete:"true")
+
+set_array("about[]")
+copy_field("@hochschulfaechersystematik.*","about[].$append.id")
+
+do list(path: "about[]")
+  copy_field("id", "prefLabel.de")
+  lookup("id","data/maps/subject-labels-to-URI.tsv","sep_char":"\t", delete:"true")
+end
+
+# ---------------conditionsOfAccess----------------------------------
+add_field("conditionsOfAccess.id","http://w3id.org/kim/conditionsOfAccess/no_login") 
+
+# ---------mainEntityOfPage----------------
+
+set_array("mainEntityOfPage[]")
+copy_field("id", "mainEntityOfPage[].$append.id")
+add_field("mainEntityOfPage[].$last.provider.id","$[service_id]")
+add_field("mainEntityOfPage[].$last.provider.type","Service")
+add_field("mainEntityOfPage[].$last.provider.name","$[service_name]")
+
+# ---------------@context ----------------------------------
+
+set_array("@context[]", "https://w3id.org/kim/amb/draft/context.jsonld")
+# resource is german therefore prefer de if multiple or no inLanguage are available
+if any_equal("inLanguage[]","de")
+  set_hash("@context[].$append", "@language": "de")
+elsif any_equal("inLanguage[]","en")
+  set_hash("@context[].$append", "@language": "en")
+else
+  copy_field("inLanguage[].1", "@context[].$append.@language")
+end
+# resources without inLanguage-Values set default to de
+unless exists("inLanguage[].1")
+  set_hash("@context[].$append", "@language": "de")
+end
+
+# ------ tidy up --- 
+include ("../../sharedFixes/retain.fix")
+vacuum()
+

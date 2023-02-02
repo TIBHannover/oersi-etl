@@ -1,25 +1,10 @@
-/*
- * Copyright 2021 Fabian Steeg, hbz
- *
- * Licensed under the Apache License, Version 2.0 the "License";
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
 package oersi;
 
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -45,6 +30,15 @@ public class TestEtl {
         assertTrue("Output file must exist: " + ETL.OUT_FILE, ETL.OUT_FILE.exists());
     }
 
+    @Test
+    public void testConvertMainFailEmptyOutput() throws IOException {
+        Files.deleteIfExists(Paths.get(ETL.OUT_FILE.toURI()));
+        assertFalse(ETL.OUT_FILE.exists());
+        ETL.main(new String[] { "src/test/resources/failing-empty-output.flux" });
+        assertTrue("No data should be written to output file: " + ETL.OUT_FILE,
+                Files.readAllLines(Paths.get(ETL.OUT_FILE.toURI())).isEmpty());
+    }
+
     public void testConvertMainFailFixNotFound() throws IOException {
         Files.deleteIfExists(Paths.get(ETL.OUT_FILE.toURI()));
         assertFalse(ETL.OUT_FILE.exists());
@@ -67,6 +61,17 @@ public class TestEtl {
         ETL.main(new String[] { "src/test/resources/local-hoou-to-oersi.flux",
                 "data/production/oersi.properties" });
         assertTrue("Output file must exist: " + ETL.OUT_FILE, ETL.OUT_FILE.exists());
+    }
+
+    @Test
+    public void testConvertMainResetErrors() throws IOException {
+        File errors = new File(ETL.DATA_DIR, "failing-errors.txt");
+        Files.deleteIfExists(Paths.get(errors.toURI()));
+        assertFalse(errors.exists()); // no errors, will now run flux writing errors:
+        ETL.main(new String[] { "src/test/resources/failing-write-errors.flux" });
+        assertTrue(errors.exists()); // got errors, now without errors, same base name:
+        ETL.main(new String[] { "src/test/resources/failing-fix-not-found.flux" });
+        assertFalse(errors.exists()); // no errors, both write to same base name file
     }
 
     @Test
