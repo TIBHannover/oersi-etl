@@ -1,30 +1,27 @@
-# unless any_match("html.body.div.*.div.*.div.*.div.*.section.*.div.*.div.div.*.h3.productcost","free|kostenlos")
-#  reject()
-# end
+if none_match("html.body.div.*.div.*.div.div.section.*.div.*.div.div.*.h3.productcost","free|kostenlos")
+   reject()
+end
 
 #  ---------------@context ----------------------------------
 
-set_array("@context[]", "https://w3id.org/kim/lrmi-profile/draft/context.jsonld")
+set_array("@context[]", "https://w3id.org/kim/amb/draft/context.jsonld")
 set_hash("@context[].$append", "@language": "de")
 
-# do array("@context")
-#  add_field("","https://w3id.org/kim/amb/draft/context.jsonld")
-#  do entity("")
-#   add_field("@language", "de")
-#  end
-# end
-
 #  ---------------id----------------------------------
-copy_field("html.head.meta.*.og:url", "id")
+copy_field("html.head.meta.og:url", "id")
+uniq("id")
 
 #  ---------------name----------------------------------
-copy_field("html.head.meta.*.og:title", "name")
+copy_field("html.head.meta.og:title", "name")
+uniq("name")
 
 #  ---------------description----------------------------------
-copy_field("html.head.meta.*.og:description", "description")
+copy_field("html.head.meta.og:description", "description")
+uniq("description")
 
 #  ---------------image----------------------------------
-copy_field("html.head.meta.*.og:image","image")
+copy_field("html.head.meta.og:image","image")
+uniq("image")
 
 /*rel = "liscence" cant be directly copy_fieldped */
 #  ---------------license----------------------------------
@@ -36,23 +33,16 @@ copy_field("html.head.meta.*.og:image","image")
 #   end
 # end
 
-copy_field("html.body.div.*.div.*.div.div.*.section.*.section.*.section.div.*.section.p.*.a.license|html.body.div.*.div.*.div.div.section.*.section.*.section.div.*.section.p.*.a.license", "license.id")
+copy_field("html.body.div.div.div.div.section.section.section.div.section.p.a.license", "license.id")
 
 #  ---------------creator----------------------------------
-
-# do array("creator", flushWith: record)
-#  do entity("")
-#   add_field("type", "Person")
-#   do map("html.body.div.div.div.div.section.section.section.div.h4.value", "name")
-#     replace(pattern: "Apl\\. |\\(apl\\.\\) |Dr\\. med |Dr\\. |Dr\\.'in |Dr |Dr\\.med\\.|Dres\\. |Dr\\.|Prof\\. |Prof\\.'in |Prof\\.|Prof |Jun\\.-|PD |PD\\. |med\\. |rer\\. |pol\\.|nat\\. |dent\\. |em\\. |Ao\\.-|o\\. Univ\\.|Uni\\.-|Univ\\.-|Univ\\. |DI |RA |Dipl\\.|-Ing\\. |-Inform\\. |-Psych\\. |h\\.c\\. |mult\\. |Mag\\. |, MME|; MME|, MScN|M\\. Sc\\. |, MSc| MSc\\.|, M\\.A\\.| M\\.A\\.|, M\\.D\\.|, B\\.A\\.|, MMZ|, Psychoanalytiker|, L\\.L\\.M\\.|, LL\\.M\\.| \\(M\\.A\\.\\)", with: "")
-#   end
-#  end
-# end
-
 set_array("creator[]")
-copy_field("html.body.div.*.div.*.div.div.*.section.*.section.section.div.*.h4.value", "creator[].$append.name")
-# add_field("creator[].$last.type", "Person")
-# replace_all("creator[].*.name","Apl\\. |\\(apl\\.\\) |Dr\\. med |Dr\\. |Dr\\.'in |Dr |Dr\\.med\\.|Dres\\. |Dr\\.|Prof\\. |Prof\\.'in |Prof\\.|Prof |Jun\\.-|PD |PD\\. |med\\. |rer\\. |pol\\.|nat\\. |dent\\. |em\\. |Ao\\.-|o\\. Univ\\.|Uni\\.-|Univ\\.-|Univ\\. |DI |RA |Dipl\\.|-Ing\\. |-Inform\\. |-Psych\\. |h\\.c\\. |mult\\. |Mag\\. |, MME|; MME|, MScN|M\\. Sc\\. |, MSc| MSc\\.|, M\\.A\\.| M\\.A\\.|, M\\.D\\.|, B\\.A\\.|, MMZ|, Psychoanalytiker|, L\\.L\\.M\\.|, LL\\.M\\.| \\(M\\.A\\.\\)", "")
+# TODO: iterate over all authors?
+set_hash("creator[].$append")
+copy_field("html.body.div.div.div.div.section.section.section.div.h4.instructor-info", "creator[].$append.name")
+# java.lang.IllegalStateException: Expected String, got Array:
+# replace_all("creator[].$last.name","Apl\\. |\\(apl\\.\\) |Dr\\. med |Dr\\. |Dr\\.'in |Dr |Dr\\.med\\.|Dres\\. |Dr\\.|Prof\\. |Prof\\.'in |Prof\\.|Prof |Jun\\.-|PD |PD\\. |med\\. |rer\\. |pol\\.|nat\\. |dent\\. |em\\. |Ao\\.-|o\\. Univ\\.|Uni\\.-|Univ\\.-|Univ\\. |DI |RA |Dipl\\.|-Ing\\. |-Inform\\. |-Psych\\. |h\\.c\\. |mult\\. |Mag\\. |, MME|; MME|, MScN|M\\. Sc\\. |, MSc| MSc\\.|, M\\.A\\.| M\\.A\\.|, M\\.D\\.|, B\\.A\\.|, MMZ|, Psychoanalytiker|, L\\.L\\.M\\.|, LL\\.M\\.| \\(M\\.A\\.\\)", "")
+add_field("creator[].$last.type", "Person")
 
 #  ---------------inLanguage----------------------------------
 
@@ -65,15 +55,11 @@ copy_field("html.body.div.*.div.*.div.div.*.section.*.section.section.div.*.h4.v
 # end
 
 set_array("inLanguage[]")
-# set_array("@inLanguage")
-# copy_field("PATH??", "@inLanguage.$append")
-# do list(path: "@inLanguage", "var": "$i")
-#   if any_match("$i", "Deutsch|English")
-#     replace(pattern: "Deutsch", with: "de")
-#     replace(pattern: "English", with: "en")
-#     copy_field("$i","inLanguage[].$append")
-#   end
-# end
+if any_match("html.body.div.2.div.2.div.div.section.1.div.4.div.div.1.div.div.1.div.3.span.2.value", "German|Deutsch|English|Englisch")
+  copy_field("html.body.div.2.div.2.div.div.section.1.div.4.div.div.1.div.div.1.div.3.span.2.value", "inLanguage[].$append")
+  replace_all("inLanguage[].$last", "German|Deutsch", "de")
+  replace_all("inLanguage[].$last", "English|Englisch", "en")
+end
 
 # ------ type --- 
 
@@ -105,7 +91,9 @@ add_field("learningResourceType[].$last.prefLabel.en","Course")
 # ---------mainEntityOfPage----------------
 
 set_array("mainEntityOfPage[]")
-copy_field("id", "mainEntityOfPage[].$append.id")
+set_hash("mainEntityOfPage[].$append")
+copy_field("id", "mainEntityOfPage[].$last.id")
+set_hash("mainEntityOfPage[].$last.provider")
 add_field("mainEntityOfPage[].$last.provider.id","$[service_id]")
 add_field("mainEntityOfPage[].$last.provider.type","Service")
 add_field("mainEntityOfPage[].$last.provider.name","$[service_name]")
