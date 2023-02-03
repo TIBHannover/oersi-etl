@@ -1,122 +1,58 @@
-if none_match("html.body.div.*.div.*.div.div.section.*.div.*.div.div.*.h3.productcost","free|kostenlos")
-   reject()
-end
-
-#  ---------------@context ----------------------------------
-
 set_array("@context[]", "https://w3id.org/kim/amb/draft/context.jsonld")
 set_hash("@context[].$append", "@language": "de")
 
-#  ---------------id----------------------------------
 copy_field("html.head.meta.og:url", "id")
-uniq("id")
+if exists("id")
+  # the meta tags appear multiple times:
+  uniq("id")
+else
+  # Sometimes, a URL for the resource can only be found in the language switcher, e.g. for:
+  # https://www.oncampus.de/blocks/ocproducts/product.php?id=eJBj9QjELwdWBGJ9Sq15nyR9dYRQL2VM
+  # See flux for setup to see the full flattened field names used where neccessary.
+  # (Maybe we just want to reject() resources without regular IDs here)
+  copy_field("html.body.nav.div.div.3.ul.1.li.4.ul.li.1.a.href", "id")
+  replace_all("id", "&lang=[^&]+", "")
+end
 
-#  ---------------name----------------------------------
-copy_field("html.head.meta.og:title", "name")
-uniq("name")
+copy_field("html.head.title.value", "name")
 
-#  ---------------description----------------------------------
 copy_field("html.head.meta.og:description", "description")
 uniq("description")
 
-#  ---------------image----------------------------------
 copy_field("html.head.meta.og:image","image")
 uniq("image")
 
-/*rel = "liscence" cant be directly copy_fieldped */
-#  ---------------license----------------------------------
-
-# /*rel = "liscence" cant be directly mapped */
-# do entity("license")
-#   do map("*.a.license", "id")
-#     regexp(match: '^http[s]?:\\/\\/creativecommons.org\\/(licenses|licences|publicdomain)\\/.*|^http[s]?:\\/\\/www.gnu.org\\/licenses\\/.*|^http[s]?:\\/\\/www.apache.org\\/licenses\\/.*|http[s]?://opensource.org/licenses/MIT|^http[s]?:\\/\\/www.opensource.org\\/licenses\\/BSD.*')
-#   end
-# end
-
 copy_field("html.body.div.div.div.div.section.section.section.div.section.p.a.license", "license.id")
 
-#  ---------------creator----------------------------------
 set_array("creator[]")
-# TODO: iterate over all authors?
-set_hash("creator[].$append")
-copy_field("html.body.div.div.div.div.section.section.section.div.h4.instructor-info", "creator[].$append.name")
-# java.lang.IllegalStateException: Expected String, got Array:
-# replace_all("creator[].$last.name","Apl\\. |\\(apl\\.\\) |Dr\\. med |Dr\\. |Dr\\.'in |Dr |Dr\\.med\\.|Dres\\. |Dr\\.|Prof\\. |Prof\\.'in |Prof\\.|Prof |Jun\\.-|PD |PD\\. |med\\. |rer\\. |pol\\.|nat\\. |dent\\. |em\\. |Ao\\.-|o\\. Univ\\.|Uni\\.-|Univ\\.-|Univ\\. |DI |RA |Dipl\\.|-Ing\\. |-Inform\\. |-Psych\\. |h\\.c\\. |mult\\. |Mag\\. |, MME|; MME|, MScN|M\\. Sc\\. |, MSc| MSc\\.|, M\\.A\\.| M\\.A\\.|, M\\.D\\.|, B\\.A\\.|, MMZ|, Psychoanalytiker|, L\\.L\\.M\\.|, LL\\.M\\.| \\(M\\.A\\.\\)", "")
+# Most of the times the author is listed here, sometimes contains language, maybe skip creator
+copy_field("html.body.div.2.div.2.div.div.section.1.div.4.div.div.1.div.div.1.div.2.span.2.value", "creator[].$append.name")
 add_field("creator[].$last.type", "Person")
-
-#  ---------------inLanguage----------------------------------
-
-# do array("inLanguage")
-#   do map("html.body.div.div.div.div.section.div.div.div.div.div.div.span.value")
-#     regexp(match: "Deutsch|English")
-#     replace(pattern: "Deutsch", with: "de")
-#     replace(pattern: "English", with: "en")
-#   end
-# end
+replace_all("creator[].$last.name","Apl\\. |\\(apl\\.\\) |Dr\\. med |Dr\\. |Dr\\.'in |Dr |Dr\\.med\\.|Dres\\. |Dr\\.|Prof\\. |Prof\\.'in |Prof\\.|Prof |Jun\\.-|PD |PD\\. |med\\. |rer\\. |pol\\.|nat\\. |dent\\. |em\\. |Ao\\.-|o\\. Univ\\.|Uni\\.-|Univ\\.-|Univ\\. |DI |RA |Dipl\\.|-Ing\\. |-Inform\\. |-Psych\\. |h\\.c\\. |mult\\. |Mag\\. |, MME|; MME|, MScN|M\\. Sc\\. |, MSc| MSc\\.|, M\\.A\\.| M\\.A\\.|, M\\.D\\.|, B\\.A\\.|, MMZ|, Psychoanalytiker|, L\\.L\\.M\\.|, LL\\.M\\.| \\(M\\.A\\.\\)", "")
 
 set_array("inLanguage[]")
-if any_match("html.body.div.2.div.2.div.div.section.1.div.4.div.div.1.div.div.1.div.3.span.2.value", "German|Deutsch|English|Englisch")
-  copy_field("html.body.div.2.div.2.div.div.section.1.div.4.div.div.1.div.div.1.div.3.span.2.value", "inLanguage[].$append")
-  replace_all("inLanguage[].$last", "German|Deutsch", "de")
-  replace_all("inLanguage[].$last", "English|Englisch", "en")
+do list("path": "html.body.div.*.div.*.div.div.section.*.div.*.div.div.*.div.div.*.div.*.span.*.value", "var": "$lang")
+  if all_match("$lang", "German|Deutsch|English|Englisch")
+    copy_field("$lang", "inLanguage[].$append")
+    replace_all("inLanguage[].$last", "German|Deutsch", "de")
+    replace_all("inLanguage[].$last", "English|Englisch", "en")
+  end
 end
 
-# ------ type --- 
-
 set_array("type[]", "LearningResource")
-
-# ------ learningResourceType --- 
-add_field("@hcrt","https://w3id.org/kim/hcrt/course")
-# only course
 
 set_array("learningResourceType[]")
 add_field("learningResourceType[].$append.id","https://w3id.org/kim/hcrt/course")
 add_field("learningResourceType[].$last.prefLabel.de","Kurs")
 add_field("learningResourceType[].$last.prefLabel.en","Course")
 
-# do array('learningResourceType')
-#   do entity('')
-#     map('@hcrt', 'id')
-#     do entity('prefLabel')
-#       do map('@hcrt', 'de')
-#         lookup(in: 'data/maps/hcrt-de-labels.tsv')
-#       end  
-#       do map('@hcrt', 'en')
-#         lookup(in: 'data/maps/hcrt-en-labels.tsv')
-#       end
-#     end
-#   end
-# end
-
-# ---------mainEntityOfPage----------------
-
 set_array("mainEntityOfPage[]")
-set_hash("mainEntityOfPage[].$append")
-copy_field("id", "mainEntityOfPage[].$last.id")
-set_hash("mainEntityOfPage[].$last.provider")
+copy_field("id", "mainEntityOfPage[].$append.id")
 add_field("mainEntityOfPage[].$last.provider.id","$[service_id]")
 add_field("mainEntityOfPage[].$last.provider.type","Service")
 add_field("mainEntityOfPage[].$last.provider.name","$[service_name]")
 
-# do array("mainEntityOfPage")
-#   do entity("")
-#     do map("html.head.meta.og:url", "id")
-#       replace(pattern: "\\?lang=fa", with: "")
-#     end
-#     do entity("provider")
-#       add_field("id","$[service_id]")
-#       add_field("type","Service")
-#       add_field("name","$[service_name]")
-#     end
-#   end
-# end
-
 add_field("conditionsOfAccess.id","http://w3id.org/kim/conditionsOfAccess/login")
 
-# do array("keywords", flushWith: record)
-#   map("html.body.div.div.div.div.section.section.div.a.value")
-# end
-
-# ------ tidy up --- 
-retain("@context[]","id","image","name","creator[]","contributor[]","sourceOrganization[]", "license","description","dateCreated","inLanguage[]","type[]","learningResourceType[]","keywords[]","about[]", "encoding[]", "publisher[]", "mainEntityOfPage[]", "conditionsOfAccess")
+retain("@context[]","id","image","name","creator[]","license","description","inLanguage[]","type[]","learningResourceType[]", "mainEntityOfPage[]", "conditionsOfAccess")
 vacuum()
