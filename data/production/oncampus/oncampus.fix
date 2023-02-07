@@ -39,6 +39,10 @@ do list("path": "html.body.div.*.div.*.div.div.section.*.div.*.div.div.*.div.div
   end
 end
 
+set_array("keywords[]")
+copy_field("html.body.div.2.div.2.div.div.section.4.section.3.div.a.*.product_tag", "keywords[].$append")
+flatten("keywords[]")
+
 set_array("type[]", "LearningResource")
 
 set_array("learningResourceType[]")
@@ -54,5 +58,5 @@ add_field("mainEntityOfPage[].$last.provider.name","$[service_name]")
 
 add_field("conditionsOfAccess.id","http://w3id.org/kim/conditionsOfAccess/login")
 
-retain("@context[]","id","image","name","creator[]","license","description","inLanguage[]","type[]","learningResourceType[]", "mainEntityOfPage[]", "conditionsOfAccess")
+retain("@context[]","id","image","name","creator[]","license","description","inLanguage[]","keywords[]","type[]","learningResourceType[]", "mainEntityOfPage[]", "conditionsOfAccess")
 vacuum()

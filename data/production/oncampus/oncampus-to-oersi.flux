@@ -11,7 +11,7 @@ default input_wait = "50";
 | as-records
 | filter-strings("<h3 class=\"productcost\">(free|kostenlos)</h3>")
 | read-string
-| decode-html(attrValsAsSubfields="&h3.class&h4.class")
+| decode-html(attrValsAsSubfields="&h3.class&h4.class&a.class")
 // useful for debugging and seeing full flattened input field names:
 //| fix("nothing()",repeatedFieldsToEntities="true") | flatten
 | fix(FLUX_DIR + "oncampus.fix", *)
