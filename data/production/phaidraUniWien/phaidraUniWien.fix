@@ -17,8 +17,9 @@ copy_field("metadata.resource.datacite:identifier.value", "id")
 # ---------------name----------------------------------
 # The json-validator created an error due to duplicated element "name". Therefore the two conditionals should prevent a duplicate elemente.
 
-unless exists("name")
-  do list(path:"metadata.resource.datacite:titles.datacite:title", "var": "$i")
+
+do list(path:"metadata.resource.datacite:titles.datacite:title", "var": "$i")
+  unless exists("name")
     unless exists("$i.titleType")
       copy_field("$i.value", "name")
     end
@@ -34,6 +35,14 @@ do list(path:"metadata.resource.datacite:dates.datacite:date","var":"$i")
 end
 replace_all("dateCreated","^(\\d{4})$","$1-01-01")
 
+
+# ---------------description----------------------------------
+
+do list(path: "metadata.resource.dc:description", "var":"$i")
+  unless exists("description")
+    copy_field("$i.value","description")
+  end
+end
 
 # ---------------creator----------------------------------
 set_array("creator[]")
