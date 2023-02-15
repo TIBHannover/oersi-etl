@@ -35,6 +35,14 @@ end
 replace_all("dateCreated","^(\\d{4})$","$1-01-01")
 
 
+# ---------------description----------------------------------
+
+unless exists("description")
+  do list(path: "metadata.resource.dc:description", "var":"$i")
+    copy_field("$i.value","description")
+  end
+end
+
 # ---------------creator----------------------------------
 set_array("creator[]")
 do list(path: "metadata.resource.datacite:creators.datacite:creator", "var": "$i")
