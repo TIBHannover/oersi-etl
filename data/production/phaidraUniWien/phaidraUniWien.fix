@@ -185,7 +185,13 @@ if exists("metadata.resource.file")
   copy_field("metadata.resource.file.value","encoding[].$append.contentUrl")
   copy_field("metadata.resource.file.mimeType","encoding[].$last.mimeType")
   add_field("encoding[].$last.type", "MediaObject")
+  if any_contain("id","o:")
+    add_field("encoding[].$append.type", "MediaObject")
+    copy_field("id", "encoding[].$last.embedUrl")
+  end
 end
+
+replace_all("encoding[].*.embedUrl",".*(o:.*)","https://services.phaidra.univie.ac.at/api/object/$1/preview")
 
 # -------isPartOf/hasPart---------
 set_array("isPartOf[]")
@@ -201,14 +207,6 @@ end
 # ---------------conditionsOfAccess----------------------------------
 add_field("conditionsOfAccess.id","http://w3id.org/kim/conditionsOfAccess/no_login") 
 
-# ------encoding------
-if any_contain("id","o:")
-  set_array("encoding[]")
-  add_field("encoding[].$append.type", "MediaObject")
-  copy_field("id", "encoding[].$last.embedUrl")
-end
-
-replace_all("encoding[].*.embedUrl",".*(o:.*)","https://services.phaidra.univie.ac.at/api/object/$1/preview")
 
 # ---------------@context ----------------------------------
 
