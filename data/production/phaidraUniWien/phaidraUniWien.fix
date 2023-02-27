@@ -139,7 +139,7 @@ lookup("inLanguage[].*",
   "eng": "en"
   )
 
-# ---------keywords----------------
+# ---------keywords & about----------------
 
 set_array("keywords[]")
 set_array("@about")
@@ -161,6 +161,7 @@ end
 
 flatten("keywords[]")
 flatten("@about")
+trim("@about.*")
 
 do list(path: "@about", "var":"$i")
   unless any_equal("$i","ÖFOS 2012")
@@ -176,7 +177,10 @@ do list(path: "about[]", "var":"$i")
   lookup("$i.prefLabel.de", "data/maps/subject-labels.tsv","sep_char":"\t", delete:"true")
 end
 
+replace_all("keywords[].*", " \\((\\d*)\\)","")
+trim("keywords[].*")
 uniq("about[]")
+uniq("keywords[]")
 
 # ------ encoding --- 
 
