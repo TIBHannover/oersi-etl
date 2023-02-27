@@ -1,5 +1,5 @@
 {
-  "$id": "resource:/schemas/caption.json",
+  "$id": "caption.json",
   "$schema": "http://json-schema.org/draft-07/schema#",
   "title": "Caption",
   "description": "The caption/subtitle file for an audio/video resource",
@@ -24,13 +24,12 @@
         "type": "string"
       },
       "inLanguage": {
-        "$ref": "https://w3id.org/kim/amb/draft/schemas/Language.json"
-      } 
+        "$ref": "Language.json"
+      }
     },
     "required": [
       "id",
       "type"
     ]
-
   }
 }
