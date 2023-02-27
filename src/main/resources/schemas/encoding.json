@@ -27,8 +27,9 @@
       },
       "contentSize": {
         "title": "Content Size",
-        "description": "The size of the media object in (kilo/mega/giga) bytes.",
-        "type": "string"
+        "description": "The size of the media object in bytes (B) without units.",
+        "type": "string",
+        "pattern": "^\\d+$"
       },
       "sha256": {
         "title": "sha256",
