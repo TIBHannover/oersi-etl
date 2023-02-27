@@ -253,6 +253,7 @@ do list(path: "metadata.inlined.mediapackage.publications.publication", "var": "
     copy_field("$i.media.track.size.value", "encoding[].$last.contentSize")
     copy_field("$i.media.track.mimetype.value", "encoding[].$last.encodingFormat")    
     add_field("encoding[].$last.type", "MediaObject")
+    copy_field("$i.media.track.duration.value", "duration")  
   end
 end
 
