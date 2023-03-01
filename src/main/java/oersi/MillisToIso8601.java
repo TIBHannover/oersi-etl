@@ -18,13 +18,13 @@ import org.metafacture.metafix.api.FixFunction;
 public class MillisToIso8601 implements FixFunction {
 
     @Override
-    public void apply(Metafix metafix, Record record, List<String> params,
+    public void apply(Metafix metafix, Record theRecord, List<String> params,
             Map<String, String> options) {
         String fieldName = params.get(0);
-        if (record.containsField(fieldName)) {
-            String oldValue = record.get(fieldName).asString();
+        if (theRecord.get(fieldName) != null) {
+            String oldValue = theRecord.get(fieldName).asString();
             String newValue = Duration.ofMillis(Long.parseLong(oldValue)).toString();
-            record.put(fieldName, new Value(newValue));
+            theRecord.set(fieldName, new Value(newValue));
         }
     }
 

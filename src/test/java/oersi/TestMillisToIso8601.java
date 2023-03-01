@@ -18,8 +18,9 @@ public final class TestMillisToIso8601 {
     @Test
     public void millisToIso8601() {
         Record record = new Record();
-        record.put("duration", new Value("83926"));
-        new MillisToIso8601().apply(null, record, Arrays.asList("duration"), null);
-        Assert.assertEquals("PT1M23.926S", record.get("duration").asString());
+        record.add("nested[]", Value.newArray());
+        record.addNested("nested[].$append.size", new Value("83926"));
+        new MillisToIso8601().apply(null, record, Arrays.asList("nested[].$last.size"), null);
+        Assert.assertEquals("PT1M23.926S", record.get("nested[].$last.size").asString());
     }
 }
