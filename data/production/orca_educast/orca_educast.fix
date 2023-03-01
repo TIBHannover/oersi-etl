@@ -257,6 +257,8 @@ do list(path: "metadata.inlined.mediapackage.publications.publication", "var": "
   end
 end
 
+oersi.MillisToIso8601("duration")
+
 do list(path: "metadata.inlined.mediapackage.publications.publication", "var": "$i")
   if all_match("$i.url.value", "^https:\\/\\/player.orca.educast.nrw\\/.*")
     copy_field("$i.url.value", "encoding[].$append.embedUrl")
