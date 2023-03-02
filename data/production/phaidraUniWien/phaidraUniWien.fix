@@ -26,14 +26,14 @@ do list(path:"metadata.resource.datacite:titles.datacite:title", "var": "$i")
   end
 end
 
-# ---------------dateCreated----------------------------------
+# ---------------datePublished----------------------------------
 
 do list(path:"metadata.resource.datacite:dates.datacite:date","var":"$i")
   if any_equal("$i.dateType", "Issued")
-    copy_field("$i.value","dateCreated")
+    copy_field("$i.value","datePublished")
   end
 end
-replace_all("dateCreated","^(\\d{4})$","$1-01-01")
+replace_all("datePublished","^(\\d{4})$","$1-01-01")
 
 
 # ---------------description----------------------------------
@@ -139,7 +139,7 @@ lookup("inLanguage[].*",
   "eng": "en"
   )
 
-# ---------keywords----------------
+# ---------keywords & about----------------
 
 set_array("keywords[]")
 set_array("@about")
@@ -161,6 +161,7 @@ end
 
 flatten("keywords[]")
 flatten("@about")
+trim("@about.*")
 
 do list(path: "@about", "var":"$i")
   unless any_equal("$i","ÖFOS 2012")
@@ -176,7 +177,10 @@ do list(path: "about[]", "var":"$i")
   lookup("$i.prefLabel.de", "data/maps/subject-labels.tsv","sep_char":"\t", delete:"true")
 end
 
+replace_all("keywords[].*", " \\((\\d*)\\)","")
+trim("keywords[].*")
 uniq("about[]")
+uniq("keywords[]")
 
 # ------ encoding --- 
 
