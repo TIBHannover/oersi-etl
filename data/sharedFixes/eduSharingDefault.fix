@@ -89,6 +89,25 @@ do list(path:"properties.ccm:university_DISPLAYNAME[]", "var": "$i")
     add_field("sourceOrganization[].$last.type", "Organization")
   end
 end
+do list(path:"properties.ccm:lifecyclecontributer_publisher[]", "var": "$i")
+  if any_match("$i", "^BEGIN:VCARD\nORG:(.+)\n[\\s\\S]*\nEND:VCARD$")
+    copy_field("$i", "sourceOrganization[].$append.name")
+    add_field("sourceOrganization[].$last.type", "Organization")
+    replace_all("sourceOrganization[].$last.name","^BEGIN:VCARD\nORG:(.+)\n[\\s\\S]*\nEND:VCARD$", "$1")
+    replace_all("sourceOrganization[].$last.name","\\\\", "")
+  end
+end
+
+do list(path:"properties.ccm:lifecyclecontributer_initiator[]", "var": "$i")
+  if any_match("$i", "^BEGIN:VCARD\nORG:(.+)\n[\\s\\S]*\nEND:VCARD$")
+    copy_field("$i", "sourceOrganization[].$append.name")
+    add_field("sourceOrganization[].$last.type", "Organization")
+    replace_all("sourceOrganization[].$last.name","^BEGIN:VCARD\nORG:(.+)\n[\\s\\S]*\nEND:VCARD$", "$1")
+    replace_all("sourceOrganization[].$last.name","\\\\", "")
+  end
+end
+
+
 
 
 #  ---------------license----------------------------------
