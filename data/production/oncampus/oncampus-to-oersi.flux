@@ -11,12 +11,13 @@ default input_wait = "50";
 | as-records
 | filter-strings("<h3 class=\"productcost\">(free|kostenlos)</h3>")
 | read-string
-| decode-html(attrValsAsSubfields="&h3.class&h4.class&a.class")
+| oersi.HtmlDecoder(attrValsAsSubfields="&h3.class&h4.class&a.class")
 // useful for debugging and seeing full flattened input field names:
 //| fix("nothing()",repeatedFieldsToEntities="true") | flatten
 | fix(FLUX_DIR + "oncampus.fix", *)
 | encode-json(prettyPrinting="false")
 | oersi.JsonValidator(output_schema, writeValid=metadata_valid, writeInvalid=metadata_invalid)
-| print
-//| oersi.OersiWriter(backend_api, user=backend_user, pass=backend_pass, log=metadata_responses)
+// useful for debugging without running oersi-setup / -backend:
+//| print
+| oersi.OersiWriter(backend_api, user=backend_user, pass=backend_pass, log=metadata_responses)
 ;

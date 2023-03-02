@@ -16,8 +16,8 @@ end
 
 copy_field("html.head.title.value", "name")
 
-copy_field("html.head.meta.og:description", "description")
-uniq("description")
+# meta tags have an issue here, see https://gitlab.com/oersi/oersi-etl/-/merge_requests/156#note_1298578328
+copy_field("html.body.div.2.div.2.div.div.section.2.section.1.section.1.div.value", "description")
 
 copy_field("html.head.meta.og:image","image")
 uniq("image")
