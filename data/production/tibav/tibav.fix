@@ -80,6 +80,10 @@ copy_field("header.identifier.value","encoding[].$append.embedUrl")
 add_field("encoding[].$last.type", "MediaObject")
 replace_all("encoding[].*.embedUrl", "oai:tib.eu:kmo-av:sid~", "https://av.tib.eu/player/")
 
+# ------ duration --- 
+copy_field("metadata.resources.resource.sizes.size.value","duration")
+replace_all("duration","(.*), (.*):(.*):(.*):(.*)", "PT$2H$3M$4S")
+
 
 # ------ publisher --- 
 
