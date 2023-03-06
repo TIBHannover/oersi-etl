@@ -20,8 +20,8 @@ do list(path:"html.head.meta","var":"$i")
   copy_field("$i.DC_Date_created", "dateCreated")
 
   # ---------------license --------
-  if any_match("$i_DC_Rights","https://creativecommons.org/.*")
-    copy_field("$i_DC_Rights", "license.id")
+  if any_match("$i.DC_Rights","https://creativecommons.org/.*")
+    copy_field("$i.DC_Rights", "license.id")
   end
 
   # ------ creator --- 
@@ -45,8 +45,8 @@ add_field("learningResourceType[].$append.id","https://w3id.org/kim/hcrt/textboo
 add_field("learningResourceType[].$last.prefLabel.de","Lehrbuch")
 add_field("learningResourceType[].$last.prefLabel.en","Textbook")
 
-  # ------ type --- 
-  set_array("type[]", "LearningResource")
+# ------ type --- 
+set_array("type[]", "LearningResource")
 
 # ------ about --- 
 set_array("about[]")
@@ -55,31 +55,31 @@ add_field("about[].$last.prefLabel.de", "Allgemeine und vergleichende Literatur-
 
 
 
-  # ---------mainEntityOfPage----------------
-  set_array("mainEntityOfPage[]")
-  copy_field("id", "mainEntityOfPage[].$append.id")
-  add_field("mainEntityOfPage[].$last.provider.id","$[service_id]")
-  add_field("mainEntityOfPage[].$last.provider.type","Service")
-  add_field("mainEntityOfPage[].$last.provider.name","$[service_name]")
+# ---------mainEntityOfPage----------------
+set_array("mainEntityOfPage[]")
+copy_field("id", "mainEntityOfPage[].$append.id")
+add_field("mainEntityOfPage[].$last.provider.id","$[service_id]")
+add_field("mainEntityOfPage[].$last.provider.type","Service")
+add_field("mainEntityOfPage[].$last.provider.name","$[service_name]")
 
-  # ---------------@context ----------------------------------
+# ---------------@context ----------------------------------
 
-  set_array("@context[]", "https://w3id.org/kim/amb/draft/context.jsonld")
-  # resource is german therefore prefer de if multiple or no inLanguage are available
-  if any_equal("inLanguage[]","de")
-    set_hash("@context[].$append", "@language": "de")
-  elsif any_equal("inLanguage[]","en")
-    set_hash("@context[].$append", "@language": "en")
-  else
-    copy_field("inLanguage[].1", "@context[].$append.@language")
-  end
-  # resources without inLanguage-Values set default to de
-  unless exists("inLanguage[].1")
-    set_hash("@context[].$append", "@language": "de")
-  end
+set_array("@context[]", "https://w3id.org/kim/amb/draft/context.jsonld")
+# resource is german therefore prefer de if multiple or no inLanguage are available
+if any_equal("inLanguage[]","de")
+  set_hash("@context[].$append", "@language": "de")
+elsif any_equal("inLanguage[]","en")
+  set_hash("@context[].$append", "@language": "en")
+else
+  copy_field("inLanguage[].1", "@context[].$append.@language")
+end
+# resources without inLanguage-Values set default to de
+unless exists("inLanguage[].1")
+  set_hash("@context[].$append", "@language": "de")
+end
 
 
 
-  # ------ tidy up --- 
-  include ("../../sharedFixes/retain.fix")
-  vacuum()
+# ------ tidy up --- 
+include ("../../sharedFixes/retain.fix")
+vacuum()
