@@ -82,8 +82,11 @@ replace_all("encoding[].*.embedUrl", "oai:tib.eu:kmo-av:sid~", "https://av.tib.e
 
 # ------ duration --- 
 copy_field("metadata.resources.resource.sizes.size.value","duration")
-replace_all("duration","(.*), (.*):(.*):(.*):(.*)", "PT$2H$3M$4S")
-
+if any_match("duration","(.*), (.*):(.*):(.*):(.*)")
+  replace_all("duration","(.*), (.*):(.*):(.*):(.*)", "PT$2H$3M$4S")
+else
+  remove_field("duration")
+end
 
 # ------ publisher --- 
 
