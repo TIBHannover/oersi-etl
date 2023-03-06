@@ -1,5 +1,4 @@
-set_array("@context[]", "https://w3id.org/kim/amb/draft/context.jsonld")
-set_hash("@context[].$append", "@language": "de")
+# -----------id-----------
 
 copy_field("html.head.meta.og:url", "id")
 if exists("id")
@@ -14,22 +13,29 @@ else
   replace_all("id", "&lang=[^&]+", "")
 end
 
+
+# -------------name--------------
 copy_field("html.head.title.value", "name")
 
+# -------------description--------------
 # meta tags have an issue here, see https://gitlab.com/oersi/oersi-etl/-/merge_requests/156#note_1298578328
 copy_field("html.body.div.2.div.2.div.div.section.2.section.1.section.1.div.value", "description")
 
+# -------------image--------------
 copy_field("html.head.meta.og:image","image")
 uniq("image")
 
+# -------------license--------------
 copy_field("html.body.div.div.div.div.section.section.section.div.section.p.a.license", "license.id")
 
+# -------------creator--------------
 set_array("creator[]")
 # Most of the times the author is listed here, sometimes contains language, maybe skip creator
 copy_field("html.body.div.2.div.2.div.div.section.1.div.4.div.div.1.div.div.1.div.2.span.2.value", "creator[].$append.name")
 add_field("creator[].$last.type", "Person")
 replace_all("creator[].$last.name","Apl\\. |\\(apl\\.\\) |Dr\\. med |Dr\\. |Dr\\.'in |Dr |Dr\\.med\\.|Dres\\. |Dr\\.|Prof\\. |Prof\\.'in |Prof\\.|Prof |Jun\\.-|PD |PD\\. |med\\. |rer\\. |pol\\.|nat\\. |dent\\. |em\\. |Ao\\.-|o\\. Univ\\.|Uni\\.-|Univ\\.-|Univ\\. |DI |RA |Dipl\\.|-Ing\\. |-Inform\\. |-Psych\\. |h\\.c\\. |mult\\. |Mag\\. |, MME|; MME|, MScN|M\\. Sc\\. |, MSc| MSc\\.|, M\\.A\\.| M\\.A\\.|, M\\.D\\.|, B\\.A\\.|, MMZ|, Psychoanalytiker|, L\\.L\\.M\\.|, LL\\.M\\.| \\(M\\.A\\.\\)", "")
 
+# -------------inLanguage--------------
 set_array("inLanguage[]")
 do list("path": "html.body.div.*.div.*.div.div.section.*.div.*.div.div.*.div.div.*.div.*.span.*.value", "var": "$lang")
   if all_match("$lang", "German|Deutsch|English|Englisch")
@@ -39,24 +45,49 @@ do list("path": "html.body.div.*.div.*.div.div.section.*.div.*.div.div.*.div.div
   end
 end
 
+# -------------keywords--------------
 set_array("keywords[]")
 copy_field("html.body.div.2.div.2.div.div.section.4.section.3.div.a.*.product_tag", "keywords[].$append")
 flatten("keywords[]")
 
+# -------------type--------------
 set_array("type[]", "LearningResource")
 
+# -------------learningResourceType--------------
 set_array("learningResourceType[]")
 add_field("learningResourceType[].$append.id","https://w3id.org/kim/hcrt/course")
 add_field("learningResourceType[].$last.prefLabel.de","Kurs")
 add_field("learningResourceType[].$last.prefLabel.en","Course")
 
+
+# -------------mainEntityOfPage--------------
 set_array("mainEntityOfPage[]")
 copy_field("id", "mainEntityOfPage[].$append.id")
 add_field("mainEntityOfPage[].$last.provider.id","$[service_id]")
 add_field("mainEntityOfPage[].$last.provider.type","Service")
 add_field("mainEntityOfPage[].$last.provider.name","$[service_name]")
 
+# -------------conditionsOfAccess--------------
 add_field("conditionsOfAccess.id","http://w3id.org/kim/conditionsOfAccess/login")
 
-retain("@context[]","id","image","name","creator[]","license","description","inLanguage[]","keywords[]","type[]","learningResourceType[]", "mainEntityOfPage[]", "conditionsOfAccess")
+# ---------------@context ----------------------------------
+
+set_array("@context[]", "https://w3id.org/kim/amb/draft/context.jsonld")
+# resource is german therefore prefer de if multiple or no inLanguage are available
+if any_equal("inLanguage[]","de")
+  set_hash("@context[].$append", "@language": "de")
+elsif any_equal("inLanguage[]","en")
+  set_hash("@context[].$append", "@language": "en")
+else
+  copy_field("inLanguage[].1", "@context[].$append.@language")
+end
+# resources without inLanguage-Values set default to de
+unless exists("inLanguage[].1")
+  set_hash("@context[].$append", "@language": "de")
+end
+
+
+# ------ tidy up --- 
+include ("../../sharedFixes/retain.fix")
 vacuum()
+
