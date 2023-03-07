@@ -40,7 +40,7 @@ replace_all("image", "oai:tib.eu:kmo-av:sid~", "https://av.tib.eu/thumbnail/")
 
 do list(path:"metadata.resources.resource.dates.date","var":"$i")
   if any_equal("$i.dateType", "Issued")
-    copy_field("$i.value","dateCreated")
+    copy_field("$i.value","datePublished")
   end
 end
 
