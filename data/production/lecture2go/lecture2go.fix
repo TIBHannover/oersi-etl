@@ -50,7 +50,7 @@ end
 
 # ---------------license----------------------------------
 
-unless any_equal("metadata.oai_datacite.payload.resource.rightsList.rights.rightsURI", "http://rightsstatements.org/vocab/InC/1.0/")
+if any_match("metadata.oai_datacite.payload.resource.rightsList.rights.rightsURI","^http[s]?:\\/\\/creativecommons.org\\/(licenses|licences|publicdomain)\\/.*|^http[s]?:\\/\\/www.gnu.org\\/licenses\\/.*|^http[s]?:\\/\\/www.apache.org\\/licenses\\/.*|http[s]?://opensource.org/licenses/MIT|^http[s]?:\\/\\/www.opensource.org\\/licenses\\/BSD.*")
   copy_field("metadata.oai_datacite.payload.resource.rightsList.rights.rightsURI","license.id")
 end
 
@@ -94,7 +94,9 @@ add_field("mainEntityOfPage[].$last.provider.name","$[service_name]")
 # ---------inLanguage----------------
 
 set_array("inLanguage[]")
-copy_field("metadata.oai_datacite.payload.resource.language.value","inLanguage[].$append")
+unless any_contain("metadata.oai_datacite.payload.resource.language.value","xx")
+  copy_field("metadata.oai_datacite.payload.resource.language.value","inLanguage[].$append")
+end
 replace_all("inLanguage[].*", "http://id.loc.gov/vocabulary/iso639-1/", "")
 
 
@@ -113,14 +115,19 @@ do list(path:"metadata.oai_datacite.payload.resource.creators.creator", "var":"$
   end
   do list(path:"$i.nameIdentifier", "var":"$j")
     if any_equal("$j.nameIdentifierScheme","ORCID")
-      copy_field("$j.value", "creator[].$last.id")
+      if any_match("$j.value", "(\\d{4}-\\d{4}-\\d{4}-\\d{4}).*|.*(\\d{4}-\\d{4}-\\d{4}-\\d{4}).*")
+        copy_field("$j.value", "creator[].$last.id")
+      end
     end
   end
-  copy_field("$i.affiliation.value", "creator[].$last.affiliation.name")
+  if exists("$i.affiliation.value")
+    copy_field("$i.affiliation.value", "creator[].$last.affiliation.name")
+    add_field("creator[].$last.affiliation.type", "Organization")
+  end
 end
 
 replace_all("creator[].*.name","(.+), (.+)", "$2 $1")
-prepend("creator[].*.id", "https://orcid.org/")
+replace_all("creator[].*.id", "(\\d{4}-\\d{4}-\\d{4}-\\d{4}).*|.*(\\d{4}-\\d{4}-\\d{4}-\\d{4}).*","https://orcid.org/$1")
 
 # ---------contributor----------------
 set_array("contributor[]")
@@ -184,5 +191,9 @@ unless exists("inLanguage[].1")
 end
 
 # ------ tidy up --- 
-retain("keywords[]")
+include ("../../sharedFixes/retain.fix")
 vacuum()
+
+unless exists ("id")
+  reject()
+end
