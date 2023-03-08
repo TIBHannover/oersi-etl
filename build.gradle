@@ -47,6 +47,7 @@ dependencies {
     implementation('org.metafacture:metafacture-biblio:5.5.0') {
         exclude group: 'xml-apis', module: 'xml-apis'
     }
+    implementation 'org.metafacture:metafacture-csv:5.5.0'
     // Required after upgrade to Gradle 7.2 in metafacture-fix:
     // (TODO: avoid RecognitionException/Flux.main in ETL.java)
     implementation "org.antlr:antlr-runtime:3.2"
