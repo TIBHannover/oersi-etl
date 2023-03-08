@@ -13,51 +13,45 @@ include ("../../sharedFixes/macros.fix")
 
 
 # ---------------id----------------------------------
-# id: Construct actual ID from @id. Picked from header not from record itself.
-
-copy_field("header.identifier.value","id")
-replace_all("id", "oai:tib.eu:kmo-av:sid~", "https://av.tib.eu/media/")
+do list(path:"metadata.oai_datacite.payload.resource.identifier","var":"$i")
+  if any_equal("$i.identifierType", "URL")
+    copy_field("$i.value","id")
+  end
+end
 
 
 # ---------------name----------------------------------
 # The json-validator created an error due to duplicated element "name". Therefore the two conditionals should prevent a duplicate elemente.
 
 unless exists("name")
-  do list(path:"metadata.resources.resource.titles.title", "var": "$i")
+  do list(path:"metadata.oai_datacite.payload.resource.titles.title", "var": "$i")
     unless exists("$i.titleType")
       copy_field("$i.value", "name")
     end
   end
 end
 
-# ---------------image----------------------------------
-
-copy_field("header.identifier.value","image")
-replace_all("image", "oai:tib.eu:kmo-av:sid~", "https://av.tib.eu/thumbnail/")
-
 
 # ---------------dateCreated----------------------------------
 
-do list(path:"metadata.resources.resource.dates.date","var":"$i")
-  if any_equal("$i.dateType", "Issued")
-    copy_field("$i.value","datePublished")
+do list(path:"metadata.oai_datacite.payload.resource.dates.date","var":"$i")
+  if any_equal("$i.dateType", "Created")
+    copy_field("$i.value","dateCreated")
   end
 end
 
 
 # ---------------description----------------------------------
 
-do list(path:"metadata.resources.resource.descriptions.description","var":"$i")
-  if any_equal("$i.descriptionType", "Abstract")
-    copy_field("$i.value","description")
-  end
+do list(path:"metadata.oai_datacite.payload.resource.descriptions.description","var":"$i")
+  copy_field("$i.value","description")
 end
-replace_all("description", "^\\(de\\)|^\\(en\\)", "")
+
 
 # ---------------license----------------------------------
 
-unless any_equal("metadata.resources.resource.rightsList.rights.rightsURI", "http://rightsstatements.org/vocab/InC/1.0/")
-  copy_field("metadata.resources.resource.rightsList.rights.rightsURI","license.id")
+if any_match("metadata.oai_datacite.payload.resource.rightsList.rights.rightsURI","^http[s]?:\\/\\/creativecommons.org\\/(licenses|licences|publicdomain)\\/.*|^http[s]?:\\/\\/www.gnu.org\\/licenses\\/.*|^http[s]?:\\/\\/www.apache.org\\/licenses\\/.*|http[s]?://opensource.org/licenses/MIT|^http[s]?:\\/\\/www.opensource.org\\/licenses\\/BSD.*")
+  copy_field("metadata.oai_datacite.payload.resource.rightsList.rights.rightsURI","license.id")
 end
 
 # ------ type --- 
@@ -73,26 +67,16 @@ add_field("learningResourceType[].$last.prefLabel.de","Video")
 add_field("learningResourceType[].$last.prefLabel.en","Video")
 
 
-# ------ encoding --- 
-
-set_array("encoding[]")
-copy_field("header.identifier.value","encoding[].$append.embedUrl")
-add_field("encoding[].$last.type", "MediaObject")
-replace_all("encoding[].*.embedUrl", "oai:tib.eu:kmo-av:sid~", "https://av.tib.eu/player/")
-
 # ------ duration --- 
-copy_field("metadata.resources.resource.sizes.size.value","duration")
-if any_match("duration","(.*), (.*):(.*):(.*):(.*)")
-  replace_all("duration","(.*), (.*):(.*):(.*):(.*)", "PT$2H$3M$4S")
-else
-  remove_field("duration")
-end
+copy_field("metadata.oai_datacite.payload.resource.sizes.size.value","duration")
+replace_all("duration","(.*):(.*):(.*)", "PT$1H$2M$3S")
+
 
 # ------ publisher --- 
 
 set_array("publisher[]")
 
-do list(path:"metadata.resources.resource.publisher","var":"$i")
+do list(path:"metadata.oai_datacite.payload.resource.publisher","var":"$i")
   copy_field("$i.value","publisher[].$append.name")
   add_field("publisher[].$last.type", "Organization")
 end
@@ -100,7 +84,8 @@ end
 # ---------mainEntityOfPage----------------
 
 set_array("mainEntityOfPage[]")
-copy_field("id", "mainEntityOfPage[].$append.id")
+add_field("mainEntityOfPage[].$append.test","")
+copy_field("id", "mainEntityOfPage[].$last.id")
 add_field("mainEntityOfPage[].$last.provider.id","$[service_id]")
 add_field("mainEntityOfPage[].$last.provider.type","Service")
 add_field("mainEntityOfPage[].$last.provider.name","$[service_name]")
@@ -109,7 +94,9 @@ add_field("mainEntityOfPage[].$last.provider.name","$[service_name]")
 # ---------inLanguage----------------
 
 set_array("inLanguage[]")
-copy_field("metadata.resources.resource.language.value","inLanguage[].$append")
+unless any_contain("metadata.oai_datacite.payload.resource.language.value","xx")
+  copy_field("metadata.oai_datacite.payload.resource.language.value","inLanguage[].$append")
+end
 replace_all("inLanguage[].*", "http://id.loc.gov/vocabulary/iso639-1/", "")
 
 
@@ -117,7 +104,7 @@ replace_all("inLanguage[].*", "http://id.loc.gov/vocabulary/iso639-1/", "")
 # TIB does not differentiate between an organisation and a person.
 
 set_array("creator[]")
-do list(path:"metadata.resources.resource.creators.creator", "var":"$i")
+do list(path:"metadata.oai_datacite.payload.resource.creators.creator", "var":"$i")
 # There might be creators with empty names that are filtered out at the beginning.
   add_field("creator[].$append.test", "")
   copy_field("$i.creatorName.value", "creator[].$last.name")
@@ -128,17 +115,23 @@ do list(path:"metadata.resources.resource.creators.creator", "var":"$i")
   end
   do list(path:"$i.nameIdentifier", "var":"$j")
     if any_equal("$j.nameIdentifierScheme","ORCID")
-      copy_field("$j.value", "creator[].$last.id")
+      if any_match("$j.value", "(\\d{4}-\\d{4}-\\d{4}-\\d{4}).*|.*(\\d{4}-\\d{4}-\\d{4}-\\d{4}).*")
+        copy_field("$j.value", "creator[].$last.id")
+      end
     end
+  end
+  if exists("$i.affiliation.value")
+    copy_field("$i.affiliation.value", "creator[].$last.affiliation.name")
+    add_field("creator[].$last.affiliation.type", "Organization")
   end
 end
 
 replace_all("creator[].*.name","(.+), (.+)", "$2 $1")
-prepend("creator[].*.id", "https://orcid.org/")
+replace_all("creator[].*.id", "(\\d{4}-\\d{4}-\\d{4}-\\d{4}).*|.*(\\d{4}-\\d{4}-\\d{4}-\\d{4}).*","https://orcid.org/$1")
 
 # ---------contributor----------------
 set_array("contributor[]")
-do list(path:"metadata.resources.resource.contributors.contributor", "var":"$i")
+do list(path:"metadata.oai_datacite.payload.resource.contributors.contributor", "var":"$i")
 # There might be contributors with empty names that are filtered out at the beginning.
   add_field("contributor[].$append.test", "")
   copy_field("$i.contributorName.value", "contributor[].$last.name")
@@ -156,45 +149,30 @@ end
 
 # contributors have functions in parenthesis these need to be deleted
 replace_all("contributor[].*.name","(.+), (.+)", "$2 $1")
-replace_all("contributor[].*.name","\\(.+\\)", "")
-replace_all("contributor[].*.name","  ", " ")
 prepend("contributor[].*.id", "https://orcid.org/")
 
 
 # ---------keywords----------------
 
 set_array("keywords[]")
-do list(path:"metadata.resources.resource.subjects.subject", "var":"$i")
+do list(path:"metadata.oai_datacite.payload.resource.subjects.subject", "var":"$i")
   copy_field("$i.value", "keywords[].$append")
 end
 
-# ---------about----------------
-# All subjects with knm or linsearch attribute are transformed to about objects. Duplicate objects should be avoided. kmn and linsearch are almoist identical. 
-
-set_array("@hochschulfaechersystematik")
-do list(path:"metadata.resources.resource.subjects.subject", "var":"$i")
-  if any_match("$i.subjectScheme", "linsearch.*")
-    copy_field("$i.value", "@hochschulfaechersystematik.$append")
-  elsif any_match("$i.subjectScheme", "knm")
-    copy_field("$i.classificationCode", "@hochschulfaechersystematik.$append")
-  end
-end
-
-trim("@hochschulfaechersystematik.*")
-uniq("@hochschulfaechersystematik")
-lookup("@hochschulfaechersystematik.*","data/maps/tibav-subject-mapping.tsv","sep_char":"\t", delete:"true")
-
-set_array("about[]")
-copy_field("@hochschulfaechersystematik.*","about[].$append.id")
-
-do list(path: "about[]")
-  copy_field("id", "prefLabel.de")
-  lookup("prefLabel.de","data/maps/subject-labels.tsv","sep_char":"\t", delete:"true")
-end
 
 # ---------------conditionsOfAccess----------------------------------
 add_field("conditionsOfAccess.id","http://w3id.org/kim/conditionsOfAccess/no_login")
 
+# -------isPartOf/hasPart---------
+set_array("isPartOf[]")
+set_array("hasPart[]")
+do list(path: "metadata.oai_datacite.payload.resource.relatedIdentifiers.relatedIdentifier", "var": "$i")
+  if any_equal("$i.relationType","IsPartOf")
+    copy_field("$i.value", "isPartOf[].$append.id")
+  elsif any_equal("$i.relationType","HasPart")
+    copy_field("$i.value", "hasPart[].$append.id")
+  end
+end
 
 # ---------------@context ----------------------------------
 
@@ -215,3 +193,7 @@ end
 # ------ tidy up --- 
 include ("../../sharedFixes/retain.fix")
 vacuum()
+
+unless exists ("id")
+  reject()
+end
