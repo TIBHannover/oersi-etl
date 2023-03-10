@@ -44,7 +44,7 @@ lookup("about[].*.prefLabel.de", "data/maps/subject-labels.tsv","sep_char":"\t",
 
 do list(path:"learningResourceType[]", "var":"$i")
   if any_match("$i.id",".*(study|report).*")
-    replace_all("$i.id",".*","https://w3id.org/kim/hcrt/text")
+    replace_all("$i.id","^.*?$","https://w3id.org/kim/hcrt/text")
     add_field("$i.prefLabel.de","Textdokument")
     add_field("$i.prefLabel.en","Text")
   end
