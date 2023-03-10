@@ -24,17 +24,21 @@ do list(path:"html.head.meta","var":"$i")
     copy_field("$i.DC_Rights", "license.id")
   end
 
+end
+
+do list(path:"html.head.meta.DC_Creator_PersonalName","var":"$i")
   # ------ creator --- 
   set_array("creator[]")
-  copy_field("$i.DC_Creator_PersonalName", "creator[].$append.name")
-  add_field("creator[].*.type", "Person")
+  copy_field("$i", "creator[].$append.name")
+end
+add_field("creator[].*.type", "Person")
 
-
+do list(path:"html.head.meta.DC_Language","var":"$i")
   # ------ inLanguage------
   set_array("inLanguage[]")
-  copy_field("$i.DC_Language", "inLanguage[].$append")
-
+  copy_field("$i", "inLanguage[].$append")
 end
+
 # ---------------conditionsOfAccess----------------------------------
 add_field("conditionsOfAccess.id","http://w3id.org/kim/conditionsOfAccess/no_login") 
 
