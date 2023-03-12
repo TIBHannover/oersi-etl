@@ -80,6 +80,18 @@
     "conditionsOfAccess": {
       "$ref": "conditionsOfAccess.json"
     },
+    "assesses": {
+      "$ref": "assesses.json"
+    },
+    "competencyRequired": {
+      "$ref": "competencyRequired.json"
+    },
+    "teaches": {
+      "$ref": "teaches.json"
+    },
+    "educationalLevel": {
+      "$ref": "educationalLevel.json"
+    },
     "isAccessibleForFree": {
       "$ref": "isAccessibleForFree.json"
     },
