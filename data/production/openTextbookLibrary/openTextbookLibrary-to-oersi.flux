@@ -10,6 +10,6 @@ default input_limit = "-1"; // 'default': is overridden by command-line/properti
 | decode-json
 | fix(FLUX_DIR + "openTextbookLibrary.fix",*)
 | encode-json
-| oersi.JsonValidator(output_schema, writeValid=metadata_valid, writeInvalid=metadata_invalid)
+| oersi.JsonValidator(output_schema, output_schema_resolution_scope, writeValid=metadata_valid, writeInvalid=metadata_invalid)
 | oersi.OersiWriter(backend_api, user=backend_user, pass=backend_pass, log=metadata_responses)
 ;

@@ -27,7 +27,8 @@ import com.google.common.collect.ImmutableMap;
  */
 public final class TestJsonValidator {
 
-    private static final String SCHEMA = "/schemas/schema.json";
+    private static final String SCHEMA = "https://gitlab.com/oersi/oersi-schema/-/raw/main/schemas/metadata/schema.json";
+    private static final String SCHEMA_RESOLUTION_SCOPE = "https://gitlab.com/oersi/oersi-schema/-/raw/main/schemas/metadata/";
     private static final List<Serializable> CONTEXT = Arrays.asList( //
             "https://w3id.org/kim/amb/draft/context.jsonld", //
             ImmutableMap.of("@language", "de"));
@@ -66,7 +67,7 @@ public final class TestJsonValidator {
     @Before
     public void setup() {
         MockitoAnnotations.initMocks(this);
-        validator = new JsonValidator(SCHEMA);
+        validator = new JsonValidator(SCHEMA, SCHEMA_RESOLUTION_SCOPE);
         validator.setReceiver(receiver);
         inOrder = Mockito.inOrder(receiver);
     }
@@ -104,7 +105,7 @@ public final class TestJsonValidator {
 
     @Test(expected = MetafactureException.class)
     public void testShouldCatchMissingSchemaFile() throws JsonProcessingException {
-        new JsonValidator("");
+        new JsonValidator("", "");
     }
 
     @Test(expected = MetafactureException.class)

@@ -29,7 +29,8 @@ public class ITEtl {
                     "data/production/twillo-to-oersi.flux", //
                     "input_limit=2", //
                     "input_from=5", //
-                    "output_schema=/schemas/schema.json", //
+                    "output_schema=http://localhost:51734/schemas/metadata/schema.json", //
+                    "output_schema_resolution_scope=http://localhost:51734/schemas/metadata/", //
                     "backend_api=http://192.168.98.115:8080/oersi/api/metadata", //
                     "backend_user=test", //
                     "backend_pass=test") }, //

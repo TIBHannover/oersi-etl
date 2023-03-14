@@ -3,6 +3,7 @@ package oersi;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URL;
 
 import org.everit.json.schema.Schema;
 import org.everit.json.schema.ValidationException;
@@ -31,12 +32,12 @@ public final class JsonValidator extends DefaultObjectPipe<String, ObjectReceive
     private FileWriter writeInvalid = null;
     private FileWriter writeValid = null;
 
-    public JsonValidator(final String url) {
-        try (InputStream inputStream = getClass().getResourceAsStream(url)) {
+    public JsonValidator(final String url, final String schemaResolutionScope) {
+        try (InputStream inputStream = new URL(url).openStream()) {
             schema = SchemaLoader.builder()//
                     .schemaJson(new JSONObject(new JSONTokener(inputStream)))//
                     .schemaClient(SchemaClient.classPathAwareClient())//
-                    .resolutionScope("classpath://schemas/")//
+                    .resolutionScope(schemaResolutionScope)//
                     .build().load().build();
         } catch (IOException | JSONException e) {
             throw new MetafactureException(e.getMessage(), e);

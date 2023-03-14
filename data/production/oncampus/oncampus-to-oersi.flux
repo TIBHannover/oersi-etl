@@ -16,7 +16,7 @@ default input_wait = "50";
 //| fix("nothing()",repeatedFieldsToEntities="true") | flatten
 | fix(FLUX_DIR + "oncampus.fix", *)
 | encode-json(prettyPrinting="false")
-| oersi.JsonValidator(output_schema, writeValid=metadata_valid, writeInvalid=metadata_invalid)
+| oersi.JsonValidator(output_schema, output_schema_resolution_scope, writeValid=metadata_valid, writeInvalid=metadata_invalid)
 // useful for debugging without running oersi-setup / -backend:
 //| print
 | oersi.OersiWriter(backend_api, user=backend_user, pass=backend_pass, log=metadata_responses)
