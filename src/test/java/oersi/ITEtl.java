@@ -23,20 +23,19 @@ public class ITEtl {
             // run all *.flux in a given directory:
             new Object[] { Arrays.asList("data/experimental") }, //
             // run a single *.flux file:
-            new Object[] { Arrays.asList("data/production/twillo-to-oersi.flux") }, //
+            new Object[] { Arrays.asList("data/production/twillo/twillo-to-oersi.flux") }, //
             // pass variables as command line arguments:
             new Object[] { Arrays.asList(//
-                    "data/production/twillo-to-oersi.flux", //
+                    "data/production/twillo/twillo-to-oersi.flux", //
                     "input_limit=2", //
                     "input_from=5", //
-                    "output_schema=http://localhost:51734/schemas/metadata/schema.json", //
-                    "output_schema_resolution_scope=http://localhost:51734/schemas/metadata/", //
+                    "output_schema=http://192.168.98.115:51734/schemas/metadata/schema.json", //
                     "backend_api=http://192.168.98.115:8080/oersi/api/metadata", //
                     "backend_user=test", //
                     "backend_pass=test") }, //
             // pass variables as *.properties file:
             new Object[] { Arrays.asList(//
-                    "data/production/zoerr-to-oersi.flux", //
+                    "data/production/zoerr/zoerr-to-oersi.flux", //
                     "data/production/oersi.properties") } //
     };
 

@@ -12,7 +12,7 @@ service_name = "lecture2go";
 | handle-generic-xml(emitNamespace="true")
 | fix(FLUX_DIR + "lecture2go.fix", *)
 | encode-json
-| oersi.JsonValidator(output_schema, output_schema_resolution_scope, writeValid=metadata_valid, writeInvalid=metadata_invalid)
+| validate-json(output_schema, writeValid=metadata_valid, writeInvalid=metadata_invalid)
 | oersi.ErrorCatcher(file_errors)
 | oersi.OersiWriter(backend_api, user=backend_user, pass=backend_pass, log=metadata_responses)
 ;
