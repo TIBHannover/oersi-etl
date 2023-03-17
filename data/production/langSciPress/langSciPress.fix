@@ -26,17 +26,49 @@ do list(path:"html.head.meta","var":"$i")
 
 end
 
-do list(path:"html.head.meta.DC_Creator_PersonalName","var":"$i")
   # ------ creator --- 
   set_array("creator[]")
+do list(path:"html.head.meta.DC_Creator_PersonalName","var":"$i")
+
   copy_field("$i", "creator[].$append.name")
 end
 add_field("creator[].*.type", "Person")
 
-do list(path:"html.head.meta.DC_Language","var":"$i")
   # ------ inLanguage------
   set_array("inLanguage[]")
+do list(path:"html.head.meta.DC_Language","var":"$i")
+
   copy_field("$i", "inLanguage[].$append")
+end
+
+  # ------ keywords------
+  set_array("keywords[]")
+do list(path:"html.head.meta.citation_keywords","var":"$i")
+  copy_field("$i", "keywords[].$append")
+end
+
+  # ------ datePublished------
+do list(path:"html.head.meta.citation_publication_date","var":"$i")
+
+  copy_field("$i", "datePublished")
+end
+
+  # ------ publisher------
+  set_array("publisher[]")
+do list(path:"html.head.meta.citation_publisher","var":"$i")
+
+  copy_field("$i", "publisher[].$append.name")
+end
+
+add_field("publisher[].*.type", "Organization")
+
+# ------ encoding --- 
+
+set_array("encoding[]")
+do list(path:"html.head.meta.citation_pdf_url","var":"$i")
+  copy_field("$i", "encoding[].$append.contentUrl")
+  add_field("encoding[].$last.encodingFormat","application/pdf")    
+  add_field("encoding[].$last.type", "MediaObject")
 end
 
 # ---------------conditionsOfAccess----------------------------------
@@ -56,6 +88,7 @@ set_array("type[]", "LearningResource")
 set_array("about[]")
 add_field("about[].$append.id", "https://w3id.org/kim/hochschulfaechersystematik/n07")
 add_field("about[].$last.prefLabel.de", "Allgemeine und vergleichende Literatur- und Sprachwissenschaft")
+
 
 
 
