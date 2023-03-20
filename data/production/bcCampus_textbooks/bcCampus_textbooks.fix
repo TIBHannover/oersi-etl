@@ -106,6 +106,12 @@ add_field("mainEntityOfPage[].$last.provider.id","$[service_id]")
 add_field("mainEntityOfPage[].$last.provider.type","Service")
 add_field("mainEntityOfPage[].$last.provider.name","$[service_name]")
 
+#---------educationalLevel + teaches--------
+# until mapped this will be deleted
+
+remove_field("educationalLevel[]")
+remove_field("teaches[]")
+
 # ---------------@context ----------------------------------
 
 set_array("@context[]", "https://w3id.org/kim/amb/draft/context.jsonld")

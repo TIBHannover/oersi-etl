@@ -43,10 +43,11 @@ dependencies {
     implementation 'org.metafacture:metafacture-elasticsearch:5.5.1-rc1'
     implementation 'org.metafacture:metafacture-xml:5.5.1-rc1'
     implementation 'org.metafacture:metafacture-fix:0.2.0-rc2'
-    implementation 'org.metafacture:metafix:0.3.0'
+    implementation 'org.metafacture:metafix:0.4.0'
     implementation('org.metafacture:metafacture-biblio:5.5.1-rc1') {
         exclude group: 'xml-apis', module: 'xml-apis'
     }
+    implementation 'org.metafacture:metafacture-csv:5.5.1-rc1'
     // Required after upgrade to Gradle 7.2 in metafacture-fix:
     // (TODO: avoid RecognitionException/Flux.main in ETL.java)
     implementation "org.antlr:antlr-runtime:3.2"

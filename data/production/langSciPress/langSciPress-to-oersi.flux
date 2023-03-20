@@ -10,8 +10,8 @@ service_name = "langSci Press";
 | literal-to-object
 | open-http
 | as-records
-| match(pattern="(name=\"DC)\\.(.*?)\\.(.*?)(\")", replacement="$1_$2_$3$4")
-| match(pattern="(name=\"DC)\\.(.*?)(\")", replacement="$1_$2$3")
+| match(pattern="(name=\"DC)\\.(\\w*?)\\.(\\w*?)(\")", replacement="$1_$2_$3$4")
+| match(pattern="(name=\"DC)\\.(\\w*?)(\")", replacement="$1_$2$3")
 | read-string
 | decode-html
 | fix(FLUX_DIR + "langSciPress.fix", *)

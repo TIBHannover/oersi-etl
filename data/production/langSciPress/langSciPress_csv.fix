@@ -2,7 +2,9 @@
 # --------Delete all emtpy values-------
 vacuum()
 
-
+if any_equal("superseded","True")
+	reject()
+end
 
 /* Map some of the data we have to the oersi model: */
 # ---------------id --------
