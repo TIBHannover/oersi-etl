@@ -2,6 +2,11 @@
 # --------Delete all emtpy values-------
 vacuum()
 
+# Rejects records of superseded books. That are not filtered out in the csv.
+if any_contain("html.head.meta.DC_Description","superseded")
+  reject()
+end
+
 do list(path:"html.head.meta","var":"$i")
 
   /* Map some of the data we have to the oersi model: */
