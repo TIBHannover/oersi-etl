@@ -1,0 +1,31 @@
+
+# --------Delete all emtpy values-------
+vacuum()
+
+if any_equal("superseded","True")
+	reject()
+end
+
+/* Map some of the data we have to the oersi model: */
+# ---------------id --------
+copy_field("ID", "id_csv")
+prepend("id_csv","https://langsci-press.org/catalog/book/")
+
+copy_field("id_csv", "_id")
+
+# ------ inLanguage------
+set_array("inLanguage[]")
+copy_field("metalanguage", "inLanguage[].$append")
+
+put_map("languageMap",
+  "eng": "en",
+  "fra": "fr",
+  "deu": "de",
+  "por": "pt",
+  "spa": "es",
+  "cmn": "zh"
+)
+
+lookup("inLanguage[].*","languageMap")
+
+retain("inLanguage[]", "_id")
