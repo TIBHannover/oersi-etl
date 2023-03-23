@@ -8,7 +8,7 @@ end
 
 /* Map some of the data we have to the oersi model: */
 # ---------------id --------
-copy_field("ID", "URL")
-prepend("URL","https://langsci-press.org/catalog/book/")
+copy_field("ID", "id")
+prepend("id","https://langsci-press.org/catalog/book/")
 
-retain("URL")
+retain("id")
