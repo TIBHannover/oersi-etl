@@ -31,7 +31,7 @@ do list(path:"html.head.meta","var":"$i")
 
 end
 
-  # ------ creator --- 
+# ------ creator --- 
   set_array("creator[]")
 do list(path:"html.head.meta.DC_Creator_PersonalName","var":"$i")
 
@@ -39,20 +39,13 @@ do list(path:"html.head.meta.DC_Creator_PersonalName","var":"$i")
 end
 add_field("creator[].*.type", "Person")
 
-  # ------ inLanguage------
-  set_array("inLanguage[]")
-do list(path:"html.head.meta.DC_Language","var":"$i")
-
-  copy_field("$i", "inLanguage[].$append")
-end
-
-  # ------ keywords------
+# ------ keywords------
   set_array("keywords[]")
 do list(path:"html.head.meta.citation_keywords","var":"$i")
   copy_field("$i", "keywords[].$append")
 end
 
-  # ------ datePublished------
+# ------ datePublished------
 do list(path:"html.head.meta.citation_publication_date","var":"$i")
 
   copy_field("$i", "datePublished")
@@ -120,8 +113,8 @@ unless exists("inLanguage[].1")
   set_hash("@context[].$append", "@language": "de")
 end
 
-
+copy_field("id","_id")
 
 # ------ tidy up --- 
-include ("../../sharedFixes/retain.fix")
+retain("_id","@context[]","id","image","name","creator[]","contributor[]","sourceOrganization[]", "license","description","datePublished","dateCreated","dateModified","inLanguage[]","type[]","learningResourceType[]","keywords[]","about[]","teaches[]","assesses[]","competencyRequired[]","educationalLevel[]", "encoding[]", "publisher[]", "isPartOf[]", "mainEntityOfPage[]","conditionsOfAccess","duration")
 vacuum()
