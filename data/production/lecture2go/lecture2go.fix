@@ -19,6 +19,11 @@ do list(path:"metadata.oai_datacite.payload.resource.identifier","var":"$i")
   end
 end
 
+unless exists ("metadata.oai_datacite.payload.resource.identifier")
+  reject()
+end
+
+
 # ---------------name----------------------------------
 # The json-validator created an error due to duplicated element "name". Therefore the two conditionals should prevent a duplicate elemente.
 
