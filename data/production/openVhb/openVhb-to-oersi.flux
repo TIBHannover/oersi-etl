@@ -4,7 +4,7 @@ service_name = "vhb";
 
 // Cumstomized JSON for OERSI based on moocHub JSON-data.
 "https://open.vhb.org/oersi.json"
-| open-http(accept="application/json")
+| open-http(header=user_agent_header, accept="application/json")
 | as-lines
 | decode-json(recordPath="$.data")
 | filter-null-values

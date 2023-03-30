@@ -7,7 +7,7 @@ default open_music_academy_api_key = "x-api-key: 9483A6E3ED5D4475AABD82D306549FE
 default open_music_academy_api_url = "https://staging.openmusic.academy/api/v1/amb/metadata";
 
 open_music_academy_api_url
-| open-http(accept="application/json", header=open_music_academy_api_key)
+| open-http(accept="application/json", header=open_music_academy_api_key+"\n"+user_agent_header)
 | as-lines
 | decode-json(recordPath="$")
 | fix(FLUX_DIR + "openMusicAcademy.fix", *)

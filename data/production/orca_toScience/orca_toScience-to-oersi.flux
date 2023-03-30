@@ -8,7 +8,7 @@ service_name = "ORCA.nrw";
 
 // First API call, result lists all public ressources
 "https://api.paideia.hbz-nrw.de/search/public_orca2/_search?size=10000"
-| open-http(accept="application/json")
+| open-http(header=user_agent_header, accept="application/json")
 | as-records
 | match(pattern="_(id)", replacement="$1")
 | decode-json(recordPath="$.hits.hits")

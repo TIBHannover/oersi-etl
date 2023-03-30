@@ -4,7 +4,7 @@ service_name = "lecture2go";
 
 // Use for testing:
 // "https://getinfo.tib.eu/oai/intern/repository/tib?verb=ListRecords&metadataPrefix=datacite&set=collection~kmo-av_solr~documentFormat:el"
-//| open-http(accept="application/xml")
+//| open-http(header=user_agent_header, accept="application/xml")
 
 "https://lecture2go.uni-hamburg.de/o/oai"
 | open-oaipmh(metadataPrefix="oai_datacite")

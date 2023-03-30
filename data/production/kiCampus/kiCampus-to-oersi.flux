@@ -3,7 +3,7 @@ service_id = "https://oerworldmap.org/resource/urn:uuid:b092c55e-038c-4634-8063-
 service_name = "KI Campus";
 
 "https://learn.ki-campus.org/bridges/moochub/courses"
-| open-http(accept="application/json")
+| open-http(header=user_agent_header, accept="application/json")
 | as-lines
 | decode-json(recordPath="$.data")
 | filter-null-values
