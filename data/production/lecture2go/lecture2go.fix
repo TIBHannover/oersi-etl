@@ -19,6 +19,10 @@ do list(path:"metadata.oai_datacite.payload.resource.identifier","var":"$i")
   end
 end
 
+unless exists ("metadata.oai_datacite.payload.resource.identifier")
+  reject()
+end
+
 
 # ---------------name----------------------------------
 # The json-validator created an error due to duplicated element "name". Therefore the two conditionals should prevent a duplicate elemente.
@@ -155,9 +159,21 @@ prepend("contributor[].*.id", "https://orcid.org/")
 # ---------keywords----------------
 
 set_array("keywords[]")
+set_array("@about")
 do list(path:"metadata.oai_datacite.payload.resource.subjects.subject", "var":"$i")
   copy_field("$i.value", "keywords[].$append")
+  copy_field("$i.value", "@about.$append")
 end
+  
+
+lookup("@about.*","data/maps/lecture2go2destatis.tsv","sep_char":"\t", delete:"true")
+
+set_array("about[]")
+do list(path:"@about", "var":"$i")
+  copy_field("$i", "about[].$append.id")
+  copy_field("$i", "about[].$last.prefLabel.de")
+end
+lookup("about[].*.prefLabel.de", "data/maps/subject-labels.tsv","sep_char":"\t", delete:"true")
 
 
 # ---------------conditionsOfAccess----------------------------------
@@ -194,6 +210,3 @@ end
 include ("../../sharedFixes/retain.fix")
 vacuum()
 
-unless exists ("id")
-  reject()
-end

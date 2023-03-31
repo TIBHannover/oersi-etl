@@ -2,7 +2,7 @@
 | oersi.SitemapReader(wait="50", limit="2", urlPattern=".*/(materials|projects)/.*")
 | object-to-literal(literalName="id", recordId="%d")
 | encode-json
-| oersi.JsonValidator("/schemas/schema.json", writeValid="local-metadata.json", writeInvalid="local-invalid.json")
+| validate-json("https://gitlab.com/oersi/oersi-schema/-/raw/main/schemas/metadata/schema.json", writeValid="local-metadata.json", writeInvalid="local-invalid.json")
 | object-tee | {
      write(FLUX_DIR + "hoou.ndjson")
   }{

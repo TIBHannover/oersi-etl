@@ -1,11 +1,11 @@
 // Get from OAI-PMH, write to local file for testing:
-service_domain = "https://duepublico2.uni-due.de";
-service_id = "https://oerworldmap.org/resource/urn:uuid:c9d74da8-bf88-4f3e-b601-f2a3f6d40330";
-service_name = "DuEPublico";
-XML_FILE = FLUX_DIR + "duepub-metafacture.xml";
+service_domain = "repository.tugraz.at";
+service_id = "https://repository.tugraz.at";
+service_name = "Repository TU Graz";
+XML_FILE = FLUX_DIR + "repositoryTUGraz-metafacture.xml";
 
-"https://duepublico2.uni-due.de/oer/oai"
-| open-oaipmh(metadataPrefix="mods")
+"https://repository.tugraz.at/oai2d"
+| open-oaipmh(metadataPrefix="lom")
 | as-lines
 | write(XML_FILE);
 
@@ -15,7 +15,7 @@ XML_FILE
 | open-file
 | decode-xml
 | handle-generic-xml(emitNamespace="true")
-| fix(FLUX_DIR + "duepublico.fix", *)
+| fix(FLUX_DIR + "repositoryTUGraz.fix", *)
 | encode-json
 | validate-json(output_schema, writeValid=metadata_valid, writeInvalid=metadata_invalid)
 | oersi.OersiWriter(backend_api, user=backend_user, pass=backend_pass, log=metadata_responses)
