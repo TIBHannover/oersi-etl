@@ -4,7 +4,7 @@ service_name = "TIB AV-Portal";
 
 // Use for testing:
 // "https://getinfo.tib.eu/oai/intern/repository/tib?verb=ListRecords&metadataPrefix=datacite&set=collection~kmo-av_solr~documentFormat:el"
-//| open-http(accept="application/xml")
+//| open-http(header=user_agent_header, accept="application/xml")
 
 "https://getinfo.tib.eu/oai/intern/repository/tib"
 | open-oaipmh(metadataPrefix="datacite", setSpec="collection~kmo-av_solr~documentFormat:el")

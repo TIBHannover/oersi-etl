@@ -3,7 +3,7 @@ service_id = "https://oerworldmap.org/resource/urn:uuid:0332a3bc-6df8-452d-8c58-
 service_name = "iMoox";
 
 "https://imoox.at/mooc/local/moochubs/classes/webservice.php"
-| open-http(accept="application/json")
+| open-http(header=user_agent_header, accept="application/json")
 | as-lines
 | decode-json(recordPath="$.data")
 // iMoox is partner of MoocHub, we use their moocHub metadata.

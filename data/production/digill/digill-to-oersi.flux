@@ -7,7 +7,7 @@ default input_wait = "50";
 
 "https://digill.de/course-sitemap.xml" // FLUX_DIR + "digiLL-sitemap.xml"
 | oersi.SitemapReader(wait=input_wait, limit=input_limit, urlPattern=".*/course/.*")
-| open-http
+| open-http(header=user_agent_header)
 | extract-element("script[class=yoast-schema-graph]")
 | decode-json
 | fix(FLUX_DIR + "digill.fix", *)

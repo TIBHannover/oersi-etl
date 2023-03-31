@@ -3,7 +3,7 @@ service_id = "https://bildungsportal.sachsen.de";
 service_name = "Bildungsportal Sachsen OPAL";
 
 "https://bildungsportal.sachsen.de/opal/oer/content.json"
-| open-http(accept="application/json")
+| open-http(header=user_agent_header, accept="application/json")
 | as-records
 | decode-json
 | filter-null-values

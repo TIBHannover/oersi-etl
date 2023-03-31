@@ -3,7 +3,7 @@ service_id = "https://oerworldmap.org/resource/urn:uuid:75c7c768-c5b2-47ad-bb62-
 service_name = "openHPI";
 
 "https://open.hpi.de/bridges/moochub/courses"
-| open-http(accept="application/json")
+| open-http(header=user_agent_header, accept="application/json")
 | as-lines
 | decode-json(recordPath="$.data")
 | filter-null-values

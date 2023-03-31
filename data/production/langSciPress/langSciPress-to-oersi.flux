@@ -3,7 +3,7 @@ service_id = "https://langsci-press.org/";
 service_name = "langSci Press";
 
 "https://raw.githubusercontent.com/langsci/opendata/master/catalog.csv"
-| open-http(accept="application/csv")
+| open-http(header=user_agent_header, accept="application/csv")
 | as-lines
 | decode-csv(hasHeader="true", separator="\t")
 | fix(FLUX_DIR + "langSciPress_csv_data.fix", *)
@@ -18,7 +18,7 @@ service_name = "langSci Press";
 | decode-csv(hasHeader="true", separator="\t")
 | fix(FLUX_DIR + "langSciPress_csv_id.fix", *)
 | literal-to-object
-| open-http
+| open-http(header=user_agent_header)
 | as-records
 | match(pattern="(name=\"DC)\\.(\\w*?)\\.(\\w*?)(\")", replacement="$1_$2_$3$4")
 | match(pattern="(name=\"DC)\\.(\\w*?)(\")", replacement="$1_$2$3")
