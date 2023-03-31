@@ -6,7 +6,7 @@ default input_limit = "-1"; // 'default': is overridden by command-line/properti
 
 
 "https://open.umn.edu/opentextbooks/textbooks?page=1"
-| oersi.JsonApiReader(method="get", recordPath="data", pageParam="page", stepSize="1", totalLimit="-1")
+| oersi.JsonApiReader(header=user_agent_header, method="get", recordPath="data", pageParam="page", stepSize="1", totalLimit="-1")
 | decode-json
 | fix(FLUX_DIR + "openTextbookLibrary.fix",*)
 | encode-json
