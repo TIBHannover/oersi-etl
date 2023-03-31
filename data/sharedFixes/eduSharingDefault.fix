@@ -71,14 +71,9 @@ do list(path:"properties.ccm:lifecyclecontributer_author[]", "var": "$i")
 end
 
 do list(path:"creator[]")
-  if any_match("name", "^BEGIN:VCARD[\\s\\S]*X-ORCID:https\\\\://(.+)\r?\n[\\s\\S]*")
+  if any_match("name", "^BEGIN:VCARD[\\s\\S]*X-ORCID:.*(\\d{4}-\\d{4}-\\d{4}-\\d{4})\r?\n[\\s\\S]*")
     copy_field("name", "id")
-    replace_all("id","^BEGIN:VCARD[\\s\\S]*X-ORCID:https\\\\://(.+)\r?\n[\\s\\S]*", "https://$1")
-    replace_all("id", " ", "")
-  elsif  any_match("name", "^BEGIN:VCARD[\\s\\S]*X-ORCID:(.+?)\r?\n[\\s\\S]*")
-    copy_field("name", "id")
-    replace_all("id","^BEGIN:VCARD[\\s\\S]*X-ORCID:(.+?)\r?\n[\\s\\S]*", "https://orcid.org/$1")
-    replace_all("id", " ", "")
+    replace_all("id","^BEGIN:VCARD[\\s\\S]*X-ORCID:.*(\\d{4}-\\d{4}-\\d{4}-\\d{4})\r?\n[\\s\\S]*", "https://orcid.org/$1")
   end
   replace_all("name","^BEGIN:VCARD[\\s\\S]*FN:(.+?)\r?\n[\\s\\S]*", "$1")
   replace_all("name","^BEGIN:VCARD\r?\nORG:(.+?)\r?\n[\\s\\S]*", "$1")
@@ -102,14 +97,9 @@ do list(path:"properties.ccm:lifecyclecontributer_*[]", "var": "$i")
 end
 
 do list(path:"contributor[]")
-  if any_match("name", "^BEGIN:VCARD[\\s\\S]*X-ORCID:https\\\\://(.+)\r?\n[\\s\\S]*")
+  if any_match("name", "^BEGIN:VCARD[\\s\\S]*X-ORCID:.*(\\d{4}-\\d{4}-\\d{4}-\\d{4})\r?\n[\\s\\S]*")
     copy_field("name", "id")
-    replace_all("id","^BEGIN:VCARD[\\s\\S]*X-ORCID:https\\\\://(.+)\r?\n[\\s\\S]*", "https://$1")
-    replace_all("id", " ", "")
-  elsif  any_match("name", "^BEGIN:VCARD[\\s\\S]*X-ORCID:(.+?)\r?\n[\\s\\S]*")
-    copy_field("name", "id")
-    replace_all("id","^BEGIN:VCARD[\\s\\S]*X-ORCID:(.+?)\r?\n[\\s\\S]*", "https://orcid.org/$1")
-    replace_all("id", " ", "")
+    replace_all("id","^BEGIN:VCARD[\\s\\S]*X-ORCID:.*(\\d{4}-\\d{4}-\\d{4}-\\d{4})\r?\n[\\s\\S]*", "https://orcid.org/$1")
   end
   replace_all("name","^BEGIN:VCARD[\\s\\S]*FN:(.+?)\r?\n[\\s\\S]*", "$1")
   replace_all("name","^BEGIN:VCARD\r?\nORG:(.+?)\r?\n[\\s\\S]*", "$1")
