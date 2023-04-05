@@ -34,19 +34,15 @@ do list_as($license: "html.body.form.div.div.2.div.div.div.div.3.div.div.1.div.3
   end
 end
 
-# # ---------------creator----------------------------------
-# do array("creator", flushWith: record)
-#  do entity("")
-#   do map("*.p.watch-speaker", "name")
-#     not_equals(string: "no speaker")  
-#     replace(pattern: "Apl\\. |\\(apl\\.\\) |Dr\\. med |Dr\\. |Dr\\.'in |Dr |Dr\\.med\\.|Dres\\. |Dr\\.|Prof\\. |Prof\\.'in |Prof\\.|Prof |Jun\\.-|PD |PD\\. |med\\. |rer\\. |pol\\.|nat\\. |dent\\. |em\\. |Ao\\.-|o\\. Univ\\.|Uni\\.-|Univ\\.-|Univ\\. |DI |RA |Dipl\\.|-Ing\\. |-Inform\\. |-Psych\\. |h\\.c\\. |mult\\. |Mag\\. |, MME|; MME|, MScN|M\\. Sc\\. |, MSc| MSc\\.|, M\\.A\\.| M\\.A\\.|, M\\.D\\.|, B\\.A\\.|, MMZ|, Psychoanalytiker|, L\\.L\\.M\\.|, LL\\.M\\.| \\(M\\.A\\.\\)", with: "")
-#   end
-#   do map("*.p.watch-speaker", "type")
-#     not_equals(string: "no speaker")
-#     regexp(match: '^.*$', format: "Person")
-#   end  
-#  end
-# end
+# ---------------creator----------------------------------
+set_array("creator[]")
+do list_as($speaker: "html.body.form.div.div.2.div.div.div.div.3.div.div.1.div.3.div.1.div.*.p.watch-speaker")
+  if none_equal($speaker, "no speaker")
+    replace_all($speaker, "Apl\\. |\\(apl\\.\\) |Dr\\. med |Dr\\. |Dr\\.'in |Dr |Dr\\.med\\.|Dres\\. |Dr\\.|Prof\\. |Prof\\.'in |Prof\\.|Prof |Jun\\.-|PD |PD\\. |med\\. |rer\\. |pol\\.|nat\\. |dent\\. |em\\. |Ao\\.-|o\\. Univ\\.|Uni\\.-|Univ\\.-|Univ\\. |DI |RA |Dipl\\.|-Ing\\. |-Inform\\. |-Psych\\. |h\\.c\\. |mult\\. |Mag\\. |, MME|; MME|, MScN|M\\. Sc\\. |, MSc| MSc\\.|, M\\.A\\.| M\\.A\\.|, M\\.D\\.|, B\\.A\\.|, MMZ|, Psychoanalytiker|, L\\.L\\.M\\.|, LL\\.M\\.| \\(M\\.A\\.\\)", "")
+    move_field($speaker, "creator[].$append.name")
+    add_field("creator[].$last.type", "Person")
+  end
+end
 
 # ---------------sourceOrganization----------------------------------
 set_array("sourceOrganization[]")
@@ -54,58 +50,40 @@ add_field("sourceOrganization[].$append.type", "Organization")
 add_field("sourceOrganization[].$last.name", "HHU Düsseldorf")
 
 # ------ type --- 
-
 set_array("type[]", "LearningResource")
 
 # ------ learningResourceType --- 
 # only video
-
 set_array("learningResourceType[]")
 add_field("learningResourceType[].$append.id","https://w3id.org/kim/hcrt/video")
 add_field("learningResourceType[].$last.prefLabel.de","Video")
 add_field("learningResourceType[].$last.prefLabel.en","Video")
 
 # ------ encoding --- 
-/* encoding: So far only embedUrl */
-# /* encoding: So far only embedUrl */
-# do map("html.body.form.div.div.div.div.div.div.div.div.div.div.div.textarea.value","@embedUrl")
-#   regexp(match: "^<iframe.*src='(https:\\/\\/mediathek\\.hhu\\.de\\/embed\\/.*)(' frameborder='0' allowfullscreen><\\/iframe>)$", format: '${1}')
-# end
-# 
-# do array("encoding", flushWith: record)
-#   do entity("")
-#     map("@embedUrl","embedUrl")
-#     do map("@embedUrl", "type")
-#       constant(value: "MediaObject")
-#     end
-#   end
-# end
-
-# set_array("@embedUrl")
-# set_array("encoding[]")
-# copy_field("html.body.form.div.div.*.div.div.div.div.*.div.div.*.div.*.div.*.div.textarea.value","@embedUrl.$append")
-
-# do list(path:"@embedUrl", "var":"$i")
-#   if any_match("$i", "^<iframe.*src='(https:\\/\\/mediathek\\.hhu\\.de\\/embed\\/.*)(' frameborder='0' allowfullscreen><\\/iframe>)$")
-#     replace_all("$i","^<iframe.*src='(https:\\/\\/mediathek\\.hhu\\.de\\/embed\\/.*)(' frameborder='0' allowfullscreen><\\/iframe>)$",'${1}')
-#     copy_field("$i", "encoding[].$append.embedUrl")
-#     add_field("encoding[].$last.type", "MediaObject")
-#   end
-# end
+set_array("encoding[]")
+do list_as($iframe: "html.body.form.div.div.2.div.div.div.div.3.div.div.1.div.3.div.*.div.textarea.value")
+  if any_match($iframe, "^<iframe.*src='(https:\\/\\/mediathek\\.hhu\\.de\\/embed\\/.*)(' frameborder='0' allowfullscreen><\\/iframe>)$")
+    replace_all($iframe, "^<iframe.*src='(https:\\/\\/mediathek\\.hhu\\.de\\/embed\\/.*)(' frameborder='0' allowfullscreen><\\/iframe>)$", "$1")
+    copy_field($iframe, "encoding[].$append.embedUrl")
+    add_field("encoding[].$last.type", "MediaObject")
+  end
+end
 
 # ---------mainEntityOfPage----------------
-
 set_array("mainEntityOfPage[]")
 copy_field("id", "mainEntityOfPage[].$append.id")
 add_field("mainEntityOfPage[].$last.provider.id","$[service_id]")
 add_field("mainEntityOfPage[].$last.provider.type","Service")
 add_field("mainEntityOfPage[].$last.provider.name","$[service_name]")
 
+# --------- conditionsOfAccess ---------------
 add_field("conditionsOfAccess.id","http://w3id.org/kim/conditionsOfAccess/no_login")
 
-# do array("keywords", flushWith: record)
-#   map("html.body.form.div.div.div.div.div.div.div.div.div.div.div.ul.li.a.value")
-# end
+# --------- keywords ----------------
+set_array("keywords[]")
+do list_as($keyword: "html.body.form.div.div.2.div.div.div.div.3.div.div.1.div.3.div.1.div.4.ul.li.*.value")
+  copy_field($keyword, "keywords[].$append")
+end
 
 # ------ tidy up --- 
 retain("@context[]","id","image","name","creator[]","contributor[]","sourceOrganization[]", "license","description","dateCreated","inLanguage[]","type[]","learningResourceType[]","keywords[]","about[]", "encoding[]", "mainEntityOfPage[]")
