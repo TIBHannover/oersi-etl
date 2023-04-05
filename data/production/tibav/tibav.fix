@@ -40,7 +40,7 @@ replace_all("image", "oai:tib.eu:kmo-av:sid~", "https://av.tib.eu/thumbnail/")
 
 do list(path:"metadata.resources.resource.dates.date","var":"$i")
   if any_equal("$i.dateType", "Issued")
-    copy_field("$i.value","dateCreated")
+    copy_field("$i.value","datePublished")
   end
 end
 
@@ -80,6 +80,13 @@ copy_field("header.identifier.value","encoding[].$append.embedUrl")
 add_field("encoding[].$last.type", "MediaObject")
 replace_all("encoding[].*.embedUrl", "oai:tib.eu:kmo-av:sid~", "https://av.tib.eu/player/")
 
+# ------ duration --- 
+copy_field("metadata.resources.resource.sizes.size.value","duration")
+if any_match("duration","(.*), (.*):(.*):(.*):(.*)")
+  replace_all("duration","(.*), (.*):(.*):(.*):(.*)", "PT$2H$3M$4S")
+else
+  remove_field("duration")
+end
 
 # ------ publisher --- 
 

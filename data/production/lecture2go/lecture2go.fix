@@ -1,0 +1,212 @@
+if exists ("metadata.error")
+  reject()
+end
+
+if any_equal ("header.status", "deleted")
+  reject()
+end
+
+
+vacuum()
+
+include ("../../sharedFixes/macros.fix")
+
+
+# ---------------id----------------------------------
+do list(path:"metadata.oai_datacite.payload.resource.identifier","var":"$i")
+  if any_equal("$i.identifierType", "URL")
+    copy_field("$i.value","id")
+  end
+end
+
+unless exists ("metadata.oai_datacite.payload.resource.identifier")
+  reject()
+end
+
+
+# ---------------name----------------------------------
+# The json-validator created an error due to duplicated element "name". Therefore the two conditionals should prevent a duplicate elemente.
+
+unless exists("name")
+  do list(path:"metadata.oai_datacite.payload.resource.titles.title", "var": "$i")
+    unless exists("$i.titleType")
+      copy_field("$i.value", "name")
+    end
+  end
+end
+
+
+# ---------------dateCreated----------------------------------
+
+do list(path:"metadata.oai_datacite.payload.resource.dates.date","var":"$i")
+  if any_equal("$i.dateType", "Created")
+    copy_field("$i.value","dateCreated")
+  end
+end
+
+
+# ---------------description----------------------------------
+
+do list(path:"metadata.oai_datacite.payload.resource.descriptions.description","var":"$i")
+  copy_field("$i.value","description")
+end
+
+
+# ---------------license----------------------------------
+
+if any_match("metadata.oai_datacite.payload.resource.rightsList.rights.rightsURI","^http[s]?:\\/\\/creativecommons.org\\/(licenses|licences|publicdomain)\\/.*|^http[s]?:\\/\\/www.gnu.org\\/licenses\\/.*|^http[s]?:\\/\\/www.apache.org\\/licenses\\/.*|http[s]?://opensource.org/licenses/MIT|^http[s]?:\\/\\/www.opensource.org\\/licenses\\/BSD.*")
+  copy_field("metadata.oai_datacite.payload.resource.rightsList.rights.rightsURI","license.id")
+end
+
+# ------ type --- 
+
+set_array("type[]", "LearningResource")
+
+# ------ learningResourceType --- 
+# only video
+
+set_array("learningResourceType[]")
+add_field("learningResourceType[].$append.id","https://w3id.org/kim/hcrt/video")
+add_field("learningResourceType[].$last.prefLabel.de","Video")
+add_field("learningResourceType[].$last.prefLabel.en","Video")
+
+
+# ------ duration --- 
+copy_field("metadata.oai_datacite.payload.resource.sizes.size.value","duration")
+replace_all("duration","(.*):(.*):(.*)", "PT$1H$2M$3S")
+
+
+# ------ publisher --- 
+
+set_array("publisher[]")
+
+do list(path:"metadata.oai_datacite.payload.resource.publisher","var":"$i")
+  copy_field("$i.value","publisher[].$append.name")
+  add_field("publisher[].$last.type", "Organization")
+end
+
+# ---------mainEntityOfPage----------------
+
+set_array("mainEntityOfPage[]")
+add_field("mainEntityOfPage[].$append.test","")
+copy_field("id", "mainEntityOfPage[].$last.id")
+add_field("mainEntityOfPage[].$last.provider.id","$[service_id]")
+add_field("mainEntityOfPage[].$last.provider.type","Service")
+add_field("mainEntityOfPage[].$last.provider.name","$[service_name]")
+
+
+# ---------inLanguage----------------
+
+set_array("inLanguage[]")
+unless any_contain("metadata.oai_datacite.payload.resource.language.value","xx")
+  copy_field("metadata.oai_datacite.payload.resource.language.value","inLanguage[].$append")
+end
+replace_all("inLanguage[].*", "http://id.loc.gov/vocabulary/iso639-1/", "")
+
+
+# ---------creator----------------
+# TIB does not differentiate between an organisation and a person.
+
+set_array("creator[]")
+do list(path:"metadata.oai_datacite.payload.resource.creators.creator", "var":"$i")
+# There might be creators with empty names that are filtered out at the beginning.
+  add_field("creator[].$append.test", "")
+  copy_field("$i.creatorName.value", "creator[].$last.name")
+  if any_equal("$i.creatorName.nameType","Organizational")
+    add_field("creator[].$last.type", "Organization")
+  else
+    add_field("creator[].$last.type", "Person")
+  end
+  do list(path:"$i.nameIdentifier", "var":"$j")
+    if any_equal("$j.nameIdentifierScheme","ORCID")
+      if any_match("$j.value", "(\\d{4}-\\d{4}-\\d{4}-\\d{4}).*|.*(\\d{4}-\\d{4}-\\d{4}-\\d{4}).*")
+        copy_field("$j.value", "creator[].$last.id")
+      end
+    end
+  end
+  if exists("$i.affiliation.value")
+    copy_field("$i.affiliation.value", "creator[].$last.affiliation.name")
+    add_field("creator[].$last.affiliation.type", "Organization")
+  end
+end
+
+replace_all("creator[].*.name","(.+), (.+)", "$2 $1")
+replace_all("creator[].*.id", "(\\d{4}-\\d{4}-\\d{4}-\\d{4}).*|.*(\\d{4}-\\d{4}-\\d{4}-\\d{4}).*","https://orcid.org/$1")
+
+# ---------contributor----------------
+set_array("contributor[]")
+do list(path:"metadata.oai_datacite.payload.resource.contributors.contributor", "var":"$i")
+# There might be contributors with empty names that are filtered out at the beginning.
+  add_field("contributor[].$append.test", "")
+  copy_field("$i.contributorName.value", "contributor[].$last.name")
+  if any_equal("$i.contributorName.nameType","Organizational")
+    add_field("contributor[].$last.type", "Organization")
+  else
+    add_field("contributor[].$last.type", "Person")
+  end
+  do list(path:"$i.nameIdentifier", "var":"$j")
+    if any_equal("$j.nameIdentifierScheme","ORCID")
+      copy_field("$j.value", "contributor[].$last.id")
+    end
+  end
+end
+
+# contributors have functions in parenthesis these need to be deleted
+replace_all("contributor[].*.name","(.+), (.+)", "$2 $1")
+prepend("contributor[].*.id", "https://orcid.org/")
+
+
+# ---------keywords----------------
+
+set_array("keywords[]")
+set_array("@about")
+do list(path:"metadata.oai_datacite.payload.resource.subjects.subject", "var":"$i")
+  copy_field("$i.value", "keywords[].$append")
+  copy_field("$i.value", "@about.$append")
+end
+  
+
+lookup("@about.*","data/maps/lecture2go2destatis.tsv","sep_char":"\t", delete:"true")
+
+set_array("about[]")
+do list(path:"@about", "var":"$i")
+  copy_field("$i", "about[].$append.id")
+  copy_field("$i", "about[].$last.prefLabel.de")
+end
+lookup("about[].*.prefLabel.de", "data/maps/subject-labels.tsv","sep_char":"\t", delete:"true")
+
+
+# ---------------conditionsOfAccess----------------------------------
+add_field("conditionsOfAccess.id","http://w3id.org/kim/conditionsOfAccess/no_login")
+
+# -------isPartOf/hasPart---------
+set_array("isPartOf[]")
+set_array("hasPart[]")
+do list(path: "metadata.oai_datacite.payload.resource.relatedIdentifiers.relatedIdentifier", "var": "$i")
+  if any_equal("$i.relationType","IsPartOf")
+    copy_field("$i.value", "isPartOf[].$append.id")
+  elsif any_equal("$i.relationType","HasPart")
+    copy_field("$i.value", "hasPart[].$append.id")
+  end
+end
+
+# ---------------@context ----------------------------------
+
+set_array("@context[]", "https://w3id.org/kim/amb/draft/context.jsonld")
+# resource is german therefore prefer de if multiple or no inLanguage are available
+if any_equal("inLanguage[]","de")
+  set_hash("@context[].$append", "@language": "de")
+elsif any_equal("inLanguage[]","en")
+  set_hash("@context[].$append", "@language": "en")
+else
+  copy_field("inLanguage[].1", "@context[].$append.@language")
+end
+# resources without inLanguage-Values set default to de
+unless exists("inLanguage[].1")
+  set_hash("@context[].$append", "@language": "de")
+end
+
+# ------ tidy up --- 
+include ("../../sharedFixes/retain.fix")
+vacuum()
+

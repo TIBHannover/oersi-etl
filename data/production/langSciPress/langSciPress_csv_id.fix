@@ -1,0 +1,14 @@
+
+# --------Delete all emtpy values-------
+vacuum()
+
+if any_equal("superseded","True")
+	reject()
+end
+
+/* Map some of the data we have to the oersi model: */
+# ---------------id --------
+copy_field("ID", "id")
+prepend("id","https://langsci-press.org/catalog/book/")
+
+retain("id")

@@ -47,7 +47,9 @@
 - [ ] `description`
 - [ ] `keywords`
 - [ ] `datePublished` and/or `dateCreated`
-- [ ] `encoding.contentUrl` for download links
+- [ ] `encoding.contentUrl` for download links (check for `contentSize`, `mimeType`)
 - [ ] `encoding.embedUrl` for embed links
+- [ ] `duration`
+
 
 /label add-source

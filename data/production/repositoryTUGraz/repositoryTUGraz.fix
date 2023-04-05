@@ -1,0 +1,120 @@
+# See https://github.com/TobiasNx/Catmandu-Testing/blob/master/DuePub-Test/duepub-catmandu.fix
+
+if exists ("metadata.error")
+  reject()
+end
+
+if any_equal ("header.status", "deleted")
+  reject()
+end
+
+# Delete all empty values
+vacuum()
+
+include ("../../sharedFixes/macros.fix")
+
+# --------------id ----------------------------------------
+do list("path": "metadata.lom:lom.lom:technical.lom:location", "var": "$i")
+  copy_field("$i.value","id")
+end
+
+#  ------------image ------------------------------------
+do list("path": "metadata.lom:lom.lom:technical.lom:thumbnail.lom:url", "var": "$i")
+  copy_field("$i.value","image")
+end
+
+#  ------------name ------------------------------------
+do list("path": "metadata.lom:lom.lom:general.lom:title.lom:langstring", "var": "$i")
+  copy_field("$i.value","name")
+end
+
+
+#  ------------creator------------------------------------
+set_array("creator[]")
+do list("path":"metadata.lom:lom.lom:lifecycle.lom:contribute","var":"$i")
+  if any_match("$i.lom:role.lom:value.lom:langstring.value","Author")
+    copy_field("$i.lom:entity.value","creator[].$append.name")
+  end
+end
+
+add_field("creator[].*.type", "Person")
+
+#  ------------contributor------------------------------------
+set_array("contributor[]")
+do list("path":"metadata.lom:lom.lom:lifecycle.lom:contribute","var":"$i")
+  unless any_match("$i.lom:role.lom:value.lom:langstring.value","Author")
+    copy_field("$i.lom:entity.value","contributor[].$append.name")
+  end
+end
+add_field("contributor[].*.type", "Person")
+
+set_array("sourceOrganization[]")
+add_field("sourceOrganization[].$append.name", "TU Graz")
+add_field("sourceOrganization[].$last.type", "Organization")
+
+#  ------------description------------------------------------
+set_array("description")
+do list("path": "metadata.lom:lom.lom:technical.lom:thumbnail.lom:url", "var": "$i")
+  copy_field("$i.value","description.$append")
+end
+join_field("description")
+
+# -----------license----------
+copy_field("metadata.lom:lom.lom:rights.lom:description.lom:langstring.value","license.id")
+
+
+#  ------------dataCreated------------------------------------
+copy_field("metadata.lom:lom.lom:lifecycle.lom:datetime.value","dataCreated")
+
+#  ------------inLanguage------------------------------------
+set_array("inLanguage[]")
+do list("path": "metadata.lom:lom.lom:general.lom:language", "var": "$i")
+  copy_field("$i.value","inLanguage[].$append")
+end
+
+# ---------------type ----------------------------------
+set_array("type[]", "LearningResource")
+
+
+#  ------------about------------------------------------
+set_array("about[]")
+do list(path:"metadata.lom:lom.lom:classification.lom:taxonpath.lom:taxon","var":"$i")
+    copy_field("$i.lom:id.value","about[].$append.id")
+    lookup("about[].$last.id", "data/maps/oefos2destatis.tsv","sep_char":"\t")
+end
+
+do list(path: "about[]", "var":"$i")
+  copy_field("$i.id", "$i.prefLabel.de")
+  lookup("$i.prefLabel.de", "data/maps/subject-labels.tsv","sep_char":"\t", delete:"true")
+end
+
+# ---------------conditionsOfAccess----------------------------------
+add_field("conditionsOfAccess.id","http://w3id.org/kim/conditionsOfAccess/no_login") 
+
+
+# ---------mainEntityOfPage----------------
+set_array("mainEntityOfPage[]")
+copy_field("id", "mainEntityOfPage[].$append.id")
+add_field("mainEntityOfPage[].$last.provider.id","$[service_id]")
+add_field("mainEntityOfPage[].$last.provider.type","Service")
+add_field("mainEntityOfPage[].$last.provider.name","$[service_name]")
+
+# ---------------@context ----------------------------------
+
+set_array("@context[]", "https://w3id.org/kim/amb/draft/context.jsonld")
+# resource is german therefore prefer de if multiple or no inLanguage are available
+if any_equal("inLanguage[]","de")
+  set_hash("@context[].$append", "@language": "de")
+elsif any_equal("inLanguage[]","en")
+  set_hash("@context[].$append", "@language": "en")
+else
+  copy_field("inLanguage[].1", "@context[].$append.@language")
+end
+# resources without inLanguage-Values set default to de
+unless exists("inLanguage[].1")
+  set_hash("@context[].$append", "@language": "de")
+end
+
+# ---------tidy up!----------------
+include ("../../sharedFixes/retain.fix")
+vacuum()

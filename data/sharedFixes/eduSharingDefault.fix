@@ -61,22 +61,48 @@ lookup("about[].*.prefLabel.de", "data/maps/subject-labels.tsv","sep_char":"\t",
 
 set_array("creator[]")
 do list(path:"properties.ccm:lifecyclecontributer_author[]", "var": "$i")
-  if any_match("$i", "^BEGIN:VCARD[\\s\\S]*FN:(.+)\n[\\s\\S]*\nEND:VCARD$")
+  if any_match("$i", "^BEGIN:VCARD[\\s\\S]*FN:(.+?)\r?\n[\\s\\S]*")
     copy_field("$i", "creator[].$append.name")
     add_field("creator[].$last.type", "Person")
-  elsif any_match("$i", "^BEGIN:VCARD\nORG:(.+)\n[\\s\\S]*\nEND:VCARD$")
+  elsif any_match("$i", "^BEGIN:VCARD\r?\nORG:(.+?)\r?\n[\\s\\S]*")
     copy_field("$i", "creator[].$append.name")
     add_field("creator[].$last.type", "Organization")
   end
 end
 
 do list(path:"creator[]")
-  if any_match("name", "^BEGIN:VCARD[\\s\\S]*X-ORCID:(.+)\n[\\s\\S]+END:VCARD$")
+  if any_match("name", "^BEGIN:VCARD[\\s\\S]*X-ORCID:.*(\\d{4}-\\d{4}-\\d{4}-\\d{4})\r?\n[\\s\\S]*")
     copy_field("name", "id")
-    replace_all("id","^BEGIN:VCARD[\\s\\S]*X-ORCID:(.+)\n[\\s\\S]*\nEND:VCARD$", "https://orcid.org/$1")
+    replace_all("id","^BEGIN:VCARD[\\s\\S]*X-ORCID:.*(\\d{4}-\\d{4}-\\d{4}-\\d{4})\r?\n[\\s\\S]*", "https://orcid.org/$1")
   end
-  replace_all("name","^BEGIN:VCARD[\\s\\S]*FN:(.+)\n[\\s\\S]*\nEND:VCARD$", "$1")
-  replace_all("name","^BEGIN:VCARD\nORG:(.+)\n[\\s\\S]*\nEND:VCARD$", "$1")
+  replace_all("name","^BEGIN:VCARD[\\s\\S]*FN:(.+?)\r?\n[\\s\\S]*", "$1")
+  replace_all("name","^BEGIN:VCARD\r?\nORG:(.+?)\r?\n[\\s\\S]*", "$1")
+end
+
+#  ---------------contributor----------------------------------
+
+set_array("contributor[]")
+do list(path:"properties.ccm:lifecyclecontributer_*[]", "var": "$i")
+  unless in("$i","properties.ccm:lifecyclecontributer_author[]")
+    unless in("$i","properties.ccm:lifecyclecontributer_publisher[]")
+      if any_match("$i", "^BEGIN:VCARD[\\s\\S]*FN:(.+?)\r?\n[\\s\\S]*")
+        copy_field("$i", "contributor[].$append.name")
+        add_field("contributor[].$last.type", "Person")
+      elsif any_match("$i", "^BEGIN:VCARD\r?\nORG:(.+?)\r?\n[\\s\\S]*")
+        copy_field("$i", "contributor[].$append.name")
+        add_field("contributor[].$last.type", "Organization")
+      end
+    end
+  end
+end
+
+do list(path:"contributor[]")
+  if any_match("name", "^BEGIN:VCARD[\\s\\S]*X-ORCID:.*(\\d{4}-\\d{4}-\\d{4}-\\d{4})\r?\n[\\s\\S]*")
+    copy_field("name", "id")
+    replace_all("id","^BEGIN:VCARD[\\s\\S]*X-ORCID:.*(\\d{4}-\\d{4}-\\d{4}-\\d{4})\r?\n[\\s\\S]*", "https://orcid.org/$1")
+  end
+  replace_all("name","^BEGIN:VCARD[\\s\\S]*FN:(.+?)\r?\n[\\s\\S]*", "$1")
+  replace_all("name","^BEGIN:VCARD\r?\nORG:(.+?)\r?\n[\\s\\S]*", "$1")
 end
 
 
@@ -89,6 +115,26 @@ do list(path:"properties.ccm:university_DISPLAYNAME[]", "var": "$i")
     add_field("sourceOrganization[].$last.type", "Organization")
   end
 end
+
+do list(path:"properties.ccm:lifecyclecontributer_publisher[]", "var": "$i")
+  if any_match("$i", "^BEGIN:VCARD\r?\nORG:(.+)\r?\n[\\s\\S]*\r?\nEND:VCARD$")
+    copy_field("$i", "sourceOrganization[].$append.name")
+    add_field("sourceOrganization[].$last.type", "Organization")
+    replace_all("sourceOrganization[].$last.name","^BEGIN:VCARD\r?\nORG:(.+)\r?\n[\\s\\S]*\r?\nEND:VCARD$", "$1")
+    replace_all("sourceOrganization[].$last.name","\\\\", "")
+  end
+end
+
+do list(path:"properties.ccm:lifecyclecontributer_initiator[]", "var": "$i")
+  if any_match("$i", "^BEGIN:VCARD\r?\nORG:(.+)\r?\n[\\s\\S]*\r?\nEND:VCARD$")
+    copy_field("$i", "sourceOrganization[].$append.name")
+    add_field("sourceOrganization[].$last.type", "Organization")
+    replace_all("sourceOrganization[].$last.name","^BEGIN:VCARD\r?\nORG:(.+)\r?\n[\\s\\S]*\r?\nEND:VCARD$", "$1")
+    replace_all("sourceOrganization[].$last.name","\\\\", "")
+  end
+end
+
+
 
 
 #  ---------------license----------------------------------

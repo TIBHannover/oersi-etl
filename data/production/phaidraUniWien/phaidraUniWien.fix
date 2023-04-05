@@ -17,23 +17,32 @@ copy_field("metadata.resource.datacite:identifier.value", "id")
 # ---------------name----------------------------------
 # The json-validator created an error due to duplicated element "name". Therefore the two conditionals should prevent a duplicate elemente.
 
-unless exists("name")
-  do list(path:"metadata.resource.datacite:titles.datacite:title", "var": "$i")
+
+do list(path:"metadata.resource.datacite:titles.datacite:title", "var": "$i")
+  unless exists("name")
     unless exists("$i.titleType")
       copy_field("$i.value", "name")
     end
   end
 end
 
-# ---------------dateCreated----------------------------------
+# ---------------datePublished----------------------------------
 
 do list(path:"metadata.resource.datacite:dates.datacite:date","var":"$i")
   if any_equal("$i.dateType", "Issued")
-    copy_field("$i.value","dateCreated")
+    copy_field("$i.value","datePublished")
   end
 end
-replace_all("dateCreated","^(\\d{4})$","$1-01-01")
+replace_all("datePublished","^(\\d{4})$","$1-01-01")
 
+
+# ---------------description----------------------------------
+
+do list(path: "metadata.resource.dc:description", "var":"$i")
+  unless exists("description")
+    copy_field("$i.value","description")
+  end
+end
 
 # ---------------creator----------------------------------
 set_array("creator[]")
@@ -130,7 +139,7 @@ lookup("inLanguage[].*",
   "eng": "en"
   )
 
-# ---------keywords----------------
+# ---------keywords & about----------------
 
 set_array("keywords[]")
 set_array("@about")
@@ -152,6 +161,7 @@ end
 
 flatten("keywords[]")
 flatten("@about")
+trim("@about.*")
 
 do list(path: "@about", "var":"$i")
   unless any_equal("$i","ÖFOS 2012")
@@ -167,7 +177,10 @@ do list(path: "about[]", "var":"$i")
   lookup("$i.prefLabel.de", "data/maps/subject-labels.tsv","sep_char":"\t", delete:"true")
 end
 
+replace_all("keywords[].*", " \\((\\d*)\\)","")
+trim("keywords[].*")
 uniq("about[]")
+uniq("keywords[]")
 
 # ------ encoding --- 
 
@@ -175,8 +188,16 @@ set_array("encoding[]")
 if exists("metadata.resource.file")
   copy_field("metadata.resource.file.value","encoding[].$append.contentUrl")
   copy_field("metadata.resource.file.mimeType","encoding[].$last.mimeType")
+  copy_field("metadata.resource.datacite:sizes.datacite:size.value","encoding[].$last.contentSize")
+  oersi.SizeToBytes("encoding[].$last.contentSize")
   add_field("encoding[].$last.type", "MediaObject")
+  if any_contain("id","o:")
+    add_field("encoding[].$append.type", "MediaObject")
+    copy_field("id", "encoding[].$last.embedUrl")
+  end
 end
+
+replace_all("encoding[].*.embedUrl",".*(o:.*)","https://services.phaidra.univie.ac.at/api/object/$1/preview")
 
 # -------isPartOf/hasPart---------
 set_array("isPartOf[]")
@@ -188,6 +209,9 @@ do list(path: "metadata.resource.datacite:relatedIdentifiers.datacite:relatedIde
     copy_field("$i.value", "hasPart[].$append.id")
   end
 end
+
+# ---------------conditionsOfAccess----------------------------------
+add_field("conditionsOfAccess.id","http://w3id.org/kim/conditionsOfAccess/no_login") 
 
 
 # ---------------@context ----------------------------------
