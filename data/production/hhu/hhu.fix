@@ -1,11 +1,10 @@
 vacuum()
 
 # ---------------@context ----------------------------------
-
 set_array("@context[]", "https://w3id.org/kim/amb/draft/context.jsonld")
 set_hash("@context[].$append", "@language": "de")
 
-# ---------------@context ----------------------------------
+# ---------------id ----------------------------------
 copy_field("html.head.meta.*.og:url", "id")
 
 # ---------------name----------------------------------
@@ -19,36 +18,20 @@ copy_field("html.head.meta.*.og:image","image")
 
 # ---------------dateCreated----------------------------------
 # /* Creation-Date comes in as "- recorded at 9/19/2012" */
-# /* Creation-Date comes in as "- recorded at 9/19/2012" */
-# do map("*.span.watch-information-date produced", "dateCreated")
-#  regexp(match: "- recorded at \\d{1,2}}/\\d{1,2}}/\\d{4}")
-#  replace(pattern: "(\\d)/(\\d+)/(\\d\\d\\d\\d)", with: "0$1/$2/$3")
-#  replace(pattern: "(\\d+)/(\\d)/(\\d\\d\\d\\d)", with: "$1/0$2/$3")
-#  replace(pattern: "- recorded at (\\d\\d)/(\\d\\d)/(\\d\\d\\d\\d)", with: "$3-$1-$2")
-# end
-
-set_array("@dateCreated")
-# copy_field("html.body.form.div.div.*.div.div.div.div.*.div.div.*.div.*.div.div.*.span.*.watch-information-date produced", "@dateCreated.$append")
-# do list(path:"@dateCreated", "var": "$i")
-#  if any_match("$i", "- recorded at \\d{1,2}}/\\d{1,2}}/\\d{4}")
-#    replace_all("$i", "(\\d)/(\\d+)/(\\d\\d\\d\\d)", "0$1/$2/$3")
-#    replace_all("$i", "(\\d+)/(\\d)/(\\d\\d\\d\\d)", "$1/0$2/$3")
-#    replace_all("$i", "- recorded at (\\d\\d)/(\\d\\d)/(\\d\\d\\d\\d)", with: "$3-$1-$2")
-#    copy_field("$i", "dateCreated")
-#  end
-# end
+do list_as($date: "html.body.form.div.div.2.div.div.div.div.3.div.div.1.div.1.div.div.2.span.*.watch-information-date produced")
+  replace_all($date, "(\\d)/(\\d+)/(\\d{4})", "0$1/$2/$3")
+  replace_all($date, "(\\d+)/(\\d)/(\\d{4})", "$1/0$2/$3")
+  replace_all($date, "- recorded at (\\d{2})/(\\d{2})/(\\d{4})", "$3-$1-$2")
+  if any_match($date, "\\d{4}-\\d{2}-\\d{2}")
+    move_field($date, "dateCreated")
+  end
+end
 
 # ---------------license----------------------------------
-/*rel = "liscence" cant be directly mapped */
-#do entity("license")
-#   do map("*.a.license", "id")
-#         regexp(match: '^http[s]?:\\/\\/creativecommons.org\\/(licenses|licences|publicdomain)\\/.*|^http[s]?:\\/\\/www.gnu.org\\/licenses\\/.*|^http[s]?:\\/\\/www.apache.org\\/licenses\\/.*|http[s]?://opensource.org/licenses/MIT|^http[s]?:\\/\\/www.opensource.org\\/licenses\\/BSD.*')
-#   end
-# end
-
-# does not work
-if any_match("html.body.form.div.div.*.div.div.div.div.*.div.div.*.div.*.div.*.div.*.div.p.a.*.license", '^http[s]?:\\/\\/creativecommons.org\\/(licenses|licences|publicdomain)\\/.*|^http[s]?:\\/\\/www.gnu.org\\/licenses\\/.*|^http[s]?:\\/\\/www.apache.org\\/licenses\\/.*|http[s]?://opensource.org/licenses/MIT|^http[s]?:\\/\\/www.opensource.org\\/licenses\\/BSD.*')
-  copy_field("html.body.form.div.div.*.div.div.div.div.*.div.div.*.div.*.div.*.div.*.div.p.a.*.license", "license.id")
+do list_as($license: "html.body.form.div.div.2.div.div.div.div.3.div.div.1.div.3.div.1.div.4.div.p.a.*.license")
+  if any_match($license, "^http[s]?:\\/\\/creativecommons.org\\/(licenses|licences|publicdomain)\\/.*|^http[s]?:\\/\\/www.gnu.org\\/licenses\\/.*|^http[s]?:\\/\\/www.apache.org\\/licenses\\/.*|http[s]?://opensource.org/licenses/MIT|^http[s]?:\\/\\/www.opensource.org\\/licenses\\/BSD.*")
+    move_field($license, "license.id")
+  end
 end
 
 # # ---------------creator----------------------------------
@@ -125,5 +108,5 @@ add_field("conditionsOfAccess.id","http://w3id.org/kim/conditionsOfAccess/no_log
 # end
 
 # ------ tidy up --- 
-retain("@context[]","id","image","name","creator[]","contributor[]","sourceOrganization[]", "license","description","dataCreated","inLanguage[]","type[]","learningResourceType[]","keywords[]","about[]", "encoding[]", "mainEntityOfPage[]")
+retain("@context[]","id","image","name","creator[]","contributor[]","sourceOrganization[]", "license","description","dateCreated","inLanguage[]","type[]","learningResourceType[]","keywords[]","about[]", "encoding[]", "mainEntityOfPage[]")
 vacuum()
