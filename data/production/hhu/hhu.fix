@@ -1,16 +1,8 @@
 vacuum()
 
-/* Set up the context */
-# do array("@context")
-#  add_field("","https://w3id.org/kim/amb/draft/context.jsonld")
-#  do entity("")
-#   add_field("@language", "de")
-#  end
-# end
-
 # ---------------@context ----------------------------------
 
-set_array("@context[]", "https://w3id.org/kim/lrmi-profile/draft/context.jsonld")
+set_array("@context[]", "https://w3id.org/kim/amb/draft/context.jsonld")
 set_hash("@context[].$append", "@language": "de")
 
 # ---------------@context ----------------------------------
