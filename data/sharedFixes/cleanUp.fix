@@ -1,5 +1,48 @@
+# Make all array-values uniq
+
+uniq("creator[]")
+uniq("contributor[]")
+uniq("sourceOrganization[]")
+uniq("inLanguage[]")
+uniq("learningResourceType[]")
+uniq("keywords[]")
+uniq("about[]")
+uniq("teaches[]")
+uniq("assesses[]")
+uniq("competencyRequired[]")
+uniq("educationalLevel[]")
+uniq("encoding[]")
+uniq("publisher[]")
+uniq("isPartOf[]")
+
 # Keep only defined elements
-retain("@context[]","id","image","name","creator[]","contributor[]","sourceOrganization[]", "license","description","datePublished","dateCreated","dateModified","inLanguage[]","type[]","learningResourceType[]","keywords[]","about[]","teaches[]","assesses[]","competencyRequired[]","educationalLevel[]", "encoding[]", "publisher[]", "isPartOf[]", "mainEntityOfPage[]","conditionsOfAccess","duration")
+retain("@context[]",
+	"id",
+	"image",
+	"name",
+	"creator[]",
+	"contributor[]",
+	"sourceOrganization[]",
+	"license",
+	"description",
+	"datePublished",
+	"dateCreated",
+	"dateModified",
+	"inLanguage[]",
+	"type[]",
+	"learningResourceType[]",
+	"keywords[]",
+	"about[]",
+	"teaches[]",
+	"assesses[]",
+	"competencyRequired[]",
+	"educationalLevel[]",
+	"encoding[]",
+	"publisher[]",
+	"isPartOf[]",
+	"mainEntityOfPage[]",
+	"conditionsOfAccess",
+	"duration")
 
 # Delete all empty elements.
 vacuum()
