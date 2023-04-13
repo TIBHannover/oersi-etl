@@ -8,7 +8,6 @@ include ("../../sharedFixes/eduSharingDefault.fix")
 
 
 include ("../../sharedFixes/cleanUp.fix")
-vacuum()
 
 unless exists("about[]")
 	reject()

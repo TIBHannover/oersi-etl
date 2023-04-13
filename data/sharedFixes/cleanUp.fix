@@ -1,1 +1,5 @@
+# Keep only defined elements
 retain("@context[]","id","image","name","creator[]","contributor[]","sourceOrganization[]", "license","description","datePublished","dateCreated","dateModified","inLanguage[]","type[]","learningResourceType[]","keywords[]","about[]","teaches[]","assesses[]","competencyRequired[]","educationalLevel[]", "encoding[]", "publisher[]", "isPartOf[]", "mainEntityOfPage[]","conditionsOfAccess","duration")
+
+# Delete all empty elements.
+vacuum()

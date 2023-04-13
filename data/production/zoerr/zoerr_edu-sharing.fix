@@ -45,4 +45,3 @@ lookup("learningResourceType[].*.prefLabel.en", "data/maps/hcrt-en-labels.tsv","
 
 
 include ("../../sharedFixes/cleanUp.fix")
-vacuum()

@@ -297,4 +297,3 @@ add_field("conditionsOfAccess.id","http://w3id.org/kim/conditionsOfAccess/no_log
 
 # ------ tidy up --- 
 include ("../../sharedFixes/cleanUp.fix")
-vacuum()

@@ -23,4 +23,3 @@ lookup("about[].*.prefLabel.de", "data/maps/subject-labels.tsv","sep_char":"\t",
 
 
 include ("../../sharedFixes/cleanUp.fix")
-vacuum()
