@@ -7,7 +7,7 @@ include ("../../sharedFixes/macros.fix")
 include ("../../sharedFixes/eduSharingDefault.fix")
 
 
-include ("../../sharedFixes/retain.fix")
+include ("../../sharedFixes/cleanUp.fix")
 vacuum()
 
 unless exists("about[]")

@@ -51,5 +51,5 @@ do list(path:"learningResourceType[]", "var":"$i")
 end
 
 
-include ("../../sharedFixes/retain.fix")
+include ("../../sharedFixes/cleanUp.fix")
 vacuum()
