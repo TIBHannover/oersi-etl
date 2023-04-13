@@ -18,6 +18,11 @@ do list("path": "metadata.lom:lom.lom:technical.lom:location", "var": "$i")
   copy_field("$i.value","id")
 end
 
+# internal_id: Construct actual ID from @id. Picked from header not from record itself.
+
+copy_field("header.identifier.value","@internal_id")
+replace_all("@internal_id", "oai:repository.tugraz.at:", "https://repository.tugraz.at/lom/")
+
 #  ------------image ------------------------------------
 do list("path": "metadata.lom:lom.lom:technical.lom:thumbnail.lom:url", "var": "$i")
   copy_field("$i.value","image")
@@ -37,6 +42,7 @@ do list("path":"metadata.lom:lom.lom:lifecycle.lom:contribute","var":"$i")
   end
 end
 
+# No specifics about creator type. Set type=Person as default.
 add_field("creator[].*.type", "Person")
 
 #  ------------contributor------------------------------------
@@ -46,6 +52,8 @@ do list("path":"metadata.lom:lom.lom:lifecycle.lom:contribute","var":"$i")
     copy_field("$i.lom:entity.value","contributor[].$append.name")
   end
 end
+
+# No specifics about contributor type. Set type=Person as default.
 add_field("contributor[].*.type", "Person")
 
 set_array("sourceOrganization[]")
@@ -54,7 +62,7 @@ add_field("sourceOrganization[].$last.type", "Organization")
 
 #  ------------description------------------------------------
 set_array("description")
-do list("path": "metadata.lom:lom.lom:technical.lom:thumbnail.lom:url", "var": "$i")
+do list("path": "metadata.lom:lom.lom:educational.lom:description.lom:langstring", "var": "$i")
   copy_field("$i.value","description.$append")
 end
 join_field("description")
@@ -64,7 +72,7 @@ copy_field("metadata.lom:lom.lom:rights.lom:description.lom:langstring.value","l
 
 
 #  ------------dataCreated------------------------------------
-copy_field("metadata.lom:lom.lom:lifecycle.lom:datetime.value","dataCreated")
+copy_field("metadata.lom:lom.lom:lifecycle.lom:datetime.value","dateCreated")
 
 #  ------------inLanguage------------------------------------
 set_array("inLanguage[]")
@@ -94,7 +102,7 @@ add_field("conditionsOfAccess.id","http://w3id.org/kim/conditionsOfAccess/no_log
 
 # ---------mainEntityOfPage----------------
 set_array("mainEntityOfPage[]")
-copy_field("id", "mainEntityOfPage[].$append.id")
+copy_field("@internal_id", "mainEntityOfPage[].$append.id")
 add_field("mainEntityOfPage[].$last.provider.id","$[service_id]")
 add_field("mainEntityOfPage[].$last.provider.type","Service")
 add_field("mainEntityOfPage[].$last.provider.name","$[service_name]")
