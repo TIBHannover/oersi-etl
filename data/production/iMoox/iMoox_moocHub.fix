@@ -116,8 +116,7 @@ end
 
 
 # ------ tidy up --- 
-include ("../../sharedFixes/retain.fix")
-vacuum()
+include ("../../sharedFixes/cleanUp.fix")
 
 /*missing:*/
 /*kewords*/

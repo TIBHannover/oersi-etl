@@ -124,5 +124,4 @@ unless exists("inLanguage[].1")
 end
 
 # ---------tidy up!----------------
-include ("../../sharedFixes/retain.fix")
-vacuum()
+include ("../../sharedFixes/cleanUp.fix")

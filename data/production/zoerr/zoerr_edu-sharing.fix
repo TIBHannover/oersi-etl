@@ -44,5 +44,4 @@ lookup("learningResourceType[].*.prefLabel.de", "data/maps/hcrt-de-labels.tsv","
 lookup("learningResourceType[].*.prefLabel.en", "data/maps/hcrt-en-labels.tsv","sep_char":"\t", delete:"true")
 
 
-include ("../../sharedFixes/retain.fix")
-vacuum()
+include ("../../sharedFixes/cleanUp.fix")

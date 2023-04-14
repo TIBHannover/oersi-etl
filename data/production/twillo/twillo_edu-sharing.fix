@@ -23,5 +23,4 @@ copy_field("properties.cm:document_createdISO8601[].1", "dateCreated")
 
 copy_field("properties.ccm:published_dateISO8601[].1", "datePublished")
 
-include ("../../sharedFixes/retain.fix")
-vacuum()
+include ("../../sharedFixes/cleanUp.fix")
