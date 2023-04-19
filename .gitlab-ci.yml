@@ -38,6 +38,7 @@ deploy:
      - data/maps/*
      - data/production/*
      - data/sharedFixes/*
+    expire_in: 1 day # Except latest, see Settings > CI/CD > Artifacts
   only:
     - branches
     - tags
