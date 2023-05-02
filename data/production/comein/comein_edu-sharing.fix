@@ -24,8 +24,8 @@ put_vars(
   "lrmiAudience_EN": "data/maps/lrmi-audience-en-labels.tsv",
   "lrmiInteractivityType_DE": "data/maps/lrmi-interactivityType-de-labels.tsv",
   "lrmiInteractivityType_EN": "data/maps/lrmi-interactivityType-en-labels.tsv",
-  "subjectMappingOEH": "data/maps/OEH_discipline-KIM_about_highschool.tsv",
-  "disciplineMappingOEH": "data/maps/OEH_discipline-keywords.tsv", # used for transform of non-highschool-mapped disciplines to keyword labels
+  "subjectMappingOEH": "data/maps/OEH_discipline-KIM_about_university.tsv",
+  "disciplineMappingOEH": "data/maps/OEH_discipline-keywords.tsv", # used for transform of non-university-mapped disciplines to keyword labels
   "lrtMappingOEH": "data/maps/OEH_LRT-HCRT.tsv",
   "eduLevelMappingOEH": "data/maps/OEH_educationalContext-KIM_educationaLevel.tsv",
   "audienceMappingOEH": "data/maps/OEH_intendedEndUserRole-LRMI_Audience.tsv"
@@ -48,7 +48,7 @@ put_vars(
 # (1) currently the fix uses local ttl files as remote https ressources threw error 'javax.net.ssl.SSLPeerUnverifiedException: peer not authenticated'
 # (2) Instead of static mapping lists between ids, rdf lookup with exactMatch/closeMatch could be introduced.
 # --- But: lookup for skos:exactMatch fails with 'org.apache.jena.rdf.model.LiteralRequiredException' as URI is not considered a Literal (RDFMap.java:189)
-# (3) currently the fix uses subject mapping to highschool only as oersi does not yet fully support amb lists
+# (3) currently the fix uses subject mapping to university only as oersi does not yet fully support amb lists
 # (4) oersi validates old amb draft @context, so context is not yet overriden in this fix
 
 # --------------- global handlings ---------------
@@ -76,7 +76,7 @@ end
 put_rdfmap("$[hochschulfaecherTTL]", "hochschulfaecherMap", target: "skos:prefLabel", select_language: "de")
 lookup("about[].*.prefLabel.de", "hochschulfaecherMap", delete:"true")
 
-# Handle some non-highschool-mapped OEH disciplines
+# Handle some non-university-mapped OEH disciplines
 if any_equal("properties.ccm:taxonid[]","http://w3id.org/openeduhub/vocabs/discipline/680")
     add_field("keywords[].$append", "http://w3id.org/openeduhub/vocabs/discipline/680")
 end
@@ -97,7 +97,7 @@ if any_equal("properties.ccm:taxonid[]","http://w3id.org/openeduhub/vocabs/disci
     add_field("keywords[].$append", "http://w3id.org/openeduhub/vocabs/discipline/040")
 end
 
-# Lookup non-highschool-mapped OEH disciplines to keywords
+# Lookup non-university-mapped OEH disciplines to keywords
 lookup("keywords[].*", "$[disciplineMappingOEH]", "sep_char":"\t")
 
 # --------------- conditionsOfAccess ---------------
