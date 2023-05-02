@@ -44,16 +44,6 @@ put_vars(
   "conditionsOfAccess_nologin": "https://w3id.org/kim/conditionsOfAccess/no_login"
 )
 
-# Fixed Mappings
-put_map("oeh-disciplines-to-keywords", 
-  "http://w3id.org/openeduhub/vocabs/discipline/680": "Weiterbildung",
-  "http://w3id.org/openeduhub/vocabs/discipline/72001": "Zeitgemäße Bildung",
-  "http://w3id.org/openeduhub/vocabs/discipline/64018": "Nachhaltigkeit",
-  "http://w3id.org/openeduhub/vocabs/discipline/20090": "Esperanto",
-  "http://w3id.org/openeduhub/vocabs/discipline/040": "Berufliche Bildung",
-  "http://w3id.org/openeduhub/vocabs/discipline/oeh01": "Arbeit, Ernährung, Soziales"
-)
-
 # --------------- notes ---------------
 # (1) currently the fix uses local ttl files as remote https ressources threw error 'javax.net.ssl.SSLPeerUnverifiedException: peer not authenticated'
 # (2) Instead of static mapping lists between ids, rdf lookup with exactMatch/closeMatch could be introduced.
