@@ -266,6 +266,7 @@ lookup("audience[].*.prefLabel.en", "$[lrmiAudience_EN]", sep_char: "\t", delete
 
 # --------------- isAccessibleForFree ---------------
 # OERSI rejects with type validation - isAccessibleForFree: expected type: Boolean, found: String
+# All resources in ComeIn are accessible for free, so it could be added statically
 #do list(path:"properties.ccm:price[]", "var": "$i")
 #	if any_equal("$i", "http://w3id.org/openeduhub/vocabs/price/yes")
 #	  set_field("isAccessibleForFree", "false")
@@ -339,10 +340,11 @@ copy_field("properties.cm:createdISO8601[].1", "dateCreated")
 # --------------- datePublished  ---------------
 copy_field("properties.ccm:published_dateISO8601[].1", "datePublished")
 
-# --------------- dateModified  ---------------
+# --------------- ADDITIONAL FIELDS (currently not in use) ---------------
 
+# --------------- dateModified  ---------------
 # --------------- isPartOf ---------------
-# --------------- isBadedOn ---------------
+# --------------- isBasedOn ---------------
 # --------------- hasPart ---------------
 
 # --------------- MEDIA ---------------
@@ -351,7 +353,6 @@ copy_field("properties.ccm:published_dateISO8601[].1", "datePublished")
 # --------------- encoding ---------------
 # --------------- caption ---------------
 
-# --------------- ADDITIONAL FIELDS ---------------
 # --------------- cclom:typicallearningtime ---------------
 # --------------- ccm:author_freetext ---------------
 # --------------- ccm:educationaltypicalagerange_from/to ---------------
