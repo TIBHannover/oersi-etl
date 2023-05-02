@@ -1,0 +1,7 @@
+http://w3id.org/openeduhub/vocabs/intendedEndUserRole/author	http://purl.org/dcx/lrmi-vocabs/educationalAudienceRole/mentor
+http://w3id.org/openeduhub/vocabs/intendedEndUserRole/counsellor	http://purl.org/dcx/lrmi-vocabs/educationalAudienceRole/professional
+http://w3id.org/openeduhub/vocabs/intendedEndUserRole/learner	http://purl.org/dcx/lrmi-vocabs/educationalAudienceRole/student
+http://w3id.org/openeduhub/vocabs/intendedEndUserRole/manager	http://purl.org/dcx/lrmi-vocabs/educationalAudienceRole/administrator
+http://w3id.org/openeduhub/vocabs/intendedEndUserRole/parent	http://purl.org/dcx/lrmi-vocabs/educationalAudienceRole/parent
+http://w3id.org/openeduhub/vocabs/intendedEndUserRole/teacher	http://purl.org/dcx/lrmi-vocabs/educationalAudienceRole/teacher
+http://w3id.org/openeduhub/vocabs/intendedEndUserRole/other	http://purl.org/dcx/lrmi-vocabs/educationalAudienceRole/generalPublic
