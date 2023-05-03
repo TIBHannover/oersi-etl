@@ -1,6 +1,6 @@
 service_domain="redaktion.openeduhub.net";
 service_id="https://redaktion.openeduhub.net/edu-sharing/components/collections?id=3bf248cc-fb53-4f81-a99a-a40d6d3d2e71";
-service_name="ComeIn.nrw";
+service_name="ComeIn";
 
 default input_limit = "-1"; // 'default': is overridden by command-line/properties value
 default input_from = "0";
