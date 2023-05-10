@@ -87,7 +87,16 @@ put_map("languageMap",
   "pol": "pl",
   "por": "pt",
   "spa": "es",
-  "chi-trad": "zh"
+  "chi-trad": "zh",
+  "dut": "nl",
+  "ukr": "uk",
+  "slv": "sl",
+  "aze": "az",
+  "chi-simp": "zh",
+  "rus":"ru",
+  "kor":"ko",
+  "gre":"el",
+  "bul": "bg"
 )
 
 lookup("inLanguage[].*","languageMap")
