@@ -42,7 +42,8 @@ retain("@context[]",
 	"isPartOf[]",
 	"mainEntityOfPage[]",
 	"conditionsOfAccess",
-	"duration")
+	"duration",
+	"trailer")
 
 # Delete all empty elements.
 vacuum()

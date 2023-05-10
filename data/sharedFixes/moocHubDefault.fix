@@ -40,6 +40,15 @@ copy_field("attributes.courseLicenses[].*.url","license.id")
 
 set_array("type[]", "LearningResource")
 
+# ------ trailer --- 
+copy_field("attributes.video.url","trailer.embedUrl")
+if exists("trailer.embedUrl")
+	add_field("trailer.type","VideoObject")
+end
+
+replace_all("trailer.embedUrl","https://youtu.be/(.*)","https://www.youtube-nocookie.com/embed/$1")
+replace_all("trailer.embedUrl","https://www.youtube.com/watch?v=(.*)","https://www.youtube-nocookie.com/embed/$1")
+
 # ---------mainEntityOfPage----------------
 
 set_array("mainEntityOfPage[]")
