@@ -9,21 +9,7 @@ vacuum()
 
 
 include ("../../sharedFixes/macros.fix")
-
-#  ---------------id----------------------------------
-remove_field("id")
-copy_field("attributes.url", "id")
-
-#  ---------------name----------------------------------
-copy_field("attributes.name", "name")
-
-#  ---------------image----------------------------------
-copy_field("attributes.image.url", "image")
-
-#  ---------------dateCreated----------------------------------
-copy_field("attributes.startDate", "dateCreated")
-replace_all("dateCreated", "T.*", "")
-
+include ("../../sharedFixes/moocHubDefault.fix")
 
 #  ---------------description----------------------------------
 copy_field("attributes.description", "description")
@@ -70,35 +56,6 @@ end
 # add_field("sourceOrganization[].$append.name", "Hasso-Plattner-Institut")
 # add_field("sourceOrganization[].$last.type", "Organization")
 
-
-
-# ------ learningResourceType --- 
-add_field("@hcrt","https://w3id.org/kim/hcrt/course")
-# only course
-
-set_array("learningResourceType[]")
-add_field("learningResourceType[].$append.id","https://w3id.org/kim/hcrt/course")
-add_field("learningResourceType[].$last.prefLabel.de","Kurs")
-add_field("learningResourceType[].$last.prefLabel.en","Course")
-
-# ------ inLanguage --- 
-/* inLanguage: The value Mehrsprachig does not represent the estimated language labels. */
-set_array("inLanguage[]")
-copy_field("attributes.languages[].*", "inLanguage[].$append")
-
-do list(path:"inLanguage[]","var":"$i")
-  if any_equal("$i", "Mehrsprachig")
-    remove_field("$i")
-  end
-end
-
-# ------ license ---
-copy_field("attributes.courseLicenses[].*.url","license.id")
-
-# ------ type --- 
-
-set_array("type[]", "LearningResource")
-
 # ------ about --- 
 set_array("about[]")
 add_field("about[].$append.id", "https://w3id.org/kim/hochschulfaechersystematik/n71")
@@ -107,29 +64,6 @@ add_field("about[].$last.prefLabel.de", "Studienbereich Informatik")
 # ---------------conditionsOfAccess----------------------------------
 add_field("conditionsOfAccess.id","http://w3id.org/kim/conditionsOfAccess/login") 
 
-# ---------mainEntityOfPage----------------
-
-set_array("mainEntityOfPage[]")
-copy_field("id", "mainEntityOfPage[].$append.id")
-add_field("mainEntityOfPage[].$last.provider.id","$[service_id]")
-add_field("mainEntityOfPage[].$last.provider.type","Service")
-add_field("mainEntityOfPage[].$last.provider.name","$[service_name]")
-
-# ---------------@context ----------------------------------
-
-set_array("@context[]", "https://w3id.org/kim/amb/draft/context.jsonld")
-# resource is german therefore prefer de if multiple or no inLanguage are available
-if any_equal("inLanguage[]","de")
-  set_hash("@context[].$append", "@language": "de")
-elsif any_equal("inLanguage[]","en")
-  set_hash("@context[].$append", "@language": "en")
-else
-  copy_field("inLanguage[].1", "@context[].$append.@language")
-end
-# resources without inLanguage-Values set default to de
-unless exists("inLanguage[].1")
-  set_hash("@context[].$append", "@language": "de")
-end
 
 
 # ------ tidy up --- 

@@ -8,22 +8,13 @@ end
 vacuum()
 
 include ("../../sharedFixes/macros.fix")
-
-#  ---------------id----------------------------------
-remove_field("id")
-copy_field("attributes.url", "id")
-
-#  ---------------name----------------------------------
-copy_field("attributes.name", "name")
+include ("../../sharedFixes/moocHubDefault.fix")
 
 #  ---------------image----------------------------------
 # has no thumbnails therefore use logo
 copy_field("attributes.moocProvider.logo", "image")
 
-/* dateCreated */
-#  ---------------dateCreated----------------------------------
-copy_field("attributes.startDate", "dateCreated")
-replace_all("dateCreated", "T.*", "")
+
 
 # ---------------conditionsOfAccess----------------------------------
 add_field("conditionsOfAccess.id","http://w3id.org/kim/conditionsOfAccess/login")
@@ -61,16 +52,6 @@ add_field("sourceOrganization[].$append.name", "Virtuelle Hochschule Bayern")
 add_field("sourceOrganization[].$last.type", "Organization")
 
 
-# ------ learningResourceType --- 
-add_field("@hcrt","https://w3id.org/kim/hcrt/course")
-# only course
-
-set_array("learningResourceType[]")
-add_field("learningResourceType[].$append.id","https://w3id.org/kim/hcrt/course")
-add_field("learningResourceType[].$last.prefLabel.de","Kurs")
-add_field("learningResourceType[].$last.prefLabel.en","Course")
-
-
 # ------- about -------
 copy_field("attributes.subjectarea", "@about")
 lookup("@about","data/maps/openVhb_subjects.tsv","sep_char":"\t", delete:"true")
@@ -81,32 +62,6 @@ do list(path:"@about", "var":"$i")
   copy_field("$i", "about[].$last.prefLabel.de")
 end
 lookup("about[].*.prefLabel.de", "data/maps/subject-labels.tsv","sep_char":"\t", delete:"true")
-
-# ------ inLanguage --- 
-# The value Mehrsprachig does not represent the estimated language labels. */
-set_array("inLanguage[]")
-copy_field("attributes.languages", "inLanguage[].$append")
-
-do list(path:"inLanguage[]","var":"$i")
-  if any_equal("$i", "Mehrsprachig")
-    remove_field("$i")
-  end
-end
-
-# ------ license ---
-copy_field("attributes.courseLicenses[].*.url","license.id")
-
-# ------ type --- 
-
-set_array("type[]", "LearningResource")
-
-# ---------mainEntityOfPage----------------
-
-set_array("mainEntityOfPage[]")
-copy_field("id", "mainEntityOfPage[].$append.id")
-add_field("mainEntityOfPage[].$last.provider.id","$[service_id]")
-add_field("mainEntityOfPage[].$last.provider.type","Service")
-add_field("mainEntityOfPage[].$last.provider.name","$[service_name]")
 
 # ---------keywords----------------
 split_field("attributes.keywords",",")
@@ -126,21 +81,6 @@ replace_all("description", '<br />', " ")
 replace_all("description", '  ', " ")
 trim("description")
 
-# ---------------@context ----------------------------------
-
-set_array("@context[]", "https://w3id.org/kim/amb/draft/context.jsonld")
-# resource is german therefore prefer de if multiple or no inLanguage are available
-if any_equal("inLanguage[]","de")
-  set_hash("@context[].$append", "@language": "de")
-elsif any_equal("inLanguage[]","en")
-  set_hash("@context[].$append", "@language": "en")
-else
-  copy_field("inLanguage[].1", "@context[].$append.@language")
-end
-# resources without inLanguage-Values set default to de
-unless exists("inLanguage[].1")
-  set_hash("@context[].$append", "@language": "de")
-end
 
 
 
