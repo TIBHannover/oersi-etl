@@ -13,6 +13,7 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
+import org.metafacture.framework.MetafactureException;
 import org.metafacture.framework.ObjectReceiver;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
@@ -146,4 +147,12 @@ public final class TestJsonApiReader {
         inOrder.verifyNoMoreInteractions();
     }
 
+    @Test(expected = MetafactureException.class)
+    public void testShouldTimeout() {
+        final int delay = 100;
+        stubFor(WireMock.request(method.toUpperCase(), WireMock.urlEqualTo(url))
+                .willReturn(WireMock.aResponse().withStatus(200).withFixedDelay(delay)));
+        reader.setTimeout(delay / 2); // should timeout
+        reader.process(wireMockRule.baseUrl() + url);
+    }
 }
