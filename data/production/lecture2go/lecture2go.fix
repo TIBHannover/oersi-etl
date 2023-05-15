@@ -133,6 +133,8 @@ end
 
 replace_all("creator[].*.name","(.+), (.+)", "$2 $1")
 replace_all("creator[].*.id", "(\\d{4}-\\d{4}-\\d{4}-\\d{4}).*|.*(\\d{4}-\\d{4}-\\d{4}-\\d{4}).*","https://orcid.org/$1")
+trim("creator[].*.affiliation.name")
+replace_all("creator[].*.affiliation.name","Uni Hamburg|Uni HH", "Universität Hamburg")
 
 # ---------contributor----------------
 set_array("contributor[]")
