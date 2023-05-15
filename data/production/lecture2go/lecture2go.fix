@@ -15,14 +15,15 @@ include ("../../sharedFixes/macros.fix")
 # ---------------id----------------------------------
 do list(path:"metadata.oai_datacite.payload.resource.identifier","var":"$i")
   if any_equal("$i.identifierType", "URL")
-    copy_field("$i.value","id")
+    copy_field("$i.value","@id")
   end
 end
 
-unless exists ("metadata.oai_datacite.payload.resource.identifier")
+unless exists ("@id")
   reject()
 end
 
+copy_field("@id","id")
 
 # ---------------name----------------------------------
 # The json-validator created an error due to duplicated element "name". Therefore the two conditionals should prevent a duplicate elemente.
@@ -189,6 +190,16 @@ do list(path: "metadata.oai_datacite.payload.resource.relatedIdentifiers.related
     copy_field("$i.value", "hasPart[].$append.id")
   end
 end
+
+# ------ encoding --- 
+
+set_array("encoding[]")
+if exists("@id")
+  copy_field("@id","encoding[].$append.embedUrl")
+  add_field("encoding[].$last.type", "MediaObject")
+  replace_all("encoding[].*.embedUrl", "https://lecture2go.uni-hamburg.de/l2go/-/get/v/", "https://lecture2go.uni-hamburg.de/iframe/?obj=")
+end
+
 
 # ---------------@context ----------------------------------
 
