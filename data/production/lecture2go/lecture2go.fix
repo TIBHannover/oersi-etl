@@ -11,6 +11,16 @@ vacuum()
 
 include ("../../sharedFixes/macros.fix")
 
+# ---------------license----------------------------------
+
+unless any_match("metadata.oai_datacite.payload.resource.rightsList.rights.rightsURI","^http[s]?:\\/\\/creativecommons.org\\/(licenses|licences|publicdomain)\\/.*|^http[s]?:\\/\\/www.gnu.org\\/licenses\\/.*|^http[s]?:\\/\\/www.apache.org\\/licenses\\/.*|http[s]?://opensource.org/licenses/MIT|^http[s]?:\\/\\/www.opensource.org\\/licenses\\/BSD.*")
+  reject()  
+end
+
+if any_match("metadata.oai_datacite.payload.resource.rightsList.rights.rightsURI","^http[s]?:\\/\\/creativecommons.org\\/(licenses|licences|publicdomain)\\/.*|^http[s]?:\\/\\/www.gnu.org\\/licenses\\/.*|^http[s]?:\\/\\/www.apache.org\\/licenses\\/.*|http[s]?://opensource.org/licenses/MIT|^http[s]?:\\/\\/www.opensource.org\\/licenses\\/BSD.*")
+  copy_field("metadata.oai_datacite.payload.resource.rightsList.rights.rightsURI","license.id")
+end
+
 
 # ---------------id----------------------------------
 do list(path:"metadata.oai_datacite.payload.resource.identifier","var":"$i")
@@ -52,12 +62,6 @@ do list(path:"metadata.oai_datacite.payload.resource.descriptions.description","
   copy_field("$i.value","description")
 end
 
-
-# ---------------license----------------------------------
-
-if any_match("metadata.oai_datacite.payload.resource.rightsList.rights.rightsURI","^http[s]?:\\/\\/creativecommons.org\\/(licenses|licences|publicdomain)\\/.*|^http[s]?:\\/\\/www.gnu.org\\/licenses\\/.*|^http[s]?:\\/\\/www.apache.org\\/licenses\\/.*|http[s]?://opensource.org/licenses/MIT|^http[s]?:\\/\\/www.opensource.org\\/licenses\\/BSD.*")
-  copy_field("metadata.oai_datacite.payload.resource.rightsList.rights.rightsURI","license.id")
-end
 
 # ------ type --- 
 
@@ -126,7 +130,11 @@ do list(path:"metadata.oai_datacite.payload.resource.creators.creator", "var":"$
     end
   end
   if exists("$i.affiliation.value")
-    copy_field("$i.affiliation.value", "creator[].$last.affiliation.name")
+    if any_contain("$i.affiliation.value","nstitut")
+      add_field("creator[].$last.affiliation.name", "Universität Hamburg")
+    else
+      copy_field("$i.affiliation.value", "creator[].$last.affiliation.name")
+    end
     add_field("creator[].$last.affiliation.type", "Organization")
   end
 end
