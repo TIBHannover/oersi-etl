@@ -130,7 +130,11 @@ do list(path:"metadata.oai_datacite.payload.resource.creators.creator", "var":"$
     end
   end
   if exists("$i.affiliation.value")
-    copy_field("$i.affiliation.value", "creator[].$last.affiliation.name")
+    if any_contain("$i.affiliation.value","nstitut")
+      add_field("creator[].$last.affiliation.name", "Universität Hamburg")
+    else
+      copy_field("$i.affiliation.value", "creator[].$last.affiliation.name")
+    end
     add_field("creator[].$last.affiliation.type", "Organization")
   end
 end
