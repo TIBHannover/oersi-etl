@@ -10,7 +10,7 @@ service_name = "lecture2go (Hamburg)";
 | open-oaipmh(metadataPrefix="oai_datacite")
 | decode-xml
 | handle-generic-xml(emitNamespace="true")
-| fix(FLUX_DIR + "lecture2go.fix", *)
+| fix(FLUX_DIR + "lecture2go_hamburg.fix", *)
 | encode-json
 | validate-json(output_schema, writeValid=metadata_valid, writeInvalid=metadata_invalid)
 | oersi.ErrorCatcher(file_errors)
