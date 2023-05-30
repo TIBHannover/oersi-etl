@@ -1,12 +1,12 @@
-service_domain = "lecture2go.ostfalia.de/";
-service_id = "https://lecture2go.ostfalia.de/";
-service_name = "lecture2go (Ostfalia)";
+service_domain = "lecture2go.uni-hamburg.de/";
+service_id = "https://lecture2go.uni-hamburg.de/";
+service_name = "lecture2go (Hamburg)";
 
 // Use for testing:
 // "https://getinfo.tib.eu/oai/intern/repository/tib?verb=ListRecords&metadataPrefix=datacite&set=collection~kmo-av_solr~documentFormat:el"
 //| open-http(header=user_agent_header, accept="application/xml")
 
-"https://lecture2go.ostfalia.de/o/oai"
+"https://lecture2go.uni-hamburg.de/o/oai"
 | open-oaipmh(metadataPrefix="oai_datacite")
 | decode-xml
 | handle-generic-xml(emitNamespace="true")
