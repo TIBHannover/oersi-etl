@@ -1,6 +1,6 @@
 service_domain = "lecture2go.uni-hamburg.de/";
 service_id = "https://lecture2go.uni-hamburg.de/";
-service_name = "lecture2go";
+service_name = "lecture2go (Hamburg)";
 
 // Use for testing:
 // "https://getinfo.tib.eu/oai/intern/repository/tib?verb=ListRecords&metadataPrefix=datacite&set=collection~kmo-av_solr~documentFormat:el"
