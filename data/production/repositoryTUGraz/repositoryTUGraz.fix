@@ -96,7 +96,7 @@ end
 
 do list(path: "about[]", "var":"$i")
   copy_field("$i.id", "$i.prefLabel.de")
-  lookup("$i.prefLabel.de", "data/maps/subject-labels.tsv","sep_char":"\t", delete:"true")
+  lookup("$i.prefLabel.de", "destatis-deLabel2Uri", delete:"true")
 end
 
 # ---------------conditionsOfAccess----------------------------------

@@ -65,7 +65,7 @@ do list(path: "fields[]", "var": "$f")
   copy_field("$f", "about[].$append.id")
   copy_field("$f", "about[].$last.prefLabel.de")
 end
-lookup("about[].*.prefLabel.de", "data/maps/subject-labels.tsv","sep_char":"\t", delete:"true")
+lookup("about[].*.prefLabel.de", "destatis-deLabel2Uri", delete:"true")
 remove_field('fields[]')
 
 
