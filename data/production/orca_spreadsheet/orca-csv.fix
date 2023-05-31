@@ -2,7 +2,10 @@
 # --------Delete all emtpy values-------
 vacuum()
 
-include ("../../sharedFixes/macros.fix")
+do once("macrosAndMaps")
+  include ("../../sharedFixes/macros.fix")
+  include ("../../sharedFixes/maps.fix")
+end
 
 
 /* Map some of the data we have to the oersi model: */
@@ -112,7 +115,7 @@ copy_field("Fachbereich", "@hochschulfaechersystematik")
 split_field("@hochschulfaechersystematik", ";")
 trim("@hochschulfaechersystematik.*")
 uniq("@hochschulfaechersystematik")
-lookup("@hochschulfaechersystematik.*","data/maps/destatisLabels-to-uri.tsv","sep_char":"\t", delete:"true")
+lookup("@hochschulfaechersystematik.*","destatis-deLabel2Uri", delete:"true")
 
 
 set_array("about[]")

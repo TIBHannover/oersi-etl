@@ -1,8 +1,10 @@
 # --------Delete all emtpy values-------
 vacuum()
 
-include ("../../sharedFixes/macros.fix")
-
+do once("macrosAndMaps")
+  include ("../../sharedFixes/macros.fix")
+  include ("../../sharedFixes/maps.fix")
+end
 
 #  ---------------id----------------------------------
 move_field("id","internalId")
@@ -143,7 +145,7 @@ copy_field("@hochschulfaechersystematik.*","about[].$append.id")
 
 do list(path: "about[]")
   copy_field("id", "prefLabel.de")
-  lookup("id","data/maps/subject-labels-to-URI.tsv","sep_char":"\t", delete:"true")
+  lookup("id","destatis-deLabel2Uri", delete:"true")
 end
 
 # ---------------conditionsOfAccess----------------------------------

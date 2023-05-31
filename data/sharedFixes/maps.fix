@@ -1,0 +1,4 @@
+
+# Destatis De:Preflabel <-> URI
+put_rdfmap("https://raw.githubusercontent.com/dini-ag-kim/hochschulfaechersystematik/master/hochschulfaechersystematik.ttl","destatis-deLabel2Uri",target:"skos:prefLabel", select_language:"de" )
+

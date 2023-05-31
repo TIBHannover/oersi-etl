@@ -6,7 +6,10 @@ vacuum()
 # description
 
 
-include ("../../sharedFixes/macros.fix")
+do once("macrosAndMaps")
+  include ("../../sharedFixes/macros.fix")
+  include ("../../sharedFixes/maps.fix")
+end
 
 # ---------------id ----------------------------------
 copy_field("isBasedOn", "@external_id")
@@ -60,7 +63,7 @@ do list(path:"@about", "var":"$i")
   copy_field("$i", "about[].$append.id")
   copy_field("$i", "about[].$last.prefLabel.de")
 end
-lookup("about[].*.id", "data/maps/subject-labels-to-URI.tsv","sep_char":"\t", delete:"true")
+lookup("about[].*.id", "destatis-deLabel2Uri", delete:"true")
 
 
 # ---------------type----------------------------------
