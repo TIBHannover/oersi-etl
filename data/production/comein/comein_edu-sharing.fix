@@ -20,12 +20,16 @@ put_vars(
   "educationallevelTTL": "data/maps/vocabulary/educationalLevel.ttl",
   "audienceTTL": "data/maps/vocabulary/educationalAudienceRole.ttl",
   "conditionsOfAccessTTL": "data/maps/vocabulary/conditionsOfAccess.ttl",
+  "medienkompetenzrahmenNrwTTL": "data/maps/vocabulary/medienkompetenzrahmenNRW.ttl",
+  "orientierungsrahmenNrwTTL": "data/maps/vocabulary/orientierungsrahmenNRW.ttl",
+  "digcompeduTTL": "data/maps/vocabulary/digCompEdu.ttl",
   "lrmiAudience_DE": "data/maps/lrmi-audience-de-labels.tsv",
   "lrmiAudience_EN": "data/maps/lrmi-audience-en-labels.tsv",
   "lrmiInteractivityType_DE": "data/maps/lrmi-interactivityType-de-labels.tsv",
   "lrmiInteractivityType_EN": "data/maps/lrmi-interactivityType-en-labels.tsv",
   "subjectMappingOEH": "data/maps/OEH_discipline-KIM_about_university.tsv",
   "disciplineMappingOEH": "data/maps/OEH_discipline-keywords.tsv", # used for transform of non-university-mapped disciplines to keyword labels
+  "competencyMapping": "data/maps/OEH_competencies-OEH_competency_concepts.tsv", 
   "lrtMappingOEH": "data/maps/OEH_LRT-HCRT.tsv",
   "eduLevelMappingOEH": "data/maps/OEH_educationalContext-KIM_educationaLevel.tsv",
   "audienceMappingOEH": "data/maps/OEH_intendedEndUserRole-LRMI_Audience.tsv"
@@ -50,12 +54,15 @@ put_vars(
 # --- But: lookup for skos:exactMatch fails with 'org.apache.jena.rdf.model.LiteralRequiredException' as URI is not considered a Literal (RDFMap.java:189)
 # (3) currently the fix uses subject mapping to university only as oersi does not yet fully support amb lists
 # (4) oersi validates old amb draft @context, so context is not yet overriden in this fix
+# (5) Keywords array is overwritten from sharedFixes (reason: see "global handlings")
 
 # --------------- global handlings ---------------
 # prepare keywords (used in multiple fields)
-unless exists("keywords[]")
-  set_array("keywords[]")
-end
+
+# We reset the keywords array from sharedFixes fix here as copy_field without $append will transform array to string if only one keyword is present
+# This should be checked and fixed in the sharedFixes
+set_array("keywords[]")
+copy_field("properties.cclom:general_keyword[]", "keywords[].$append")
 trim("keywords[].*")
 
 # --------------- about ---------------
@@ -169,7 +176,6 @@ lookup("learningResourceType[].*.prefLabel.de", "hcrtMap")
 put_rdfmap("$[hcrtTTL]", "hcrtMap", target: "skos:prefLabel", select_language: "en")
 lookup("learningResourceType[].*.prefLabel.en", "hcrtMap")
 
-
 # --------------- creator / contributor ---------------
 # (see eduSharingDefault.fix)
 
@@ -280,9 +286,45 @@ unless exists("teaches[]")
   set_array("teaches[]")
 end
 
-do list_as(compID: "ccm:competence[]", compLabel: "ccm:competence_DISPLAYNAME[]")
-  copy_field(orgId, "teaches[].$append.id")
-  copy_field(orgName, "teaches[].$last.prefLabel.de")
+do list_as(compId: "ccm:competence[]", compLabel: "ccm:competence_DISPLAYNAME[]")
+  copy_field(compId, "teaches[].$append.id")
+  copy_field(compLabel, "teaches[].$last.prefLabel.de")
+end
+
+do list_as(compId: "ccm:oeh_digital_competency[]", compLabel: "ccm:oeh_digital_competency_DISPLAYNAME[]")
+  copy_field(compId, "teaches[].$append.id")
+  copy_field(compLabel, "teaches[].$last.prefLabel.de")
+end
+
+#
+# Lookup competencies from keywords 
+#
+
+# Gather competencies from keywords and convert to concepts
+set_array("teachesTemp[]")
+copy_field("properties.cclom:general_keyword[]", "teachesTemp[]")
+# translate keywords to concept ids
+lookup("teachesTemp[].*", "$[competencyMapping]", "sep_char":"\t", delete:"true") 
+# copy ids to concepts
+do list(path:"teachesTemp[]", "var":"$i")
+	copy_field("$i", "teaches[].$append.id")
+	copy_field("$i", "teaches[].$last.prefLabel.de")
+end
+remove_field("teachesTemp[]")
+
+# Lookup matching prefLabels in competencies
+put_rdfmap("$[orientierungsrahmenNrwTTL]", "orMap", target: "skos:prefLabel", select_language: "de")
+lookup("teaches[].*.prefLabel.de", "orMap")
+
+put_rdfmap("$[medienkompetenzrahmenNrwTTL]", "mkrMap", target: "skos:prefLabel", select_language: "de")
+lookup("teaches[].*.prefLabel.de", "mkrMap")
+
+put_rdfmap("$[digcompeduTTL]", "digcompeduMap", target: "skos:prefLabel", select_language: "de")
+lookup("teaches[].*.prefLabel.de", "digcompeduMap")
+
+# --------------- about ---------------
+unless exists("about[]")
+  set_array("about[]")
 end
 
 # --------------- competencyRequired ---------------
@@ -290,14 +332,14 @@ unless exists("competencyRequired[]")
   set_array("competencyRequired[]")
 end
 
-do list_as(compID: "ccm:oeh_competence_requirements[]", compLabel: "ccm:oeh_competence_requirements_DISPLAYNAME[]")
-  copy_field(orgId, "competencyRequired[].$append.id")
-  copy_field(orgName, "competencyRequired[].$last.prefLabel.de")
+do list_as(compId: "ccm:oeh_competence_requirements[]", compLabel: "ccm:oeh_competence_requirements_DISPLAYNAME[]")
+  copy_field(compId, "competencyRequired[].$append.id")
+  copy_field(compLabel, "competencyRequired[].$last.prefLabel.de")
 end
 
-do list_as(compID: "ccm:oeh_languageLevel[]", compLabel: "ccm:oeh_languageLevel_DISPLAYNAME[]")
-  copy_field(orgId, "competencyRequired[].$append.id")
-  copy_field(orgName, "competencyRequired[].$last.prefLabel.de")
+do list_as(compId: "ccm:oeh_languageLevel[]", compLabel: "ccm:oeh_languageLevel_DISPLAYNAME[]")
+  copy_field(compId, "competencyRequired[].$append.id")
+  copy_field(compLabel, "competencyRequired[].$last.prefLabel.de")
 end
 
 # --------------- assesses ---------------
@@ -305,9 +347,9 @@ unless exists("assesses[]")
   set_array("assesses[]")
 end
 
-do list_as(compID: "ccm:oeh_competence_check[]", compLabel: "oeh_competence_check_DISPLAYNAME[]")
-  copy_field(orgId, "assesses[].$append.id")
-  copy_field(orgName, "assesses[].$last.prefLabel.de")
+do list_as(compId: "ccm:oeh_competence_check[]", compLabel: "oeh_competence_check_DISPLAYNAME[]")
+  copy_field(compId, "assesses[].$append.id")
+  copy_field(compLabel, "assesses[].$last.prefLabel.de")
 end
 
 # --------------- interactivityType ---------------
@@ -362,6 +404,13 @@ copy_field("properties.ccm:published_dateISO8601[].1", "datePublished")
 # set_array("@context[]", "https://w3id.org/kim/amb/context.jsonld")
 
 # --------------- Cleanup ---------------
+# Remove keywords that have been mapped to other fields
+filter("keywords[]","^(?!(Lehramtstyp)).*$")
+filter("keywords[]","^(?!(Bildungsstufe)).*$")
+filter("keywords[]","^(?!(Lehr-/Lernform)).*$")
+filter("keywords[]","^(?!(MKR-NRW)).*$")
+filter("keywords[]","^(?!(OR-NRW)).*$")
+
 include ("../../sharedFixes/cleanUp.fix")
 
 # --------------- debug --------------- 
