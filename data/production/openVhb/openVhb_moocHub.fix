@@ -10,6 +10,8 @@ vacuum()
 do once("macrosAndMaps")
   include ("../../sharedFixes/macros.fix")
   include ("../../sharedFixes/maps.fix")
+  # workflow specific map
+  put_filemap("data/maps/openVhb_subjects.tsv","openVhb_subjects","sep_char":"\t")
 end
 include ("../../sharedFixes/moocHubDefault.fix")
 
@@ -57,7 +59,7 @@ add_field("sourceOrganization[].$last.type", "Organization")
 
 # ------- about -------
 copy_field("attributes.subjectarea", "@about")
-lookup("@about","data/maps/openVhb_subjects.tsv","sep_char":"\t", delete:"true")
+lookup("@about","openVhb_subjects",delete:"true")
 
 set_array("about[]")
 do list(path:"@about", "var":"$i")

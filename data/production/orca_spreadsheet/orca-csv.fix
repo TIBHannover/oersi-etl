@@ -5,6 +5,9 @@ vacuum()
 do once("macrosAndMaps")
   include ("../../sharedFixes/macros.fix")
   include ("../../sharedFixes/maps.fix")
+  # workflow specific maps
+  put_filemap("data/maps/orcaUni.tsv","orcaUni","sep_char":"\t")
+  put_filemap("data/maps/orcaLabels-hcrt.tsv","orcaLabels-hcrt","sep_char":"\t") 
 end
 
 
@@ -46,7 +49,7 @@ set_array("@sourceOrga")
 do list(path:"creator[]", "var":"$i")
   copy_field("$i.@affiliation", "$i.affiliation.id")
   copy_field("$i.@affiliation", "$i.affiliation.name")
-  lookup("$i.affiliation.name", "data/maps/orcaUni.tsv","sep_char":"\t", delete:"true")
+  lookup("$i.affiliation.name", "orcaUni"delete:"true")
   add_field("$i.affiliation.type", "Organization")
   move_field("$i.@affiliation", "@sourceOrga.$append")
 end
@@ -68,7 +71,7 @@ copy_field("Beitragende2_Grad", "contributor[].2.honorificPrefix")
 do list(path:"contributor[]", "var":"$i")
   copy_field("$i.@affiliation", "$i.affiliation.id")
   copy_field("$i.@affiliation", "$i.affiliation.name")
-  lookup("$i.affiliation.name", "data/maps/orcaUni.tsv","sep_char":"\t", delete:"true")
+  lookup("$i.affiliation.name", "orcaUni"delete:"true")
   add_field("$i.affiliation.type", "Organization")
   move_field("$i.@affiliation", "@sourceOrga.$append")
 end
@@ -84,7 +87,7 @@ do list(path:"@sourceOrga", "var": "$i")
   add_field("sourceOrganization[].$last.type", "Organization")
 end
 
-lookup("sourceOrganization[].*.name", "data/maps/orcaUni.tsv","sep_char":"\t", delete:"true")
+lookup("sourceOrganization[].*.name", "orcaUni"delete:"true")
 
 # ------ type --- 
 set_array("type[]", "LearningResource")
@@ -98,7 +101,7 @@ trim("@hcrt.*")
 uniq("@hcrt")
 
 do list(path:"@hcrt", "var":"$i")
-  lookup("$i","data/maps/orcaLabels-hcrt.tsv","sep_char":"\t", delete:"true")
+  lookup("$i","orcaLabels-hcrt", delete:"true")
   copy_field("$i", "learningResourceType[].$append.id")
 end
 

@@ -6,6 +6,9 @@ vacuum()
 do once("macrosAndMaps")
   include ("../../sharedFixes/macros.fix")
   include ("../../sharedFixes/maps.fix")
+  # workflow specific maps
+  put_filemap("data/maps/openRubLearningResourceTypes.tsv","openRubLearningResourceTypes", "sep_char":"\t")
+  put_filemap("data/maps/openRubFields2Destatis.tsv","openRubFields2Destatis","sep_char":"\t")
 end
 
 #  ------------id------------------------------------
@@ -40,7 +43,7 @@ add_field("sourceOrganization[].$last.type","Organization")
 # ------------learningResourceType-----
 
 
-lookup("learningResourceType", "data/maps/openRubLearningResourceTypes.tsv", "sep_char":"\t", delete:"true")
+lookup("learningResourceType", "openRubLearningResourceTypes", delete:"true")
 lookup("learningResourceType", "hcrt-deLabel2Uri", delete:"true")
 
 set_array("learningResourceType[]")
@@ -60,7 +63,7 @@ unless exists("fields[]")
   set_array("fields[]")
   move_field("fields", "fields[].$append")
 end
-lookup("fields[].*", "data/maps/openRubFields2Destatis.tsv","sep_char":"\t", delete:"true")
+lookup("fields[].*", "openRubFields2Destatis", delete:"true")
 do list(path: "fields[]", "var": "$f")
   copy_field("$f", "about[].$append.id")
   copy_field("$f", "about[].$last.prefLabel.de")

@@ -4,6 +4,8 @@ vacuum()
 do once("macrosAndMaps")
   include ("../../sharedFixes/macros.fix")
   include ("../../sharedFixes/maps.fix")
+  #workflow specific map
+  put_filemap("data/maps/oefos2destatis.tsv","oefos2destatis","sep_char":"\t")
 end
 
 # --- reuse edu-sharing default template -------- 
@@ -32,7 +34,7 @@ end
 set_array("@hochschulfaechersystematik[]")
 copy_field("properties.ccm:taxonid[].*", "@hochschulfaechersystematik[].$append")
 prepend("@hochschulfaechersystematik[].*", "https://w3id.org/oerbase/vocabs/oefos2012/")
-lookup("@hochschulfaechersystematik[].*", "data/maps/oefos2destatis.tsv","sep_char":"\t", delete:"true")
+lookup("@hochschulfaechersystematik[].*", "oefos2destatis", delete:"true")
 uniq("@hochschulfaechersystematik[]")
 
 set_array("about[]")

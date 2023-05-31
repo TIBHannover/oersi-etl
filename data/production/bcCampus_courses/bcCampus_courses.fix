@@ -8,6 +8,8 @@ vacuum()
 do once("macrosAndMaps")
   include ("../../sharedFixes/macros.fix")
   include ("../../sharedFixes/maps.fix")
+  # workflow specific map
+  put_filemap("data/maps/bcCampusSubjects2DestatisLabels.tsv", "bcCampusSubjects2DestatisLabels","sep_char":"\t")
 end
 
 # ---------------license ----------------------------------
@@ -41,7 +43,7 @@ move_field("keywords","keywords[]")
 
 set_array("@about")
 do list(path: "about[]", "var":"$i")
-  lookup("$i", "data/maps/bcCampusSubjects2DestatisLabels.tsv","sep_char":"\t", delete:"true")
+  lookup("$i", "bcCampusSubjects2DestatisLabels", delete:"true")
   move_field("$i", "@about.$append")
 end
 uniq("@about")

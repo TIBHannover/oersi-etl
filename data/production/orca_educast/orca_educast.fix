@@ -12,6 +12,9 @@ vacuum()
 do once("macrosAndMaps")
   include ("../../sharedFixes/macros.fix")
   include ("../../sharedFixes/maps.fix")
+  # workflow specific maps
+  put_filemap("data/maps/orcaUni.tsv","orcaUni","sep_char":"\t")
+  put_filemap("data/maps/orcaMedienId-hcrt.tsv","orcaMedienId-hcrt","sep_char":"\t")
 end
 
 # ------ id --- 
@@ -108,7 +111,7 @@ do list(path:"creator[]", "var":"$i")
   if exists("$i.@affiliation")
     copy_field("$i.@affiliation", "$i.affiliation.id")
     copy_field("$i.@affiliation", "$i.affiliation.name")
-    lookup("$i.affiliation.name", "data/maps/orcaUni.tsv","sep_char":"\t", delete:"true")
+    lookup("$i.affiliation.name", "orcaUni", delete:"true")
     add_field("$i.affiliation.type", "Organization")
     move_field("$i.@affiliation", "@sourceOrga.$append")
   end
@@ -180,7 +183,7 @@ do list(path:"contributor[]", "var":"$i")
   if exists("$i.@affiliation")
     copy_field("$i.@affiliation", "$i.affiliation.id")
     copy_field("$i.@affiliation", "$i.affiliation.name")
-    lookup("$i.affiliation.name", "data/maps/orcaUni.tsv","sep_char":"\t", delete:"true")
+    lookup("$i.affiliation.name", "orcaUni", delete:"true")
     add_field("$i.affiliation.type", "Organization")
     move_field("$i.@affiliation", "@sourceOrga.$append")
   end
@@ -197,7 +200,7 @@ do list(path:"@sourceOrga", "var": "$i")
   add_field("sourceOrganization[].$last.type", "Organization")
 end
 
-lookup("sourceOrganization[].*.name", "data/maps/orcaUni.tsv","sep_char":"\t", delete:"true")
+lookup("sourceOrganization[].*.name", "orcaUni", delete:"true")
 
 # ------ type --- 
 set_array("type[]", "LearningResource", "VideoObject")
@@ -208,7 +211,7 @@ copy_field("metadata.inlined.catalog.*.metadata.terms:learningResourceType_id.va
 split_field("@hcrt", ";")
 trim("@hcrt.*")
 uniq("@hcrt")
-lookup("@hcrt.*","data/maps/orcaMedienId-hcrt.tsv","sep_char":"\t") # sometimes the old vocab and sometimes the hcrt is used.
+lookup("@hcrt.*","orcaMedienId-hcrt") # sometimes the old vocab and sometimes the hcrt is used.
 
 
 set_array("learningResourceType[]")

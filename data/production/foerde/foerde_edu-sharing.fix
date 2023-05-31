@@ -4,6 +4,9 @@ vacuum()
 do once("macrosAndMaps")
   include ("../../sharedFixes/macros.fix")
   include ("../../sharedFixes/maps.fix")
+  # workflow specific maps
+  put_filemap("data/maps/foerdeSubjects.tsv","foerdeSubjects","sep_char":"\t")
+  put_filemap("data/maps/foerdeLeardningResourceTypes.tsv","foerdeLeardningResourceTypes","sep_char":"\t")
 end
 
 # Filter out any non higher ed oer
@@ -58,7 +61,7 @@ copy_field("node.properties.cclom:general_description[].*", "description") # eve
 
 
 #  ---------------about----------------------------------
-lookup("node.properties.ccm:taxonid_DISPLAYNAME[].*","data/maps/foerdeSubjects.tsv","sep_char":"\t", delete:"true")
+lookup("node.properties.ccm:taxonid_DISPLAYNAME[].*","foerdeSubjects","sep_char":"\t", delete:"true")
 copy_field("node.properties.ccm:taxonid_DISPLAYNAME[]", "@hochschulfaechersystematik[]")
 
  
@@ -140,7 +143,7 @@ set_array("type[]", "LearningResource")
  
 # ---------------learningResourceType----------------------------------
 
-lookup("node.properties.ccm:educationallearningresourcetype_DISPLAYNAME[].*","data/maps/foerdeLeardningResourceTypes.tsv","sep_char":"\t", delete:"true")
+lookup("node.properties.ccm:educationallearningresourcetype_DISPLAYNAME[].*","foerdeLeardningResourceTypes", delete:"true")
 copy_field("node.properties.ccm:educationallearningresourcetype_DISPLAYNAME[]", "@learningResourceType[]")
 
 

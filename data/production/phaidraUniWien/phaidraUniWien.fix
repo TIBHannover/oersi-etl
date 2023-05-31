@@ -12,6 +12,9 @@ vacuum()
 do once("macrosAndMaps")
   include ("../../sharedFixes/macros.fix")
   include ("../../sharedFixes/maps.fix")
+  # workflow specific maps
+  put_filemap("data/maps/coarResource2hcrt.tsv","coarResource2hcrt","sep_char":"\t")
+  put_filemap("data/maps/oefos2destatis.tsv","oefos2destatis","sep_char":"\t")
 end
 
 # ---------------id----------------------------------
@@ -117,7 +120,7 @@ do list(path:"metadata.resource.resourceType","var":"$i")
   copy_field("$i.uri", "learningResourceType[].$append.id")
 end
 do list(path:"learningResourceType[]","var":"$i")
-  lookup("$i.id", "data/maps/coarResource2hcrt.tsv","sep_char":"\t", delete:"true")  
+  lookup("$i.id", "coarResource2hcrt", delete:"true")  
   copy_field("$i.id", "$i.prefLabel.de")
   lookup("$i.prefLabel.de", "hcrt-deLabel2Uri", delete:"true")
   copy_field("$i.id", "$i.prefLabel.en")
@@ -173,7 +176,7 @@ do list(path: "@about", "var":"$i")
     copy_field("$i", "keywords[].$append")
     copy_field("$i", "about[].$append.id")
     replace_all("about[].$last.id",".*\\((\\d*)\\)","https://w3id.org/oerbase/vocabs/oefos2012/$1")
-    lookup("about[].$last.id", "data/maps/oefos2destatis.tsv","sep_char":"\t")
+    lookup("about[].$last.id", "oefos2destatis")
   end
 end
 

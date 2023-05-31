@@ -14,6 +14,8 @@ vacuum()
 do once("macrosAndMaps")
   include ("../../sharedFixes/macros.fix")
   include ("../../sharedFixes/maps.fix")
+  # workflow specific map
+  put_filemap("data/maps/oefos2destatis.tsv","oefos2destatis","sep_char":"\t")
 end
 
 # --------------id ----------------------------------------
@@ -91,7 +93,7 @@ set_array("type[]", "LearningResource")
 set_array("about[]")
 do list(path:"metadata.lom:lom.lom:classification.lom:taxonpath.lom:taxon","var":"$i")
     copy_field("$i.lom:id.value","about[].$append.id")
-    lookup("about[].$last.id", "data/maps/oefos2destatis.tsv","sep_char":"\t")
+    lookup("about[].$last.id", "oefos2destatis")
 end
 
 do list(path: "about[]", "var":"$i")

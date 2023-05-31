@@ -20,7 +20,7 @@ end
 # ---------about----------------
 do list(path:"about[]")
   copy_field("id", "prefLabel.de")
-  lookup("prefLabel.de", "data/maps/subject-labels.tsv","sep_char":"\t", delete:"true")
+  lookup("prefLabel.de", "destatis-deLabel2Uri", delete:"true")
 end
 
 # ------ sourceOrganization --- 
