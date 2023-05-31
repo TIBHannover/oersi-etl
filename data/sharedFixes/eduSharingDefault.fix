@@ -179,8 +179,8 @@ do list(path:"properties.ccm:educationallearningresourcetype[]", "var": "$i")
   end
 end
 
-lookup("learningResourceType[].*.prefLabel.de", "data/maps/hcrt-de-labels.tsv","sep_char":"\t", delete:"true")
-lookup("learningResourceType[].*.prefLabel.en", "data/maps/hcrt-en-labels.tsv","sep_char":"\t", delete:"true")
+lookup("learningResourceType[].*.prefLabel.de", "hcrt-deLabel2Uri", delete:"true")
+lookup("learningResourceType[].*.prefLabel.en", "hcrt-enLabel2Uri", delete:"true")
 
 
 #  ---------------keywords----------------------------------

@@ -2,3 +2,9 @@
 # Destatis De:Preflabel <-> URI
 put_rdfmap("https://raw.githubusercontent.com/dini-ag-kim/hochschulfaechersystematik/master/hochschulfaechersystematik.ttl","destatis-deLabel2Uri",target:"skos:prefLabel", select_language:"de" )
 
+# HCRT de:preflabel <-> URI
+put_rdfmap("https://raw.githubusercontent.com/dini-ag-kim/hcrt/master/hcrt.ttl","hcrt-deLabel2Uri",target:"skos:prefLabel", select_language:"de" )
+
+# HCRT de:preflabel <-> URI
+put_rdfmap("https://raw.githubusercontent.com/dini-ag-kim/hcrt/master/hcrt.ttl","hcrt-enLabel2Uri",target:"skos:prefLabel", select_language:"en" )
+

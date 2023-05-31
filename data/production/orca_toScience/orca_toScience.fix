@@ -1,5 +1,10 @@
 # The data build mostly on AMB-profil. We only need some adjustments.
 
+do once("macrosAndMaps")
+  include ("../../sharedFixes/macros.fix")
+  include ("../../sharedFixes/maps.fix")
+end
+
 # -------  image ----
 #There are no pictures there at the moment
 unless exists("image")
@@ -49,7 +54,7 @@ end
 do list(path: "learningResourceType[]")
   unless exists ("prefLabel.en") # filter out if en-Label already exists
     copy_field("id", "prefLabel.en")
-    lookup("prefLabel.en","data/maps/hcrt-en-labels.tsv", "sep_char":"\t", delete:"true")
+    lookup("prefLabel.en", "hcrt-enLabel2Uri", delete:"true")
   end
 end
 

@@ -7,7 +7,10 @@ end
 # Delete all empty values
 vacuum()
 
-include ("../../sharedFixes/macros.fix")
+do once("macrosAndMaps")
+  include ("../../sharedFixes/macros.fix")
+  include ("../../sharedFixes/maps.fix")
+end
 include ("../../sharedFixes/moocHubDefault.fix")
 
 #  ---------------image----------------------------------

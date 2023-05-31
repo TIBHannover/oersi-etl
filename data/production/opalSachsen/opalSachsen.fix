@@ -1,7 +1,10 @@
 # Delete all empty values
 vacuum()
 
-include ("../../sharedFixes/macros.fix")
+do once("macrosAndMaps")
+  include ("../../sharedFixes/macros.fix")
+  include ("../../sharedFixes/maps.fix")
+end
 
 #  ---------------id----------------------------------
 copy_field("oer_permalink", "id")
@@ -76,8 +79,8 @@ copy_field("resourcetype","learningResourceType[].$append.id")
 copy_field("resourcetype","learningResourceType[].$last.prefLabel.de")
 copy_field("resourcetype","learningResourceType[].$last.prefLabel.en")
 
-lookup("learningResourceType[].*.prefLabel.de", "data/maps/hcrt-de-labels.tsv","sep_char":"\t", delete:"true")
-lookup("learningResourceType[].*.prefLabel.en", "data/maps/hcrt-en-labels.tsv","sep_char":"\t", delete:"true")
+lookup("learningResourceType[].*.prefLabel.de", "hcrt-deLabel2Uri", delete:"true")
+lookup("learningResourceType[].*.prefLabel.en", "hcrt-enLabel2Uri", delete:"true")
 
 # ---------------description----------------------------------
 copy_field("comment","description")

@@ -1,6 +1,11 @@
 # Delete all empty values
 vacuum()
 
+do once("macrosAndMaps")
+  include ("../../sharedFixes/macros.fix")
+  include ("../../sharedFixes/maps.fix")
+end
+
 # Filter out any non higher ed oer
 unless any_equal("node.properties.ccm:educontextname_DISPLAYNAME[]", "Hochschule")
   reject()
@@ -148,8 +153,8 @@ do list(path:"@learningResourceType[]", "var": "$i")
   end
 end
  
-lookup("learningResourceType[].*.prefLabel.de", "data/maps/hcrt-de-labels.tsv","sep_char":"\t", delete:"true")
-lookup("learningResourceType[].*.prefLabel.en", "data/maps/hcrt-en-labels.tsv","sep_char":"\t", delete:"true")
+lookup("learningResourceType[].*.prefLabel.de", "hcrt-deLabel2Uri", delete:"true")
+lookup("learningResourceType[].*.prefLabel.en", "hcrt-enLabel2Uri", delete:"true")
  
 #  ---------------keywords----------------------------------
 copy_field("node.properties.cclom:general_keyword[]", "keywords[]")

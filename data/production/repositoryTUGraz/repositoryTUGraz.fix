@@ -11,7 +11,10 @@ end
 # Delete all empty values
 vacuum()
 
-include ("../../sharedFixes/macros.fix")
+do once("macrosAndMaps")
+  include ("../../sharedFixes/macros.fix")
+  include ("../../sharedFixes/maps.fix")
+end
 
 # --------------id ----------------------------------------
 do list("path": "metadata.lom:lom.lom:technical.lom:location", "var": "$i")

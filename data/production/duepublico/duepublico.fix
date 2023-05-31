@@ -11,7 +11,10 @@ end
 # Delete all empty values
 vacuum()
 
-include ("../../sharedFixes/macros.fix")
+do once("macrosAndMaps")
+  include ("../../sharedFixes/macros.fix")
+  include ("../../sharedFixes/maps.fix")
+end
 
 # --------------id ----------------------------------------
 do list("path": "metadata.mods:mods.mods:identifier", "var": "$i")
@@ -134,8 +137,8 @@ do list(path: "@lRT", "var":"$i")
   copy_field("$i","learningResourceType[].$last.prefLabel.en")
 end
 
-lookup("learningResourceType[].*.prefLabel.de", "data/maps/hcrt-de-labels.tsv","sep_char":"\t", delete:"true")
-lookup("learningResourceType[].*.prefLabel.en", "data/maps/hcrt-en-labels.tsv","sep_char":"\t", delete:"true")
+lookup("learningResourceType[].*.prefLabel.de", "hcrt-deLabel2Uri", delete:"true")
+lookup("learningResourceType[].*.prefLabel.en", "hcrt-enLabel2Uri", delete:"true")
 
 # ---------------keywords----------------------------------
 set_array("keywords[]")
@@ -152,7 +155,7 @@ do list(path:"metadata.mods:mods.mods:classification","var":"$i")
   end
 end
 
-lookup("about[].*.prefLabel.de", "data/maps/subject-labels.tsv","sep_char":"\t", delete:"true")
+lookup("about[].*.prefLabel.de", "hcrt-deLabel2Uri", delete:"true")
 
 
 # -------isPartOf---------

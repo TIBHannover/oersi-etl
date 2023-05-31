@@ -9,6 +9,11 @@ end
 # Delete all empty values
 vacuum()
 
+do once("macrosAndMaps")
+  include ("../../sharedFixes/macros.fix")
+  include ("../../sharedFixes/maps.fix")
+end
+
 # ---------------id----------------------------------
 
 copy_field("metadata.resource.datacite:identifier.value", "id")
@@ -114,9 +119,9 @@ end
 do list(path:"learningResourceType[]","var":"$i")
   lookup("$i.id", "data/maps/coarResource2hcrt.tsv","sep_char":"\t", delete:"true")  
   copy_field("$i.id", "$i.prefLabel.de")
-  lookup("$i.prefLabel.de", "data/maps/hcrt-de-labels.tsv","sep_char":"\t", delete:"true")
+  lookup("$i.prefLabel.de", "hcrt-deLabel2Uri", delete:"true")
   copy_field("$i.id", "$i.prefLabel.en")
-  lookup("$i.prefLabel.en", "data/maps/hcrt-en-labels.tsv","sep_char":"\t", delete:"true")
+  lookup("$i.prefLabel.en", "hcrt-enLabel2Uri", delete:"true")
 end
 
 # ---------mainEntityOfPage----------------
