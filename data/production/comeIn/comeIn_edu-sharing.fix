@@ -1,0 +1,316 @@
+# Delete all empty values
+vacuum()
+
+# --------------- macros --------------- 
+do once ("mapsAndMacros")
+  include ("../../sharedFixes/macros.fix")
+  put_rdfmap("data/maps/vocabulary/hochschulfaechersystematik.ttl", "hochschulfaecherDeLabel", target: "skos:prefLabel", select_language: "de")
+  put_rdfmap("data/maps/vocabulary/conditionsOfAccess.ttl", "conditionsOfAccessEnLabel", target: "skos:prefLabel", select_language: "en")
+  put_rdfmap("data/maps/vocabulary/conditionsOfAccess.ttl", "conditionsOfAccessDeLabel", target: "skos:prefLabel", select_language: "de")
+  put_rdfmap("data/maps/vocabulary/learningResourceType.ttl", "oehressourcentypDeLabel", target: "skos:prefLabel", select_language: "de")
+  put_rdfmap("data/maps/vocabulary/learningResourceType.ttl", "oehressourcentypEnLabel", target: "skos:prefLabel", select_language: "en")
+  put_rdfmap("data/maps/vocabulary/orientierungsrahmenNRW.ttl", "orMap", target: "skos:prefLabel", select_language: "de")
+  put_rdfmap("data/maps/vocabulary/educationalLevel.ttl", "educationalLevelMapDe", target: "skos:prefLabel", select_language: "de")
+  put_rdfmap("data/maps/vocabulary/educationalLevel.ttl", "educationalLevelMapEn", target: "skos:prefLabel", select_language: "en")
+  put_rdfmap("data/maps/vocabulary/digCompEdu.ttl", "digcompeduMap", target: "skos:prefLabel", select_language: "de")
+  put_rdfmap("data/maps/vocabulary/hcrt.ttl", "hcrtMapDe", target: "skos:prefLabel", select_language: "de")
+  put_rdfmap("data/maps/vocabulary/hcrt.ttl", "hcrtMapEn", target: "skos:prefLabel", select_language: "en")
+  put_rdfmap("data/maps/vocabulary/medienkompetenzrahmenNRW.ttl", "mkrMap", target: "skos:prefLabel", select_language: "de")
+  # put_rdfmap("data/maps/vocabulary/schulfaecher.ttl", "schulfaecherMapDeLabel", target: "skos:prefLabel", select_language: "de")
+  put_filemap("data/maps/lrmi-audience-de-labels.tsv", "audienceDeLabel", sep_char: "\t", delete:"true")
+  put_filemap("data/maps/lrmi-audience-en-labels.tsv", "audienceEnLabel", sep_char: "\t", delete:"true")
+  put_filemap("data/maps/lrmi-interactivityType-de-labels.tsv", "interacticvityDeLabel", sep_char: "\t")
+  put_filemap("data/maps/lrmi-interactivityType-en-labels.tsv", "intertactivityEnLabel", sep_char: "\t")
+  #  "audienceTTL": "data/maps/vocabulary/educationalAudienceRole.ttl",
+  put_filemap("data/maps/OEH_discipline-KIM_about_university.tsv", "subjectMappingOEH", sep_char: "\t")
+	put_filemap("data/maps/OEH_discipline-keywords.tsv", "disciplineMappingOEH", sep_char: "\t") # used for transform of non-university-mapped disciplines to keyword labels
+  put_filemap("data/maps/OEH_competencies-OEH_competency_concepts.tsv", "competencyMapping", sep_char: "\t") 
+	put_filemap("data/maps/OEH_LRT-HCRT.tsv", "lrtMappingOEH", sep_char: "\t") 
+	put_filemap("data/maps/OEH_educationalContext-KIM_educationaLevel.tsv", "eduLevelMappingOEH", sep_char: "\t") 
+	put_filemap("data/maps/OEH_intendedEndUserRole-LRMI_Audience.tsv", "audienceMappingOEH", sep_char: "\t") 	
+end
+
+# --------------- edusharing default template  --------------- 
+include ("../../sharedFixes/eduSharingDefault.fix")
+
+
+# --------------- global handlings ---------------
+# prepare keywords (used in multiple fields)
+
+do list(path: "properties.cclom:general_keyword[]","var":"$i")
+	copy_field("$i", "keywords[].$append")
+end
+trim("keywords[].*")
+
+# --------------- about ---------------
+
+do list(path:"properties.ccm:taxonid[]", "var":"$i")
+  # Replace with mapped ids
+  lookup("$i", "subjectMappingOEH", delete: "true")
+	copy_field("$i", "about[].$append.id")
+	copy_field("$i", "about[].$last.prefLabel.de")
+end
+
+# Lookup matching prefLabels in both value lists (AMB)
+# lookup("about[].*.prefLabel.de", "schulfaecherMap")
+
+lookup("about[].*.prefLabel.de", "hochschulfaecherDeLabel", delete:"true")
+
+# Handle some non-university-mapped OEH disciplines
+if any_equal("properties.ccm:taxonid[]","http://w3id.org/openeduhub/vocabs/discipline/680")
+    add_field("keywords[].$append", "http://w3id.org/openeduhub/vocabs/discipline/680")
+end
+
+if any_equal("properties.ccm:taxonid[]","http://w3id.org/openeduhub/vocabs/discipline/72001")
+    add_field("keywords[].$append", "http://w3id.org/openeduhub/vocabs/discipline/72001")
+end
+
+if any_equal("properties.ccm:taxonid[]","http://w3id.org/openeduhub/vocabs/discipline/64018")
+    add_field("keywords[].$append", "http://w3id.org/openeduhub/vocabs/discipline/64018")
+end
+
+if any_equal("properties.ccm:taxonid[]","http://w3id.org/openeduhub/vocabs/discipline/20090")
+    add_field("keywords[].$append", "http://w3id.org/openeduhub/vocabs/discipline/20090")
+end
+
+if any_equal("properties.ccm:taxonid[]","http://w3id.org/openeduhub/vocabs/discipline/040")
+    add_field("keywords[].$append", "http://w3id.org/openeduhub/vocabs/discipline/040")
+end
+
+# Lookup non-university-mapped OEH disciplines to keywords
+lookup("keywords[].*", "disciplineMappingOEH")
+
+# --------------- conditionsOfAccess ---------------
+
+do list(path:"properties.ccm:oeh_quality_login[]", "var": "$i")
+	if any_equal("$i","0")
+		copy_field("coaconditionsOfAccess.id", "https://w3id.org/kim/conditionsOfAccess/login")
+	else
+    copy_field("conditionsOfAccess.id", "https://w3id.org/kim/conditionsOfAccess/no_login")
+  end
+end
+
+# --------------- learningResourceType ---------------
+# NOTES
+# WLO uses at least three fields for LRT (ccm:educationallearningresourcetype, ccm:oeh_lrt, ccm:oeh_lrt_aggregated)
+# There might be an additional handling of these fields later on to map them to OEHRT/HCRT lists.
+# Although the AMB profile allows OEHRT and HCRT value lists, they should be unified for better user experience in OERSI-related applications.
+# Primary goals are avoiding duplicate concepts with different labels.
+# Therefore we replace known mapped OEHRT ids with the HCRT ids and only add additional resource types.
+
+# We need to override from default fix (to handle it a bit differently)
+
+# OEH_NEW_LRT_AGGREGATED
+# https://github.com/openeduhub/oeh-metadata-vocabs/blob/master/new_lrt_aggregated.ttl
+#do list(path:"properties.ccm:oeh_lrt_aggregated[]", "var": "$i")
+#    copy_field("$i", "learningResourceType[].$append.id")
+#    copy_field("$i", "learningResourceType[].$last.prefLabel.de")
+#    copy_field("$i", "learningResourceType[].$last.prefLabel.en")
+#end
+
+# OEH_NEW_LRT 
+# https://github.com/openeduhub/oeh-metadata-vocabs/blob/master/new_lrt.ttl
+#do list(path:"properties.ccm:oeh_lrt[]", "var": "$i")
+#    copy_field("$i", "learningResourceType[].$append.id")
+#    copy_field("$i", "learningResourceType[].$last.prefLabel.de")
+#    copy_field("$i", "learningResourceType[].$last.prefLabel.en")
+#end
+
+# OEH_LRT
+# https://github.com/openeduhub/oeh-metadata-vocabs/blob/master/learningResourceType.ttl
+
+do list(path:"learningResourceType[]","var":"$i")
+  if any_contain("$i.id","http://w3id.org/openeduhub/vocabs/")
+    lookup("$i.id", "lrtMappingOEH", delete:"true")
+    copy_field("$i.id","$i.prefLabel.de")
+    copy_field("$i.id","$i.prefLabel.en")
+    lookup("$i.prefLabel.de", "hcrtMapDe")
+    lookup("$i.prefLabel.en", "hcrtMapEn")
+  end
+end
+
+# --------------- publisher ---------------
+
+do list(path:"properties.ccm:lifecyclecontributer_publisher[]", "var": "$i")
+  if any_match("$i", "^BEGIN:VCARD[\\s\\S]*FN:(.+)\n[\\s\\S]*\nEND:VCARD$")
+    copy_field("$i", "publisher[].$append.name")
+    add_field("publisher[].$last.type", "Person")
+  elsif any_match("$i", "^BEGIN:VCARD\nORG:(.+)\n[\\s\\S]*\nEND:VCARD$")
+    copy_field("$i", "publisher[].$append.name")
+    add_field("publisher[].$last.type", "Organization")
+  end
+end
+
+do list(path:"publisher[]")
+  if any_match("name", "^BEGIN:VCARD[\\s\\S]*X-ORCID:(.+)\n[\\s\\S]+END:VCARD$")
+    copy_field("name", "id")
+    replace_all("id","^BEGIN:VCARD[\\s\\S]*X-ORCID:(.+)\n[\\s\\S]*\nEND:VCARD$", "https://orcid.org/$1")
+  end
+  replace_all("name","^BEGIN:VCARD[\\s\\S]*FN:(.+)\n[\\s\\S]*\nEND:VCARD$", "$1")
+  replace_all("name","^BEGIN:VCARD\nORG:(.+)\n[\\s\\S]*\nEND:VCARD$", "$1")
+end
+
+# --------------- educationalLevel ---------------
+set_array("educationalLevel[]")
+
+do list(path:"properties.ccm:educationalcontext[]", "var": "$i")
+  # Replace ID with mappings and delete values not known
+  lookup("$i", "eduLevelMappingOEH", delete:"true")
+  unless is_empty("$i")
+    copy_field("$i", "educationalLevel[].$append.id")
+  end
+end
+
+# Check keywords and add further values
+if any_contain("keywords[]","Bildungsstufe: Bachelor")
+  add_field("educationalLevel[].$append.id", "https://w3id.org/kim/educationalLevel/level_6")
+end
+
+if any_contain("keywords[]","Bildungsstufe: Master")
+  add_field("educationalLevel[].$append.id", "https://w3id.org/kim/educationalLevel/level_7")
+end
+
+if any_contain("keywords[]","Bildungsstufe: Promotion")
+  add_field("educationalLevel[].$append.id", "https://w3id.org/kim/educationalLevel/level_8")
+end
+
+if any_contain("keywords[]","Bildungsstufe: Vorbereitungsdienst")
+  add_field("educationalLevel[].$append.id", "https://w3id.org/kim/educationalLevel/level_B")
+end
+
+do list(path:"educationalLevel[]","var":"$i")
+    copy_field("$i.id", "$i.prefLabel.de")
+    copy_field("$i.id", "$i.prefLabel.en")
+end
+
+lookup("educationalLevel[].*.prefLabel.de", "educationalLevelMapDe")
+lookup("educationalLevel[].*.prefLabel.en", "educationalLevelMapEn")
+
+# --------------- audience ---------------
+set_array("audience[]")
+
+do list(path:"properties.ccm:educationalintendedenduserrole[]", "var": "$i")
+  lookup("$i", "audienceMappingOEH","sep_char":"\t", delete:"true")
+  unless is_empty("$i")
+    copy_field("$i", "audience[].$append.id")
+    copy_field("$i", "audience[].$last.prefLabel.de")
+    copy_field("$i", "audience[].$last.prefLabel.en")
+  end
+end
+
+# Get labels
+lookup("audience[].*.prefLabel.de", "audienceDeLabel", delete:"true")
+lookup("audience[].*.prefLabel.en", "audienceEnLabel", delete:"true")
+
+# --------------- teaches ---------------
+set_array("teaches[]")
+
+do list_as(compId: "ccm:competence[]", compLabel: "ccm:competence_DISPLAYNAME[]")
+  copy_field(compId, "teaches[].$append.id")
+  copy_field(compLabel, "teaches[].$last.prefLabel.de")
+end
+
+do list_as(compId: "ccm:oeh_digital_competency[]", compLabel: "ccm:oeh_digital_competency_DISPLAYNAME[]")
+  copy_field(compId, "teaches[].$append.id")
+  copy_field(compLabel, "teaches[].$last.prefLabel.de")
+end
+
+#
+# Lookup competencies from keywords 
+#
+
+# Gather competencies from keywords and convert to concepts
+set_array("@teachesFromKeywords")
+copy_field("properties.cclom:general_keyword[]", "@teachesFromKeywords")
+# translate keywords to concept ids
+lookup("@teachesFromKeywords.*", "competencyMapping", delete:"true") 
+# copy ids to concepts
+do list(path:"@teachesFromKeywords", "var":"$i")
+	copy_field("$i", "teaches[].$append.id")
+	copy_field("$i", "teaches[].$last.prefLabel.de")
+end
+
+# Lookup matching prefLabels in competencies
+lookup("teaches[].*.prefLabel.de", "orMap")
+lookup("teaches[].*.prefLabel.de", "mkrMap")
+lookup("teaches[].*.prefLabel.de", "digcompeduMap")
+
+# --------------- competencyRequired ---------------
+
+set_array("competencyRequired[]")
+
+do list_as(compId: "ccm:oeh_competence_requirements[]", compLabel: "ccm:oeh_competence_requirements_DISPLAYNAME[]")
+  add_field("competencyRequired[].$append.test","")
+  copy_field(compId, "competencyRequired[].$last.id")
+  copy_field(compLabel, "competencyRequired[].$last.prefLabel.de")
+end
+
+do list_as(compId: "ccm:oeh_languageLevel[]", compLabel: "ccm:oeh_languageLevel_DISPLAYNAME[]")
+  add_field("competencyRequired[].$append.test","")
+  copy_field(compId, "competencyRequired[].$last.id")
+  copy_field(compLabel, "competencyRequired[].$last.prefLabel.de")
+end
+
+# --------------- assesses ---------------
+set_array("assesses[]")
+
+do list_as(compId: "ccm:oeh_competence_check[]", compLabel: "oeh_competence_check_DISPLAYNAME[]")
+  add_field("assesses[].$append.test","")
+  copy_field(compId, "assesses[].$last.id")
+  copy_field(compLabel, "assesses[].$last.prefLabel.de")
+end
+
+# --------------- interactivityType ---------------
+set_array("interactivityType[]")
+
+# Semantically there can only be one of these values for interactivityType
+if any_contain("keywords[]","Lehr-/Lernform: aktiv")
+  add_field("interactivityType[].$append.id", "http://purl.org/dcx/lrmi-vocabs/interactivityType/active")
+elsif any_contain("keywords[]","Lehr-/Lernform: erklärend")
+  add_field("interactivityType[].$append.id", "http://purl.org/dcx/lrmi-vocabs/interactivityType/expositive")
+elsif any_contain("keywords[]","Lehr-/Lernform: gemischt")
+  add_field("interactivityType[].$append.id", "http://purl.org/dcx/lrmi-vocabs/interactivityType/mixed")
+end
+
+do list(path: "interactivityType[]", "var":"$i")
+  copy_field("$i.id","$i.prefLabel.de")
+  copy_field("$i.id","$i.prefLabel.en")
+end
+
+# Get labels
+lookup("interactivityType[].*.prefLabel.de", "data/maps/lrmi-interactivityType-de-labels.tsv", sep_char: "\t")
+lookup("interactivityType[].*.prefLabel.en", "data/maps/lrmi-interactivityType-en-labels.tsv", sep_char: "\t")
+
+# --------------- dateCreated ---------------
+copy_field("properties.cm:createdISO8601[].1", "dateCreated")
+
+# --------------- datePublished  ---------------
+copy_field("properties.ccm:published_dateISO8601[].1", "datePublished")
+
+# --------------- Cleanup ---------------
+# Remove keywords that have been mapped to other fields
+filter("keywords[]","^(?!(Lehramtstyp)).*$")
+filter("keywords[]","^(?!(Bildungsstufe)).*$")
+filter("keywords[]","^(?!(Lehr-/Lernform)).*$")
+filter("keywords[]","^(?!(MKR-NRW)).*$")
+filter("keywords[]","^(?!(OR-NRW)).*$")
+
+include ("../../sharedFixes/cleanUp.fix")
+
+# --------------- ADDITIONAL FIELDS (currently not in use) ---------------
+
+# --------------- dateModified  ---------------
+# --------------- isPartOf ---------------
+# --------------- isBasedOn ---------------
+# --------------- hasPart ---------------
+
+# --------------- MEDIA ---------------
+# --------------- trailer ---------------
+# --------------- duration ---------------
+# --------------- encoding ---------------
+# --------------- caption ---------------
+
+# --------------- cclom:typicallearningtime ---------------
+# --------------- ccm:author_freetext ---------------
+# --------------- ccm:educationaltypicalagerange_from/to ---------------
+# --------------- ccm:fskRating ---------------
