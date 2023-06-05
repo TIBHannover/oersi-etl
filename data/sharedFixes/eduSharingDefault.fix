@@ -184,9 +184,10 @@ lookup("learningResourceType[].*.prefLabel.en", "hcrt-enLabel2Uri", delete:"true
 
 
 #  ---------------keywords----------------------------------
-
-copy_field("properties.cclom:general_keyword[]", "keywords[]")
-
+set_array("keywords[]")
+do list(path: "properties.cclom:general_keyword[]","var":"$i")
+  copy_field("$i", "keywords[].$append")
+end
 
 # ---------------encoding----------------------------------
 

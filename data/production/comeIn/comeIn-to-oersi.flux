@@ -20,7 +20,7 @@ default input_wait = "50";
     \"ccm:educationalintendedenduserrole\",
     \"cclom:general_keyword\",
     \"ccm:taxonid\"
-]}", recordPath="nodes", pageParam="skipCount", stepSize="10", totalLimit="20")
+]}", recordPath="nodes", pageParam="skipCount", stepSize="10", totalLimit=input_limit)
 | decode-json
 | filter-null-values
 // edu-sharing WLO
