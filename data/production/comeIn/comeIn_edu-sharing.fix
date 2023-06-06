@@ -23,11 +23,11 @@ do once ("mapsAndMacros")
   put_filemap("data/maps/lrmi-interactivityType-en-labels.tsv", "intertactivityEnLabel", sep_char: "\t")
   #  "audienceTTL": "data/maps/vocabulary/educationalAudienceRole.ttl",
   put_filemap("data/maps/OEH_discipline-KIM_about_university.tsv", "subjectMappingOEH", sep_char: "\t")
-	put_filemap("data/maps/OEH_discipline-keywords.tsv", "disciplineMappingOEH", sep_char: "\t") # used for transform of non-university-mapped disciplines to keyword labels
+  put_filemap("data/maps/OEH_discipline-keywords.tsv", "disciplineMappingOEH", sep_char: "\t") # used for transform of non-university-mapped disciplines to keyword labels
   put_filemap("data/maps/OEH_competencies-OEH_competency_concepts.tsv", "competencyMapping", sep_char: "\t") 
-	put_filemap("data/maps/OEH_LRT-HCRT.tsv", "lrtMappingOEH", sep_char: "\t") 
-	put_filemap("data/maps/OEH_educationalContext-KIM_educationaLevel.tsv", "eduLevelMappingOEH", sep_char: "\t") 
-	put_filemap("data/maps/OEH_intendedEndUserRole-LRMI_Audience.tsv", "audienceMappingOEH", sep_char: "\t") 	
+  put_filemap("data/maps/OEH_LRT-HCRT.tsv", "lrtMappingOEH", sep_char: "\t") 
+  put_filemap("data/maps/OEH_educationalContext-KIM_educationaLevel.tsv", "eduLevelMappingOEH", sep_char: "\t") 
+  put_filemap("data/maps/OEH_intendedEndUserRole-LRMI_Audience.tsv", "audienceMappingOEH", sep_char: "\t") 	
 end
 
 # --------------- edusharing default template  --------------- 
@@ -205,12 +205,12 @@ lookup("audience[].*.prefLabel.en", "audienceEnLabel", delete:"true")
 # --------------- teaches ---------------
 set_array("teaches[]")
 
-do list_as(compId: "ccm:competence[]", compLabel: "ccm:competence_DISPLAYNAME[]")
+do list_as(compId: "properties.ccm:competence[]", compLabel: "properties.ccm:competence_DISPLAYNAME[]")
   copy_field(compId, "teaches[].$append.id")
   copy_field(compLabel, "teaches[].$last.prefLabel.de")
 end
 
-do list_as(compId: "ccm:oeh_digital_competency[]", compLabel: "ccm:oeh_digital_competency_DISPLAYNAME[]")
+do list_as(compId: "properties.ccm:oeh_digital_competency[]", compLabel: "properties.ccm:oeh_digital_competency_DISPLAYNAME[]")
   copy_field(compId, "teaches[].$append.id")
   copy_field(compLabel, "teaches[].$last.prefLabel.de")
 end
@@ -239,13 +239,13 @@ lookup("teaches[].*.prefLabel.de", "digcompeduMap")
 
 set_array("competencyRequired[]")
 
-do list_as(compId: "ccm:oeh_competence_requirements[]", compLabel: "ccm:oeh_competence_requirements_DISPLAYNAME[]")
+do list_as(compId: "properties.ccm:oeh_competence_requirements[]", compLabel: "properties.ccm:oeh_competence_requirements_DISPLAYNAME[]")
   add_field("competencyRequired[].$append.test","")
   copy_field(compId, "competencyRequired[].$last.id")
   copy_field(compLabel, "competencyRequired[].$last.prefLabel.de")
 end
 
-do list_as(compId: "ccm:oeh_languageLevel[]", compLabel: "ccm:oeh_languageLevel_DISPLAYNAME[]")
+do list_as(compId: "properties.ccm:oeh_languageLevel[]", compLabel: "properties.ccm:oeh_languageLevel_DISPLAYNAME[]")
   add_field("competencyRequired[].$append.test","")
   copy_field(compId, "competencyRequired[].$last.id")
   copy_field(compLabel, "competencyRequired[].$last.prefLabel.de")
@@ -254,7 +254,7 @@ end
 # --------------- assesses ---------------
 set_array("assesses[]")
 
-do list_as(compId: "ccm:oeh_competence_check[]", compLabel: "oeh_competence_check_DISPLAYNAME[]")
+do list_as(compId: "properties.ccm:oeh_competence_check[]", compLabel: "properties.oeh_competence_check_DISPLAYNAME[]")
   add_field("assesses[].$append.test","")
   copy_field(compId, "assesses[].$last.id")
   copy_field(compLabel, "assesses[].$last.prefLabel.de")
