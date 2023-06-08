@@ -60,14 +60,6 @@ add_field("@hcrt","https://w3id.org/kim/hcrt/video")
 do array('learningResourceType')
   do entity('')
     map('@hcrt', 'id')
-    do entity('prefLabel')
-      do map('@hcrt', 'de')
-        lookup(in: 'data/maps/hcrt-de-labels.tsv')
-      end  
-      do map('@hcrt', 'en')
-        lookup(in: 'data/maps/hcrt-en-labels.tsv')
-      end
-    end
   end
 end
 

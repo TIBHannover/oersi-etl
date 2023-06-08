@@ -9,7 +9,12 @@ end
 
 vacuum()
 
-include ("../../sharedFixes/macros.fix")
+do once("macrosAndMaps")
+  include ("../../sharedFixes/macros.fix")
+  include ("../../sharedFixes/maps.fix")
+  # workflow specific map
+  put_filemap("data/maps/tibav-subject-mapping.tsv","tibav-subject-mapping","sep_char":"\t")
+end
 
 
 # ---------------id----------------------------------
@@ -182,14 +187,14 @@ end
 
 trim("@hochschulfaechersystematik.*")
 uniq("@hochschulfaechersystematik")
-lookup("@hochschulfaechersystematik.*","data/maps/tibav-subject-mapping.tsv","sep_char":"\t", delete:"true")
+lookup("@hochschulfaechersystematik.*","tibav-subject-mapping", delete:"true")
 
 set_array("about[]")
 copy_field("@hochschulfaechersystematik.*","about[].$append.id")
 
 do list(path: "about[]")
   copy_field("id", "prefLabel.de")
-  lookup("prefLabel.de","data/maps/subject-labels.tsv","sep_char":"\t", delete:"true")
+  lookup("prefLabel.de","destatis-deLabel2Uri", delete:"true")
 end
 
 # ---------------conditionsOfAccess----------------------------------

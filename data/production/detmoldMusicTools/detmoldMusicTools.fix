@@ -4,18 +4,23 @@
 # --------Delete all emtpy values-------
 vacuum()
 
+do once("macrosAndMaps")
+  include ("../../sharedFixes/macros.fix")
+  include ("../../sharedFixes/maps.fix")
+end
+
 # ---------learningResourceType----------------
 do list(path:"learningResourceType[]")
   copy_field("id", "prefLabel.de")
-  lookup("prefLabel.de", "data/maps/hcrt-de-labels.tsv","sep_char":"\t", delete:"true")
+  lookup("prefLabel.de", "hcrt-deLabel2Uri", delete:"true")
   copy_field("id", "prefLabel.en")
-  lookup("prefLabel.en", "data/maps/hcrt-en-labels.tsv","sep_char":"\t", delete:"true")
+  lookup("prefLabel.en", "hcrt-enLabel2Uri", delete:"true")
 end
 
 # ---------about----------------
 do list(path:"about[]")
   copy_field("id", "prefLabel.de")
-  lookup("prefLabel.de", "data/maps/subject-labels.tsv","sep_char":"\t", delete:"true")
+  lookup("prefLabel.de", "destatis-deLabel2Uri", delete:"true")
 end
 
 # ------ sourceOrganization --- 

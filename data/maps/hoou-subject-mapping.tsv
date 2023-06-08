@@ -1,41 +1,37 @@
-angewandte Kunst	ANGEWANDTE_KUNST
-Archäologie	ARCHAEOLOGIE
-Architektur	ARCHITEKTUR
-Bauingenieurwesen	BAUINGENIEURWESEN
-Bibliotheks- und Informationswissenschaften	BIBLIOTHEKSWISSENSCHAFT_DOKUMENTATION
-Bildhauerkunst	BILDHAUEREI_PLASTIK
-Bildung und Erziehung	ERZIEHUNGSWISSENSCHAFTEN
-Biologie	BIOLOGIE
-Biotechnologie	BIOTECHNOLOGIE
-Biowissenschaften	STUDIENBEREICH_BIOLOGIE
-Chemie	STUDIENBEREICH_CHEMIE
-Erziehungswissenschaften	ERZIEHUNGSWISSENSCHAFTEN
-Ethik	ETHIK
-Geografie	GEOGRAPHIE
-Geowissenschaften	GEOWISSENSCHAFTEN
-Geschichte	STUDIENBEREICH_GESCHICHTE
-Geschichte und Geografie	STUDIENBEREICH_GESCHICHTE
-Informatik	INFORMATIK
-Ingenieurwissenschaften	INGENIEURWISSENSCHAFTEN
-Kulturwissenschaft	KULTURWISSENSCHAFTEN_IES
-Kunst	KUNST_KUNSTWISSENSCHAFT
-Landschaftsgestaltung	LANDESPFLEGE_LANDSCHAFTSGESTALTUNG
-Landwirtschaft	AGRARWISSENSCHAFT_LANDWIRTSCHAFT
-Mathematik	STUDIENBEREICH_MATHEMATIK
-Medizin	MEDIZIN_ALLGEMEINMEDIZIN
-Medizin und Gesundheit	MEDIZIN_ALLGEMEINMEDIZIN
-Mikrobiologie	STUDIENBEREICH_BIOLOGIE
-Musik	MUSIK_MUSIKWISSENSCHAFT
-Naturwissenschaften	MATHEMATIK_NATURWISSENSCHAFTEN
-Naturwissenschaften und Mathematik	MATHEMATIK_NATURWISSENSCHAFTEN
-Pädagogik	ERZIEHUNGSWISSENSCHAFT_PAEDAGOGIK
-Philosophie	PHILOSOPHIE
-Physik	PHYSIK
-Politikwissenschaft	POLITIKWISSENSCHAFTEN
-Programmieren	STUDIENBEREICH_INFORMATIK
-Psychologie	PSYCHOLOGIE
-Raumplanung	RAUMPLANUNG
-Religion	RELIGIONSWISSENSCHAFT
-Sozialwissenschaften	SOZIALWISSENSCHAFTEN
-Soziologie	SOZIOLOGIE
-Sport	SPORT
+angewandte Kunst	https://w3id.org/kim/hochschulfaechersystematik/n007
+Archäologie	https://w3id.org/kim/hochschulfaechersystematik/n012
+Architektur	https://w3id.org/kim/hochschulfaechersystematik/n013
+Bauingenieurwesen	https://w3id.org/kim/hochschulfaechersystematik/n68
+Bibliotheks- und Informationswissenschaften	https://w3id.org/kim/hochschulfaechersystematik/n06
+Bildhauerkunst	https://w3id.org/kim/hochschulfaechersystematik/n205
+Bildung und Erziehung	https://w3id.org/kim/hochschulfaechersystematik/n33
+Biologie	https://w3id.org/kim/hochschulfaechersystematik/n026
+Biotechnologie	https://w3id.org/kim/hochschulfaechersystematik/n282
+Biowissenschaften	https://w3id.org/kim/hochschulfaechersystematik/n42
+Chemie	https://w3id.org/kim/hochschulfaechersystematik/n40
+Erziehungswissenschaften	https://w3id.org/kim/hochschulfaechersystematik/n33
+Ethik	https://w3id.org/kim/hochschulfaechersystematik/n169
+Geografie	https://w3id.org/kim/hochschulfaechersystematik/n44
+Geowissenschaften	https://w3id.org/kim/hochschulfaechersystematik/n44
+Geschichte	https://w3id.org/kim/hochschulfaechersystematik/n05
+Geschichte und Geografie	Shttps://w3id.org/kim/hochschulfaechersystematik/n05
+Informatik	https://w3id.org/kim/hochschulfaechersystematik/n079
+Ingenieurwissenschaften	https://w3id.org/kim/hochschulfaechersystematik/n8
+Kulturwissenschaft	https://w3id.org/kim/hochschulfaechersystematik/n14
+Kunst	https://w3id.org/kim/hochschulfaechersystematik/n9
+Landschaftsgestaltung	https://w3id.org/kim/hochschulfaechersystematik/n093
+Landwirtschaft	https://w3id.org/kim/hochschulfaechersystematik/n003
+Mathematik	https://w3id.org/kim/hochschulfaechersystematik/n37
+Medizin	https://w3id.org/kim/hochschulfaechersystematik/n107
+Medizin und Gesundheit	https://w3id.org/kim/hochschulfaechersystematik/n107
+Mikrobiologie	https://w3id.org/kim/hochschulfaechersystematik/n42
+Musik	https://w3id.org/kim/hochschulfaechersystematik/n78
+Naturwissenschaften	https://w3id.org/kim/hochschulfaechersystematik/n4
+Naturwissenschaften und Mathematik	https://w3id.org/kim/hochschulfaechersystematik/n4
+Pädagogik	https://w3id.org/kim/hochschulfaechersystematik/n052
+Philosophie	https://w3id.org/kim/hochschulfaechersystematik/n127
+Physik	https://w3id.org/kim/hochschulfaechersystematik/n0128
+Politikwissenschaft	https://w3id.org/kim/hochschulfaechersystematik/n25
+Programmieren	https://w3id.org/kim/hochschulfaechersystematik/n71
+Soziologie	https://w3id.org/kim/hochschulfaechersystematik/n149
+Sport	https://w3id.org/kim/hochschulfaechersystematik/n2

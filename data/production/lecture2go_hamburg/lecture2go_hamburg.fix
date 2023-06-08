@@ -9,7 +9,12 @@ end
 
 vacuum()
 
-include ("../../sharedFixes/macros.fix")
+do once("macrosAndMaps")
+  include ("../../sharedFixes/macros.fix")
+  include ("../../sharedFixes/maps.fix")
+  # workflow specific map
+  put_filemap("data/maps/lecture2go2destatis.tsv","lecture2go2destatis","sep_char":"\t")
+end
 
 # ---------------license----------------------------------
 
@@ -177,14 +182,14 @@ do list(path:"metadata.oai_datacite.payload.resource.subjects.subject", "var":"$
 end
   
 
-lookup("@about.*","data/maps/lecture2go2destatis.tsv","sep_char":"\t", delete:"true")
+lookup("@about.*","lecture2go2destatis", delete:"true")
 
 set_array("about[]")
 do list(path:"@about", "var":"$i")
   copy_field("$i", "about[].$append.id")
   copy_field("$i", "about[].$last.prefLabel.de")
 end
-lookup("about[].*.prefLabel.de", "data/maps/subject-labels.tsv","sep_char":"\t", delete:"true")
+lookup("about[].*.prefLabel.de", "destatis-deLabel2Uri", delete:"true")
 
 
 # ---------------conditionsOfAccess----------------------------------

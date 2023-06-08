@@ -1,7 +1,12 @@
 # Delete all empty values
 vacuum()
 
-include ("../../sharedFixes/macros.fix")
+do once("macrosAndMaps")
+  include ("../../sharedFixes/macros.fix")
+  include ("../../sharedFixes/maps.fix")
+  #workflow specific map
+  put_filemap("data/maps/oefos2destatis.tsv","oefos2destatis","sep_char":"\t")
+end
 
 # --- reuse edu-sharing default template -------- 
 include ("../../sharedFixes/eduSharingDefault.fix")
@@ -11,7 +16,7 @@ include ("../../sharedFixes/eduSharingDefault.fix")
  
 set_array("@hochschulfaechersystematik[]")
 copy_field("properties.ccm:taxonid[].*", "@hochschulfaechersystematik[].$append")
-lookup("@hochschulfaechersystematik[].*", "data/maps/oefos2destatis.tsv","sep_char":"\t", delete:"true")
+lookup("@hochschulfaechersystematik[].*", "oefos2destatis", delete:"true")
 uniq("@hochschulfaechersystematik[]")
 
 set_array("about[]")
@@ -19,7 +24,7 @@ do list(path:"@hochschulfaechersystematik[]", "var":"$i")
   copy_field("$i", "about[].$append.id")
   copy_field("$i", "about[].$last.prefLabel.de")
 end
-lookup("about[].*.prefLabel.de", "data/maps/subject-labels.tsv","sep_char":"\t", delete:"true")
+lookup("about[].*.prefLabel.de", "destatis-deLabel2Uri", delete:"true")
 
 
 include ("../../sharedFixes/cleanUp.fix")

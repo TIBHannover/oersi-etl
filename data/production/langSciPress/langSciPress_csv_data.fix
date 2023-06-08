@@ -17,14 +17,16 @@ copy_field("id_csv", "_id")
 set_array("inLanguage[]")
 copy_field("metalanguage", "inLanguage[].$append")
 
-put_map("languageMap",
-  "eng": "en",
-  "fra": "fr",
-  "deu": "de",
-  "por": "pt",
-  "spa": "es",
-  "cmn": "zh"
-)
+do once("languageMap")
+  put_map("languageMap",
+    "eng": "en",
+    "fra": "fr",
+    "deu": "de",
+    "por": "pt",
+    "spa": "es",
+    "cmn": "zh"
+  )
+end
 
 lookup("inLanguage[].*","languageMap")
 

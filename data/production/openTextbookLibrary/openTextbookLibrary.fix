@@ -1,8 +1,41 @@
 # --------Delete all emtpy values-------
 vacuum()
 
-include ("../../sharedFixes/macros.fix")
-
+do once("macrosAndMaps")
+  include ("../../sharedFixes/macros.fix")
+  include ("../../sharedFixes/maps.fix")
+  # workflow specific maps
+  put_filemap("data/maps/subjectMappingOpenTextbooks.tsv","subjectMappingOpenTextbooks","sep_char":"\t")
+  put_map("languageMap",
+    "eng": "en",
+    "fre": "fr",
+    "ger": "de",
+    "jpn": "ja",
+    "pol": "pl",
+    "por": "pt",
+    "spa": "es",
+    "chi-trad": "zh",
+    "dut": "nl",
+    "ukr": "uk",
+    "slv": "sl",
+    "aze": "az",
+    "chi-simp": "zh",
+    "rus":"ru",
+    "kor":"ko",
+    "gre":"el",
+    "bul": "bg"
+  )
+  put_map("licenseMap",
+    "Attribution": "https://creativecommons.org/licenses/by/4.0/",
+    "Attribution-NoDerivs": "https://creativecommons.org/licenses/by-nd/4.0/",
+    "Attribution-NonCommercial": "https://creativecommons.org/licenses/by-nc/4.0/",
+    "Attribution-NonCommercial-NoDerivs": "https://creativecommons.org/licenses/by-nc-nd/4.0/",
+    "Attribution-NonCommercial-ShareAlike": "https://creativecommons.org/licenses/by-nc-sa/4.0/",
+    "Attribution-ShareAlike": "https://creativecommons.org/licenses/by-sa/4.0/",
+    "Free Documentation License (GNU)": "https://www.gnu.org/licenses/fdl-1.3.html",
+    "No Rights Reserved": "https://creativecommons.org/publicdomain/zero/1.0/"
+  )
+end
 
 #  ---------------id----------------------------------
 move_field("id","internalId")
@@ -79,41 +112,12 @@ add_field("learningResourceType[].$last.prefLabel.en","Textbook")
 set_array("inLanguage[]")
 copy_field("language", "inLanguage[].$append")
 
-put_map("languageMap",
-  "eng": "en",
-  "fre": "fr",
-  "ger": "de",
-  "jpn": "ja",
-  "pol": "pl",
-  "por": "pt",
-  "spa": "es",
-  "chi-trad": "zh",
-  "dut": "nl",
-  "ukr": "uk",
-  "slv": "sl",
-  "aze": "az",
-  "chi-simp": "zh",
-  "rus":"ru",
-  "kor":"ko",
-  "gre":"el",
-  "bul": "bg"
-)
 
 lookup("inLanguage[].*","languageMap")
 
 # ------ license ---
 move_field("license","@license")
 
-put_map("licenseMap",
-"Attribution": "https://creativecommons.org/licenses/by/4.0/",
-"Attribution-NoDerivs": "https://creativecommons.org/licenses/by-nd/4.0/",
-"Attribution-NonCommercial": "https://creativecommons.org/licenses/by-nc/4.0/",
-"Attribution-NonCommercial-NoDerivs": "https://creativecommons.org/licenses/by-nc-nd/4.0/",
-"Attribution-NonCommercial-ShareAlike": "https://creativecommons.org/licenses/by-nc-sa/4.0/",
-"Attribution-ShareAlike": "https://creativecommons.org/licenses/by-sa/4.0/",
-"Free Documentation License (GNU)": "https://www.gnu.org/licenses/fdl-1.3.html",
-"No Rights Reserved": "https://creativecommons.org/publicdomain/zero/1.0/"
-)
 
 copy_field("@license","license.id")
 lookup("license.id","licenseMap")
@@ -136,14 +140,14 @@ do list(path:"keywords[]","var":"$i")
     move_field("$i", "@hochschulfaechersystematik.$append")
 end
 
-lookup("@hochschulfaechersystematik.*","data/maps/subjectMappingOpenTextbooks.tsv","sep_char":"\t", delete:"true")
+lookup("@hochschulfaechersystematik.*","subjectMappingOpenTextbooks", delete:"true")
 
 set_array("about[]")
 copy_field("@hochschulfaechersystematik.*","about[].$append.id")
 
 do list(path: "about[]")
   copy_field("id", "prefLabel.de")
-  lookup("id","data/maps/subject-labels-to-URI.tsv","sep_char":"\t", delete:"true")
+  lookup("id","destatis-deLabel2Uri", delete:"true")
 end
 
 # ---------------conditionsOfAccess----------------------------------

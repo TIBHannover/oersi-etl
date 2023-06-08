@@ -9,7 +9,13 @@ end
 # --------Delete all emtpy values-------
 vacuum()
 
-include ("../../sharedFixes/macros.fix")
+do once("macrosAndMaps")
+  include ("../../sharedFixes/macros.fix")
+  include ("../../sharedFixes/maps.fix")
+  # workflow specific maps
+  put_filemap("data/maps/orcaUni.tsv","orcaUni","sep_char":"\t")
+  put_filemap("data/maps/orcaMedienId-hcrt.tsv","orcaMedienId-hcrt","sep_char":"\t")
+end
 
 # ------ id --- 
 copy_field("metadata.inlined.catalog.*.metadata.terms:id.value", "id")
@@ -105,7 +111,7 @@ do list(path:"creator[]", "var":"$i")
   if exists("$i.@affiliation")
     copy_field("$i.@affiliation", "$i.affiliation.id")
     copy_field("$i.@affiliation", "$i.affiliation.name")
-    lookup("$i.affiliation.name", "data/maps/orcaUni.tsv","sep_char":"\t", delete:"true")
+    lookup("$i.affiliation.name", "orcaUni", delete:"true")
     add_field("$i.affiliation.type", "Organization")
     move_field("$i.@affiliation", "@sourceOrga.$append")
   end
@@ -177,7 +183,7 @@ do list(path:"contributor[]", "var":"$i")
   if exists("$i.@affiliation")
     copy_field("$i.@affiliation", "$i.affiliation.id")
     copy_field("$i.@affiliation", "$i.affiliation.name")
-    lookup("$i.affiliation.name", "data/maps/orcaUni.tsv","sep_char":"\t", delete:"true")
+    lookup("$i.affiliation.name", "orcaUni", delete:"true")
     add_field("$i.affiliation.type", "Organization")
     move_field("$i.@affiliation", "@sourceOrga.$append")
   end
@@ -194,7 +200,7 @@ do list(path:"@sourceOrga", "var": "$i")
   add_field("sourceOrganization[].$last.type", "Organization")
 end
 
-lookup("sourceOrganization[].*.name", "data/maps/orcaUni.tsv","sep_char":"\t", delete:"true")
+lookup("sourceOrganization[].*.name", "orcaUni", delete:"true")
 
 # ------ type --- 
 set_array("type[]", "LearningResource", "VideoObject")
@@ -205,7 +211,7 @@ copy_field("metadata.inlined.catalog.*.metadata.terms:learningResourceType_id.va
 split_field("@hcrt", ";")
 trim("@hcrt.*")
 uniq("@hcrt")
-lookup("@hcrt.*","data/maps/orcaMedienId-hcrt.tsv","sep_char":"\t") # sometimes the old vocab and sometimes the hcrt is used.
+lookup("@hcrt.*","orcaMedienId-hcrt") # sometimes the old vocab and sometimes the hcrt is used.
 
 
 set_array("learningResourceType[]")
@@ -213,9 +219,9 @@ copy_field("@hcrt.*", "learningResourceType[].$append.id")
 
 do list(path:"learningResourceType[]")
   copy_field("id", "prefLabel.de")
-  lookup("prefLabel.de", "data/maps/hcrt-de-labels.tsv","sep_char":"\t", delete:"true")
+  lookup("prefLabel.de", "hcrt-deLabel2Uri", delete:"true")
   copy_field("id", "prefLabel.en")
-  lookup("prefLabel.en", "data/maps/hcrt-en-labels.tsv","sep_char":"\t", delete:"true")
+  lookup("prefLabel.en", "hcrt-enLabel2Uri", delete:"true")
 end
 
 # ------ about --- 
@@ -230,7 +236,7 @@ copy_field("@hochschulfaechersystematik.*","about[].$append.id")
 
 do list(path: "about[]")
   copy_field("id", "prefLabel.de")
-  lookup("prefLabel.de","data/maps/subject-labels.tsv","sep_char":"\t", delete:"true")
+  lookup("prefLabel.de","destatis-deLabel2Uri", delete:"true")
 end
 
 # ------ inLanguage --- 

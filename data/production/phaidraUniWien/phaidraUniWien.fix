@@ -9,6 +9,14 @@ end
 # Delete all empty values
 vacuum()
 
+do once("macrosAndMaps")
+  include ("../../sharedFixes/macros.fix")
+  include ("../../sharedFixes/maps.fix")
+  # workflow specific maps
+  put_filemap("data/maps/coarResource2hcrt.tsv","coarResource2hcrt","sep_char":"\t")
+  put_filemap("data/maps/oefos2destatis.tsv","oefos2destatis","sep_char":"\t")
+end
+
 # ---------------id----------------------------------
 
 copy_field("metadata.resource.datacite:identifier.value", "id")
@@ -112,11 +120,11 @@ do list(path:"metadata.resource.resourceType","var":"$i")
   copy_field("$i.uri", "learningResourceType[].$append.id")
 end
 do list(path:"learningResourceType[]","var":"$i")
-  lookup("$i.id", "data/maps/coarResource2hcrt.tsv","sep_char":"\t", delete:"true")  
+  lookup("$i.id", "coarResource2hcrt", delete:"true")  
   copy_field("$i.id", "$i.prefLabel.de")
-  lookup("$i.prefLabel.de", "data/maps/hcrt-de-labels.tsv","sep_char":"\t", delete:"true")
+  lookup("$i.prefLabel.de", "hcrt-deLabel2Uri", delete:"true")
   copy_field("$i.id", "$i.prefLabel.en")
-  lookup("$i.prefLabel.en", "data/maps/hcrt-en-labels.tsv","sep_char":"\t", delete:"true")
+  lookup("$i.prefLabel.en", "hcrt-enLabel2Uri", delete:"true")
 end
 
 # ---------mainEntityOfPage----------------
@@ -168,13 +176,13 @@ do list(path: "@about", "var":"$i")
     copy_field("$i", "keywords[].$append")
     copy_field("$i", "about[].$append.id")
     replace_all("about[].$last.id",".*\\((\\d*)\\)","https://w3id.org/oerbase/vocabs/oefos2012/$1")
-    lookup("about[].$last.id", "data/maps/oefos2destatis.tsv","sep_char":"\t")
+    lookup("about[].$last.id", "oefos2destatis")
   end
 end
 
 do list(path: "about[]", "var":"$i")
   copy_field("$i.id", "$i.prefLabel.de")
-  lookup("$i.prefLabel.de", "data/maps/subject-labels.tsv","sep_char":"\t", delete:"true")
+  lookup("$i.prefLabel.de", "destatis-deLabel2Uri", delete:"true")
 end
 
 replace_all("keywords[].*", " \\((\\d*)\\)","")
