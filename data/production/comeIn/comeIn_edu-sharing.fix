@@ -4,7 +4,8 @@ vacuum()
 # --------------- macros --------------- 
 do once ("mapsAndMacros")
   include ("../../sharedFixes/macros.fix")
-  put_rdfmap("data/maps/vocabulary/hochschulfaechersystematik.ttl", "hochschulfaecherDeLabel", target: "skos:prefLabel", select_language: "de")
+  include ("../../sharedFixes/maps.fix")
+  # workflow specific maps
   put_rdfmap("data/maps/vocabulary/conditionsOfAccess.ttl", "conditionsOfAccessEnLabel", target: "skos:prefLabel", select_language: "en")
   put_rdfmap("data/maps/vocabulary/conditionsOfAccess.ttl", "conditionsOfAccessDeLabel", target: "skos:prefLabel", select_language: "de")
   put_rdfmap("data/maps/vocabulary/learningResourceType.ttl", "oehressourcentypDeLabel", target: "skos:prefLabel", select_language: "de")
@@ -13,15 +14,13 @@ do once ("mapsAndMacros")
   put_rdfmap("data/maps/vocabulary/educationalLevel.ttl", "educationalLevelMapDe", target: "skos:prefLabel", select_language: "de")
   put_rdfmap("data/maps/vocabulary/educationalLevel.ttl", "educationalLevelMapEn", target: "skos:prefLabel", select_language: "en")
   put_rdfmap("data/maps/vocabulary/digCompEdu.ttl", "digcompeduMap", target: "skos:prefLabel", select_language: "de")
-  put_rdfmap("data/maps/vocabulary/hcrt.ttl", "hcrtMapDe", target: "skos:prefLabel", select_language: "de")
-  put_rdfmap("data/maps/vocabulary/hcrt.ttl", "hcrtMapEn", target: "skos:prefLabel", select_language: "en")
   put_rdfmap("data/maps/vocabulary/medienkompetenzrahmenNRW.ttl", "mkrMap", target: "skos:prefLabel", select_language: "de")
+  put_rdfmap("data/maps/vocabulary/educationalAudienceRole.ttl", "audienceDeLabel", target: "skos:prefLabel", select_language: "de")
+  put_rdfmap("data/maps/vocabulary/educationalAudienceRole.ttl", "audienceEnLabel", target: "skos:prefLabel", select_language: "en")
+  put_rdfmap("data/maps/vocabulary/interactivityType.ttl", "interacticvityDeLabel", target: "skos:prefLabel", select_language: "de")
+  put_rdfmap("data/maps/vocabulary/interactivityType.ttl", "interacticvityEnLabel", target: "skos:prefLabel", select_language: "en-US")
+  put_rdfmap("data/maps/vocabulary/digitalCompetencies.ttl", "digitalCompetenciesMap", target: "skos:prefLabel", select_language: "de")
   # put_rdfmap("data/maps/vocabulary/schulfaecher.ttl", "schulfaecherMapDeLabel", target: "skos:prefLabel", select_language: "de")
-  put_filemap("data/maps/lrmi-audience-de-labels.tsv", "audienceDeLabel", sep_char: "\t", delete:"true")
-  put_filemap("data/maps/lrmi-audience-en-labels.tsv", "audienceEnLabel", sep_char: "\t", delete:"true")
-  put_filemap("data/maps/lrmi-interactivityType-de-labels.tsv", "interacticvityDeLabel", sep_char: "\t")
-  put_filemap("data/maps/lrmi-interactivityType-en-labels.tsv", "intertactivityEnLabel", sep_char: "\t")
-  #  "audienceTTL": "data/maps/vocabulary/educationalAudienceRole.ttl",
   put_filemap("data/maps/OEH_discipline-KIM_about_university.tsv", "subjectMappingOEH", sep_char: "\t")
   put_filemap("data/maps/OEH_discipline-keywords.tsv", "disciplineMappingOEH", sep_char: "\t") # used for transform of non-university-mapped disciplines to keyword labels
   put_filemap("data/maps/OEH_competencies-OEH_competency_concepts.tsv", "competencyMapping", sep_char: "\t") 
@@ -35,11 +34,6 @@ include ("../../sharedFixes/eduSharingDefault.fix")
 
 
 # --------------- global handlings ---------------
-# prepare keywords (used in multiple fields)
-
-do list(path: "properties.cclom:general_keyword[]","var":"$i")
-	copy_field("$i", "keywords[].$append")
-end
 trim("keywords[].*")
 
 # --------------- about ---------------
@@ -54,7 +48,7 @@ end
 # Lookup matching prefLabels in both value lists (AMB)
 # lookup("about[].*.prefLabel.de", "schulfaecherMap")
 
-lookup("about[].*.prefLabel.de", "hochschulfaecherDeLabel", delete:"true")
+lookup("about[].*.prefLabel.de", "destatis-deLabel2Uri", delete:"true")
 
 # Handle some non-university-mapped OEH disciplines
 if any_equal("properties.ccm:taxonid[]","http://w3id.org/openeduhub/vocabs/discipline/680")
@@ -84,7 +78,7 @@ lookup("keywords[].*", "disciplineMappingOEH")
 
 do list(path:"properties.ccm:oeh_quality_login[]", "var": "$i")
 	if any_equal("$i","0")
-		copy_field("coaconditionsOfAccess.id", "https://w3id.org/kim/conditionsOfAccess/login")
+		copy_field("conditionsOfAccess.id", "https://w3id.org/kim/conditionsOfAccess/login")
 	else
     copy_field("conditionsOfAccess.id", "https://w3id.org/kim/conditionsOfAccess/no_login")
   end
@@ -124,13 +118,13 @@ do list(path:"learningResourceType[]","var":"$i")
     lookup("$i.id", "lrtMappingOEH", delete:"true")
     copy_field("$i.id","$i.prefLabel.de")
     copy_field("$i.id","$i.prefLabel.en")
-    lookup("$i.prefLabel.de", "hcrtMapDe")
-    lookup("$i.prefLabel.en", "hcrtMapEn")
+    lookup("$i.prefLabel.de", "hcrt-deLabel2Uri")
+    lookup("$i.prefLabel.en", "hcrt-enLabel2Uri")
   end
 end
 
 # --------------- publisher ---------------
-
+set_array("publisher[]")
 do list(path:"properties.ccm:lifecyclecontributer_publisher[]", "var": "$i")
   if any_match("$i", "^BEGIN:VCARD[\\s\\S]*FN:(.+)\n[\\s\\S]*\nEND:VCARD$")
     copy_field("$i", "publisher[].$append.name")
@@ -231,9 +225,11 @@ do list(path:"@teachesFromKeywords", "var":"$i")
 end
 
 # Lookup matching prefLabels in competencies
-lookup("teaches[].*.prefLabel.de", "orMap")
-lookup("teaches[].*.prefLabel.de", "mkrMap")
-lookup("teaches[].*.prefLabel.de", "digcompeduMap")
+
+do list(path: "teaches[]","var":"$i")
+  lookup("$i.prefLabel.de", "orMap")
+  lookup("$i.prefLabel.de", "mkrMap")
+end
 
 # --------------- competencyRequired ---------------
 
@@ -264,11 +260,11 @@ end
 set_array("interactivityType[]")
 
 # Semantically there can only be one of these values for interactivityType
-if any_contain("keywords[]","Lehr-/Lernform: aktiv")
+if any_equal("keywords[]","Lehr-/Lernform: aktiv")
   add_field("interactivityType[].$append.id", "http://purl.org/dcx/lrmi-vocabs/interactivityType/active")
-elsif any_contain("keywords[]","Lehr-/Lernform: erklärend")
+elsif any_equal("keywords[]","Lehr-/Lernform: erklärend")
   add_field("interactivityType[].$append.id", "http://purl.org/dcx/lrmi-vocabs/interactivityType/expositive")
-elsif any_contain("keywords[]","Lehr-/Lernform: gemischt")
+elsif any_equal("keywords[]","Lehr-/Lernform: gemischt")
   add_field("interactivityType[].$append.id", "http://purl.org/dcx/lrmi-vocabs/interactivityType/mixed")
 end
 
@@ -278,8 +274,8 @@ do list(path: "interactivityType[]", "var":"$i")
 end
 
 # Get labels
-lookup("interactivityType[].*.prefLabel.de", "data/maps/lrmi-interactivityType-de-labels.tsv", sep_char: "\t")
-lookup("interactivityType[].*.prefLabel.en", "data/maps/lrmi-interactivityType-en-labels.tsv", sep_char: "\t")
+lookup("interactivityType[].*.prefLabel.de", "interacticvityDeLabel")
+lookup("interactivityType[].*.prefLabel.en", "interacticvityEnLabel")
 
 # --------------- dateCreated ---------------
 copy_field("properties.cm:createdISO8601[].1", "dateCreated")
