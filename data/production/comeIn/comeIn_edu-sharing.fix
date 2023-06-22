@@ -257,25 +257,22 @@ do list_as(compId: "properties.ccm:oeh_competence_check[]", compLabel: "properti
 end
 
 # --------------- interactivityType ---------------
-set_array("interactivityType[]")
 
 # Semantically there can only be one of these values for interactivityType
 if any_equal("keywords[]","Lehr-/Lernform: aktiv")
-  add_field("interactivityType[].$append.id", "http://purl.org/dcx/lrmi-vocabs/interactivityType/active")
-elsif any_equal("keywords[]","Lehr-/Lernform: erklärend")
-  add_field("interactivityType[].$append.id", "http://purl.org/dcx/lrmi-vocabs/interactivityType/expositive")
+  add_field("interactivityType.id", "http://purl.org/dcx/lrmi-vocabs/interactivityType/active")
+elsif any_equal("keywords","Lehr-/Lernform: erklärend")
+  add_field("interactivityType.id", "http://purl.org/dcx/lrmi-vocabs/interactivityType/expositive")
 elsif any_equal("keywords[]","Lehr-/Lernform: gemischt")
-  add_field("interactivityType[].$append.id", "http://purl.org/dcx/lrmi-vocabs/interactivityType/mixed")
+  add_field("interactivityType.id", "http://purl.org/dcx/lrmi-vocabs/interactivityType/mixed")
 end
 
-do list(path: "interactivityType[]", "var":"$i")
-  copy_field("$i.id","$i.prefLabel.de")
-  copy_field("$i.id","$i.prefLabel.en")
-end
+copy_field("interactivityType.id","interactivityType.prefLabel.de")
+copy_field("interactivityType.id","interactivityType.prefLabel.en")
 
 # Get labels
-lookup("interactivityType[].*.prefLabel.de", "interacticvityDeLabel")
-lookup("interactivityType[].*.prefLabel.en", "interacticvityEnLabel")
+lookup("interactivityType.prefLabel.de", "interacticvityDeLabel")
+lookup("interactivityType.prefLabel.en", "interacticvityEnLabel")
 
 # --------------- dateCreated ---------------
 copy_field("properties.cm:createdISO8601[].1", "dateCreated")
