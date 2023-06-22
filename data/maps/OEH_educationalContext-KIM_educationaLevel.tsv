@@ -1,0 +1,10 @@
+http://w3id.org/openeduhub/vocabs/educationalContext/elementarbereich	https://w3id.org/kim/educationalLevel/level_0
+http://w3id.org/openeduhub/vocabs/educationalContext/grundschule	https://w3id.org/kim/educationalLevel/level_1
+http://w3id.org/openeduhub/vocabs/educationalContext/sekundarstufe_1	https://w3id.org/kim/educationalLevel/level_2
+http://w3id.org/openeduhub/vocabs/educationalContext/sekundarstufe_2	https://w3id.org/kim/educationalLevel/level_3
+http://w3id.org/openeduhub/vocabs/educationalContext/hochschule	https://w3id.org/kim/educationalLevel/level_A
+http://w3id.org/openeduhub/vocabs/educationalContext/berufliche_bildung	https://w3id.org/kim/educationalLevel/level_4
+http://w3id.org/openeduhub/vocabs/educationalContext/fortbildung	https://w3id.org/kim/educationalLevel/level_C
+http://w3id.org/openeduhub/vocabs/educationalContext/erwachsenenbildung	https://w3id.org/kim/educationalLevel/level_C
+http://w3id.org/openeduhub/vocabs/educationalContext/foerderschule
+http://w3id.org/openeduhub/vocabs/educationalContext/fernunterricht

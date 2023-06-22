@@ -1,0 +1,38 @@
+http://w3id.org/openeduhub/vocabs/learningResourceType/application	https://w3id.org/kim/hcrt/application
+http://w3id.org/openeduhub/vocabs/learningResourceType/assessment	https://w3id.org/kim/hcrt/assessment
+http://w3id.org/openeduhub/vocabs/learningResourceType/audiovisual_medium
+http://w3id.org/openeduhub/vocabs/learningResourceType/broadcast
+http://w3id.org/openeduhub/vocabs/learningResourceType/case_study	https://w3id.org/kim/hcrt/case_study
+http://w3id.org/openeduhub/vocabs/learningResourceType/course	https://w3id.org/kim/hcrt/course
+http://w3id.org/openeduhub/vocabs/learningResourceType/demonstration
+http://w3id.org/openeduhub/vocabs/learningResourceType/drill_and_practice	https://w3id.org/kim/hcrt/drill_and_practice
+http://w3id.org/openeduhub/vocabs/learningResourceType/educational_game	https://w3id.org/kim/hcrt/educational_game
+http://w3id.org/openeduhub/vocabs/learningResourceType/enquiry_oriented_activity
+http://w3id.org/openeduhub/vocabs/learningResourceType/experiment	https://w3id.org/kim/hcrt/experiment
+http://w3id.org/openeduhub/vocabs/learningResourceType/exploration
+http://w3id.org/openeduhub/vocabs/learningResourceType/glossary	https://w3id.org/kim/hcrt/index
+http://w3id.org/openeduhub/vocabs/learningResourceType/guide	https://w3id.org/kim/hcrt/index
+http://w3id.org/openeduhub/vocabs/learningResourceType/audio	https://w3id.org/kim/hcrt/audio
+http://w3id.org/openeduhub/vocabs/learningResourceType/data	https://w3id.org/kim/hcrt/data
+http://w3id.org/openeduhub/vocabs/learningResourceType/image	https://w3id.org/kim/hcrt/image
+http://w3id.org/openeduhub/vocabs/learningResourceType/map	https://w3id.org/kim/hcrt/map
+http://w3id.org/openeduhub/vocabs/learningResourceType/model
+http://w3id.org/openeduhub/vocabs/learningResourceType/photograph	https://w3id.org/kim/hcrt/image
+http://w3id.org/openeduhub/vocabs/learningResourceType/text	https://w3id.org/kim/hcrt/text
+http://w3id.org/openeduhub/vocabs/learningResourceType/video	https://w3id.org/kim/hcrt/video
+http://w3id.org/openeduhub/vocabs/learningResourceType/other_asset_type	https://w3id.org/kim/hcrt/other
+http://w3id.org/openeduhub/vocabs/learningResourceType/lesson_plan	https://w3id.org/kim/hcrt/lesson_plan
+http://w3id.org/openeduhub/vocabs/learningResourceType/open_activity
+http://w3id.org/openeduhub/vocabs/learningResourceType/presentation	https://w3id.org/kim/hcrt/slide
+http://w3id.org/openeduhub/vocabs/learningResourceType/project
+http://w3id.org/openeduhub/vocabs/learningResourceType/reference
+http://w3id.org/openeduhub/vocabs/learningResourceType/role_play
+http://w3id.org/openeduhub/vocabs/learningResourceType/simulation	https://w3id.org/kim/hcrt/simulation
+http://w3id.org/openeduhub/vocabs/learningResourceType/teaching_module
+http://w3id.org/openeduhub/vocabs/learningResourceType/tool
+http://w3id.org/openeduhub/vocabs/learningResourceType/weblog
+http://w3id.org/openeduhub/vocabs/learningResourceType/web_page	https://w3id.org/kim/hcrt/web_page
+http://w3id.org/openeduhub/vocabs/learningResourceType/wiki	https://w3id.org/kim/hcrt/web_page
+http://w3id.org/openeduhub/vocabs/learningResourceType/other_web_resource	https://w3id.org/kim/hcrt/web_page
+http://w3id.org/openeduhub/vocabs/learningResourceType/other	https://w3id.org/kim/hcrt/other
+http://w3id.org/openeduhub/vocabs/learningResourceType/worksheet	https://w3id.org/kim/hcrt/worksheet

@@ -1,0 +1,121 @@
+@base <https://w3id.org/kim/educationalLevel/> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix isced97: <https://w3id.org/kim/isced-1997/> .
+@prefix isced2011: <https://w3id.org/kim/isced-2011/> .
+@prefix eduContext: <http://w3id.org/openeduhub/vocabs/educationalContext/> .
+
+<> a skos:ConceptScheme;
+    dct:title "Bildungsstufe"@de ;
+    dct:title "Educational level"@en ;
+    dct:description "Eine Wertelliste für die Stufe im Bildungssystem als Lehr-/Lernkontext, für den Lernobjekt ausgewiesen ist."@de ;
+    dct:created "2020-04-08"^^xsd:date ;
+    dct:modified "2022-03-23"^^xsd:date ;
+    dct:issued "2020-04-08"^^xsd:date ;
+    dct:license <http://creativecommons.org/publicdomain/zero/1.0/> ;
+    skos:hasTopConcept <level_0>, <level_1>, <level_2>,
+        <level_3>, <level_4>, <level_5>, <level_A>, <level_B>, <level_C> .
+
+<level_0> a skos:Concept ;
+    skos:prefLabel "Early childhood education"@en, "Elementarbereich"@de ;
+    skos:altLabel "Elementarstufe"@de ;
+    skos:altLabel "Frühbereich"@de ;
+    skos:altLabel "Frühkindliche Bildung"@de ;
+    skos:altLabel "ISCED 2011, Level 0"@en, "ISCED 2011, Level 0"@de ;
+    skos:narrowMatch isced97:level0 ;
+    skos:exactMatch isced2011:level0 ;
+    skos:exactMatch eduContext:elementarbereich ;
+    skos:topConceptOf <> .
+
+<level_1> a skos:Concept ;
+    skos:prefLabel "Primary education"@en, "Primarbereich"@de ;
+    skos:altLabel "Primarstufe"@de ;
+    skos:altLabel "ISCED 2011, Level 1"@en, "ISCED 2011, Level 1"@de ;
+    skos:exactMatch isced97:level1 ;
+    skos:exactMatch isced2011:level1 ;
+    skos:exactMatch eduContext:grundschule ;
+    skos:topConceptOf <> .
+
+<level_2> a skos:Concept ;
+    skos:prefLabel "Lower secondary education"@en, "Sekundarbereich I"@de ;
+    skos:altLabel "Sekundarstufe I"@de ;
+    skos:altLabel "ISCED 2011, Level 2"@en, "ISCED 2011, Level 2"@de ;
+    skos:exactMatch isced97:level2 ;
+    skos:exactMatch isced2011:level2 ;
+    skos:exactMatch eduContext:sekundarstufe_1 ;
+    skos:topConceptOf <> .
+
+<level_3> a skos:Concept ;
+    skos:prefLabel "Upper secondary education"@en, "Sekundarbereich II"@de ;
+    skos:altLabel "Sekundarstufe II"@de ;
+    skos:altLabel "ISCED 2011, Level 3"@en, "ISCED 2011, Level 3"@de ;
+    skos:exactMatch isced97:level3 ;
+    skos:exactMatch isced2011:level3 ;
+    skos:exactMatch eduContext:sekundarstufe_2 ;
+    skos:topConceptOf <> .
+
+<level_4> a skos:Concept ;
+    skos:prefLabel "Post-secondary non-tertiary education"@en, "Postsekundarer nicht-tertiärer Bereich"@de ;
+    skos:altLabel "Berufliche Bildung"@de ;
+    skos:altLabel "ISCED 2011, Level 4"@en, "ISCED 2011, Level 4"@de ;
+    skos:exactMatch isced97:level4 ;
+    skos:exactMatch isced2011:level4 ;
+    skos:closeMatch eduContext:berufliche_bildung ;
+    skos:topConceptOf <> .
+
+<level_5> a skos:Concept ;
+    skos:prefLabel "Short-cycle tertiary education"@en, "Kurzes tertiäres Bildungsprogramm"@de ;
+    skos:definition "First stage of tertiary education, not leading directly to an advanced research qualification"@en, "Erste Stufe der tertiären Bildung, die nicht direkt zu einer höheren Forschungsqualifikation führt"@de ;
+    skos:altLabel "ISCED 2011, Level 5"@en, "ISCED 2011, Level 5"@de ;
+    skos:closeMatch isced97:level5 ;
+    skos:exactMatch isced2011:level5 ;
+    skos:topConceptOf <> .
+
+<level_A> a skos:Concept ;
+  skos:prefLabel "University"@en, "Hochschule"@de ;
+  skos:narrower <level_6>, <level_7>, <level_8> ;
+  skos:exactMatch eduContext:hochschule ;
+  skos:narrowMatch isced97:level5 ;
+  skos:narrowMatch isced97:level6 ;
+  skos:narrowMatch isced2011:level6 ;
+  skos:narrowMatch isced2011:level7 ;
+  skos:narrowMatch isced2011:level8 ;
+  skos:topConceptOf <> .
+
+<level_6> a skos:Concept ;
+    skos:prefLabel "Bachelor or equivalent"@en, "Bachelor oder äquivalent"@de ;
+    skos:altLabel "ISCED 2011, Level 6"@en, "ISCED 2011, Level 6"@de;
+    skos:closeMatch isced97:level5 ;
+    skos:exactMatch isced2011:level6 ;
+    skos:broader <level_A> ;
+    skos:broadMatch eduContext:hochschule ;
+    skos:inScheme <> .
+
+<level_7> a skos:Concept ;
+    skos:prefLabel "Master or equivalent"@en, "Master oder äquivalent"@de ;
+    skos:altLabel "ISCED 2011, Level 7"@en, "ISCED 2011, Level 7"@de;
+    skos:closeMatch isced97:level5 ;
+    skos:exactMatch isced2011:level7 ;
+    skos:broader <level_A> ;
+    skos:broadMatch eduContext:hochschule ;
+    skos:inScheme <> .
+
+<level_8> a skos:Concept ;
+    skos:prefLabel "Doctoral or equivalent"@en, "Promotion oder äquivalent"@de ;
+    skos:altLabel "ISCED 2011, Level 8"@en, "ISCED 2011, Level 8"@de ;
+    skos:exactMatch isced97:level6 ;
+    skos:exactMatch isced2011:level8 ;
+    skos:broader <level_A> ;
+    skos:broadMatch eduContext:hochschule ;
+    skos:inScheme <> .
+
+<level_B> a skos:Concept ;
+    skos:prefLabel "Preparatory service"@en, "Vorbereitungsdienst"@de ;
+    skos:definition "The preparatory service designates the second phase of teacher training in germany."@en, "Der Vorbereitungsdienst bezeichnet die zweite Phase der Lehrkräfteausbildung in Deutschland."@de ;
+    skos:topConceptOf <> .
+
+<level_C> a skos:Concept ;
+    skos:prefLabel "Advanced training"@en, "Fortbildung"@de ;
+    skos:exactMatch eduContext:fortbildung ;
+    skos:topConceptOf <> .
