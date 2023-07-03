@@ -87,32 +87,23 @@ end
 # --------------- learningResourceType ---------------
 # NOTES
 # WLO uses at least three fields for LRT (ccm:educationallearningresourcetype, ccm:oeh_lrt, ccm:oeh_lrt_aggregated)
-# There might be an additional handling of these fields later on to map them to OEHRT/HCRT lists.
 # Although the AMB profile allows OEHRT and HCRT value lists, they should be unified for better user experience in OERSI-related applications.
-# Primary goals are avoiding duplicate concepts with different labels.
-# Therefore we replace known mapped OEHRT ids with the HCRT ids and only add additional resource types.
-
-# We need to override from default fix (to handle it a bit differently)
+# Primary goals are avoiding duplicate concepts with different labels. Therefore we replace known mapped OEHRT ids with the HCRT ids.
 
 # OEH_NEW_LRT_AGGREGATED
 # https://github.com/openeduhub/oeh-metadata-vocabs/blob/master/new_lrt_aggregated.ttl
-#do list(path:"properties.ccm:oeh_lrt_aggregated[]", "var": "$i")
-#    copy_field("$i", "learningResourceType[].$append.id")
-#    copy_field("$i", "learningResourceType[].$last.prefLabel.de")
-#    copy_field("$i", "learningResourceType[].$last.prefLabel.en")
-#end
+do list(path:"properties.ccm:oeh_lrt_aggregated[]", "var": "$i")
+    copy_field("$i", "learningResourceType[].$append.id")
+end
 
 # OEH_NEW_LRT 
 # https://github.com/openeduhub/oeh-metadata-vocabs/blob/master/new_lrt.ttl
-#do list(path:"properties.ccm:oeh_lrt[]", "var": "$i")
-#    copy_field("$i", "learningResourceType[].$append.id")
-#    copy_field("$i", "learningResourceType[].$last.prefLabel.de")
-#    copy_field("$i", "learningResourceType[].$last.prefLabel.en")
-#end
+do list(path:"properties.ccm:oeh_lrt[]", "var": "$i")
+    copy_field("$i", "learningResourceType[].$append.id")
+end
 
 # OEH_LRT
 # https://github.com/openeduhub/oeh-metadata-vocabs/blob/master/learningResourceType.ttl
-
 do list(path:"learningResourceType[]","var":"$i")
   if any_contain("$i.id","http://w3id.org/openeduhub/vocabs/")
     lookup("$i.id", "lrtMappingOEH", delete:"true")
