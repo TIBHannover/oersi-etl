@@ -13,13 +13,11 @@ do once ("mapsAndMacros")
   put_rdfmap("data/maps/vocabulary/orientierungsrahmenNRW.ttl", "orMap", target: "skos:prefLabel", select_language: "de")
   put_rdfmap("data/maps/vocabulary/educationalLevel.ttl", "educationalLevelMapDe", target: "skos:prefLabel", select_language: "de")
   put_rdfmap("data/maps/vocabulary/educationalLevel.ttl", "educationalLevelMapEn", target: "skos:prefLabel", select_language: "en")
-  put_rdfmap("data/maps/vocabulary/digCompEdu.ttl", "digcompeduMap", target: "skos:prefLabel", select_language: "de")
   put_rdfmap("data/maps/vocabulary/medienkompetenzrahmenNRW.ttl", "mkrMap", target: "skos:prefLabel", select_language: "de")
   put_rdfmap("data/maps/vocabulary/educationalAudienceRole.ttl", "audienceDeLabel", target: "skos:prefLabel", select_language: "de")
   put_rdfmap("data/maps/vocabulary/educationalAudienceRole.ttl", "audienceEnLabel", target: "skos:prefLabel", select_language: "en")
   put_rdfmap("data/maps/vocabulary/interactivityType.ttl", "interacticvityDeLabel", target: "skos:prefLabel", select_language: "de")
   put_rdfmap("data/maps/vocabulary/interactivityType.ttl", "interacticvityEnLabel", target: "skos:prefLabel", select_language: "en-US")
-  put_rdfmap("data/maps/vocabulary/digitalCompetencies.ttl", "digitalCompetenciesMap", target: "skos:prefLabel", select_language: "de")
   # put_rdfmap("data/maps/vocabulary/schulfaecher.ttl", "schulfaecherMapDeLabel", target: "skos:prefLabel", select_language: "de")
   put_filemap("data/maps/OEH_discipline-KIM_about_university.tsv", "subjectMappingOEH", sep_char: "\t")
   put_filemap("data/maps/OEH_discipline-keywords.tsv", "disciplineMappingOEH", sep_char: "\t") # used for transform of non-university-mapped disciplines to keyword labels
@@ -37,12 +35,23 @@ include ("../../sharedFixes/eduSharingDefault.fix")
 trim("keywords[].*")
 
 # --------------- about ---------------
+# NOTES
+# WLO Uses at least three fields for about (ccm:taxonid, ccm:oeh_taxonid_university, ccm:curriculum)
+# We do not handle ccm:curriculum but rely on taxonid or oeh_taxonid_university being present
 
+# ccm:taxonid (WLO)
 do list(path:"properties.ccm:taxonid[]", "var":"$i")
   # Replace with mapped ids
   lookup("$i", "subjectMappingOEH", delete: "true")
 	copy_field("$i", "about[].$append.id")
 	copy_field("$i", "about[].$last.prefLabel.de")
+end
+
+# ccm:oeh_taxonid_university (DeStatis)
+replace_all("properties.ccm:oeh_taxonid_university[].*","http://w3id.org/openeduhub/vocabs/hochschulfaechersystematik/(.*)","https://w3id.org/kim/hochschulfaechersystematik/$1")
+do list(path:"properties.ccm:oeh_taxonid_university[]", "var":"$i")
+  copy_field("$i", "about[].$append.id")
+  copy_field("$i", "about[].$last.prefLabel.de")
 end
 
 # Lookup matching prefLabels in both value lists (AMB)
