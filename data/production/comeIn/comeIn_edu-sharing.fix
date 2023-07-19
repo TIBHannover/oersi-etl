@@ -250,7 +250,7 @@ end
 # --------------- assesses ---------------
 set_array("assesses[]")
 
-do list_as(compId: "properties.ccm:oeh_competence_check[]", compLabel: "properties.oeh_competence_check_DISPLAYNAME[]")
+do list_as(compId: "properties.ccm:oeh_competence_check[]", compLabel: "properties.ccm:oeh_competence_check_DISPLAYNAME[]")
   add_field("assesses[].$append.test","")
   copy_field(compId, "assesses[].$last.id")
   copy_field(compLabel, "assesses[].$last.prefLabel.de")
