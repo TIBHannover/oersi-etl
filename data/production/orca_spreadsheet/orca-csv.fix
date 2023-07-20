@@ -49,7 +49,7 @@ set_array("@sourceOrga")
 do list(path:"creator[]", "var":"$i")
   copy_field("$i.@affiliation", "$i.affiliation.id")
   copy_field("$i.@affiliation", "$i.affiliation.name")
-  lookup("$i.affiliation.name", "orcaUni"delete:"true")
+  lookup("$i.affiliation.name", "orcaUni",delete:"true")
   add_field("$i.affiliation.type", "Organization")
   move_field("$i.@affiliation", "@sourceOrga.$append")
 end
@@ -71,7 +71,7 @@ copy_field("Beitragende2_Grad", "contributor[].2.honorificPrefix")
 do list(path:"contributor[]", "var":"$i")
   copy_field("$i.@affiliation", "$i.affiliation.id")
   copy_field("$i.@affiliation", "$i.affiliation.name")
-  lookup("$i.affiliation.name", "orcaUni"delete:"true")
+  lookup("$i.affiliation.name", "orcaUni",delete:"true")
   add_field("$i.affiliation.type", "Organization")
   move_field("$i.@affiliation", "@sourceOrga.$append")
 end
@@ -87,7 +87,7 @@ do list(path:"@sourceOrga", "var": "$i")
   add_field("sourceOrganization[].$last.type", "Organization")
 end
 
-lookup("sourceOrganization[].*.name", "orcaUni"delete:"true")
+lookup("sourceOrganization[].*.name", "orcaUni", delete:"true")
 
 # ------ type --- 
 set_array("type[]", "LearningResource")
@@ -105,11 +105,11 @@ do list(path:"@hcrt", "var":"$i")
   copy_field("$i", "learningResourceType[].$append.id")
 end
 
-do list(path:"learningResourceType[]")
-  copy_field("id", "prefLabel.de")
-  lookup("prefLabel.de", "hcrt-deLabel2Uri", delete:"true")
-  copy_field("id", "prefLabel.en")
-  lookup("prefLabel.en", "hcrt-enLabel2Uri", delete:"true")
+do list(path:"learningResourceType[]","var":"$i")
+  copy_field("$i.id", "$i.prefLabel.de")
+  lookup("$i.prefLabel.de", "hcrt-deLabel2Uri", delete:"true")
+  copy_field("$i.id", "$i.prefLabel.en")
+  lookup("$i.prefLabel.en", "hcrt-enLabel2Uri", delete:"true")
 end
 
 # ------ about ------
@@ -124,16 +124,16 @@ lookup("@hochschulfaechersystematik.*","destatis-deLabel2Uri", delete:"true")
 set_array("about[]")
 copy_field("@hochschulfaechersystematik.*","about[].$append.id")
 
-do list(path: "about[]")
-  copy_field("id", "prefLabel.de")
-  lookup("prefLabel.de","destatis-deLabel2Uri", delete:"true")
+do list(path: "about[]","var":"$i")
+  copy_field("$i.id", "$i.prefLabel.de")
+  lookup("$i.prefLabel.de","destatis-deLabel2Uri", delete:"true")
 end
 
 # ------ inLanguage------
 set_array("inLanguage[]")
 split_field("Sprache",";")
 do list(path:"Sprache", "var":"$i")
-  copy_field("$i", "inLanguage[]")
+  copy_field("$i", "inLanguage[].$append")
 end
 trim("inLanguage[].*")
 
