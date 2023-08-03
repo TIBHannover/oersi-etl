@@ -280,6 +280,23 @@ copy_field("properties.cm:createdISO8601[].1", "dateCreated")
 # --------------- datePublished  ---------------
 copy_field("properties.ccm:published_dateISO8601[].1", "datePublished")
 
+# --------------- encoding ---------------
+unless exists("properties.ccm:wwwurl[].1")
+  # if downloadUrl exists, default fix handles encoding already
+  unless exists("downloadUrl")
+    if exists("content.url")
+      set_array("encoding[]")
+      add_field("encoding[].$append.type", "MediaObject")
+      copy_field("content.url", "encoding[].$last.contentUrl")
+      copy_field("content.url", "encoding[].$last.embedUrl")
+      replace_all("encoding[].$last.contentUrl","(.*)/components/render/(.*)","$1/eduservlet/download?nodeId=$2")
+      replace_all("encoding[].$last.embedUrl","(.*)/components/render/(.*)","$1/eduservlet/render?node_id=$2")
+      copy_field("mimetype", "encoding[].$last.encodingFormat")
+      copy_field("size", "encoding[].$last.contentSize")
+    end
+  end
+end
+
 # --------------- Cleanup ---------------
 # Remove keywords that have been mapped to other fields
 filter("keywords[]","^(?!(Bildungsstufe)).*$")
@@ -299,7 +316,6 @@ include ("../../sharedFixes/cleanUp.fix")
 # --------------- MEDIA ---------------
 # --------------- trailer ---------------
 # --------------- duration ---------------
-# --------------- encoding ---------------
 # --------------- caption ---------------
 
 # --------------- cclom:typicallearningtime ---------------
