@@ -15,9 +15,9 @@ do once ("mapsAndMacros")
   put_rdfmap("data/maps/vocabulary/educationalLevel.ttl", "educationalLevelMapEn", target: "skos:prefLabel", select_language: "en")
   put_rdfmap("data/maps/vocabulary/medienkompetenzrahmenNRW.ttl", "mkrMap", target: "skos:prefLabel", select_language: "de")
   put_rdfmap("data/maps/vocabulary/educationalAudienceRole.ttl", "audienceDeLabel", target: "skos:prefLabel", select_language: "de")
-  put_rdfmap("data/maps/vocabulary/educationalAudienceRole.ttl", "audienceEnLabel", target: "skos:prefLabel", select_language: "en")
-  put_rdfmap("data/maps/vocabulary/interactivityType.ttl", "interacticvityDeLabel", target: "skos:prefLabel", select_language: "de")
-  put_rdfmap("data/maps/vocabulary/interactivityType.ttl", "interacticvityEnLabel", target: "skos:prefLabel", select_language: "en-US")
+  put_rdfmap("data/maps/vocabulary/educationalAudienceRole.ttl", "audienceEnLabel", target: "skos:prefLabel", select_language: "en-US")
+  put_rdfmap("data/maps/vocabulary/interactivityType.ttl", "interactivityDeLabel", target: "skos:prefLabel", select_language: "de")
+  put_rdfmap("data/maps/vocabulary/interactivityType.ttl", "interactivityEnLabel", target: "skos:prefLabel", select_language: "en-US")
   # put_rdfmap("data/maps/vocabulary/schulfaecher.ttl", "schulfaecherMapDeLabel", target: "skos:prefLabel", select_language: "de")
   put_filemap("data/maps/OEH_discipline-KIM_about_university.tsv", "subjectMappingOEH", sep_char: "\t")
   put_filemap("data/maps/OEH_discipline-keywords.tsv", "disciplineMappingOEH", sep_char: "\t") # used for transform of non-university-mapped disciplines to keyword labels
@@ -271,8 +271,8 @@ copy_field("interactivityType.id","interactivityType.prefLabel.de")
 copy_field("interactivityType.id","interactivityType.prefLabel.en")
 
 # Get labels
-lookup("interactivityType.prefLabel.de", "interacticvityDeLabel")
-lookup("interactivityType.prefLabel.en", "interacticvityEnLabel")
+lookup("interactivityType.prefLabel.de", "interactivityDeLabel")
+lookup("interactivityType.prefLabel.en", "interactivityEnLabel")
 
 # --------------- dateCreated ---------------
 copy_field("properties.cm:createdISO8601[].1", "dateCreated")
@@ -280,9 +280,25 @@ copy_field("properties.cm:createdISO8601[].1", "dateCreated")
 # --------------- datePublished  ---------------
 copy_field("properties.ccm:published_dateISO8601[].1", "datePublished")
 
+# --------------- encoding ---------------
+unless exists("properties.ccm:wwwurl[].1")
+  # if downloadUrl exists, default fix handles encoding already
+  unless exists("downloadUrl")
+    if exists("content.url")
+      set_array("encoding[]")
+      add_field("encoding[].$append.type", "MediaObject")
+      copy_field("content.url", "encoding[].$last.contentUrl")
+      copy_field("content.url", "encoding[].$last.embedUrl")
+      replace_all("encoding[].$last.contentUrl","(.*)/components/render/(.*)","$1/eduservlet/download?nodeId=$2")
+      replace_all("encoding[].$last.embedUrl","(.*)/components/render/(.*)","$1/eduservlet/render?node_id=$2")
+      copy_field("mimetype", "encoding[].$last.encodingFormat")
+      copy_field("size", "encoding[].$last.contentSize")
+    end
+  end
+end
+
 # --------------- Cleanup ---------------
 # Remove keywords that have been mapped to other fields
-filter("keywords[]","^(?!(Lehramtstyp)).*$")
 filter("keywords[]","^(?!(Bildungsstufe)).*$")
 filter("keywords[]","^(?!(Lehr-/Lernform)).*$")
 filter("keywords[]","^(?!(MKR-NRW)).*$")
@@ -300,7 +316,6 @@ include ("../../sharedFixes/cleanUp.fix")
 # --------------- MEDIA ---------------
 # --------------- trailer ---------------
 # --------------- duration ---------------
-# --------------- encoding ---------------
 # --------------- caption ---------------
 
 # --------------- cclom:typicallearningtime ---------------
