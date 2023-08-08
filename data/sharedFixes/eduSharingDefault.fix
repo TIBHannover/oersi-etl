@@ -191,6 +191,19 @@ do list(path: "properties.cclom:general_keyword[]","var":"$i")
   copy_field("$i", "keywords[].$append")
 end
 
+# Some eduSharing provider use GND classifications (classification_keyword).
+# For those we only should use the lassification_keyword_display since classification_keyword entails the id.
+
+if exists("properties.cclom:classification_keyword_display[]")
+  do list(path: "properties.cclom:classification_keyword_display[]","var":"$i")
+    copy_field("$i", "keywords[].$append")
+  end
+else
+  do list(path: "properties.cclom:classification_keyword[]","var":"$i")
+    copy_field("$i", "keywords[].$append")
+  end
+end
+
 # ---------------encoding----------------------------------
 
 unless exists("properties.ccm:wwwurl[].1")
