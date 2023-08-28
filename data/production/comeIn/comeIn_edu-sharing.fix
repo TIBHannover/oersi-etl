@@ -215,7 +215,9 @@ end
 
 # Gather competencies from keywords and convert to concepts
 set_array("@teachesFromKeywords")
-copy_field("properties.cclom:general_keyword[]", "@teachesFromKeywords")
+do list(path: "properties.cclom:general_keyword[]","var":"$i")
+  copy_field("$i", "@teachesFromKeywords.$append")
+end
 # translate keywords to concept ids
 lookup("@teachesFromKeywords.*", "competencyMapping", delete:"true") 
 # copy ids to concepts
