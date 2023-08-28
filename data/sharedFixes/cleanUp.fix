@@ -1,5 +1,6 @@
 # Make all array-values uniq
 
+uniq("audience[]")
 uniq("creator[]")
 uniq("contributor[]")
 uniq("sourceOrganization[]")
@@ -32,6 +33,7 @@ retain("@context[]",
 	"interactivityType",
 	"type[]",
 	"learningResourceType[]",
+	"audience[]",
 	"keywords[]",
 	"about[]",
 	"teaches[]",

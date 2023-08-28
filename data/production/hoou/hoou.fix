@@ -4,6 +4,7 @@ vacuum()
 # id
 # name
 # image
+# audience
 # description
 # sourceOrganization
 
@@ -13,6 +14,9 @@ do once("macrosAndMaps")
   include ("../../sharedFixes/maps.fix")
   # workflow specific map
   put_filemap("data/maps/hoou-subject-mapping.tsv","hoou-subject-mapping","sep_char":"\t")
+  put_filemap("data/maps/hoou-audience-mapping.tsv","hoou-audience-mapping","sep_char":"\t")
+  put_rdfmap("data/maps/vocabulary/educationalAudienceRole.ttl", "audienceDeLabel", target: "skos:prefLabel", select_language: "de")
+  put_rdfmap("data/maps/vocabulary/educationalAudienceRole.ttl", "audienceEnLabel", target: "skos:prefLabel", select_language: "en-US")
 end
 
 # ---------------license ----------------------------------
@@ -105,5 +109,22 @@ unless exists("inLanguage[].1")
   set_hash("@context[].$append", "@language": "de")
 end
 
-# ------ tidy up --- 
+# ---------audience----------------
+copy_field("audience[]", "@tempAudience[]")
+set_array("audience[]")
+
+do list(path:"@tempAudience[]", "var": "$i")
+  # Replace ID with mappings and delete values not known
+  lookup("$i.educationalRole", "hoou-audience-mapping", delete:"true")
+  unless is_empty("$i.educationalRole")
+    copy_field("$i.educationalRole", "audience[].$append.id")
+    copy_field("$i.educationalRole", "audience[].$last.prefLabel.de")
+    copy_field("$i.educationalRole", "audience[].$last.prefLabel.en")
+  end
+end
+
+lookup("audience[].*.prefLabel.de", "audienceDeLabel")
+lookup("audience[].*.prefLabel.en", "audienceEnLabel")
+
+# ------ tidy up ---
 include ("../../sharedFixes/cleanUp.fix")
