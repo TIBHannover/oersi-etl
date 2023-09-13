@@ -10,6 +10,7 @@ do once("macrosAndMaps")
   include ("../../sharedFixes/maps.fix")
   # workflow specific map
   put_filemap("data/maps/bcCampusSubjects2DestatisLabels.tsv", "bcCampusSubjects2DestatisLabels","sep_char":"\t")
+  put_filemap("data/maps/bcCampusAudienceRole.tsv", "bcCampusSubjectsAudienceMap","sep_char":"\t")  
 end
 
 # ---------------license ----------------------------------
@@ -98,6 +99,20 @@ add_field("mainEntityOfPage[].$last.provider.name","$[service_name]")
 
 remove_field("educationalLevel[]")
 remove_field("teaches[]")
+
+# ---------audience----------------
+copy_field("audience[]", "@tempAudience[]")
+set_array("audience[]")
+do list(path:"@tempAudience[]", "var": "$i")
+  # Replace ID with mappings and delete values not known
+  lookup("$i.educationalRole", "bcCampusSubjectsAudienceMap")
+  copy_field("$i.educationalRole", "audience[].$append.id")
+  copy_field("$i.educationalRole", "audience[].$last.prefLabel.de")
+  copy_field("$i.educationalRole", "audience[].$last.prefLabel.en")
+end
+
+lookup("audience[].*.prefLabel.de", "audienceDeLabel")
+lookup("audience[].*.prefLabel.en", "audienceEnLabel")
 
 
 # ---------------@context ----------------------------------
