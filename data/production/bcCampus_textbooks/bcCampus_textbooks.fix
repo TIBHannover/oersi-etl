@@ -11,7 +11,9 @@ do once("macrosAndMaps")
   include ("../../sharedFixes/maps.fix")
   # workflow specific map
   put_filemap("data/maps/bcCampusSubjects2DestatisLabels.tsv", "bcCampusSubjects2DestatisLabels","sep_char":"\t")
-  put_filemap("data/maps/bcCampusAudienceRole.tsv", "bcCampusSubjectsAudienceMap","sep_char":"\t")  
+  put_filemap("data/maps/bcCampusAudienceRole.tsv", "bcCampusSubjectsAudienceMap","sep_char":"\t")
+    put_rdfmap("data/maps/vocabulary/educationalAudienceRole.ttl", "audienceDeLabel", target: "skos:prefLabel", select_language: "de")
+  put_rdfmap("data/maps/vocabulary/educationalAudienceRole.ttl", "audienceEnLabel", target: "skos:prefLabel", select_language: "en-US")  
 end
 
 # ---------------id ----------------------------------
