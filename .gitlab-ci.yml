@@ -1,4 +1,4 @@
-image: gradle:jdk11
+image: gradle:jdk17
 
 stages:
   - build
@@ -44,7 +44,7 @@ deploy:
     - tags
 
 sonar:
-  image: gradle:jdk11
+  image: gradle:jdk17
   cache:
     key: "${CI_JOB_NAME}"
     paths:
