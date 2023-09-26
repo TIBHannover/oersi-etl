@@ -43,7 +43,8 @@ end
 do array("sourceOrganization", flushWith: record)
  do entity("")
   add_field("type", "Organization")
-  add_field("name", "HHU Düsseldorf")
+  add_field("name", "Heinrich-Heine-Universität Düsseldorf")
+  add_field("id", "https://ror.org/024z2rq82")
  end
 end
 
