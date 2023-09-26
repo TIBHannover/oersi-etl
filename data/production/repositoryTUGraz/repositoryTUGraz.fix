@@ -62,8 +62,9 @@ end
 add_field("contributor[].*.type", "Person")
 
 set_array("sourceOrganization[]")
-add_field("sourceOrganization[].$append.name", "TU Graz")
+add_field("sourceOrganization[].$append.name", "Technische Universität Graz")
 add_field("sourceOrganization[].$last.type", "Organization")
+add_field("sourceOrganization[].$last.id", "https://ror.org/00d7xrm67")
 
 #  ------------description------------------------------------
 set_array("description")
