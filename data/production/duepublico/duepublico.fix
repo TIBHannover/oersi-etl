@@ -104,6 +104,7 @@ end
 
 add_field("sourceOrganization[].$append.name", "Universität Duisburg-Essen")
 add_field("sourceOrganization[].$last.type", "Organization")
+add_field("sourceOrganization[].$last.id", "https://ror.org/04mz5ra38")
 
 #  ------------description------------------------------------
 copy_field("metadata.mods:mods.mods:abstract.*.value","description")
