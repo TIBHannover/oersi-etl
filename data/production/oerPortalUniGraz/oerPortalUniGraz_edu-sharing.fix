@@ -21,6 +21,7 @@ end
 if any_equal("properties.ccm:author_freetext[].*", "Universität Graz")
   add_field("creator[].$append.name", "Universität Graz")
   add_field("creator[].$last.type", "Organization")
+  add_field("creator[].$last.id", "https://ror.org/01faaaf77")
 end
 
 # --- inLanguage -------- 
