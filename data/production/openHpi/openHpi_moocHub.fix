@@ -40,6 +40,7 @@ end
 
 add_field("sourceOrganization[].$append.name", "Hasso-Plattner-Institut")
 add_field("sourceOrganization[].$last.type", "Organization")
+add_field("sourceOrganization[].$last.id", "https://ror.org/058rn5r42")
 
 # ---------------conditionsOfAccess----------------------------------
 add_field("conditionsOfAccess.id","http://w3id.org/kim/conditionsOfAccess/no_login") 
