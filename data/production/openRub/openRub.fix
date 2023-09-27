@@ -39,6 +39,7 @@ trim("description")
 set_array("sourceOrganization[]")
 add_field("sourceOrganization[].$append.name", "Ruhr-Universität Bochum")
 add_field("sourceOrganization[].$last.type","Organization")
+add_field("sourceOrganization[].$last.id","https://ror.org/04tsk2644")
 
 # ------------learningResourceType-----
 
