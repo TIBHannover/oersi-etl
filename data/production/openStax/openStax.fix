@@ -5,6 +5,7 @@ do once("macrosAndMaps")
   include ("../../sharedFixes/macros.fix")
   include ("../../sharedFixes/maps.fix")
   # workflow specific maps
+  put_filemap("data/maps/openStax2Destatis.tsv","openStax2Destatis","sep_char":"\t")
 
 end
 
@@ -94,15 +95,17 @@ do list(path:"keywords[]","var":"$i")
     move_field("$i", "@hochschulfaechersystematik.$append")
 end
 
-lookup("@hochschulfaechersystematik.*","subjectMappingOpenTextbooks", delete:"true")
+lookup("@hochschulfaechersystematik.*","openStax2Destatis", delete:"true")
 
 set_array("about[]")
 copy_field("@hochschulfaechersystematik.*","about[].$append.id")
 
-do list(path: "about[]")
-  copy_field("id", "prefLabel.de")
-  lookup("id","destatis-deLabel2Uri", delete:"true")
+do list(path: "about[]", "var": "$i")
+  copy_field("$i.id", "$i.prefLabel.de")
+  lookup("$i.prefLabel.de","destatis-deLabel2Uri", delete:"true")
 end
+
+uniq("about[]")
 
 # ---------------conditionsOfAccess----------------------------------
 add_field("conditionsOfAccess.id","http://w3id.org/kim/conditionsOfAccess/no_login") 
