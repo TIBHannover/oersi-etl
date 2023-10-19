@@ -19,29 +19,51 @@ do once("macrosAndMaps")
 end
 
 # --------------id ----------------------------------------
-do list("path": "metadata.lom:lom.lom:technical.lom:location", "var": "$i")
-  copy_field("$i.value","id")
+
+do list(path: "metadata.lom:lom.lom:general.lom:identifier", "var": "$i")
+  if any_equal("$i.lom:catalog.value","DOI")
+    copy_field("$i.lom:entry.lom:langstring.value","@doi")
+  end
+end
+prepend("@doi","https://www.doi.org/")
+
+do list(path: "metadata.lom:lom.lom:general.lom:identifier", "var": "$i")
+  if any_equal("$i.lom:catalog.value","repository.tugraz.at")
+    copy_field("$i.lom:entry.lom:langstring.value","@internalId")
+  end
+end
+prepend("@internalId","https://repository.tugraz.at/lom/")
+
+do list(path: "metadata.lom:lom.lom:technical.lom:location", "var": "$i")
+  copy_field("$i.value","@externalId")
 end
 
-# internal_id: Construct actual ID from @id. Picked from header not from record itself.
-
-copy_field("header.identifier.value","@internal_id")
-replace_all("@internal_id", "oai:repository.tugraz.at:", "https://repository.tugraz.at/lom/")
+if exists("@doi")
+  copy_field("@doi","id")
+elsif exists("@externalId")
+  copy_field("@externalId","id")
+else
+  copy_field("@internalId","id")
+end
 
 #  ------------image ------------------------------------
-do list("path": "metadata.lom:lom.lom:technical.lom:thumbnail.lom:url", "var": "$i")
+do list(path: "metadata.lom:lom.lom:technical.lom:thumbnail.lom:url", "var": "$i")
   copy_field("$i.value","image")
 end
 
+unless exists("image")
+  add_field("image","https://repository.tugraz.at/static/images/library_logo.png")
+end
+
 #  ------------name ------------------------------------
-do list("path": "metadata.lom:lom.lom:general.lom:title.lom:langstring", "var": "$i")
+do list(path: "metadata.lom:lom.lom:general.lom:title.lom:langstring", "var": "$i")
   copy_field("$i.value","name")
 end
 
 
 #  ------------creator------------------------------------
 set_array("creator[]")
-do list("path":"metadata.lom:lom.lom:lifecycle.lom:contribute","var":"$i")
+do list(path:"metadata.lom:lom.lom:lifecycle.lom:contribute","var":"$i")
   if any_match("$i.lom:role.lom:value.lom:langstring.value","Author")
     copy_field("$i.lom:entity.value","creator[].$append.name")
   end
@@ -52,7 +74,7 @@ add_field("creator[].*.type", "Person")
 
 #  ------------contributor------------------------------------
 set_array("contributor[]")
-do list("path":"metadata.lom:lom.lom:lifecycle.lom:contribute","var":"$i")
+do list(path:"metadata.lom:lom.lom:lifecycle.lom:contribute","var":"$i")
   unless any_match("$i.lom:role.lom:value.lom:langstring.value","Author")
     copy_field("$i.lom:entity.value","contributor[].$append.name")
   end
@@ -68,8 +90,15 @@ add_field("sourceOrganization[].$last.id", "https://ror.org/00d7xrm67")
 
 #  ------------description------------------------------------
 set_array("description")
-do list("path": "metadata.lom:lom.lom:educational.lom:description.lom:langstring", "var": "$i")
-  copy_field("$i.value","description.$append")
+do list(path: "metadata.lom:lom.lom:educational", "var": "$i")
+  do list(path: "$i.lom:description.lom:langstring","var":"$j")
+    copy_field("$j.value","description.$append")
+  end
+end
+do list(path: "metadata.lom:lom.lom:general.lom:description", "var": "$i")
+  do list(path: "$i.lom:description.lom:langstring","var":"$j")
+    copy_field("$j.value","description.$append")
+  end
 end
 join_field("description")
 
@@ -79,22 +108,46 @@ copy_field("metadata.lom:lom.lom:rights.lom:description.lom:langstring.value","l
 
 #  ------------dataCreated------------------------------------
 copy_field("metadata.lom:lom.lom:lifecycle.lom:datetime.value","dateCreated")
+replace_all("dateCreated","^(\\d{4})$","$1-01-01")
 
 #  ------------inLanguage------------------------------------
 set_array("inLanguage[]")
-do list("path": "metadata.lom:lom.lom:general.lom:language", "var": "$i")
-  copy_field("$i.value","inLanguage[].$append")
+do list(path: "metadata.lom:lom.lom:general.lom:language", "var": "$i")
+  if any_equal("$i.value","en_us_wp")
+    add_field("inLanguage[].$append","en")
+  else
+    copy_field("$i.value","inLanguage[].$append")
+  end
 end
 
 # ---------------type ----------------------------------
 set_array("type[]", "LearningResource")
 
+# ---------------learningResourceType ----------------------------------
+set_array("learningResourceType[]")
+
+do list(path: "metadata.lom:lom.lom:educational.lom:learningresourcetype.lom:id.value", "var":"$i")
+  copy_field("$i","learningResourceType[].$append.id")
+  copy_field("$i","learningResourceType[].$last.prefLabel.de")
+  copy_field("$i","learningResourceType[].$last.prefLabel.en")
+end
+
+lookup("learningResourceType[].*.prefLabel.de", "hcrt-deLabel2Uri", delete:"true")
+lookup("learningResourceType[].*.prefLabel.en", "hcrt-enLabel2Uri", delete:"true")
+
+if any_contain("@externalId","moox") # Add Course if it is a iMoox course.
+  add_field("learningResourceType[].$append.id","https://w3id.org/kim/hcrt/course")
+  add_field("learningResourceType[].$last.prefLabel.de","Kurs")
+  add_field("learningResourceType[].$last.prefLabel.en","Course")
+end
 
 #  ------------about------------------------------------
 set_array("about[]")
-do list(path:"metadata.lom:lom.lom:classification.lom:taxonpath.lom:taxon","var":"$i")
-    copy_field("$i.lom:id.value","about[].$append.id")
-    lookup("about[].$last.id", "oefos2destatis")
+do list(path:"metadata.lom:lom.lom:classification.lom:taxonpath","var":"$i")
+    do list(path: "$i.lom:taxon", "var":"$j")
+        copy_field("$j.lom:id.value","about[].$append.id")
+        lookup("about[].$last.id", "oefos2destatis")
+    end
 end
 
 do list(path: "about[]", "var":"$i")
@@ -108,7 +161,7 @@ add_field("conditionsOfAccess.id","http://w3id.org/kim/conditionsOfAccess/no_log
 
 # ---------mainEntityOfPage----------------
 set_array("mainEntityOfPage[]")
-copy_field("@internal_id", "mainEntityOfPage[].$append.id")
+copy_field("@internalId", "mainEntityOfPage[].$append.id")
 add_field("mainEntityOfPage[].$last.provider.id","$[service_id]")
 add_field("mainEntityOfPage[].$last.provider.type","Service")
 add_field("mainEntityOfPage[].$last.provider.name","$[service_name]")

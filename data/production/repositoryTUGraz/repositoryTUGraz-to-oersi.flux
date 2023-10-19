@@ -6,13 +6,6 @@ XML_FILE = FLUX_DIR + "repositoryTUGraz-metafacture.xml";
 
 "https://repository.tugraz.at/oai2d"
 | open-oaipmh(metadataPrefix="lom")
-| as-lines
-| write(XML_FILE);
-
-// Use local file for transformation (un-comment lines above to re-fetch data):
-
-XML_FILE
-| open-file
 | decode-xml
 | handle-generic-xml(emitNamespace="true")
 | fix(FLUX_DIR + "repositoryTUGraz.fix", *)
