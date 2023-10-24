@@ -61,8 +61,9 @@ add_field("learningResourceType[].$last.prefLabel.de","Lehrbuch")
 add_field("learningResourceType[].$last.prefLabel.en","Textbook")
 
 # ------ inLanguage --- 
-/* inLanguage: The value Mehrsprachig does not represent the estimated language labels. */
-set_array("inLanguage[]","en")
+
+set_array('inLanguage[]')
+copy_field('meta.locale','inLanguage[].$append')
 
 # ------ license ---
 
