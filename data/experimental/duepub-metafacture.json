@@ -1,5 +1,5 @@
 {
-  "@context" : [ "https://w3id.org/kim/lrmi-profile/draft/context.jsonld", {
+  "@context" : [ "https://w3id.org/kim/amb/context.jsonld", {
     "@language" : "de"
   } ],
   "id" : "https://duepublico2.uni-due.de/receive/duepublico_mods_00074441",
@@ -38,7 +38,7 @@
   } ]
 }
 {
-  "@context" : [ "https://w3id.org/kim/lrmi-profile/draft/context.jsonld", {
+  "@context" : [ "https://w3id.org/kim/amb/context.jsonld", {
     "@language" : "de"
   } ],
   "id" : "https://duepublico2.uni-due.de/receive/duepublico_mods_00074302",
