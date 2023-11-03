@@ -2,18 +2,17 @@ service_domain = "https://www.hoou.de/";
 service_id = "https://oerworldmap.org/resource/urn:uuid:ac5d5269-6449-43c0-b43b-2ed372763a0e";
 service_name = "HOOU";
 
+
 default input_limit = "-1"; // 'default': is overridden by command-line/properties value
+default input_from = "0";
 default input_wait = "50";
 
-"https://legacy.hoou.de/sitemap.xml" // for local testing: "file://" + FLUX_DIR + "hoou-sitemap.xml"
-| oersi.SitemapReader(wait=input_wait, limit=input_limit, urlPattern=".*/(materials|projects)/.*",findAndReplace="www.hoou.de`legacy.hoou.de")
-| oersi.ErrorCatcher(file_errors)
-| open-http(header=user_agent_header)
-| extract-element("script[data-test=model-linked-data]")
-| match(pattern="@(type|id)", replacement="$1")
+"https://oer.hoou.de/edu-sharing/rest/search/v1/queries/-home-/-default-/ngsearch?maxItems=10&skipCount=0&propertyFilter=-all-"
+| oersi.JsonApiReader(header=user_agent_header, method="post", body="{\"resolveCollections\": false, \"criteria\": [], \"facets\": []}", recordPath="nodes", pageParam="skipCount", stepSize="10", totalLimit="250")
 | decode-json
 | filter-null-values
-| fix(FLUX_DIR + "hoou.fix", *)
+// edu-sharing version 8.0
+| fix(FLUX_DIR + "hoou_edu-sharing.fix", *) // '*': pass all flux variables to the fix
 | encode-json
 | validate-json(output_schema, writeValid=metadata_valid, writeInvalid=metadata_invalid)
 | oersi.OersiWriter(backend_api, user=backend_user, pass=backend_pass, log=metadata_responses)

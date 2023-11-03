@@ -1,0 +1,42 @@
+# Moochub specific filter to kick out all resources that are not free
+
+unless any_match("attributes.access[].","free")
+  reject()
+end
+
+# Delete all empty values
+vacuum()
+
+# Include general macros and general and specific maps for reuse
+do once("macrosAndMaps")
+  include ("../../sharedFixes/macros.fix")
+  include ("../../sharedFixes/maps.fix")
+  # Add here workflow specific maps
+  
+end
+
+
+# -------------------------------------------
+# Reuse edu-sharing default template
+include ("../../sharedFixes/moocHubDefault.fix")
+
+# Default elements: id, name, image, dateCreated, learningResourceType, inLanguage, license, type, trailer, mainEntityOfPage, context
+
+# -------------------------------------------
+# Add here provider specific transformation for elements that deviate from the default edusharing transfromation and additional ones:
+
+#  ---------------description----------------------------------
+
+
+#  ---------------creator----------------------------------
+
+
+# ------ sourceOrganization ------
+
+# ---------------conditionsOfAccess----------------------------------
+
+
+# ------ tidy up --- 
+include ("../../sharedFixes/cleanUp.fix")
+
+# missing:

@@ -1,0 +1,28 @@
+# Delete all empty values
+vacuum()
+
+# Include general macros and general and specific maps for reuse
+do once("macrosAndMaps")
+  include ("../../sharedFixes/macros.fix")
+  include ("../../sharedFixes/maps.fix")
+  # Add here workflow specific maps
+  
+end
+# -------------------------------------------
+# Reuse edu-sharing default template
+include ("../../sharedFixes/eduSharingDefault.fix")
+
+# Elements contain: 
+# name, id, image, mainEntityOfPage, description, about, creator, contributor, type, context
+# sourceOrganization, license, conditionsOfAccess, inLanguage, learningResourceType, keywords, encoding,
+
+
+# -------------------------------------------
+# Add here provider specific transformation for elements that deviate from the default edusharing transfromation and additional ones:
+
+# additional fixes...
+
+
+
+# This includes several fix functions that clean up the final data.
+include ("../../sharedFixes/cleanUp.fix")
