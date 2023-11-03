@@ -1,6 +1,6 @@
 /* Set up the context */
 do array("@context")
- add_field("","https://w3id.org/kim/amb/draft/context.jsonld")
+ add_field("","https://w3id.org/kim/amb/context.jsonld")
  do entity("")
   add_field("@language", "de")
  end
