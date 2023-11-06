@@ -54,5 +54,8 @@ do list(path:"creator[]|contributor[]", "var":"$i")
   end
 end
 
+# ------ context URI ------
+replace_all("@context[].$first", "https://w3id.org/kim/amb/draft/context.jsonld", "https://w3id.org/kim/amb/context.jsonld")
+
 # ------ tidy up --- 
 vacuum()
