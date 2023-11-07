@@ -90,16 +90,21 @@ add_field("sourceOrganization[].$last.id", "https://ror.org/00d7xrm67")
 
 #  ------------description------------------------------------
 set_array("description")
-do list(path: "metadata.lom:lom.lom:educational", "var": "$i")
-  do list(path: "$i.lom:description.lom:langstring","var":"$j")
-    copy_field("$j.value","description.$append")
+do list("path": "metadata.lom:lom.lom:general.lom:description", "var": "$i")
+  copy_field("$i.lom:langstring.value","description.$append")
+end
+
+do list("path": "metadata.lom:lom.lom:educational.lom:description", "var": "$i")
+  copy_field("$i.lom:langstring.value","description.$append")
+end
+unless exists("description.1")
+  do list(path:'metadata.lom:lom.lom:courses', 'var': '$i')
+    do list(path: '$i.lom:course.lom:description', 'var' : '$j')
+      copy_field('$j.lom:langstring.value', 'description.$append')
+    end
   end
 end
-do list(path: "metadata.lom:lom.lom:general.lom:description", "var": "$i")
-  do list(path: "$i.lom:description.lom:langstring","var":"$j")
-    copy_field("$j.value","description.$append")
-  end
-end
+uniq("description")
 join_field("description")
 
 # -----------license----------
