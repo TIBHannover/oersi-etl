@@ -107,6 +107,13 @@ end
 uniq("description")
 join_field("description")
 
+#------------keywords---------
+
+set_array("keywords[]")
+do list("path": "metadata.lom:lom.lom:general.lom:keyword", "var": "$i")
+  copy_field("$i.lom:langstring.value","keywords[].$append")
+end
+
 # -----------license----------
 copy_field("metadata.lom:lom.lom:rights.lom:description.lom:langstring.value","license.id")
 
