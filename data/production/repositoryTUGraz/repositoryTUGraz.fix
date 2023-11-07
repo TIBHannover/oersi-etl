@@ -117,12 +117,11 @@ replace_all("dateCreated","^(\\d{4})$","$1-01-01")
 
 #  ------------inLanguage------------------------------------
 set_array("inLanguage[]")
-do list(path: "metadata.lom:lom.lom:general.lom:language", "var": "$i")
-  if any_equal("$i.value","en_us_wp")
-    add_field("inLanguage[].$append","en")
-  else
-    copy_field("$i.value","inLanguage[].$append")
+do list("path": "metadata.lom:lom.lom:general.lom:language", "var": "$i")
+  if all_match("$i.value", "(^..)_.+")
+    replace_all("$i.value", "(^..)_.+", "$1")
   end
+  copy_field("$i.value","inLanguage[].$append")
 end
 
 # ---------------type ----------------------------------
