@@ -90,17 +90,29 @@ add_field("sourceOrganization[].$last.id", "https://ror.org/00d7xrm67")
 
 #  ------------description------------------------------------
 set_array("description")
-do list(path: "metadata.lom:lom.lom:educational", "var": "$i")
-  do list(path: "$i.lom:description.lom:langstring","var":"$j")
-    copy_field("$j.value","description.$append")
+do list("path": "metadata.lom:lom.lom:general.lom:description", "var": "$i")
+  copy_field("$i.lom:langstring.value","description.$append")
+end
+
+do list("path": "metadata.lom:lom.lom:educational.lom:description", "var": "$i")
+  copy_field("$i.lom:langstring.value","description.$append")
+end
+unless exists("description.1")
+  do list(path:'metadata.lom:lom.lom:courses', 'var': '$i')
+    do list(path: '$i.lom:course.lom:description', 'var' : '$j')
+      copy_field('$j.lom:langstring.value', 'description.$append')
+    end
   end
 end
-do list(path: "metadata.lom:lom.lom:general.lom:description", "var": "$i")
-  do list(path: "$i.lom:description.lom:langstring","var":"$j")
-    copy_field("$j.value","description.$append")
-  end
-end
+uniq("description")
 join_field("description")
+
+#------------keywords---------
+
+set_array("keywords[]")
+do list("path": "metadata.lom:lom.lom:general.lom:keyword", "var": "$i")
+  copy_field("$i.lom:langstring.value","keywords[].$append")
+end
 
 # -----------license----------
 copy_field("metadata.lom:lom.lom:rights.lom:description.lom:langstring.value","license.id")
@@ -112,12 +124,11 @@ replace_all("dateCreated","^(\\d{4})$","$1-01-01")
 
 #  ------------inLanguage------------------------------------
 set_array("inLanguage[]")
-do list(path: "metadata.lom:lom.lom:general.lom:language", "var": "$i")
-  if any_equal("$i.value","en_us_wp")
-    add_field("inLanguage[].$append","en")
-  else
-    copy_field("$i.value","inLanguage[].$append")
+do list("path": "metadata.lom:lom.lom:general.lom:language", "var": "$i")
+  if all_match("$i.value", "(^..)_.+")
+    replace_all("$i.value", "(^..)_.+", "$1")
   end
+  copy_field("$i.value","inLanguage[].$append")
 end
 
 # ---------------type ----------------------------------
