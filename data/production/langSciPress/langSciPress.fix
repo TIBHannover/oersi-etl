@@ -91,12 +91,16 @@ add_field("about[].$last.prefLabel.de", "Allgemeine und vergleichende Literatur-
 
 
 # ---------mainEntityOfPage----------------
-set_array("mainEntityOfPage[]")
-copy_field("id", "mainEntityOfPage[].$append.id")
-add_field("mainEntityOfPage[].$last.provider.id","$[service_id]")
-add_field("mainEntityOfPage[].$last.provider.type","Service")
-add_field("mainEntityOfPage[].$last.provider.name","$[service_name]")
 
+if exists("id")
+  set_array("mainEntityOfPage[]")
+  copy_field("id", "mainEntityOfPage[].$append.id")
+  add_field("mainEntityOfPage[].$last.provider.id","$[service_id]")
+  add_field("mainEntityOfPage[].$last.provider.type","Service")
+  add_field("mainEntityOfPage[].$last.provider.name","$[service_name]")
+else
+  print_record(destination:"data/production/langSciPress/missing_ids.json",pretty:"true")
+end
 # ---------------@context ----------------------------------
 
 set_array("@context[]", "https://w3id.org/kim/amb/context.jsonld")
