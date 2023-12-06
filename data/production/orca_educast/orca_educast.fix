@@ -187,6 +187,9 @@ do list(path:"contributor[]", "var":"$i")
     add_field("$i.affiliation.type", "Organization")
     move_field("$i.@affiliation", "@sourceOrga.$append")
   end
+  if any_match("$i.id", "^\\d{4}-\\d{4}-\\d{4}-\\d{4}") 
+    replace_all("$i.id", "(\\d{4}-\\d{4}-\\d{4}-\\d{4})", "https://orcid.org/$1" )
+  end
 end
 
 
