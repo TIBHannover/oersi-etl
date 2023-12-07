@@ -23,7 +23,10 @@ do once("macrosAndMaps")
     "rus":"ru",
     "kor":"ko",
     "gre":"el",
-    "bul": "bg"
+    "bul": "bg",
+    "swa": "sw",
+    "ita": "it",
+    "chi": "zh"
   )
   put_map("licenseMap",
     "Attribution": "https://creativecommons.org/licenses/by/4.0/",
