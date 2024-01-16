@@ -1,4 +1,4 @@
-service_domain = "https://www.hoou.de/";
+service_domain = "www.oer.hoou.de";
 service_id = "https://oerworldmap.org/resource/urn:uuid:ac5d5269-6449-43c0-b43b-2ed372763a0e";
 service_name = "HOOU";
 
