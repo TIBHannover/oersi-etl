@@ -1,6 +1,6 @@
 service_domain = "www.oer.hoou.de";
 service_id = "https://oerworldmap.org/resource/urn:uuid:ac5d5269-6449-43c0-b43b-2ed372763a0e";
-service_name = "HOOU";
+service_name = "HOOU_edusharing";
 
 
 default input_limit = "-1"; // 'default': is overridden by command-line/properties value
