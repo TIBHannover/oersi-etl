@@ -6,7 +6,7 @@ Design	Gestaltung
 Film	Darstellende Kunst, Film und Fernsehen, Theaterwissenschaft
 Music	Musik, Musikwissenschaft
 Biological/Physical Sciences	Mathematik, Naturwissenschaften
-Astronomy	Astronomie, Astrophysik
+Astronomy	Astrophysik und Astronomie
 Biology	Studienbereich Biologie
 Chemistry	Studienbereich Chemie
 Physics	Physik
@@ -66,14 +66,14 @@ Hospitality/Tourism	Tourismuswirtschaft
 Hospitality/Tourism - General	Tourismuswirtschaft
 Humanities	Geisteswissenschaften
 English	Anglistik, Amerikanistik
-Gender and Sexuality	Sozialwissenschaften
+Gender and Sexuality	Sozialwissenschaften/Soziologie
 History	Studienbereich Geschichte
 Linguistics	Allgemeine und vergleichende Literatur- und Sprachwissenschaft
 Philosophy	Studienbereich Philosophie
 Spanish Literature	Spanisch
 # Language Learning
 Arabic Language	Arabisch/Arabistik
-Cree Language	Außereuropäische Sprach- und Kulturwissenschaften
+Cree Language	Sonstige Sprach- und Kulturwissenschaften
 English Language	Anglistik, Amerikanistik
 French Language	Französisch
 Korean Language	Sinologie/Koreanistik
@@ -81,16 +81,16 @@ Punjabi Language	Indologie
 Law and Criminal Justice	Rechtswissenschaften
 International Law	Rechtswissenschaften
 Law Enforcement	Polizei/Verfassungsschutz
-Math & Stats	Studienbereich Mathematik
-Algebra	Studienbereich Mathematik
-Calculus	Studienbereich Mathematik
-General Math	Studienbereich Mathematik
-Statistics	Mathematische Statistik/Wahrscheinlichkeitsrechnung
-Social Sciences	Sozialwissenschaften
-Anthropology	Sozialwissenschaften
+Math & Stats	Mathematik
+Algebra	Mathematik
+Calculus	Mathematik
+General Math	Mathematik
+Statistics	Statistik
+Social Sciences	Sozialwissenschaften/Soziologie
+Anthropology	Sozialwissenschaften/Soziologie
 Economics	Studienbereich Wirtschaftswissenschaften
 Labour	Studienbereich Wirtschaftswissenschaften
-Political Science	Politikwissenschaften
+Political Science	Politikwissenschaft
 Psychology	Studienbereich Psychologie
 Social Work	Soziale Arbeit
 Sociology	Soziologie
