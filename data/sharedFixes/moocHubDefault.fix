@@ -42,6 +42,7 @@ set_array("type[]", "LearningResource")
 
 # ------ trailer --- 
 copy_field("attributes.video.url","trailer.embedUrl")
+copy_field("attributes.trailer.contentUrl","trailer.embedUrl")
 if exists("trailer.embedUrl")
 	add_field("trailer.type","VideoObject")
 end
