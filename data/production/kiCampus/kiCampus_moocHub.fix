@@ -58,8 +58,8 @@ end
 
 # ------ about --- 
 set_array("about[]")
-add_field("about[].$append.id", "https://w3id.org/kim/hochschulfaechersystematik/n71")
-add_field("about[].$last.prefLabel.de", "Studienbereich Informatik")
+add_field("about[].$append.id", "https://w3id.org/kim/hochschulfaechersystematik/n0")
+add_field("about[].$last.prefLabel.de", "Fachübergreifend")
 
 # ---------------conditionsOfAccess----------------------------------
 add_field("conditionsOfAccess.id","http://w3id.org/kim/conditionsOfAccess/login") 
