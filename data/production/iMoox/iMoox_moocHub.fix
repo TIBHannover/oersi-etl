@@ -50,11 +50,20 @@ do list(path:"@creator", "var": "$i")
   copy_field("$i","creator[].$append.name")
   add_field("creator[].$last.type", "Person")
 end
-# ----- contributor -----
+
+# ----- contributor / sourceOrganization -----
+# if contributors of type "Organization", use SourceOrganization
+
 set_array("contributor[]")
+set_array("sourceOrganization[]")
 do list_as("$contributorName":"attributes.contributor[].name", "$contributorType":"attributes.contributor[].type")
-  copy_field("$contributorType","contributor[].$append.type")
-  copy_field("$contributorName","contributor[].$last.name")
+  if all_equal("$contributorType","Organization")
+    copy_field("$contributorName","sourceOrganization[].$append.name")
+    add_field("sourceOrganization[].$last.type", "Organization")
+  else
+    copy_field("$contributorType","contributor[].$append.type")
+    copy_field("$contributorName","contributor[].$last.name")
+  end
 end
 
 #----- publisher -----
@@ -65,12 +74,12 @@ do list_as("$publisherName":"attributes.publisher.name", "$publisherId": "attrib
   copy_field("$publisherName", "publisher[].$last.name")
 end
 
-# ------ sourceOrganization --- 
-set_array("sourceOrganization[]")
-do list(path:"attributes.partnerInstitute[]", "var": "$i")
-  copy_field("$i.name", "sourceOrganization[].$append.name")
-  add_field("sourceOrganization[].$last.type", "Organization")
-end
+# # ------ sourceOrganization ---  partnerInstitute no longer used in source data?
+
+# do list(path:"attributes.partnerInstitute[]", "var": "$i")
+#   copy_field("$i.name", "sourceOrganization[].$append.name")
+#   add_field("sourceOrganization[].$last.type", "Organization")
+# end
 
 # ---------------conditionsOfAccess----------------------------------
 add_field("conditionsOfAccess.id","http://w3id.org/kim/conditionsOfAccess/login")
