@@ -32,7 +32,7 @@ do list(path: "metadata.lom:lom.lom:general.lom:identifier", "var": "$i")
     copy_field("$i.lom:entry.lom:langstring.value","@internalId")
   end
 end
-prepend("@internalId","https://repository.tugraz.at/lom/")
+prepend("@internalId","https://repository.tugraz.at/oer/")
 
 do list(path: "metadata.lom:lom.lom:technical.lom:location", "var": "$i")
   copy_field("$i.value","@externalId")
@@ -137,10 +137,12 @@ set_array("type[]", "LearningResource")
 # ---------------learningResourceType ----------------------------------
 set_array("learningResourceType[]")
 
-do list(path: "metadata.lom:lom.lom:educational.lom:learningresourcetype.lom:id.value", "var":"$i")
-  copy_field("$i","learningResourceType[].$append.id")
-  copy_field("$i","learningResourceType[].$last.prefLabel.de")
-  copy_field("$i","learningResourceType[].$last.prefLabel.en")
+do list(path: "metadata.lom:lom.lom:educational.lom:learningresourcetype", "var":"$i")
+  unless all_contain("$i.lom:id.value", "N/A")
+    copy_field("$i.lom:id.value","learningResourceType[].$append.id")
+    copy_field("$i.lom:id.value","learningResourceType[].$last.prefLabel.de")
+    copy_field("$i.lom:id.value","learningResourceType[].$last.prefLabel.en")
+  end
 end
 
 lookup("learningResourceType[].*.prefLabel.de", "hcrt-deLabel2Uri", delete:"true")
@@ -157,6 +159,7 @@ set_array("about[]")
 do list(path:"metadata.lom:lom.lom:classification.lom:taxonpath","var":"$i")
     do list(path: "$i.lom:taxon", "var":"$j")
         copy_field("$j.lom:id.value","about[].$append.id")
+        replace_all("about[].$last.id", "https://w3id.org/oerbase/vocabs/oefos2012/", "https://vocabs.acdh.oeaw.ac.at/oefosdisciplines/")
         lookup("about[].$last.id", "oefos2destatis")
     end
 end
