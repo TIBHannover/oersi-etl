@@ -116,6 +116,16 @@ unless exists("inLanguage[].1")
 end
 
 
+# ----- duration -----
+
+if any_match("duration", "^(.+)?[A-Za-z](.+)?$")
+  remove_field("duration")
+end
+replace_all("duration","(\\d\\d):(\\d\\d):(\\d\\d)", "PT$1H$2M$3S")
+replace_all("duration","(\\d):(\\d\\d):(\\d\\d)", "PT0$1H$2M$3S")
+replace_all("duration","(\\d\\d):(\\d\\d)", "PT00H$1M$2S")
+
+
 # Filter incomplete records.
 
 unless exists ("name")
