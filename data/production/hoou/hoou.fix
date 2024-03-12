@@ -87,6 +87,7 @@ add_field("conditionsOfAccess.id","http://w3id.org/kim/conditionsOfAccess/no_log
 
 
 # ---------mainEntityOfPage----------------
+replace_all("id", 'legacy.hoou.de', 'www.hoou.de')
 set_array("mainEntityOfPage[]")
 copy_field("id", "mainEntityOfPage[].$append.id")
 add_field("mainEntityOfPage[].$last.provider.id","$[service_id]")
