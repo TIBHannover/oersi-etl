@@ -16,6 +16,7 @@ include ("../../sharedFixes/eduSharingDefault.fix")
  
 set_array("@hochschulfaechersystematik[]")
 copy_field("properties.ccm:taxonid[].*", "@hochschulfaechersystematik[].$append")
+replace_all("@hochschulfaechersystematik[].*", "https://w3id.org/oerbase/vocabs/oefos2012/", "https://vocabs.acdh.oeaw.ac.at/oefosdisciplines/")
 lookup("@hochschulfaechersystematik[].*", "oefos2destatis", delete:"true")
 uniq("@hochschulfaechersystematik[]")
 
