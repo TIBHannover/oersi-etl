@@ -26,5 +26,13 @@ do list(path:"@hochschulfaechersystematik[]", "var":"$i")
 end
 lookup("about[].*.prefLabel.de", "destatis-deLabel2Uri", delete:"true")
 
+# ----- SourceOrganization -----
+
+unless exists("properties.ccm:university_DISPLAYNAME[]")
+  set_array("sourceOrganization[]")
+  add_field("sourceOrganization[].$append.name", "Universität Innsbruck")
+  add_field("sourceOrganization[].$last.type","Organization")
+  add_field("sourceOrganization[].$last.id","https://ror.org/054pv6659")
+end
 
 include ("../../sharedFixes/cleanUp.fix")
