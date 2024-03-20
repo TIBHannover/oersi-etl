@@ -47,7 +47,11 @@ do list("path": "metadata.mods:mods.mods:location.mods:url", "var": "$i")
 end
 
 #  ------------name ------------------------------------
-paste("name","metadata.mods:mods.mods:titleInfo.mods:nonSort.value","metadata.mods:mods.mods:titleInfo.mods:title.value")
+do list(path: "metadata.mods:mods.mods:titleInfo", "var":"$i")
+  unless any_equal("$i.type", "translated")
+    paste("name","$i.mods:nonSort.value","$i.mods:title.value")
+  end
+end
 
 #  ------------creator------------------------------------
 set_array("creator[]")
