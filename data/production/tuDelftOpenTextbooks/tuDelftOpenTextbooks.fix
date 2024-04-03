@@ -20,7 +20,7 @@ do list(path:"html.head.meta","var":"$i")
   # ---------------dateCreated --------
   copy_field("$i.DC_Date_created", "dateCreated")
 
-  # inLanguage
+  # ----------------inLanguage------------
     copy_field("$i.citation_language", "inLanguage[].$append")
 
   # ---------------license --------
@@ -96,7 +96,8 @@ set_array("type[]", "LearningResource")
 
 
 
-
+# -----image-----
+copy_field("html.body.div.div.1.div.div.div.div.div.2.div.1.img.src","image")
 
 # ---------mainEntityOfPage----------------
 
