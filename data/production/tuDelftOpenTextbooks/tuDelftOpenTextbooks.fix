@@ -2,6 +2,7 @@
 # --------Delete all emtpy values-------
 vacuum()
 
+set_array("inLanguage[]")
 do list(path:"html.head.meta","var":"$i")
 
   /* Map some of the data we have to the oersi model: */
@@ -18,6 +19,9 @@ do list(path:"html.head.meta","var":"$i")
 
   # ---------------dateCreated --------
   copy_field("$i.DC_Date_created", "dateCreated")
+
+  # inLanguage
+    copy_field("$i.citation_language", "inLanguage[].$append")
 
   # ---------------license --------
   if any_match("$i.DC_Rights","https://creativecommons.org/.*")
@@ -124,5 +128,4 @@ end
 copy_field("id","_id")
 
 # ------ tidy up --- 
-retain("@context[]","id","image","name","creator[]","contributor[]","sourceOrganization[]", "license","description","datePublished","dateCreated","dateModified","inLanguage[]","type[]","learningResourceType[]","keywords[]","about[]","teaches[]","assesses[]","competencyRequired[]","educationalLevel[]", "encoding[]", "publisher[]", "isPartOf[]", "mainEntityOfPage[]","conditionsOfAccess","duration")
-vacuum()
+include ("../../sharedFixes/cleanUp.fix")
