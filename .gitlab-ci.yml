@@ -1,4 +1,4 @@
-image: gradle:jdk11
+image: gradle:jdk17
 
 stages:
   - build
@@ -38,12 +38,13 @@ deploy:
      - data/maps/*
      - data/production/*
      - data/sharedFixes/*
+    expire_in: 1 day # Except latest, see Settings > CI/CD > Artifacts
   only:
     - branches
     - tags
 
 sonar:
-  image: gradle:jdk11
+  image: gradle:jdk17
   cache:
     key: "${CI_JOB_NAME}"
     paths:

@@ -5,8 +5,8 @@ service_name = "HOOU";
 default input_limit = "-1"; // 'default': is overridden by command-line/properties value
 default input_wait = "50";
 
-"https://www.hoou.de/sitemap.xml" // for local testing: "file://" + FLUX_DIR + "hoou-sitemap.xml"
-| oersi.SitemapReader(wait=input_wait, limit=input_limit, urlPattern=".*/(materials|projects)/.*")
+"https://legacy.hoou.de/sitemap.xml" // for local testing: "file://" + FLUX_DIR + "hoou-sitemap.xml"
+| oersi.SitemapReader(wait=input_wait, limit=input_limit, urlPattern=".*/(materials|projects)/.*",findAndReplace="www.hoou.de`legacy.hoou.de")
 | oersi.ErrorCatcher(file_errors)
 | open-http(header=user_agent_header)
 | extract-element("script[data-test=model-linked-data]")

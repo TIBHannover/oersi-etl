@@ -69,7 +69,7 @@ add_field("conditionsOfAccess.id","http://w3id.org/kim/conditionsOfAccess/no_log
 
 # ---------------@context ----------------------------------
 
-set_array("@context[]", "https://w3id.org/kim/amb/draft/context.jsonld")
+set_array("@context[]", "https://w3id.org/kim/amb/context.jsonld")
 # resource is german therefore prefer de if multiple or no inLanguage are available
 if any_equal("inLanguage[]","de")
   set_hash("@context[].$append", "@language": "de")
@@ -84,5 +84,4 @@ unless exists("inLanguage[].1")
 end
 
 # ------ tidy up --- 
-include ("../../sharedFixes/retain.fix")
-vacuum()
+include ("../../sharedFixes/cleanUp.fix")

@@ -9,20 +9,36 @@ end
 
 vacuum()
 
-include ("../../sharedFixes/macros.fix")
+do once("macrosAndMaps")
+  include ("../../sharedFixes/macros.fix")
+  include ("../../sharedFixes/maps.fix")
+  # workflow specific map
+  put_filemap("data/maps/lecture2go2destatis.tsv","lecture2go2destatis","sep_char":"\t")
+end
+
+# ---------------license----------------------------------
+
+unless any_match("metadata.oai_datacite.payload.resource.rightsList.rights.rightsURI","^http[s]?:\\/\\/creativecommons.org\\/(licenses|licences|publicdomain)\\/.*|^http[s]?:\\/\\/www.gnu.org\\/licenses\\/.*|^http[s]?:\\/\\/www.apache.org\\/licenses\\/.*|http[s]?://opensource.org/licenses/MIT|^http[s]?:\\/\\/www.opensource.org\\/licenses\\/BSD.*")
+  reject()  
+end
+
+if any_match("metadata.oai_datacite.payload.resource.rightsList.rights.rightsURI","^http[s]?:\\/\\/creativecommons.org\\/(licenses|licences|publicdomain)\\/.*|^http[s]?:\\/\\/www.gnu.org\\/licenses\\/.*|^http[s]?:\\/\\/www.apache.org\\/licenses\\/.*|http[s]?://opensource.org/licenses/MIT|^http[s]?:\\/\\/www.opensource.org\\/licenses\\/BSD.*")
+  copy_field("metadata.oai_datacite.payload.resource.rightsList.rights.rightsURI","license.id")
+end
 
 
 # ---------------id----------------------------------
 do list(path:"metadata.oai_datacite.payload.resource.identifier","var":"$i")
   if any_equal("$i.identifierType", "URL")
-    copy_field("$i.value","id")
+    copy_field("$i.value","@id")
   end
 end
 
-unless exists ("metadata.oai_datacite.payload.resource.identifier")
+unless exists ("@id")
   reject()
 end
 
+copy_field("@id","id")
 
 # ---------------name----------------------------------
 # The json-validator created an error due to duplicated element "name". Therefore the two conditionals should prevent a duplicate elemente.
@@ -51,12 +67,6 @@ do list(path:"metadata.oai_datacite.payload.resource.descriptions.description","
   copy_field("$i.value","description")
 end
 
-
-# ---------------license----------------------------------
-
-if any_match("metadata.oai_datacite.payload.resource.rightsList.rights.rightsURI","^http[s]?:\\/\\/creativecommons.org\\/(licenses|licences|publicdomain)\\/.*|^http[s]?:\\/\\/www.gnu.org\\/licenses\\/.*|^http[s]?:\\/\\/www.apache.org\\/licenses\\/.*|http[s]?://opensource.org/licenses/MIT|^http[s]?:\\/\\/www.opensource.org\\/licenses\\/BSD.*")
-  copy_field("metadata.oai_datacite.payload.resource.rightsList.rights.rightsURI","license.id")
-end
 
 # ------ type --- 
 
@@ -125,13 +135,19 @@ do list(path:"metadata.oai_datacite.payload.resource.creators.creator", "var":"$
     end
   end
   if exists("$i.affiliation.value")
-    copy_field("$i.affiliation.value", "creator[].$last.affiliation.name")
+    if any_contain("$i.affiliation.value","nstitut")
+      add_field("creator[].$last.affiliation.name", "Universität Hamburg")
+    else
+      copy_field("$i.affiliation.value", "creator[].$last.affiliation.name")
+    end
     add_field("creator[].$last.affiliation.type", "Organization")
   end
 end
 
 replace_all("creator[].*.name","(.+), (.+)", "$2 $1")
 replace_all("creator[].*.id", "(\\d{4}-\\d{4}-\\d{4}-\\d{4}).*|.*(\\d{4}-\\d{4}-\\d{4}-\\d{4}).*","https://orcid.org/$1")
+trim("creator[].*.affiliation.name")
+replace_all("creator[].*.affiliation.name","Uni Hamburg|Uni HH", "Universität Hamburg")
 
 # ---------contributor----------------
 set_array("contributor[]")
@@ -166,14 +182,14 @@ do list(path:"metadata.oai_datacite.payload.resource.subjects.subject", "var":"$
 end
   
 
-lookup("@about.*","data/maps/lecture2go2destatis.tsv","sep_char":"\t", delete:"true")
+lookup("@about.*","lecture2go2destatis", delete:"true")
 
 set_array("about[]")
 do list(path:"@about", "var":"$i")
   copy_field("$i", "about[].$append.id")
   copy_field("$i", "about[].$last.prefLabel.de")
 end
-lookup("about[].*.prefLabel.de", "data/maps/subject-labels.tsv","sep_char":"\t", delete:"true")
+lookup("about[].*.prefLabel.de", "destatis-deLabel2Uri", delete:"true")
 
 
 # ---------------conditionsOfAccess----------------------------------
@@ -190,9 +206,19 @@ do list(path: "metadata.oai_datacite.payload.resource.relatedIdentifiers.related
   end
 end
 
+# ------ encoding --- 
+
+set_array("encoding[]")
+if exists("@id")
+  copy_field("@id","encoding[].$append.embedUrl")
+  add_field("encoding[].$last.type", "MediaObject")
+  replace_all("encoding[].*.embedUrl", "https://lecture2go.uni-hamburg.de/l2go/-/get/v/", "https://lecture2go.uni-hamburg.de/iframe/?obj=")
+end
+
+
 # ---------------@context ----------------------------------
 
-set_array("@context[]", "https://w3id.org/kim/amb/draft/context.jsonld")
+set_array("@context[]", "https://w3id.org/kim/amb/context.jsonld")
 # resource is german therefore prefer de if multiple or no inLanguage are available
 if any_equal("inLanguage[]","de")
   set_hash("@context[].$append", "@language": "de")
@@ -207,6 +233,5 @@ unless exists("inLanguage[].1")
 end
 
 # ------ tidy up --- 
-include ("../../sharedFixes/retain.fix")
-vacuum()
+include ("../../sharedFixes/cleanUp.fix")
 

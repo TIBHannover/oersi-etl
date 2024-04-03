@@ -9,7 +9,12 @@ end
 
 vacuum()
 
-include ("../../sharedFixes/macros.fix")
+do once("macrosAndMaps")
+  include ("../../sharedFixes/macros.fix")
+  include ("../../sharedFixes/maps.fix")
+  # workflow specific map
+  put_filemap("data/maps/tibav-subject-mapping.tsv","tibav-subject-mapping","sep_char":"\t")
+end
 
 
 # ---------------id----------------------------------
@@ -182,14 +187,14 @@ end
 
 trim("@hochschulfaechersystematik.*")
 uniq("@hochschulfaechersystematik")
-lookup("@hochschulfaechersystematik.*","data/maps/tibav-subject-mapping.tsv","sep_char":"\t", delete:"true")
+lookup("@hochschulfaechersystematik.*","tibav-subject-mapping", delete:"true")
 
 set_array("about[]")
 copy_field("@hochschulfaechersystematik.*","about[].$append.id")
 
 do list(path: "about[]")
   copy_field("id", "prefLabel.de")
-  lookup("prefLabel.de","data/maps/subject-labels.tsv","sep_char":"\t", delete:"true")
+  lookup("prefLabel.de","destatis-deLabel2Uri", delete:"true")
 end
 
 # ---------------conditionsOfAccess----------------------------------
@@ -198,7 +203,7 @@ add_field("conditionsOfAccess.id","http://w3id.org/kim/conditionsOfAccess/no_log
 
 # ---------------@context ----------------------------------
 
-set_array("@context[]", "https://w3id.org/kim/amb/draft/context.jsonld")
+set_array("@context[]", "https://w3id.org/kim/amb/context.jsonld")
 # resource is german therefore prefer de if multiple or no inLanguage are available
 if any_equal("inLanguage[]","de")
   set_hash("@context[].$append", "@language": "de")
@@ -213,5 +218,4 @@ unless exists("inLanguage[].1")
 end
 
 # ------ tidy up --- 
-include ("../../sharedFixes/retain.fix")
-vacuum()
+include ("../../sharedFixes/cleanUp.fix")

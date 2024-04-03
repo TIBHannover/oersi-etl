@@ -1,6 +1,14 @@
 # Delete all empty values
 vacuum()
 
+do once("macrosAndMaps")
+  include ("../../sharedFixes/macros.fix")
+  include ("../../sharedFixes/maps.fix")
+  # workflow specific maps
+  put_filemap("data/maps/foerdeSubjects.tsv","foerdeSubjects","sep_char":"\t")
+  put_filemap("data/maps/foerdeLeardningResourceTypes.tsv","foerdeLeardningResourceTypes","sep_char":"\t")
+end
+
 # Filter out any non higher ed oer
 unless any_equal("node.properties.ccm:educontextname_DISPLAYNAME[]", "Hochschule")
   reject()
@@ -53,7 +61,7 @@ copy_field("node.properties.cclom:general_description[].*", "description") # eve
 
 
 #  ---------------about----------------------------------
-lookup("node.properties.ccm:taxonid_DISPLAYNAME[].*","data/maps/foerdeSubjects.tsv","sep_char":"\t", delete:"true")
+lookup("node.properties.ccm:taxonid_DISPLAYNAME[].*","foerdeSubjects","sep_char":"\t", delete:"true")
 copy_field("node.properties.ccm:taxonid_DISPLAYNAME[]", "@hochschulfaechersystematik[]")
 
  
@@ -62,7 +70,7 @@ do list(path:"@hochschulfaechersystematik[]", "var":"$i")
   copy_field("$i", "about[].$append.id")
   copy_field("$i", "about[].$last.prefLabel.de")
 end
-lookup("about[].*.prefLabel.de", "data/maps/subject-labels.tsv","sep_char":"\t", delete:"true")
+lookup("about[].*.prefLabel.de", "destatis-deLabel2Uri", delete:"true")
 
 #  ---------------creator----------------------------------
 set_array("creator[]")
@@ -135,7 +143,7 @@ set_array("type[]", "LearningResource")
  
 # ---------------learningResourceType----------------------------------
 
-lookup("node.properties.ccm:educationallearningresourcetype_DISPLAYNAME[].*","data/maps/foerdeLeardningResourceTypes.tsv","sep_char":"\t", delete:"true")
+lookup("node.properties.ccm:educationallearningresourcetype_DISPLAYNAME[].*","foerdeLeardningResourceTypes", delete:"true")
 copy_field("node.properties.ccm:educationallearningresourcetype_DISPLAYNAME[]", "@learningResourceType[]")
 
 
@@ -148,8 +156,8 @@ do list(path:"@learningResourceType[]", "var": "$i")
   end
 end
  
-lookup("learningResourceType[].*.prefLabel.de", "data/maps/hcrt-de-labels.tsv","sep_char":"\t", delete:"true")
-lookup("learningResourceType[].*.prefLabel.en", "data/maps/hcrt-en-labels.tsv","sep_char":"\t", delete:"true")
+lookup("learningResourceType[].*.prefLabel.de", "hcrt-deLabel2Uri", delete:"true")
+lookup("learningResourceType[].*.prefLabel.en", "hcrt-enLabel2Uri", delete:"true")
  
 #  ---------------keywords----------------------------------
 copy_field("node.properties.cclom:general_keyword[]", "keywords[]")
@@ -173,7 +181,7 @@ add_field("sourceOrganization[].$last.id", "https://ror.org/04v76ef78")
 
 # ---------------@context ----------------------------------
 
-set_array("@context[]", "https://w3id.org/kim/amb/draft/context.jsonld")
+set_array("@context[]", "https://w3id.org/kim/amb/context.jsonld")
 # resource is german therefore prefer de if multiple or no inLanguage are available
 if any_equal("inLanguage[]","de")
   set_hash("@context[].$append", "@language": "de")
@@ -188,5 +196,4 @@ unless exists("inLanguage[].1")
 end
 
 
-include ("../../sharedFixes/retain.fix")
-vacuum()
+include ("../../sharedFixes/cleanUp.fix")

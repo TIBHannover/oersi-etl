@@ -5,8 +5,15 @@ vacuum()
 # name
 # description
 
-
-include ("../../sharedFixes/macros.fix")
+do once("macrosAndMaps")
+  include ("../../sharedFixes/macros.fix")
+  include ("../../sharedFixes/maps.fix")
+  # workflow specific map
+  put_filemap("data/maps/bcCampusSubjects2DestatisLabels.tsv", "bcCampusSubjects2DestatisLabels","sep_char":"\t")
+  put_filemap("data/maps/bcCampusAudienceRole.tsv", "bcCampusSubjectsAudienceMap","sep_char":"\t")
+  put_rdfmap("data/maps/vocabulary/educationalAudienceRole.ttl", "audienceDeLabel", target: "skos:prefLabel", select_language: "de")
+  put_rdfmap("data/maps/vocabulary/educationalAudienceRole.ttl", "audienceEnLabel", target: "skos:prefLabel", select_language: "en-US")  
+end
 
 # ---------------license ----------------------------------
 move_field("license", "@license")
@@ -39,7 +46,7 @@ move_field("keywords","keywords[]")
 
 set_array("@about")
 do list(path: "about[]", "var":"$i")
-  lookup("$i", "data/maps/bcCampusSubjects2DestatisLabels.tsv","sep_char":"\t", delete:"true")
+  lookup("$i", "bcCampusSubjects2DestatisLabels", delete:"true")
   move_field("$i", "@about.$append")
 end
 uniq("@about")
@@ -49,7 +56,7 @@ do list(path:"@about", "var":"$i")
   copy_field("$i", "about[].$append.id")
   copy_field("$i", "about[].$last.prefLabel.de")
 end
-lookup("about[].*.id", "data/maps/subject-labels-to-URI.tsv","sep_char":"\t", delete:"true")
+lookup("about[].*.id", "destatis-deLabel2Uri", delete:"true")
 
 
 # ---------------type----------------------------------
@@ -66,16 +73,16 @@ set_array("learningResourceType[]")
 copy_field("type|learningResourceType", "@hcrt.$append")
 replace_all("@hcrt.*","textbook","Textbook")
 replace_all("@hcrt.*","course","Course")
-lookup("@hcrt.*","data/maps/en-labels-hcrt-uri.tsv","sep_char":"\t", delete:"true")
+lookup("@hcrt.*", "hcrt-enLabel2Uri", delete:"true")
 uniq("@hcrt")
 
 copy_field("@hcrt.*", "learningResourceType[].$append.id")
 
 do list(path:"learningResourceType[]")
   copy_field("id", "prefLabel.de")
-  lookup("prefLabel.de", "data/maps/hcrt-de-labels.tsv","sep_char":"\t", delete:"true")
+  lookup("prefLabel.de", "hcrt-deLabel2Uri", delete:"true")
   copy_field("id", "prefLabel.en")
-  lookup("prefLabel.en", "data/maps/hcrt-en-labels.tsv","sep_char":"\t", delete:"true")
+  lookup("prefLabel.en", "hcrt-enLabel2Uri", delete:"true")
 end
 
 # ---------------conditionsOfAccess----------------------------------
@@ -95,10 +102,24 @@ add_field("mainEntityOfPage[].$last.provider.name","$[service_name]")
 remove_field("educationalLevel[]")
 remove_field("teaches[]")
 
+# ---------audience----------------
+copy_field("audience[]", "@tempAudience[]")
+set_array("audience[]")
+do list(path:"@tempAudience[]", "var": "$i")
+  # Replace ID with mappings and delete values not known
+  lookup("$i.educationalRole", "bcCampusSubjectsAudienceMap")
+  copy_field("$i.educationalRole", "audience[].$append.id")
+  copy_field("$i.educationalRole", "audience[].$last.prefLabel.de")
+  copy_field("$i.educationalRole", "audience[].$last.prefLabel.en")
+end
+
+lookup("audience[].*.prefLabel.de", "audienceDeLabel")
+lookup("audience[].*.prefLabel.en", "audienceEnLabel")
+
 
 # ---------------@context ----------------------------------
 
-set_array("@context[]", "https://w3id.org/kim/amb/draft/context.jsonld")
+set_array("@context[]", "https://w3id.org/kim/amb/context.jsonld")
 # resource is german therefore prefer de if multiple or no inLanguage are available
 if any_equal("inLanguage[]","de")
   set_hash("@context[].$append", "@language": "de")
@@ -113,5 +134,4 @@ unless exists("inLanguage[].1")
 end
 
 # ------ tidy up --- 
-include ("../../sharedFixes/retain.fix")
-vacuum()
+include ("../../sharedFixes/cleanUp.fix")

@@ -47,7 +47,8 @@ end
 # ---------------sourceOrganization----------------------------------
 set_array("sourceOrganization[]")
 add_field("sourceOrganization[].$append.type", "Organization")
-add_field("sourceOrganization[].$last.name", "HHU Düsseldorf")
+add_field("sourceOrganization[].$last.name", "Heinrich-Heine-Universität Düsseldorf")
+# add_field("id", "https://ror.org/024z2rq82")
 
 # ------ type --- 
 set_array("type[]", "LearningResource")

@@ -21,7 +21,13 @@ copy_field("ref.id", "@internal_id")
 prepend("@internal_id","https://$[service_domain]/edu-sharing/components/render/")
 
 if exists("@external_id")
-  copy_field("@external_id", "id")
+  if any_equal("properties.virtual:childobjectcount[]", "0")
+    copy_field("@external_id", "id")
+  elsif exists("properties.virtual:childobjectcount[]") # a series of objects. since the first conditional filters all "properties.virtual:childobjectcount[]" = "0", only the rest is kept in the second part of the conditional
+    copy_field("@internal_id", "id")
+  else
+    copy_field("@external_id", "id")
+  end
 else
   copy_field("@internal_id", "id")
 end
@@ -54,7 +60,7 @@ do list(path:"@hochschulfaechersystematik[]", "var":"$i")
   copy_field("$i", "about[].$append.id")
   copy_field("$i", "about[].$last.prefLabel.de")
 end
-lookup("about[].*.prefLabel.de", "data/maps/subject-labels.tsv","sep_char":"\t", delete:"true")
+lookup("about[].*.prefLabel.de", "destatis-deLabel2Uri", delete:"true")
 
 
 #  ---------------creator----------------------------------
@@ -141,17 +147,19 @@ end
 
 if exists("license.url")
   move_field("license.url", "license.id")
-  filter("license.id","^http[s]?:\\/\\/creativecommons.org\\/(licenses|licences|publicdomain)\\/.*|^http[s]?:\\/\\/www.gnu.org\\/licenses\\/.*|^http[s]?:\\/\\/www.apache.org\\/licenses\\/.*|http[s]?://opensource.org/licenses/MIT|^http[s]?:\\/\\/www.opensource.org\\/licenses\\/BSD.*")
 else
   remove_field("license")
   copy_field("properties.virtual:licenseurl[].1", "license.id")
-  filter("license.id","^http[s]?:\\/\\/creativecommons.org\\/(licenses|licences|publicdomain)\\/.*|^http[s]?:\\/\\/www.gnu.org\\/licenses\\/.*|^http[s]?:\\/\\/www.apache.org\\/licenses\\/.*|http[s]?://opensource.org/licenses/MIT|^http[s]?:\\/\\/www.opensource.org\\/licenses\\/BSD.*")  
 end
 
 unless any_match("properties.ccm:commonlicense_key[]","^CC_.*")
   copy_field("properties.ccm:commonlicense_key[].1", "license.id")
   replace_all("license.id","MIT", "https://opensource.org/licenses/MIT")
   replace_all("license.id","GPL3", "https://www.gnu.org/licenses/gpl-3.0")
+end
+  
+unless any_match("license.id","^http[s]?:\\/\\/creativecommons.org\\/(licenses|licences|publicdomain)\\/.*|^http[s]?:\\/\\/www.gnu.org\\/licenses\\/.*|^http[s]?:\\/\\/www.apache.org\\/licenses\\/.*|http[s]?://opensource.org/licenses/MIT|^http[s]?:\\/\\/www.opensource.org\\/licenses\\/BSD.*")
+  remove_field("license")
 end
 
 # ---------------conditionsOfAccess----------------------------------
@@ -179,14 +187,28 @@ do list(path:"properties.ccm:educationallearningresourcetype[]", "var": "$i")
   end
 end
 
-lookup("learningResourceType[].*.prefLabel.de", "data/maps/hcrt-de-labels.tsv","sep_char":"\t", delete:"true")
-lookup("learningResourceType[].*.prefLabel.en", "data/maps/hcrt-en-labels.tsv","sep_char":"\t", delete:"true")
+lookup("learningResourceType[].*.prefLabel.de", "hcrt-deLabel2Uri", delete:"true")
+lookup("learningResourceType[].*.prefLabel.en", "hcrt-enLabel2Uri", delete:"true")
 
 
 #  ---------------keywords----------------------------------
+set_array("keywords[]")
+do list(path: "properties.cclom:general_keyword[]","var":"$i")
+  copy_field("$i", "keywords[].$append")
+end
 
-copy_field("properties.cclom:general_keyword[]", "keywords[]")
+# Some eduSharing provider use GND classifications (classification_keyword).
+# For those we only should use the lassification_keyword_display since classification_keyword entails the id.
 
+if exists("properties.ccm:classification_keyword_display[]")
+  do list(path: "properties.ccm:classification_keyword_display[]","var":"$i")
+    copy_field("$i", "keywords[].$append")
+  end
+else
+  do list(path: "properties.ccm:classification_keyword[]","var":"$i")
+    copy_field("$i", "keywords[].$append")
+  end
+end
 
 # ---------------encoding----------------------------------
 

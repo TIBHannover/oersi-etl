@@ -1,0 +1,132 @@
+
+# --------Delete all emtpy values-------
+vacuum()
+
+set_array("inLanguage[]")
+do list(path:"html.head.meta","var":"$i")
+
+  /* Map some of the data we have to the oersi model: */
+  # ---------------id --------
+  copy_field("$i.DC_Identifier_URI", "id")
+
+  # ---------------name --------
+  copy_field("$i.citation_title", "name")
+
+
+  # ---------------description --------
+  copy_field("$i.DC_Description", "description")
+
+
+  # ---------------dateCreated --------
+  copy_field("$i.DC_Date_created", "dateCreated")
+
+  # ----------------inLanguage------------
+    copy_field("$i.citation_language", "inLanguage[].$append")
+
+  # ---------------license --------
+  if any_match("$i.DC_Rights","https://creativecommons.org/.*")
+    copy_field("$i.DC_Rights", "license.id")
+  end
+
+end
+
+# ------ creator --- 
+set_array("creator[]")
+do list(path:"html.head.meta.DC_Creator_PersonalName","var":"$i")
+
+  copy_field("$i", "creator[].$append.name")
+end
+add_field("creator[].*.type", "Person")
+
+do list(path:"creator[]","var":"$i")
+  do list(path:"html.body.div.div.1.div.div.div.div.div.1.div.1.div","var":"$x")
+    if in("$i.name","$x.div.1.label")
+      copy_field("$x.div.2.value", "$i.affiliation.name")
+      copy_field("$x.span.orcid", "$i.id")
+    end
+  end
+end
+
+add_field("creator[].*.affiliation.type", "Organization")
+
+# ------ keywords------
+  set_array("keywords[]")
+do list(path:"html.head.meta.citation_keywords","var":"$i")
+  copy_field("$i", "keywords[].$append")
+end
+
+# ------ datePublished------
+do list(path:"html.head.meta.citation_publication_date","var":"$i")
+
+  copy_field("$i", "datePublished")
+end
+
+  # ------ publisher------
+  set_array("publisher[]")
+do list(path:"html.head.meta.citation_publisher","var":"$i")
+
+  copy_field("$i", "publisher[].$append.name")
+end
+
+add_field("publisher[].*.type", "Organization")
+
+# ------ encoding --- 
+
+set_array("encoding[]")
+do list(path:"html.head.meta.citation_pdf_url","var":"$i")
+  copy_field("$i", "encoding[].$append.contentUrl")
+  add_field("encoding[].$last.encodingFormat","application/pdf")    
+  add_field("encoding[].$last.type", "MediaObject")
+end
+
+# ---------------conditionsOfAccess----------------------------------
+add_field("conditionsOfAccess.id","http://w3id.org/kim/conditionsOfAccess/no_login") 
+
+# ------ learningResourceType --- 
+set_array("learningResourceType[]")
+
+add_field("learningResourceType[].$append.id","https://w3id.org/kim/hcrt/textbook")
+add_field("learningResourceType[].$last.prefLabel.de","Lehrbuch")
+add_field("learningResourceType[].$last.prefLabel.en","Textbook")
+
+# ------ type --- 
+set_array("type[]", "LearningResource")
+
+# ------ about --- 
+
+
+
+# -----image-----
+copy_field("html.body.div.div.1.div.div.div.div.div.2.div.1.img.src","image")
+
+# ---------mainEntityOfPage----------------
+
+if exists("id")
+  set_array("mainEntityOfPage[]")
+  copy_field("id", "mainEntityOfPage[].$append.id")
+  add_field("mainEntityOfPage[].$last.provider.id","$[service_id]")
+  add_field("mainEntityOfPage[].$last.provider.type","Service")
+  add_field("mainEntityOfPage[].$last.provider.name","$[service_name]")
+else
+  print_record(destination:"data/production/langSciPress/missing_ids.json",pretty:"true")
+end
+# ---------------@context ----------------------------------
+
+set_array("@context[]", "https://w3id.org/kim/amb/context.jsonld")
+# resource is german therefore prefer de if multiple or no inLanguage are available
+if any_equal("inLanguage[]","de")
+  set_hash("@context[].$append", "@language": "de")
+elsif any_equal("inLanguage[]","en")
+  set_hash("@context[].$append", "@language": "en")
+else
+  copy_field("inLanguage[].1", "@context[].$append.@language")
+end
+# resources without inLanguage-Values set default to de
+unless exists("inLanguage[].1")
+  set_hash("@context[].$append", "@language": "de")
+end
+
+copy_field("id","_id")
+
+# ------ tidy up --- 
+include ("../../sharedFixes/cleanUp.fix")

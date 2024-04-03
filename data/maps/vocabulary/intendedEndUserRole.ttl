@@ -1,0 +1,71 @@
+@base <http://w3id.org/openeduhub/vocabs/intendedEndUserRole/> .
+@prefix dct: <http://purl.org/dc/terms/>.
+@prefix skos: <http://www.w3.org/2004/02/skos/core#>.
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+<> a skos:ConceptScheme;
+    dct:title "Zielgruppe"@de ;
+    dct:title "Intended End User Role"@en ;
+    dct:description "Eine Werteliste für Rollen, für die die Ressource erstellt wurde. Entstanden im Kontext des OpenEduHub."@de ;
+    dct:description "A value list for role of principal user for which the learning object was designed for. Developed in context of OpenEduHub."@en ;
+    dct:creator "<https://wirlernenonline.de>" ;
+    dct:created "2020-04-08"^^xsd:date ;
+    dct:modified "2020-04-08"^^xsd:date ; 
+    dct:issued "2020-04-08"^^xsd:date ;
+    dct:license <http://creativecommons.org/publicdomain/zero/1.0/> ;
+    skos:hasTopConcept <author>, <counsellor>, <learner>, 
+        <manager>, <parent>, <teacher>, <other> .
+
+<author> a skos:Concept ;
+  skos:prefLabel "Autor/in"@de ;
+  skos:prefLabel "author"@en ;
+  skos:altLabel "Autorin"@de, "Autor"@de ;
+  skos:definition "Someone who advises, trains, supports, and/or guides."@en;
+  skos:topConceptOf <> .
+
+<counsellor> a skos:Concept ;
+  skos:prefLabel "Berater/in"@de ;
+  skos:prefLabel "counsellor"@en ;
+  skos:altLabel "Ratgeber/in"@de ;
+  skos:topConceptOf <> .
+
+<learner> a skos:Concept ;
+  skos:prefLabel "Lerner/in"@de ;
+  skos:prefLabel "learner"@en ;
+  skos:altLabel "Schüler"@de ;
+  skos:altLabel "Schülerin"@de ;
+  skos:altLabel "Lernende"@de ;
+  skos:altLabel "Lernender"@de ;
+  skos:altLabel "students"@en ;
+  skos:definition "The learner or trainee."@en ;
+  skos:topConceptOf <> .
+
+<manager> a skos:Concept ;
+  skos:prefLabel "Verwaltung"@de ;
+  skos:prefLabel "manager"@en ;
+  skos:topConceptOf <> .
+
+<parent> a skos:Concept ;
+  skos:prefLabel "Eltern"@de ;
+  skos:prefLabel "parent"@en ;
+  skos:altLabel "Elter"@de ;
+  skos:altLabel "Elternteil"@de ;
+  skos:altLabel "Erziehungsberechtigter"@de ;
+  skos:altLabel "Sorgeberechtigter"@de ;
+  skos:definition "A father, mother, or legal guardian."@en ;
+  skos:topConceptOf <> .
+
+<teacher> a skos:Concept ;
+  skos:prefLabel "Lehrer/in"@de ;
+  skos:prefLabel "teacher"@en ;
+  skos:altLabel "Lehrer"@de ;
+  skos:altLabel "Lehrerin"@de ;
+  skos:altLabel "Lehrende"@de ;
+  skos:altLabel "Lehrender"@de ;
+  skos:definition "A person who has been trained to implement educational methods and practices."@en ;
+  skos:topConceptOf <> .
+
+<other> a skos:Concept ;
+  skos:prefLabel "andere"@de ;
+  skos:prefLabel "other"@en ;
+  skos:topConceptOf <> .

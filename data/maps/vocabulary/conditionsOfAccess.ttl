@@ -1,0 +1,26 @@
+@base <https://w3id.org/kim/conditionsOfAccess/> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+<> a skos:ConceptScheme ;
+    dct:title "Zugangsbedingungen (Login)"@de ;
+    dct:title "Conditions of access (login)"@en ;
+    dct:title "Умови доступу (логін)"@uk ;
+    dct:description "Describes conditions of access to an object."@en ;
+    dct:publisher <https://oerworldmap.org/resource/urn:uuid:fd06253e-fe67-4910-b923-51db9d27e59f> ;
+    dct:created "2022-02-08"^^xsd:date ;
+    dct:license <http://creativecommons.org/publicdomain/zero/1.0/> ;
+    skos:hasTopConcept <no_login>, <login> .
+
+<no_login> a skos:Concept ;
+    skos:prefLabel "keine Anmeldung erforderlich"@de ;
+    skos:prefLabel "no login required"@en ;
+    skos:prefLabel "вхід без авторизації"@uk ;
+    skos:topConceptOf <> .
+
+<login> a skos:Concept ;
+    skos:prefLabel "Anmeldung erforderlich"@de ;
+    skos:prefLabel "login required"@en ;
+    skos:prefLabel "для авторизації вкажіть логін"@uk ;
+    skos:topConceptOf <> .

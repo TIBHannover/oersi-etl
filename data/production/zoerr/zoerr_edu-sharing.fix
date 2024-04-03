@@ -1,7 +1,10 @@
 # Delete all empty values
 vacuum()
 
-include ("../../sharedFixes/macros.fix")
+do once("macrosAndMaps")
+  include ("../../sharedFixes/macros.fix")
+  include ("../../sharedFixes/maps.fix")
+end
 
 # --- reuse edu-sharing default template -------- 
 include ("../../sharedFixes/eduSharingDefault.fix")
@@ -10,8 +13,24 @@ include ("../../sharedFixes/eduSharingDefault.fix")
 
 remove_field("id")
 
+# Zoerr needs a special handling of the id if collection item.
+# This is combined with the special handling of series for all edu-sharing.
+
 if exists("@external_id")
-  copy_field("@external_id", "id")
+  if any_equal("properties.virtual:childobjectcount[]", "0")
+    copy_field("@external_id", "id")
+  elsif exists("properties.virtual:childobjectcount[]") # a series of objects. since the first conditional filters all "properties.virtual:childobjectcount[]" = "0", only the rest is kept in the second part of the conditional
+    # prefer this originalId as id if collection item
+    if exists("originalId")
+      copy_field("originalId", "id")
+      prepend("id","https://$[service_domain]/edu-sharing/components/render/")
+      paste("mainEntityOfPage[].1.id","id")
+    else
+      copy_field("@internal_id", "id")
+    end
+  else
+    copy_field("@external_id", "id")
+  end
 # prefer this originalId as id if collection item
 elsif exists("originalId")
   copy_field("originalId", "id")
@@ -20,6 +39,7 @@ elsif exists("originalId")
 else
   copy_field("@internal_id", "id")
 end
+
 
 # ---------------datePublished----------------------------------
 
@@ -40,9 +60,8 @@ do list(path:"properties.ccm:educationallearningresourcetype[]", "var": "$i")
   end
 end
  
-lookup("learningResourceType[].*.prefLabel.de", "data/maps/hcrt-de-labels.tsv","sep_char":"\t", delete:"true")
-lookup("learningResourceType[].*.prefLabel.en", "data/maps/hcrt-en-labels.tsv","sep_char":"\t", delete:"true")
+lookup("learningResourceType[].*.prefLabel.de", "hcrt-deLabel2Uri", delete:"true")
+lookup("learningResourceType[].*.prefLabel.en", "hcrt-enLabel2Uri", delete:"true")
 
 
-include ("../../sharedFixes/retain.fix")
-vacuum()
+include ("../../sharedFixes/cleanUp.fix")

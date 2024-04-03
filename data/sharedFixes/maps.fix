@@ -1,0 +1,10 @@
+
+# Destatis De:Preflabel <-> URI
+put_rdfmap("data/maps/vocabulary/hochschulfaechersystematik.ttl","destatis-deLabel2Uri",target:"skos:prefLabel", select_language:"de" )
+
+# HCRT de:preflabel <-> URI
+put_rdfmap("data/maps/vocabulary/hcrt.ttl","hcrt-deLabel2Uri",target:"skos:prefLabel", select_language:"de" )
+
+# HCRT en:preflabel <-> URI
+put_rdfmap("data/maps/vocabulary/hcrt.ttl","hcrt-enLabel2Uri",target:"skos:prefLabel", select_language:"en" )
+

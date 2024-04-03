@@ -1,7 +1,37 @@
 # Delete all empty values
 vacuum()
 
-include ("../../sharedFixes/macros.fix")
+do once("macrosAndMaps")
+  include ("../../sharedFixes/macros.fix")
+  include ("../../sharedFixes/maps.fix")
+  # workflow specific maps
+  put_map("license",
+    "CC BY-ND 4.0 Int.":"https://creativecommons.org/licenses/by-nd/4.0/",
+    "CC0 1.0 Universell":"https://creativecommons.org/publicdomain/zero/1.0/",
+    "CC BY-NC-SA 4.0 Int.":"https://creativecommons.org/licenses/by-nc-sa/4.0/",
+    "CC BY 4.0 Int.":"https://creativecommons.org/licenses/by/4.0/",
+    "CC BY-NC 4.0 Int.":"https://creativecommons.org/licenses/by-nc/4.0/",
+    "CC BY-SA 4.0 Int.":"https://creativecommons.org/licenses/by-sa/4.0/",
+    "CC BY-NC-ND 4.0 Int.":"https://creativecommons.org/licenses/by-nc-nd/4.0/"
+  )
+  put_map("lRT",
+    "Mediathek":"https://w3id.org/kim/hcrt/other",
+    "PDF-Datei":"https://w3id.org/kim/hcrt/text",
+    "Portfoliovorlage":"https://w3id.org/kim/hcrt/other",
+    "Lernkartei":"https://w3id.org/kim/hcrt/other",
+    "Glossar":"https://w3id.org/kim/hcrt/other",
+    "Podcast":"https://w3id.org/kim/hcrt/audio",
+    "CP-Lerninhalt":"https://w3id.org/kim/hcrt/other",
+    "Frage":"https://w3id.org/kim/hcrt/other",
+    "Wiki":"https://w3id.org/kim/hcrt/web_page",
+    "Blog":"https://w3id.org/kim/hcrt/web_page",
+    "Ressourcenordner":"https://w3id.org/kim/hcrt/other",
+    "Fragebogen":"https://w3id.org/kim/hcrt/questionnaire",
+    "SCORM-Inhalt":"https://w3id.org/kim/hcrt/other",
+    "Test":"https://w3id.org/kim/hcrt/assessment",
+    "Kurs":"https://w3id.org/kim/hcrt/course"
+  )
+end
 
 #  ---------------id----------------------------------
 copy_field("oer_permalink", "id")
@@ -35,39 +65,12 @@ end
 
 #  ---------------license----------------------------------
 
-put_map("license",
-  "CC BY-ND 4.0 Int.":"https://creativecommons.org/licenses/by-nd/4.0/",
-  "CC0 1.0 Universell":"https://creativecommons.org/publicdomain/zero/1.0/",
-  "CC BY-NC-SA 4.0 Int.":"https://creativecommons.org/licenses/by-nc-sa/4.0/",
-  "CC BY 4.0 Int.":"https://creativecommons.org/licenses/by/4.0/",
-  "CC BY-NC 4.0 Int.":"https://creativecommons.org/licenses/by-nc/4.0/",
-  "CC BY-SA 4.0 Int.":"https://creativecommons.org/licenses/by-sa/4.0/",
-  "CC BY-NC-ND 4.0 Int.":"https://creativecommons.org/licenses/by-nc-nd/4.0/"
-)
 
 move_field("license","@license")
 copy_field("@license","license.id")
 lookup("license.id","license")
 
 #  ---------------learningResourceType----------------------------------
-
-put_map("lRT",
-  "Mediathek":"https://w3id.org/kim/hcrt/other",
-  "PDF-Datei":"https://w3id.org/kim/hcrt/text",
-  "Portfoliovorlage":"https://w3id.org/kim/hcrt/other",
-  "Lernkartei":"https://w3id.org/kim/hcrt/other",
-  "Glossar":"https://w3id.org/kim/hcrt/other",
-  "Podcast":"https://w3id.org/kim/hcrt/audio",
-  "CP-Lerninhalt":"https://w3id.org/kim/hcrt/other",
-  "Frage":"https://w3id.org/kim/hcrt/other",
-  "Wiki":"https://w3id.org/kim/hcrt/web_page",
-  "Blog":"https://w3id.org/kim/hcrt/web_page",
-  "Ressourcenordner":"https://w3id.org/kim/hcrt/other",
-  "Fragebogen":"https://w3id.org/kim/hcrt/questionnaire",
-  "SCORM-Inhalt":"https://w3id.org/kim/hcrt/other",
-  "Test":"https://w3id.org/kim/hcrt/assessment",
-  "Kurs":"https://w3id.org/kim/hcrt/course"
-  )
 
 lookup("resourcetype", "lRT")
 
@@ -76,8 +79,8 @@ copy_field("resourcetype","learningResourceType[].$append.id")
 copy_field("resourcetype","learningResourceType[].$last.prefLabel.de")
 copy_field("resourcetype","learningResourceType[].$last.prefLabel.en")
 
-lookup("learningResourceType[].*.prefLabel.de", "data/maps/hcrt-de-labels.tsv","sep_char":"\t", delete:"true")
-lookup("learningResourceType[].*.prefLabel.en", "data/maps/hcrt-en-labels.tsv","sep_char":"\t", delete:"true")
+lookup("learningResourceType[].*.prefLabel.de", "hcrt-deLabel2Uri", delete:"true")
+lookup("learningResourceType[].*.prefLabel.en", "hcrt-enLabel2Uri", delete:"true")
 
 # ---------------description----------------------------------
 copy_field("comment","description")
@@ -98,7 +101,7 @@ add_field("mainEntityOfPage[].$last.provider.name","$[service_name]")
 
 # ---------------@context ----------------------------------
 
-set_array("@context[]", "https://w3id.org/kim/amb/draft/context.jsonld")
+set_array("@context[]", "https://w3id.org/kim/amb/context.jsonld")
 # resource is german therefore prefer de if multiple or no inLanguage are available
 if any_equal("inLanguage[]","de")
   set_hash("@context[].$append", "@language": "de")
@@ -111,6 +114,16 @@ end
 unless exists("inLanguage[].1")
   set_hash("@context[].$append", "@language": "de")
 end
+
+
+# ----- duration -----
+
+if any_match("duration", "^(.+)?[A-Za-z](.+)?$")
+  remove_field("duration")
+end
+replace_all("duration","(\\d\\d):(\\d\\d):(\\d\\d)", "PT$1H$2M$3S")
+replace_all("duration","(\\d):(\\d\\d):(\\d\\d)", "PT0$1H$2M$3S")
+replace_all("duration","(\\d\\d):(\\d\\d)", "PT00H$1M$2S")
 
 
 # Filter incomplete records.
@@ -128,5 +141,4 @@ unless exists ("creator[]")
 end
 
 # ------ tidy up --- 
-include ("../../sharedFixes/retain.fix")
-vacuum()
+include ("../../sharedFixes/cleanUp.fix")

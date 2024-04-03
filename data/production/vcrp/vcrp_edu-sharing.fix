@@ -1,14 +1,16 @@
 # Delete all empty values
 vacuum()
 
-include ("../../sharedFixes/macros.fix")
+do once("macrosAndMaps")
+  include ("../../sharedFixes/macros.fix")
+  include ("../../sharedFixes/maps.fix")
+end
 
 # --- reuse edu-sharing default template -------- 
 include ("../../sharedFixes/eduSharingDefault.fix")
 
 
-include ("../../sharedFixes/retain.fix")
-vacuum()
+include ("../../sharedFixes/cleanUp.fix")
 
 unless exists("about[]")
 	reject()

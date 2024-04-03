@@ -1,0 +1,72 @@
+# Delete all empty values
+vacuum()
+
+# Check if any element is already (almost) correct provided:
+# if so document them here.
+
+
+# Include general macros and general and specific maps for reuse
+do once("macrosAndMaps")
+  include ("../../sharedFixes/macros.fix")
+  include ("../../sharedFixes/maps.fix")
+  # workflow specific map:
+
+end
+
+# Transform the metadata and document if any specifics are noteworthy.
+
+# ---------------id ----------------------------------
+
+# ---------------license ----------------------------------
+
+# ---------------dateCreated----------------------------------
+
+# ---------------datePublished----------------------------------
+
+# ---------------dateModified ----------------------------------
+
+
+# ---------------creator ----------------------------------
+
+# ---------------sourceOrganization ----------------------------------
+
+# ---------------keywords----------------------------------
+
+# ---------------about ----------------------------------
+
+# ---------------type----------------------------------
+set_array("type[]", "LearningResource")
+
+# ---------------inLanguage----------------------------------
+
+# ---------------publisher----------------------------------
+
+# ---------------learningResourceType----------------------------------
+
+# ---------------conditionsOfAccess----------------------------------
+
+
+# ---------mainEntityOfPage----------------
+
+#---------educationalLevel + teaches--------
+
+# ---------audience----------------
+
+# ---------------@context ----------------------------------
+
+set_array("@context[]", "https://w3id.org/kim/amb/context.jsonld")
+# resource is german therefore prefer de if multiple or no inLanguage are available
+if any_equal("inLanguage[]","de")
+  set_hash("@context[].$append", "@language": "de")
+elsif any_equal("inLanguage[]","en")
+  set_hash("@context[].$append", "@language": "en")
+else
+  copy_field("inLanguage[].1", "@context[].$append.@language")
+end
+# resources without inLanguage-Values set default to de
+unless exists("inLanguage[].1")
+  set_hash("@context[].$append", "@language": "en") #english as default
+end
+
+# ------ tidy up --- 
+include ("../../sharedFixes/cleanUp.fix")

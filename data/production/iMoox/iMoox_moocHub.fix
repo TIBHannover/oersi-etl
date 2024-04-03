@@ -1,3 +1,19 @@
+put_map("licensemap",
+    "CC BY 4.0": "https://creativecommons.org/licenses/by/4.0/",
+    "CC BY-NC 4.0": "https://creativecommons.org/licenses/by-nc/4.0/",
+    "CC BY-NC-ND 4.0": "https://creativecommons.org/licenses/by-nc-nd/4.0/",
+    "CC BY-NC-SA 4.0": "https://creativecommons.org/licenses/by-nc-sa/4.0/",
+    "CC BY-ND 4.0": "https://creativecommons.org/licenses/by-nd/4.0/",
+    "CC BY-SA 4.0": "https://creativecommons.org/licenses/by-sa/4.0/", 
+    "CC-BY-4.0": "https://creativecommons.org/licenses/by/4.0/",
+    "CC-BY-NC-4.0": "https://creativecommons.org/licenses/by-nc/4.0/",
+    "CC-BY-NC-ND-4.0": "https://creativecommons.org/licenses/by-nc-nd/4.0/",
+    "CC-BY-NC-SA-4.0": "https://creativecommons.org/licenses/by-nc-sa/4.0/",
+    "CC-BY-ND-4.0": "https://creativecommons.org/licenses/by-nd/4.0/",
+    "CC-BY-SA-4.0": "https://creativecommons.org/licenses/by-sa/4.0/", 
+    "CC0-1.0": "https://creativecommons.org/publicdomain/zero/1.0/"
+  )
+
 # Filter out all resources that are not free
 
 unless any_match("attributes.access[].","free")
@@ -8,20 +24,8 @@ end
 vacuum()
 
 include ("../../sharedFixes/macros.fix")
+include ("../../sharedFixes/moocHubDefault.fix")
 
-#  ---------------id----------------------------------
-remove_field("id")
-copy_field("attributes.url", "id")
-
-#  ---------------name----------------------------------
-copy_field("attributes.name", "name")
-
-#  ---------------image----------------------------------
-copy_field("attributes.image.url", "image")
-
-#  ---------------dateCreated----------------------------------
-copy_field("attributes.startDate", "dateCreated")
-replace_all("dateCreated", "T.*", "")
 
 #  ---------------description----------------------------------
 paste("description", "attributes.description","attributes.learningobjectives[].*")
@@ -37,7 +41,7 @@ paste("description", "attributes.description","attributes.learningobjectives[].*
 #  ---------------creator----------------------------------
 # source data is not consistent, can be a single author or multiple separated by comma or "&amp;". API estimates one object per instructor. Also there is no type even though there are persons and organisations.*/
 set_array("@creator")
-do list(path: "attributes.instructors[]", "var":"$i")
+do list(path: "attributes.creator[]", "var":"$i")
   split_field("$i.name", ", | &amp; | / ")
   do list(path:"$i.name", "var":"$j")
     copy_field("$j", "@creator.$append")
@@ -53,71 +57,56 @@ do list(path:"@creator", "var": "$i")
   add_field("creator[].$last.type", "Person")
 end
 
-# ------ sourceOrganization --- 
+# ----- contributor / sourceOrganization -----
+# if contributors of type "Organization", use SourceOrganization
+
+set_array("contributor[]")
 set_array("sourceOrganization[]")
-do list(path:"attributes.partnerInstitute[]", "var": "$i")
-  copy_field("$i.name", "sourceOrganization[].$append.name")
-  add_field("sourceOrganization[].$last.type", "Organization")
-end
-
-# ------ learningResourceType --- 
-add_field("@hcrt","https://w3id.org/kim/hcrt/course")
-# only course
-
-set_array("learningResourceType[]")
-add_field("learningResourceType[].$append.id","https://w3id.org/kim/hcrt/course")
-add_field("learningResourceType[].$last.prefLabel.de","Kurs")
-add_field("learningResourceType[].$last.prefLabel.en","Course")
-
-# ------ inLanguage --- 
-/* inLanguage: The value Mehrsprachig does not represent the estimated language labels. */
-set_array("inLanguage[]")
-copy_field("attributes.languages[].*", "inLanguage[].$append")
-
-do list(path:"inLanguage[]","var":"$i")
-  if any_equal("$i", "Mehrsprachig")
-    remove_field("$i")
+do list_as("$contributorName":"attributes.contributor[].name", "$contributorType":"attributes.contributor[].type")
+  if all_equal("$contributorType","Organization")
+    copy_field("$contributorName","sourceOrganization[].$append.name")
+    add_field("sourceOrganization[].$last.type", "Organization")
+  else
+    copy_field("$contributorType","contributor[].$append.type")
+    copy_field("$contributorName","contributor[].$last.name")
   end
 end
 
-# ------ license ---
-copy_field("attributes.courseLicenses[].*.url","license.id")
+#----- publisher -----
+set_array("publisher[]")
+do list_as("$publisherName":"attributes.publisher.name", "$publisherId": "attributes.publisher.url", "$publisherType":"attributes.publisher.type")
+  copy_field("$publisherType", "publisher[].$append.type")
+  copy_field("$publisherId", "publisher[].$last.url")
+  copy_field("$publisherName", "publisher[].$last.name")
+end
 
-# ------ type --- 
+# # ------ sourceOrganization ---  partnerInstitute no longer used in source data?
 
-set_array("type[]", "LearningResource")
-
-# ---------mainEntityOfPage----------------
-
-set_array("mainEntityOfPage[]")
-copy_field("id", "mainEntityOfPage[].$append.id")
-add_field("mainEntityOfPage[].$last.provider.id","$[service_id]")
-add_field("mainEntityOfPage[].$last.provider.type","Service")
-add_field("mainEntityOfPage[].$last.provider.name","$[service_name]")
+# do list(path:"attributes.partnerInstitute[]", "var": "$i")
+#   copy_field("$i.name", "sourceOrganization[].$append.name")
+#   add_field("sourceOrganization[].$last.type", "Organization")
+# end
 
 # ---------------conditionsOfAccess----------------------------------
 add_field("conditionsOfAccess.id","http://w3id.org/kim/conditionsOfAccess/login")
 
-# ---------------@context ----------------------------------
-
-set_array("@context[]", "https://w3id.org/kim/amb/draft/context.jsonld")
-# resource is german therefore prefer de if multiple or no inLanguage are available
-if any_equal("inLanguage[]","de")
-  set_hash("@context[].$append", "@language": "de")
-elsif any_equal("inLanguage[]","en")
-  set_hash("@context[].$append", "@language": "en")
-else
-  copy_field("inLanguage[].1", "@context[].$append.@language")
-end
-# resources without inLanguage-Values set default to de
-unless exists("inLanguage[].1")
-  set_hash("@context[].$append", "@language": "de")
+# ------inLanguage-----
+unless exists("inlanguage[]")
+  set_array("inLanguage[]")
+  copy_field("attributes.inLanguage[].*", "inLanguage[].$append")
 end
 
+# ------ license -----
+unless exists("license")
+  copy_field("attributes.license[].*.identifier","license.id")
+  lookup("license.id", "licensemap")
+end
+
+# ----- image -----
+copy_field("attributes.image.contentUrl", "image")
 
 # ------ tidy up --- 
-include ("../../sharedFixes/retain.fix")
-vacuum()
+include ("../../sharedFixes/cleanUp.fix")
 
 /*missing:*/
 /*kewords*/

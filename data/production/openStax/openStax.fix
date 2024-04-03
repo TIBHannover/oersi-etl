@@ -1,0 +1,140 @@
+# --------Delete all emtpy values-------
+vacuum()
+
+do once("macrosAndMaps")
+  include ("../../sharedFixes/macros.fix")
+  include ("../../sharedFixes/maps.fix")
+  # workflow specific maps
+  put_filemap("data/maps/openStax2Destatis.tsv","openStax2Destatis","sep_char":"\t")
+
+end
+
+#  ---------------id----------------------------------
+remove_field("id")
+
+copy_field("meta.html_url","id")
+
+#  ---------------name----------------------------------
+copy_field("title", "name")
+
+#  ---------------image----------------------------------
+copy_field("cover_url","image")
+
+#  ---------------dateCreated----------------------------------
+copy_field("publish_date", "datePublished")
+
+# Only the year is provided.
+replace_all("dateCreated", "^(\\d*).*", "$1-01-01")
+
+
+#  ---------------description----------------------------------
+remove_field("description")
+copy_field("meta.search_description","description")
+
+#  ---------------creator----------------------------------
+# provides editors and authors which I transform both to creators
+
+
+set_array("creator[]")
+do list(path:"authors[]", "var": "$i")
+  copy_field("$i.value.name","creator[].$append.name")
+  add_field("creator[].$last.type","Person")
+  copy_field("$i.title", "creator[].$last.honorificPrefix")
+  copy_field("$i.value.university","creator[].$last.affiliation.name")
+  if exists("$i.value.university")
+    add_field("creator[].$last.affiliation.type", "Organization")
+  end
+end
+  
+
+
+# ------ publisher --- 
+set_array("publisher[]")
+add_field("publisher[].$append.name", "OpenStax")
+add_field("publisher[].$last.type", "Organization")
+
+
+# ------ learningResourceType --- 
+set_array("learningResourceType[]")
+
+add_field("learningResourceType[].$append.id","https://w3id.org/kim/hcrt/textbook")
+add_field("learningResourceType[].$last.prefLabel.de","Lehrbuch")
+add_field("learningResourceType[].$last.prefLabel.en","Textbook")
+
+# ------ inLanguage --- 
+
+set_array('inLanguage[]')
+copy_field('meta.locale','inLanguage[].$append')
+
+# ------ license ---
+
+copy_field("license_url","license.id")
+
+
+# ------ type --- 
+
+set_array("type[]", "LearningResource")
+
+# ------ keywords ---
+set_array("keywords[]")
+do list(path:"book_subjects[]","var":"$i")
+    move_field("$i.subject_name", "keywords[].$append")
+end
+do list(path:"book_categories[]","var":"$i")
+    move_field("$i.subject_name", "keywords[].$append")
+end
+do list(path:"k12book_subjects[]","var":"$i")
+    move_field("$i.subject_name", "keywords[].$append")
+end
+
+uniq("keywords[]")
+
+# ------ about --- 
+
+set_array("@hochschulfaechersystematik")
+do list(path:"keywords[]","var":"$i")
+    move_field("$i", "@hochschulfaechersystematik.$append")
+end
+
+lookup("@hochschulfaechersystematik.*","openStax2Destatis", delete:"true")
+
+set_array("about[]")
+copy_field("@hochschulfaechersystematik.*","about[].$append.id")
+
+do list(path: "about[]", "var": "$i")
+  copy_field("$i.id", "$i.prefLabel.de")
+  lookup("$i.prefLabel.de","destatis-deLabel2Uri", delete:"true")
+end
+
+uniq("about[]")
+
+# ---------------conditionsOfAccess----------------------------------
+add_field("conditionsOfAccess.id","http://w3id.org/kim/conditionsOfAccess/no_login") 
+
+# ---------mainEntityOfPage----------------
+
+set_array("mainEntityOfPage[]")
+copy_field("id", "mainEntityOfPage[].$append.id")
+add_field("mainEntityOfPage[].$last.provider.id","$[service_id]")
+add_field("mainEntityOfPage[].$last.provider.type","Service")
+add_field("mainEntityOfPage[].$last.provider.name","$[service_name]")
+
+# ---------------@context ----------------------------------
+
+set_array("@context[]", "https://w3id.org/kim/amb/context.jsonld")
+# resource is german therefore prefer de if multiple or no inLanguage are available
+if any_equal("inLanguage[]","de")
+  set_hash("@context[].$append", "@language": "de")
+elsif any_equal("inLanguage[]","en")
+  set_hash("@context[].$append", "@language": "en")
+else
+  copy_field("inLanguage[].1", "@context[].$append.@language")
+end
+# resources without inLanguage-Values set default to de
+unless exists("inLanguage[].1")
+  set_hash("@context[].$append", "@language": "de")
+end
+
+# ------ tidy up --- 
+include ("../../sharedFixes/cleanUp.fix")
+

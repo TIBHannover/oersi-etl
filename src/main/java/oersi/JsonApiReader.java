@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
+import java.time.Duration;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -31,7 +32,8 @@ public final class JsonApiReader extends DefaultObjectPipe<String, ObjectReceive
     private static final String JSON = "application/json";
     private int totalLimit = Integer.MAX_VALUE;
     private int totalProcessed = 0;
-    private int wait = 1000;
+    private long wait = Duration.ofSeconds(1).toMillis();
+    private long timeout = Duration.ofMinutes(3).toMillis();
 
     private String recordPath;
     private String body;
@@ -84,6 +86,10 @@ public final class JsonApiReader extends DefaultObjectPipe<String, ObjectReceive
         });
     }
 
+    public void setTimeout(int millis) {
+        this.timeout = millis;
+    }
+
     @Override
     public void process(final String url) {
         LOG.debug("Processing JSON API from URL {}", url);
@@ -112,6 +118,8 @@ public final class JsonApiReader extends DefaultObjectPipe<String, ObjectReceive
 
     private HttpURLConnection openUrlConnection(final String url) throws IOException {
         HttpURLConnection connection = (HttpURLConnection) new URL(url).openConnection();
+        connection.setConnectTimeout((int) timeout);
+        connection.setReadTimeout((int) timeout);
         connection.setRequestMethod(method.toUpperCase());
         connection.addRequestProperty("accept", JSON);
         connection.addRequestProperty("content-type", JSON);
