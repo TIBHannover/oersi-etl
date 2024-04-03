@@ -1,8 +1,14 @@
+
+# --------Delete all emtpy values-------
 vacuum()
 
-# ---------------@context ----------------------------------
-set_array("@context[]", "https://w3id.org/kim/amb/draft/context.jsonld")
-set_hash("@context[].$append", "@language": "de")
+do once("macrosAndMaps")
+  include ("../../sharedFixes/macros.fix")
+  include ("../../sharedFixes/maps.fix")
+  # workflow specific maps
+  put_filemap("data/maps/openRubLearningResourceTypes.tsv","openRubLearningResourceTypes", "sep_char":"\t")
+  put_filemap("data/maps/openRubFields2Destatis.tsv","openRubFields2Destatis","sep_char":"\t")
+end
 
 # ---------------id ----------------------------------
 copy_field("html.head.meta.*.og:url", "id")
@@ -16,76 +22,110 @@ copy_field("html.head.meta.*.og:description", "description")
 # ---------------image----------------------------------
 copy_field("html.head.meta.*.og:image","image")
 
+
 # ---------------dateCreated----------------------------------
-# /* Creation-Date comes in as "- recorded at 9/19/2012" */
-do list_as($date: "html.body.form.div.div.2.div.div.div.div.3.div.div.1.div.1.div.div.2.span.*.watch-information-date produced")
-  replace_all($date, "(\\d)/(\\d+)/(\\d{4})", "0$1/$2/$3")
-  replace_all($date, "(\\d+)/(\\d)/(\\d{4})", "$1/0$2/$3")
-  replace_all($date, "- recorded at (\\d{2})/(\\d{2})/(\\d{4})", "$3-$1-$2")
-  if any_match($date, "\\d{4}-\\d{2}-\\d{2}")
-    move_field($date, "dateCreated")
-  end
+set_array("@dateCreated")
+copy_field("html.body.form.div.div.*.div.div.div.div.*.div.div.*.div.*.div.div.*.span.*.watch-information-date produced", "@dateCreated.$append")
+do list(path:"@dateCreated", "var": "$i")
+ if any_match("$i", "- recorded at \\d{1,2}}/\\d{1,2}}/\\d{4}")
+   replace_all("$i", "(\\d)/(\\d+)/(\\d\\d\\d\\d)", "0$1/$2/$3")
+   replace_all("$i", "(\\d+)/(\\d)/(\\d\\d\\d\\d)", "$1/0$2/$3")
+   replace_all("$i", "- recorded at (\\d\\d)/(\\d\\d)/(\\d\\d\\d\\d)", with: "$3-$1-$2")
+   copy_field("$i", "dateCreated")
+ end
 end
 
 # ---------------license----------------------------------
-do list_as($license: "html.body.form.div.div.2.div.div.div.div.3.div.div.1.div.3.div.1.div.4.div.p.a.*.license")
-  if any_match($license, "^http[s]?:\\/\\/creativecommons.org\\/(licenses|licences|publicdomain)\\/.*|^http[s]?:\\/\\/www.gnu.org\\/licenses\\/.*|^http[s]?:\\/\\/www.apache.org\\/licenses\\/.*|http[s]?://opensource.org/licenses/MIT|^http[s]?:\\/\\/www.opensource.org\\/licenses\\/BSD.*")
-    move_field($license, "license.id")
-  end
+if any_match("html.body.form.div.div.*.div.div.div.div.*.div.div.*.div.*.div.*.div.*.div.p.a.*.license", '^http[s]?:\\/\\/creativecommons.org\\/(licenses|licences|publicdomain)\\/.*|^http[s]?:\\/\\/www.gnu.org\\/licenses\\/.*|^http[s]?:\\/\\/www.apache.org\\/licenses\\/.*|http[s]?://opensource.org/licenses/MIT|^http[s]?:\\/\\/www.opensource.org\\/licenses\\/BSD.*')
+  copy_field("html.body.form.div.div.*.div.div.div.div.*.div.div.*.div.*.div.*.div.*.div.p.a.*.license", "license.id")
 end
 
-# ---------------creator----------------------------------
+
+# # ---------------creator----------------------------------
+
+set_array("@creator[]")
+copy_field("html.body.form.div.div.*.div.div.div.div.*.div.div.*.div.*.div.*.div.*.p.watch-speaker","@creator[].$append")
+
+
 set_array("creator[]")
-do list_as($speaker: "html.body.form.div.div.2.div.div.div.div.3.div.div.1.div.3.div.1.div.*.p.watch-speaker")
-  if none_equal($speaker, "no speaker")
-    replace_all($speaker, "Apl\\. |\\(apl\\.\\) |Dr\\. med |Dr\\. |Dr\\.'in |Dr |Dr\\.med\\.|Dres\\. |Dr\\.|Prof\\. |Prof\\.'in |Prof\\.|Prof |Jun\\.-|PD |PD\\. |med\\. |rer\\. |pol\\.|nat\\. |dent\\. |em\\. |Ao\\.-|o\\. Univ\\.|Uni\\.-|Univ\\.-|Univ\\. |DI |RA |Dipl\\.|-Ing\\. |-Inform\\. |-Psych\\. |h\\.c\\. |mult\\. |Mag\\. |, MME|; MME|, MScN|M\\. Sc\\. |, MSc| MSc\\.|, M\\.A\\.| M\\.A\\.|, M\\.D\\.|, B\\.A\\.|, MMZ|, Psychoanalytiker|, L\\.L\\.M\\.|, LL\\.M\\.| \\(M\\.A\\.\\)", "")
-    move_field($speaker, "creator[].$append.name")
-    add_field("creator[].$last.type", "Person")
+do list(path:"@creator[]","var":"$i")
+  unless any_equal("$i","no speaker")
+    copy_field("$i","creator[].$append.name")
   end
 end
+add_field("creator[].*.type", "Person")
+call_macro("deleteAcademicTitles", field: "creator[].*.name")
 
 # ---------------sourceOrganization----------------------------------
 set_array("sourceOrganization[]")
 add_field("sourceOrganization[].$append.type", "Organization")
 add_field("sourceOrganization[].$last.name", "Heinrich-Heine-Universität Düsseldorf")
-# add_field("id", "https://ror.org/024z2rq82")
+add_field("sourceOrganization[].$last.id", "https://ror.org/024z2rq82")
 
 # ------ type --- 
+
 set_array("type[]", "LearningResource")
 
 # ------ learningResourceType --- 
 # only video
+
 set_array("learningResourceType[]")
 add_field("learningResourceType[].$append.id","https://w3id.org/kim/hcrt/video")
 add_field("learningResourceType[].$last.prefLabel.de","Video")
 add_field("learningResourceType[].$last.prefLabel.en","Video")
 
+# ------------conditionsOfAccess---------------
+add_field("conditionsOfAccess.id","http://w3id.org/kim/conditionsOfAccess/no_login")
+
+
 # ------ encoding --- 
+/* encoding: So far only embedUrl */
+
+set_array("@embedUrl")
 set_array("encoding[]")
-do list_as($iframe: "html.body.form.div.div.2.div.div.div.div.3.div.div.1.div.3.div.*.div.textarea.value")
-  if any_match($iframe, "^<iframe.*src='(https:\\/\\/mediathek\\.hhu\\.de\\/embed\\/.*)(' frameborder='0' allowfullscreen><\\/iframe>)$")
-    replace_all($iframe, "^<iframe.*src='(https:\\/\\/mediathek\\.hhu\\.de\\/embed\\/.*)(' frameborder='0' allowfullscreen><\\/iframe>)$", "$1")
-    copy_field($iframe, "encoding[].$append.embedUrl")
+copy_field("html.body.form.div.div.*.div.div.div.div.*.div.div.*.div.*.div.*.div.textarea.value","@embedUrl.$append")
+
+do list(path:"@embedUrl", "var":"$i")
+  if any_match("$i", "^<iframe.*src='(https:\\/\\/mediathek\\.hhu\\.de\\/embed\\/.*)(' frameborder='0' allowfullscreen><\\/iframe>)$")
+    replace_all("$i","^<iframe.*src='(https:\\/\\/mediathek\\.hhu\\.de\\/embed\\/.*)(' frameborder='0' allowfullscreen><\\/iframe>)$",'$1')
+    copy_field("$i", "encoding[].$append.embedUrl")
     add_field("encoding[].$last.type", "MediaObject")
   end
 end
 
+# ------ keywords --- 
+
+set_array("keywords[]")
+do list(path:"html.body.form.div.div.*.div.div.div.div.*.div.div.*.div.*.div.*.div.ul.li.*.a.value","var":"$i")
+  copy_field("$i","keywords[].$append")
+end
+
+
 # ---------mainEntityOfPage----------------
+
 set_array("mainEntityOfPage[]")
 copy_field("id", "mainEntityOfPage[].$append.id")
 add_field("mainEntityOfPage[].$last.provider.id","$[service_id]")
 add_field("mainEntityOfPage[].$last.provider.type","Service")
 add_field("mainEntityOfPage[].$last.provider.name","$[service_name]")
 
-# --------- conditionsOfAccess ---------------
-add_field("conditionsOfAccess.id","http://w3id.org/kim/conditionsOfAccess/no_login")
+# ---------------@context ----------------------------------
 
-# --------- keywords ----------------
-set_array("keywords[]")
-do list_as($keyword: "html.body.form.div.div.2.div.div.div.div.3.div.div.1.div.3.div.1.div.4.ul.li.*.value")
-  copy_field($keyword, "keywords[].$append")
+set_array("@context[]", "https://w3id.org/kim/amb/context.jsonld")
+# resource is german therefore prefer de if multiple or no inLanguage are available
+if any_equal("inLanguage[]","de")
+  set_hash("@context[].$append", "@language": "de")
+elsif any_equal("inLanguage[]","en")
+  set_hash("@context[].$append", "@language": "en")
+else
+  copy_field("inLanguage[].1", "@context[].$append.@language")
+end
+# resources without inLanguage-Values set default to de
+unless exists("inLanguage[].1")
+  set_hash("@context[].$append", "@language": "de")
 end
 
+
+
 # ------ tidy up --- 
-retain("@context[]","id","image","name","creator[]","contributor[]","sourceOrganization[]", "license","description","dateCreated","inLanguage[]","type[]","learningResourceType[]","keywords[]","about[]", "encoding[]", "mainEntityOfPage[]")
-vacuum()
+include ("../../sharedFixes/cleanUp.fix")
