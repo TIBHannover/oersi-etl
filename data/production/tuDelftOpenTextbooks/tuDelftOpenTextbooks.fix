@@ -1,6 +1,12 @@
-
 # --------Delete all emtpy values-------
 vacuum()
+
+do once("macrosAndMaps")
+  include ("../../sharedFixes/macros.fix")
+  include ("../../sharedFixes/maps.fix")
+  # workflow specific maps
+  put_filemap("data/maps/tuDelftSubjects2destatis.tsv","tuDelftSubjects2destatis","sep_char":"\t")
+end
 
 set_array("inLanguage[]")
 do list(path:"html.head.meta","var":"$i")
@@ -33,7 +39,7 @@ end
 # ------ creator --- 
 set_array("creator[]")
 do list(path:"html.head.meta.DC_Creator_PersonalName","var":"$i")
-
+  trim("$i")
   copy_field("$i", "creator[].$append.name")
 end
 add_field("creator[].*.type", "Person")
@@ -47,7 +53,11 @@ do list(path:"creator[]","var":"$i")
   end
 end
 
-add_field("creator[].*.affiliation.type", "Organization")
+do list(path:"creator[]","var":"$i")
+  if exists("$i.affiliation")
+    add_field("$i.affiliation.type", "Organization")
+  end
+end
 
 # ------ keywords------
   set_array("keywords[]")
@@ -94,6 +104,20 @@ set_array("type[]", "LearningResource")
 
 # ------ about --- 
 
+set_array("@hochschulfaechersystematik")
+do list(path:"keywords[]","var":"$i")
+  move_field("$i", "@hochschulfaechersystematik.$append")
+end
+
+lookup("@hochschulfaechersystematik.*","tuDelftSubjects2destatis", delete:"true")
+
+set_array("about[]")
+copy_field("@hochschulfaechersystematik.*","about[].$append.id")
+
+do list(path: "about[]")
+  copy_field("id", "prefLabel.de")
+  lookup("prefLabel.de","destatis-deLabel2Uri", delete:"true")
+end
 
 
 # -----image-----
