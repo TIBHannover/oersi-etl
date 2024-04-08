@@ -129,11 +129,13 @@ end
 
 # ---------mainEntityOfPage----------------
 
-set_array("mainEntityOfPage[]")
-copy_field("id", "mainEntityOfPage[].$append.id")
-add_field("mainEntityOfPage[].$last.provider.id","$[service_id]")
-add_field("mainEntityOfPage[].$last.provider.type","Service")
-add_field("mainEntityOfPage[].$last.provider.name","$[service_name]")
+if exists("id")
+  set_array("mainEntityOfPage[]")
+  copy_field("id", "mainEntityOfPage[].$append.id")
+  add_field("mainEntityOfPage[].$last.provider.id","$[service_id]")
+  add_field("mainEntityOfPage[].$last.provider.type","Service")
+  add_field("mainEntityOfPage[].$last.provider.name","$[service_name]")
+end
 
 # ---------inLanguage----------------
 
