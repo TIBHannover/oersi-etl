@@ -42,7 +42,6 @@ dependencies {
     implementation 'org.metafacture:metafacture-html:6.0.0'
     implementation 'org.metafacture:metafacture-elasticsearch:6.0.0'
     implementation 'org.metafacture:metafacture-xml:6.0.0'
-    implementation 'org.metafacture:metafacture-fix:0.2.0-rc2'
     implementation 'org.metafacture:metafix:1.0.0'
     implementation('org.metafacture:metafacture-biblio:6.0.0') {
         exclude group: 'xml-apis', module: 'xml-apis'
