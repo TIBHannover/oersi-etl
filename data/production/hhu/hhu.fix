@@ -1,99 +1,131 @@
-/* Set up the context */
-do array("@context")
- add_field("","https://w3id.org/kim/amb/context.jsonld")
- do entity("")
-  add_field("@language", "de")
+
+# --------Delete all emtpy values-------
+vacuum()
+
+do once("macrosAndMaps")
+  include ("../../sharedFixes/macros.fix")
+  include ("../../sharedFixes/maps.fix")
+  # workflow specific maps
+  put_filemap("data/maps/openRubLearningResourceTypes.tsv","openRubLearningResourceTypes", "sep_char":"\t")
+  put_filemap("data/maps/openRubFields2Destatis.tsv","openRubFields2Destatis","sep_char":"\t")
+end
+
+# ---------------id ----------------------------------
+copy_field("html.head.meta.*.og:url", "id")
+
+# ---------------name----------------------------------
+copy_field("html.head.meta.*.og:title", "name")
+
+# ---------------description----------------------------------
+copy_field("html.head.meta.*.og:description", "description")
+
+# ---------------image----------------------------------
+copy_field("html.head.meta.*.og:image","image")
+
+
+# ---------------dateCreated----------------------------------
+set_array("@dateCreated")
+copy_field("html.body.form.div.div.*.div.div.div.div.*.div.div.*.div.*.div.div.*.span.*.watch-information-date produced", "@dateCreated.$append")
+do list(path:"@dateCreated", "var": "$i")
+ if any_match("$i", "- recorded at \\d{1,2}}/\\d{1,2}}/\\d{4}")
+   replace_all("$i", "(\\d)/(\\d+)/(\\d\\d\\d\\d)", "0$1/$2/$3")
+   replace_all("$i", "(\\d+)/(\\d)/(\\d\\d\\d\\d)", "$1/0$2/$3")
+   replace_all("$i", "- recorded at (\\d\\d)/(\\d\\d)/(\\d\\d\\d\\d)", with: "$3-$1-$2")
+   copy_field("$i", "dateCreated")
  end
 end
 
-/* Map some of the data we have to the oersi model: */
-map("html.head.meta.og:title", "name")
-map("html.head.meta.og:description", "description")
-map("html.head.meta.og:image","image")
-
-/* Creation-Date comes in as "- recorded at 9/19/2012" */
-do map("*.span.watch-information-date produced", "dateCreated")
-  regexp(match: "- recorded at \\d{1,2}}/\\d{1,2}}/\\d{4}")
-  replace(pattern: "(\\d)/(\\d+)/(\\d\\d\\d\\d)", with: "0$1/$2/$3")
-  replace(pattern: "(\\d+)/(\\d)/(\\d\\d\\d\\d)", with: "$1/0$2/$3")
-  replace(pattern: "- recorded at (\\d\\d)/(\\d\\d)/(\\d\\d\\d\\d)", with: "$3-$1-$2")
+# ---------------license----------------------------------
+if any_match("html.body.form.div.div.*.div.div.div.div.*.div.div.*.div.*.div.*.div.*.div.p.a.*.license", '^http[s]?:\\/\\/creativecommons.org\\/(licenses|licences|publicdomain)\\/.*|^http[s]?:\\/\\/www.gnu.org\\/licenses\\/.*|^http[s]?:\\/\\/www.apache.org\\/licenses\\/.*|http[s]?://opensource.org/licenses/MIT|^http[s]?:\\/\\/www.opensource.org\\/licenses\\/BSD.*')
+  copy_field("html.body.form.div.div.*.div.div.div.div.*.div.div.*.div.*.div.*.div.*.div.p.a.*.license", "license.id")
 end
 
-/*rel = "liscence" cant be directly mapped */
 
-do entity("license")
-  do map("*.a.license", "id")
-        regexp(match: '^http[s]?:\\/\\/creativecommons.org\\/(licenses|licences|publicdomain)\\/.*|^http[s]?:\\/\\/www.gnu.org\\/licenses\\/.*|^http[s]?:\\/\\/www.apache.org\\/licenses\\/.*|http[s]?://opensource.org/licenses/MIT|^http[s]?:\\/\\/www.opensource.org\\/licenses\\/BSD.*')
+# # ---------------creator----------------------------------
+
+set_array("@creator[]")
+copy_field("html.body.form.div.div.*.div.div.div.div.*.div.div.*.div.*.div.*.div.*.p.watch-speaker","@creator[].$append")
+
+
+set_array("creator[]")
+do list(path:"@creator[]","var":"$i")
+  unless any_equal("$i","no speaker")
+    copy_field("$i","creator[].$append.name")
   end
 end
+add_field("creator[].*.type", "Person")
+call_macro("deleteAcademicTitles", field: "creator[].*.name")
 
-do array("creator", flushWith: record)
- do entity("")
-  do map("*.p.watch-speaker", "name")
-    not_equals(string: "no speaker")  
-    replace(pattern: "Apl\\. |\\(apl\\.\\) |Dr\\. med |Dr\\. |Dr\\.'in |Dr |Dr\\.med\\.|Dres\\. |Dr\\.|Prof\\. |Prof\\.'in |Prof\\.|Prof |Jun\\.-|PD |PD\\. |med\\. |rer\\. |pol\\.|nat\\. |dent\\. |em\\. |Ao\\.-|o\\. Univ\\.|Uni\\.-|Univ\\.-|Univ\\. |DI |RA |Dipl\\.|-Ing\\. |-Inform\\. |-Psych\\. |h\\.c\\. |mult\\. |Mag\\. |, MME|; MME|, MScN|M\\. Sc\\. |, MSc| MSc\\.|, M\\.A\\.| M\\.A\\.|, M\\.D\\.|, B\\.A\\.|, MMZ|, Psychoanalytiker|, L\\.L\\.M\\.|, LL\\.M\\.| \\(M\\.A\\.\\)", with: "")
-  end
-  do map("*.p.watch-speaker", "type")
-    not_equals(string: "no speaker")
-    regexp(match: '^.*$', format: "Person")
-  end  
- end
-end
+# ---------------sourceOrganization----------------------------------
+set_array("sourceOrganization[]")
+add_field("sourceOrganization[].$append.type", "Organization")
+add_field("sourceOrganization[].$last.name", "Heinrich-Heine-Universität Düsseldorf")
+add_field("sourceOrganization[].$last.id", "https://ror.org/024z2rq82")
 
-do array("sourceOrganization", flushWith: record)
- do entity("")
-  add_field("type", "Organization")
-  add_field("name", "Heinrich-Heine-Universität Düsseldorf")
-  add_field("id", "https://ror.org/024z2rq82")
- end
-end
+# ------ type --- 
 
-map("html.head.meta.og:url", "id")
+set_array("type[]", "LearningResource")
 
-do array ("type")
-  add_field("","LearningResource")
-end
+# ------ learningResourceType --- 
+# only video
 
-/* Add Video always as lRT */
+set_array("learningResourceType[]")
+add_field("learningResourceType[].$append.id","https://w3id.org/kim/hcrt/video")
+add_field("learningResourceType[].$last.prefLabel.de","Video")
+add_field("learningResourceType[].$last.prefLabel.en","Video")
 
-add_field("@hcrt","https://w3id.org/kim/hcrt/video")
-
-do array('learningResourceType')
-  do entity('')
-    map('@hcrt', 'id')
-  end
-end
-
-/* encoding: So far only embedUrl */
-do map("html.body.form.div.div.div.div.div.div.div.div.div.div.div.textarea.value","@embedUrl")
-  regexp(match: "^<iframe.*src='(https:\\/\\/mediathek\\.hhu\\.de\\/embed\\/.*)(' frameborder='0' allowfullscreen><\\/iframe>)$", format: '${1}')
-end
-
-do array("encoding", flushWith: record)
-  do entity("")
-    map("@embedUrl","embedUrl")
-    do map("@embedUrl", "type")
-      constant(value: "MediaObject")
-    end
-  end
-end
-
+# ------------conditionsOfAccess---------------
 add_field("conditionsOfAccess.id","http://w3id.org/kim/conditionsOfAccess/no_login")
 
-do array("keywords", flushWith: record)
-  map("html.body.form.div.div.div.div.div.div.div.div.div.div.div.ul.li.a.value")
-end
 
-do array("mainEntityOfPage")
-  do entity("")
-    do map("html.body.form.action", "id")
-      replace(pattern: "./", with: "https://mediathek.hhu.de/watch/")
-    end
-    /* Add provider/source information to each resource description */
-    do entity("provider")
-      add_field("id","$[service_id]")
-      add_field("type","Service")
-      add_field("name","$[service_name]")
-    end
+# ------ encoding --- 
+/* encoding: So far only embedUrl */
+
+set_array("@embedUrl")
+set_array("encoding[]")
+copy_field("html.body.form.div.div.*.div.div.div.div.*.div.div.*.div.*.div.*.div.textarea.value","@embedUrl.$append")
+
+do list(path:"@embedUrl", "var":"$i")
+  if any_match("$i", "^<iframe.*src='(https:\\/\\/mediathek\\.hhu\\.de\\/embed\\/.*)(' frameborder='0' allowfullscreen><\\/iframe>)$")
+    replace_all("$i","^<iframe.*src='(https:\\/\\/mediathek\\.hhu\\.de\\/embed\\/.*)(' frameborder='0' allowfullscreen><\\/iframe>)$",'$1')
+    copy_field("$i", "encoding[].$append.embedUrl")
+    add_field("encoding[].$last.type", "MediaObject")
   end
 end
+
+# ------ keywords --- 
+
+set_array("keywords[]")
+do list(path:"html.body.form.div.div.*.div.div.div.div.*.div.div.*.div.*.div.*.div.ul.li.*.a.value","var":"$i")
+  copy_field("$i","keywords[].$append")
+end
+
+
+# ---------mainEntityOfPage----------------
+
+set_array("mainEntityOfPage[]")
+copy_field("id", "mainEntityOfPage[].$append.id")
+add_field("mainEntityOfPage[].$last.provider.id","$[service_id]")
+add_field("mainEntityOfPage[].$last.provider.type","Service")
+add_field("mainEntityOfPage[].$last.provider.name","$[service_name]")
+
+# ---------------@context ----------------------------------
+
+set_array("@context[]", "https://w3id.org/kim/amb/context.jsonld")
+# resource is german therefore prefer de if multiple or no inLanguage are available
+if any_equal("inLanguage[]","de")
+  set_hash("@context[].$append", "@language": "de")
+elsif any_equal("inLanguage[]","en")
+  set_hash("@context[].$append", "@language": "en")
+else
+  copy_field("inLanguage[].1", "@context[].$append.@language")
+end
+# resources without inLanguage-Values set default to de
+unless exists("inLanguage[].1")
+  set_hash("@context[].$append", "@language": "de")
+end
+
+
+
+# ------ tidy up --- 
+include ("../../sharedFixes/cleanUp.fix")
