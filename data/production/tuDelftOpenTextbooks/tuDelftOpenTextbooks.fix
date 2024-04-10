@@ -65,6 +65,13 @@ do list(path:"html.head.meta.citation_keywords","var":"$i")
   copy_field("$i", "keywords[].$append")
 end
 
+do list(path:"keywords[]","var":"$i")
+  trim("$i")
+  split_field("$i"," ")
+  capitalize("$i.*")
+  join_field("$i"," ")
+end
+
 # ------ datePublished------
 do list(path:"html.head.meta.citation_publication_date","var":"$i")
 
