@@ -93,7 +93,7 @@ uniq("keywords[]")
 
 set_array("@hochschulfaechersystematik")
 do list(path:"keywords[]","var":"$i")
-    move_field("$i", "@hochschulfaechersystematik.$append")
+    copy_field("$i", "@hochschulfaechersystematik.$append")
 end
 
 lookup("@hochschulfaechersystematik.*","openStax2Destatis", delete:"true")

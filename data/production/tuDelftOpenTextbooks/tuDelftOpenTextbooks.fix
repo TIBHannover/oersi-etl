@@ -5,7 +5,7 @@ do once("macrosAndMaps")
   include ("../../sharedFixes/macros.fix")
   include ("../../sharedFixes/maps.fix")
   # workflow specific maps
-  put_filemap("data/maps/tuDelftSubjects2destatis.tsv","tuDelftSubjects2destatis","sep_char":"\t")
+  put_filemap("data/maps/tuDelftSubjects2destatis.tsv","tuDelftSubjects2destatis","sep_char":"\t",key_column:"0",value_column:"1",expected_columns:"-1")
 end
 
 set_array("inLanguage[]")
@@ -55,6 +55,7 @@ end
 
 do list(path:"creator[]","var":"$i")
   if exists("$i.affiliation")
+    replace_all("$i.affiliation.name","^(.*)[ ]?[,\\|] Faculty.*","$1")    
     add_field("$i.affiliation.type", "Organization")
   end
 end
@@ -113,7 +114,7 @@ set_array("type[]", "LearningResource")
 
 set_array("@hochschulfaechersystematik")
 do list(path:"keywords[]","var":"$i")
-  move_field("$i", "@hochschulfaechersystematik.$append")
+  copy_field("$i", "@hochschulfaechersystematik.$append")
 end
 
 lookup("@hochschulfaechersystematik.*","tuDelftSubjects2destatis", delete:"true")
