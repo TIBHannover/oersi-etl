@@ -55,6 +55,7 @@ end
 
 do list(path:"creator[]","var":"$i")
   if exists("$i.affiliation")
+    replace_all("$i.affiliation.name","^(.*)[ ]?[,\\|] Faculty.*","$1")    
     add_field("$i.affiliation.type", "Organization")
   end
 end
