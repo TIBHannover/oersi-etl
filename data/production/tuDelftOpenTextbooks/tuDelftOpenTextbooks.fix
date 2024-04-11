@@ -5,7 +5,7 @@ do once("macrosAndMaps")
   include ("../../sharedFixes/macros.fix")
   include ("../../sharedFixes/maps.fix")
   # workflow specific maps
-  put_filemap("data/maps/tuDelftSubjects2destatis.tsv","tuDelftSubjects2destatis","sep_char":"\t")
+  put_filemap("data/maps/tuDelftSubjects2destatis.tsv","tuDelftSubjects2destatis","sep_char":"\t",key_column:"0",value_column:"1",expected_columns:"-1")
 end
 
 set_array("inLanguage[]")

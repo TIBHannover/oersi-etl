@@ -174,7 +174,7 @@ Europa
 Ethical concerns
 erosion
 energiebalansen
-Elektriciteit
+Elektriciteit	https://w3id.org/kim/hochschulfaechersystematik/n0128
 electronics
 ecosystem based approach
 Dynamics
@@ -233,6 +233,48 @@ actor analysis
 3D printing 
 quantum computing
 bouwkundige methoden	https://w3id.org/kim/hochschulfaechersystematik/n017
+AK	https://w3id.org/kim/hochschulfaechersystematik/n203	Industrial / commercial art & design
+AKP	https://w3id.org/kim/hochschulfaechersystematik/n203
+AM	https://w3id.org/kim/hochschulfaechersystematik/n013	Architecture
+AMC	https://w3id.org/kim/hochschulfaechersystematik/n013
+AMCR	https://w3id.org/kim/hochschulfaechersystematik/n013
+GPS	https://w3id.org/kim/hochschulfaechersystematik/n0	Research methods: general
+GT	https://w3id.org/kim/hochschulfaechersystematik/n0	Interdisciplinary studies
+JFMG	https://w3id.org/kim/hochschulfaechersystematik/n169	Ethical issues: scientific & technological developments (eg Genetic engineering, GM foods, cloning, reproductive technology, stem cells, etc)
+KJMD	https://w3id.org/kim/hochschulfaechersystematik/n30	Management decision making
+KNBW	https://w3id.org/kim/hochschulfaechersystematik/n077	Water industries, Energy industries & utilities, Industry & industrial studies
+KNGR	https://w3id.org/kim/hochschulfaechersystematik/n210	Road transport industries, Transport industries, Industry & industrial studies
+KNGV	https://w3id.org/kim/hochschulfaechersystematik/n210	Aerospace & air transport industriesIndustry & industrial studies
+PBW	https://w3id.org/kim/hochschulfaechersystematik/n105	Applied mathematics
+PDG	https://w3id.org/kim/hochschulfaechersystematik/n0	Industrial applications of scientific research & technological innovation (Science: general issues)
+PHD	https://w3id.org/kim/hochschulfaechersystematik/n0128	Classical mechanics(physics)
+PHQ	https://w3id.org/kim/hochschulfaechersystematik/n0128	Quantum physics (quantum mechanics & quantum field theory)
+PHV	https://w3id.org/kim/hochschulfaechersystematik/n0128	Applied physics
+RGBP	https://w3id.org/kim/hochschulfaechersystematik/n44	Deltas, estuaries, coastal regions (Physical geography & topography)
+RGW	https://w3id.org/kim/hochschulfaechersystematik/n44	Geographical information systems (GIS) & remote sensing  (Physical geography & topography)
+RNT	https://w3id.org/kim/hochschulfaechersystematik/n458	Social impact of environmental issues (The environment, REarth sciences, geography, environment, planning)
+RNU	https://w3id.org/kim/hochschulfaechersystematik/n458	Sustainability
+SCI053000
+TCB	https://w3id.org/kim/hochschulfaechersystematik/n282	Biotechnology
+TEC013000
+TEC030000
+TGB	https://w3id.org/kim/hochschulfaechersystematik/n104	Mechanical engineering, Mechanical engineering & materials
+THR	https://w3id.org/kim/hochschulfaechersystematik/n64	Electrical engineering
+TJF	https://w3id.org/kim/hochschulfaechersystematik/n64	Electronics engineering (TJ Electronics & communications engineering)
+TN	https://w3id.org/kim/hochschulfaechersystematik/n68	Civil engineering, surveying & building
+TNCB	https://w3id.org/kim/hochschulfaechersystematik/n68	Surveying (Structural engineering)
+TNF	https://w3id.org/kim/hochschulfaechersystematik/n68
+TNFH	https://w3id.org/kim/hochschulfaechersystematik/n68
+TNH	https://w3id.org/kim/hochschulfaechersystematik/n68
+TQ	https://w3id.org/kim/hochschulfaechersystematik/n457	Environmental Science, Engineering & Technology
+TQSW	https://w3id.org/kim/hochschulfaechersystematik/n457
+TRLT	https://w3id.org/kim/hochschulfaechersystematik/n223	Maritime / nautical trades (Transport Technology & Trades
+TRP	https://w3id.org/kim/hochschulfaechersystematik/n057	Aerospace & aviation technology	Transport Technology & Trades
+TTB	https://w3id.org/kim/hochschulfaechersystematik/n143	Applied optics
+TTS	https://w3id.org/kim/hochschulfaechersystematik/n223	Marine engineering
+TTSH	https://w3id.org/kim/hochschulfaechersystematik/n223
+UGB	https://w3id.org/kim/hochschulfaechersystematik/n71	Graphical & Digital Media Applications (Computing & information technology)
+UY	https://w3id.org/kim/hochschulfaechersystematik/n71	Computer Science
 
 
 
