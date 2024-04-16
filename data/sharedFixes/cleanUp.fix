@@ -1,5 +1,13 @@
-# Make all array-values uniq
+# Trim trailing and leading whitespaces
+trim("name")
+trim("creator[].*.name")
+trim("creator[].*.affiliation.name")
+trim("contributor[].*.name")
+trim("contributor[].*.affiliation.name")
+trim("sourceOrganization[].*.name")
+trim("keywords[].*")
 
+# Make all array-values uniq
 uniq("audience[]")
 uniq("creator[]")
 uniq("contributor[]")
