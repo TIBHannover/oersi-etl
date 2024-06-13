@@ -72,6 +72,12 @@ do list("path":"metadata.mods:mods.mods:name","var":"$i")
   end
 end
 
+do list("path": "creator[]")
+  if any_match("type","Person")
+    replace_all("name", "(^[^,]+)(, )(.+$)", "$3 $1")
+  end
+end
+
 #  ------------contributor------------------------------------
 set_array("contributor[]")
 do list("path":"metadata.mods:mods.mods:name","var":"$i")
