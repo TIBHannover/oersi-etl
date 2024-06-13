@@ -66,9 +66,10 @@ set_array("creator[]")
 do list(path:"metadata.lom:lom.lom:lifecycle.lom:contribute","var":"$i")
   if any_match("$i.lom:role.lom:value.lom:langstring.value","Author")
     if any_match("$i.lom:centity.lom:vcard.value","^.+VCARD.+?FN:(?! ).+?$")
-      unless any_contain("$i.lom:centity.lom:vcard.value","TU Graz")
+      unless any_match("$i.lom:centity.lom:vcard.value",".*(Die LawBusters|IG Lebenszyklus Bau|Institut|Virtuelle PH|The Berg Group|TU Graz|[Tt]eam|[Ss]tiftung|University|Stadt Graz).*")
         copy_field("$i.lom:centity.lom:vcard.value","creator[].$append.name")
         replace_all("creator[].*.name", "(BEGIN:VCARD VERSION:4.0 FN:)(.+)( ROLE.+ END:VCARD)", "$2")
+        replace_all("creator[].*.name", "\\\\.+", "")
       end
     end
   end
@@ -79,13 +80,19 @@ add_field("creator[].*.type", "Person")
 call_macro("deleteAcademicTitles", field: "creator[].*.name")
 
 #  ------------contributor------------------------------------
-set_array("contributor[]")
+set_array("@contributor[]")
 do list(path:"metadata.lom:lom.lom:lifecycle.lom:contribute","var":"$i")
   unless any_match("$i.lom:role.lom:value.lom:langstring.value","Author")
     if any_match("$i.lom:centity.lom:vcard.value","^.+VCARD.+?FN:(?! ).+?$")
-        copy_field("$i.lom:centity.lom:vcard.value","contributor[].$append.name")
-        replace_all("contributor[].*.name", "(BEGIN:VCARD VERSION:4.0 FN:)(.+)( ROLE.+ END:VCARD)", "$2")
+        copy_field("$i.lom:centity.lom:vcard.value","@contributor[].$append.name")
+        replace_all("@contributor[].*.name", "(BEGIN:VCARD VERSION:4.0 FN:)(.+)( ROLE.+ END:VCARD)", "$2")
     end
+  end
+end
+set_array("contributor[]")
+do list(path:"@contributor[]","var":"$i")
+  unless in("$i.name", "creator[].*.name")
+    copy_field("$i.name","contributor[].$append.name")
   end
 end
 
