@@ -5,7 +5,7 @@ service_name = "Phaidra Uni Wien";
 XML_FILE = FLUX_DIR + "phaidraUniWien-metafacture.xml";
 
 "https://services.phaidra.univie.ac.at/api/oai"
-| open-oaipmh(metadataPrefix="oai_openaire", setSpec="oer")
+| oersi.OaiPmhOpener(metadataPrefix="oai_openaire", setSpec="oer")
 | as-lines
 | write(XML_FILE);
 
