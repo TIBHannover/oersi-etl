@@ -68,14 +68,14 @@ do list(path:"metadata.lom:lom.lom:lifecycle.lom:contribute","var":"$i")
     if any_match("$i.lom:centity.lom:vcard.value","^.+VCARD.+?FN:(?! ).+?$")
       unless any_match("$i.lom:centity.lom:vcard.value",".*(Die LawBusters|IG Lebenszyklus Bau|Institut|Virtuelle PH|The Berg Group|TU Graz|[Tt]eam|[Ss]tiftung|University|Stadt Graz).*")
         copy_field("$i.lom:centity.lom:vcard.value","creator[].$append.name")
-        replace_all("creator[].*.name", "(BEGIN:VCARD VERSION:4.0 FN:)(.+)( ROLE.+ END:VCARD)", "$2")
-        replace_all("creator[].*.name", "\\\\.+", "")
+        replace_all("creator[].$last.name", "(BEGIN:VCARD VERSION:4.0 FN:)(.+)( ROLE.+ END:VCARD)", "$2")
+        replace_all("creator[].$last.name", "\\\\.+", "")
         add_field("creator[].$last.type","Person")
       end
       if any_match("$i.lom:centity.lom:vcard.value",".*(Institut|Virtuelle PH|TU Graz|University).*")
         copy_field("$i.lom:centity.lom:vcard.value","creator[].$append.name")
-        replace_all("creator[].*.name", "(BEGIN:VCARD VERSION:4.0 FN:)(.+)( ROLE.+ END:VCARD)", "$2")
-        replace_all("creator[].*.name", "\\\\.+", "")
+        replace_all("creator[].$last.name", "(BEGIN:VCARD VERSION:4.0 FN:)(.+)( ROLE.+ END:VCARD)", "$2")
+        replace_all("creator[].$last.name", "\\\\.+", "")
         add_field("creator[].$last.type","Organization")
       end
     end
@@ -92,7 +92,7 @@ do list(path:"metadata.lom:lom.lom:lifecycle.lom:contribute","var":"$i")
   unless any_match("$i.lom:role.lom:value.lom:langstring.value","Author")
     if any_match("$i.lom:centity.lom:vcard.value","^.+VCARD.+?FN:(?! ).+?$")
         copy_field("$i.lom:centity.lom:vcard.value","@contributor[].$append.name")
-        replace_all("@contributor[].*.name", "(BEGIN:VCARD VERSION:4.0 FN:)(.+)( ROLE.+ END:VCARD)", "$2")
+        replace_all("@contributor[].$last.name", "(BEGIN:VCARD VERSION:4.0 FN:)(.+)( ROLE.+ END:VCARD)", "$2")
     end
   end
 end
@@ -110,8 +110,8 @@ do list(path:"metadata.lom:lom.lom:lifecycle.lom:contribute","var":"$i")
   if any_match("$i.lom:role.lom:value.lom:langstring.value","Publisher")
     if any_match("$i.lom:centity.lom:vcard.value","^.+VCARD.+?FN:(?! ).+?$")  
       copy_field("$i.lom:centity.lom:vcard.value","publisher[].$append.name")
-      replace_all("publisher[].*.name", "(BEGIN:VCARD VERSION:4.0 FN:)(.+)( ROLE.+ END:VCARD)", "$2")
-      replace_all("publisher[].*.name", "\\\\.+", "")
+      replace_all("publisher[].$last.name", "(BEGIN:VCARD VERSION:4.0 FN:)(.+)( ROLE.+ END:VCARD)", "$2")
+      replace_all("publisher[].$last.name", "\\\\.+", "")
       add_field("publisher[].$last.type","Organization")
     end
   end
