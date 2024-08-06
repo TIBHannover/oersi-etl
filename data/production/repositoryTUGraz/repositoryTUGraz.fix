@@ -168,7 +168,9 @@ do list("path": "metadata.lom:lom.lom:general.lom:language", "var": "$i")
   if all_match("$i.value", "(^..)_.+")
     replace_all("$i.value", "(^..)_.+", "$1")
   end
-  copy_field("$i.value","inLanguage[].$append")
+  unless any_match("$i.value","0|N/A")
+    copy_field("$i.value","inLanguage[].$append")
+  end
 end
 
 # ---------------type ----------------------------------
