@@ -65,18 +65,27 @@ end
 set_array("creator[]")
 do list(path:"metadata.lom:lom.lom:lifecycle.lom:contribute","var":"$i")
   if any_match("$i.lom:role.lom:value.lom:langstring.value","Author")
-    if any_match("$i.lom:centity.lom:vcard.value","^.+VCARD.+?FN:(?! ).+?$")
-      unless any_match("$i.lom:centity.lom:vcard.value",".*(Die LawBusters|IG Lebenszyklus Bau|Institut|Virtuelle PH|The Berg Group|TU Graz|[Tt]eam|[Ss]tiftung|University|Stadt Graz).*")
-        copy_field("$i.lom:centity.lom:vcard.value","creator[].$append.name")
-        replace_all("creator[].*.name", "(BEGIN:VCARD VERSION:4.0 FN:)(.+)( ROLE.+ END:VCARD)", "$2")
-        replace_all("creator[].*.name", "\\\\.+", "")
+    do list(path:"$i.lom:centity","var":"$j")
+      if any_match("$j.lom:vcard.value","^.+VCARD.+?FN:(?! ).+?$")
+        unless any_match("$j.lom:vcard.value",".*(Die LawBusters|IG Lebenszyklus Bau|Institut|Virtuelle PH|The Berg Group|TU Graz|[Tt]eam|[Ss]tiftung|University|Stadt Graz).*")
+          copy_field("$j.lom:vcard.value","creator[].$append.name")
+          replace_all("creator[].$last.name", "(BEGIN:VCARD VERSION:4.0 FN:)(.+)( ROLE.+ END:VCARD)", "$2")
+          replace_all("creator[].$last.name", "\\\\.+", "")
+          add_field("creator[].$last.type","Person")
+        end
+        if any_match("$j.lom:vcard.value",".*(Institut|Virtuelle PH|TU Graz|University).*")
+          copy_field("$j.lom:vcard.value","creator[].$append.name")
+          replace_all("creator[].$last.name", "(BEGIN:VCARD VERSION:4.0 FN:)(.+)( ROLE.+ END:VCARD)", "$2")
+          replace_all("creator[].$last.name", "\\\\.+", "")
+          add_field("creator[].$last.type","Organization")
+        end
       end
     end
   end
 end
 
 # No specifics about creator type. Set type=Person as default.
-add_field("creator[].*.type", "Person")
+# add_field("creator[].*.type", "Person")
 call_macro("deleteAcademicTitles", field: "creator[].*.name")
 
 #  ------------contributor------------------------------------
@@ -85,7 +94,7 @@ do list(path:"metadata.lom:lom.lom:lifecycle.lom:contribute","var":"$i")
   unless any_match("$i.lom:role.lom:value.lom:langstring.value","Author")
     if any_match("$i.lom:centity.lom:vcard.value","^.+VCARD.+?FN:(?! ).+?$")
         copy_field("$i.lom:centity.lom:vcard.value","@contributor[].$append.name")
-        replace_all("@contributor[].*.name", "(BEGIN:VCARD VERSION:4.0 FN:)(.+)( ROLE.+ END:VCARD)", "$2")
+        replace_all("@contributor[].$last.name", "(BEGIN:VCARD VERSION:4.0 FN:)(.+)( ROLE.+ END:VCARD)", "$2")
     end
   end
 end
@@ -95,6 +104,21 @@ do list(path:"@contributor[]","var":"$i")
     copy_field("$i.name","contributor[].$append.name")
   end
 end
+
+# ----- Publisher -----
+
+set_array("publisher[]")
+do list(path:"metadata.lom:lom.lom:lifecycle.lom:contribute","var":"$i")
+  if any_match("$i.lom:role.lom:value.lom:langstring.value","Publisher")
+    if any_match("$i.lom:centity.lom:vcard.value","^.+VCARD.+?FN:(?! ).+?$")  
+      copy_field("$i.lom:centity.lom:vcard.value","publisher[].$append.name")
+      replace_all("publisher[].$last.name", "(BEGIN:VCARD VERSION:4.0 FN:)(.+)( ROLE.+ END:VCARD)", "$2")
+      replace_all("publisher[].$last.name", "\\\\.+", "")
+      add_field("publisher[].$last.type","Organization")
+    end
+  end
+end
+
 
 # No specifics about contributor type. Set type=Organization as default.
 add_field("contributor[].*.type", "Organization")
@@ -144,7 +168,9 @@ do list("path": "metadata.lom:lom.lom:general.lom:language", "var": "$i")
   if all_match("$i.value", "(^..)_.+")
     replace_all("$i.value", "(^..)_.+", "$1")
   end
-  copy_field("$i.value","inLanguage[].$append")
+  unless any_match("$i.value","0|N/A")
+    copy_field("$i.value","inLanguage[].$append")
+  end
 end
 
 # ---------------type ----------------------------------
