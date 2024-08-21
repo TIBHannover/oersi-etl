@@ -7,6 +7,11 @@ end
 if any_equal ("header.status", "deleted")
   reject()
 end
+do list(path: "metadata.lom:lom.lom:technical.lom:location", "var": "$i")
+  if any_match("$i.value", ".*imoox.*")
+    reject()
+  end
+end
 
 # Delete all empty values
 vacuum()
