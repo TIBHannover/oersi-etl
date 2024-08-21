@@ -69,16 +69,15 @@ end
 #  ------------creator------------------------------------
 set_array("creator[]")
 do list(path:"metadata.lom:lom.lom:lifecycle.lom:contribute","var":"$i")
-  if any_match("$i.lom:role.lom:value.lom:langstring.value","Author")
     do list(path:"$i.lom:centity","var":"$j")
       if any_match("$j.lom:vcard.value","^.+VCARD.+?FN:(?! ).+?$")
-        unless any_match("$j.lom:vcard.value",".*(Die LawBusters|IG Lebenszyklus Bau|Institut|Virtuelle PH|The Berg Group|TU Graz|[Tt]eam|[Ss]tiftung|University|Stadt Graz).*")
+        unless any_match("$i.lom:centity.lom:vcard.value",".*(HTWG|Academy|Forum|Wien|INTER|TU|FH|PH|Institut|Virtuelle PH|TU Graz|[Ss]tiftung|[uU]niversit|Stadt Graz|[hH]ochschul|Verband|Digital|iMoo[xX]).*")
           copy_field("$j.lom:vcard.value","creator[].$append.name")
           replace_all("creator[].$last.name", "(BEGIN:VCARD VERSION:4.0 FN:)(.+)( ROLE.+ END:VCARD)", "$2")
           replace_all("creator[].$last.name", "\\\\.+", "")
           add_field("creator[].$last.type","Person")
         end
-        if any_match("$j.lom:vcard.value",".*(Institut|Virtuelle PH|TU Graz|University).*")
+        if any_match("$j.lom:vcard.value",".*(Institut|Virtuelle PH|TU Graz|Universit|[hH]ochschul).*")
           copy_field("$j.lom:vcard.value","creator[].$append.name")
           replace_all("creator[].$last.name", "(BEGIN:VCARD VERSION:4.0 FN:)(.+)( ROLE.+ END:VCARD)", "$2")
           replace_all("creator[].$last.name", "\\\\.+", "")
@@ -86,7 +85,6 @@ do list(path:"metadata.lom:lom.lom:lifecycle.lom:contribute","var":"$i")
         end
       end
     end
-  end
 end
 
 # No specifics about creator type. Set type=Person as default.
