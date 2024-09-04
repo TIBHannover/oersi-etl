@@ -13,6 +13,10 @@ do list(path: "metadata.lom:lom.lom:technical.lom:location", "var": "$i")
   end
 end
 
+unless exists("metadata.lom:lom.lom:general.lom:description")
+  reject()
+end
+
 # Delete all empty values
 vacuum()
 
