@@ -6,7 +6,6 @@ do once("macrosAndMaps")
   include ("../../sharedFixes/macros.fix")
   include ("../../sharedFixes/maps.fix")
   # workflow specific maps
-  put_filemap("data/maps/openRubLearningResourceTypes.tsv","openRubLearningResourceTypes", "sep_char":"\t")
   put_filemap("data/maps/hhuUploadResource2Destatis.tsv","hhuUploadResource2Destatis","sep_char":"\t")
   put_filemap("data/maps/hhuKeywords2Destatis.tsv","hhuKeywords2Destatis","sep_char":"\t")
 end
@@ -29,10 +28,10 @@ set_array("@dateCreated")
 copy_field("html.body.form.div.div.*.div.div.div.div.*.div.div.*.div.*.div.div.*.span.*.watch-information-date produced", "@dateCreated.$append")
 do list(path:"@dateCreated", "var": "$i")
  if any_match("$i", "- recorded at \\d{1,2}}/\\d{1,2}}/\\d{4}")
-   replace_all("$i", "(\\d)/(\\d+)/(\\d\\d\\d\\d)", "0$1/$2/$3")
-   replace_all("$i", "(\\d+)/(\\d)/(\\d\\d\\d\\d)", "$1/0$2/$3")
-   replace_all("$i", "- recorded at (\\d\\d)/(\\d\\d)/(\\d\\d\\d\\d)", with: "$3-$1-$2")
-   copy_field("$i", "dateCreated")
+    replace_all("$i", "(\\d)/(\\d+)/(\\d\\d\\d\\d)", "0$1/$2/$3")
+    replace_all("$i", "(\\d+)/(\\d)/(\\d\\d\\d\\d)", "$1/0$2/$3")
+    replace_all("$i", "- recorded at (\\d\\d)/(\\d\\d)/(\\d\\d\\d\\d)", with: "$3-$1-$2")
+    copy_field("$i", "dateCreated")
  end
 end
 
