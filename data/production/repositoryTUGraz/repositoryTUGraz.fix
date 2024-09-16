@@ -1,4 +1,4 @@
-# See https://github.com/TobiasNx/Catmandu-Testing/blob/master/DuePub-Test/duepub-catmandu.fix
+# Reject deleted, broken, unsufficient records as well as iMoox resources
 
 if exists ("metadata.error")
   reject()
@@ -11,6 +11,10 @@ do list(path: "metadata.lom:lom.lom:technical.lom:location", "var": "$i")
   if any_match("$i.value", ".*imoox.*")
     reject()
   end
+end
+
+unless exists("metadata.lom:lom.lom:general.lom:description")
+  reject()
 end
 
 # Delete all empty values
