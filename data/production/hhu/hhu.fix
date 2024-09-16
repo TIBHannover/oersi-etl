@@ -6,8 +6,8 @@ do once("macrosAndMaps")
   include ("../../sharedFixes/macros.fix")
   include ("../../sharedFixes/maps.fix")
   # workflow specific maps
-  put_filemap("data/maps/openRubLearningResourceTypes.tsv","openRubLearningResourceTypes", "sep_char":"\t")
-  put_filemap("data/maps/openRubFields2Destatis.tsv","openRubFields2Destatis","sep_char":"\t")
+  put_filemap("data/maps/hhuUploadResource2Destatis.tsv","hhuUploadResource2Destatis","sep_char":"\t")
+  put_filemap("data/maps/hhuKeywords2Destatis.tsv","hhuKeywords2Destatis","sep_char":"\t")
 end
 
 # ---------------id ----------------------------------
@@ -28,10 +28,10 @@ set_array("@dateCreated")
 copy_field("html.body.form.div.div.*.div.div.div.div.*.div.div.*.div.*.div.div.*.span.*.watch-information-date produced", "@dateCreated.$append")
 do list(path:"@dateCreated", "var": "$i")
  if any_match("$i", "- recorded at \\d{1,2}}/\\d{1,2}}/\\d{4}")
-   replace_all("$i", "(\\d)/(\\d+)/(\\d\\d\\d\\d)", "0$1/$2/$3")
-   replace_all("$i", "(\\d+)/(\\d)/(\\d\\d\\d\\d)", "$1/0$2/$3")
-   replace_all("$i", "- recorded at (\\d\\d)/(\\d\\d)/(\\d\\d\\d\\d)", with: "$3-$1-$2")
-   copy_field("$i", "dateCreated")
+    replace_all("$i", "(\\d)/(\\d+)/(\\d\\d\\d\\d)", "0$1/$2/$3")
+    replace_all("$i", "(\\d+)/(\\d)/(\\d\\d\\d\\d)", "$1/0$2/$3")
+    replace_all("$i", "- recorded at (\\d\\d)/(\\d\\d)/(\\d\\d\\d\\d)", with: "$3-$1-$2")
+    copy_field("$i", "dateCreated")
  end
 end
 
@@ -100,6 +100,25 @@ do list(path:"html.body.form.div.div.*.div.div.div.div.*.div.div.*.div.*.div.*.d
   copy_field("$i","keywords[].$append")
 end
 
+# ----- about -----
+
+set_array("about[]")
+do list(path:"html.body.form.div.div.*.div.div.div.div.*.div.div.*.div.*.div.div.*.span.*.a", "var":"$prov")
+  if exists("$prov.author")
+    lookup("$prov.author", "hhuUploadResource2Destatis", delete: "true")
+    copy_field("$prov.author", "about[].$append.id")
+    copy_field("$prov.author", "about[].$last.prefLabel.de")
+  end
+end
+unless exists("about.id")
+    do list(path:"keywords[]","var":"$tag")
+    lookup("$tag", "hhuKeywords2Destatis", delete: "true")
+      copy_field("$tag", "about[].$append.id")
+      copy_field("$tag", "about[].$last.prefLabel.de")
+    end
+end
+
+uniq("about[]")
 
 # ---------mainEntityOfPage----------------
 
