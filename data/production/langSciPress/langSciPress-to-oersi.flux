@@ -33,6 +33,7 @@ service_name = "langSci Press";
 | wait-for-inputs("2")
 | sort-triples
 | collect-triples
+| fix("data/sharedFixes/cleanUp.fix")
 | encode-json
 | validate-json(output_schema, writeValid=metadata_valid, writeInvalid=metadata_invalid)
 | oersi.OersiWriter(backend_api, user=backend_user, pass=backend_pass, log=metadata_responses)
