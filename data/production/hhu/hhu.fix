@@ -118,6 +118,8 @@ unless exists("about.id")
     end
 end
 
+lookup("about[].*.prefLabel.de", "destatis-deLabel2Uri", delete:"true")
+
 uniq("about[]")
 
 # ---------mainEntityOfPage----------------
