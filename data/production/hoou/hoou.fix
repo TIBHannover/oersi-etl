@@ -47,12 +47,12 @@ trim("keywords.*")
 move_field("keywords","keywords[]")
 
 # ---------------about ----------------------------------
-set_array("@about")
+add_array("@about")
 do list(path:"keywords[]", "var":"$i")
   copy_field("$i","@about.$append")
 end
 
-set_array("about[]")
+add_array("about[]")
 do list(path:"@about", "var":"$i")
   lookup("$i", "hoou-subject-mapping", delete:"true")
   copy_field("$i", "about[].$append.id")
@@ -62,13 +62,13 @@ lookup("about[].*.prefLabel.de", "destatis-deLabel2Uri", delete:"true")
 
 
 # ---------------type----------------------------------
-set_array("type[]", "LearningResource")
+add_array("type[]", "LearningResource")
 
 # ---------------learningResourceType----------------------------------
 
 /* HOOU provides at the moment only Course or CreativeWork as types. Also learningResourceType is set with Video oder Bilder but not very often. */
-set_array("@hcrt")
-set_array("learningResourceType[]")
+add_array("@hcrt")
+add_array("learningResourceType[]")
 copy_field("type|learningResourceType", "@hcrt.$append")
 replace_all("@hcrt.*","Bilder","Image")
 lookup("@hcrt.*","hcrt-enLabel2Uri", delete:"true")
@@ -88,7 +88,7 @@ add_field("conditionsOfAccess.id","http://w3id.org/kim/conditionsOfAccess/no_log
 
 # ---------mainEntityOfPage----------------
 replace_all("id", 'legacy.hoou.de', 'www.hoou.de')
-set_array("mainEntityOfPage[]")
+add_array("mainEntityOfPage[]")
 copy_field("id", "mainEntityOfPage[].$append.id")
 add_field("mainEntityOfPage[].$last.provider.id","$[service_id]")
 add_field("mainEntityOfPage[].$last.provider.type","Service")
@@ -96,23 +96,23 @@ add_field("mainEntityOfPage[].$last.provider.name","$[service_name]")
 
 # ---------------@context ----------------------------------
 
-set_array("@context[]", "https://w3id.org/kim/amb/context.jsonld")
+add_array("@context[]", "https://w3id.org/kim/amb/context.jsonld")
 # resource is german therefore prefer de if multiple or no inLanguage are available
 if any_equal("inLanguage[]","de")
-  set_hash("@context[].$append", "@language": "de")
+  add_hash("@context[].$append", "@language": "de")
 elsif any_equal("inLanguage[]","en")
-  set_hash("@context[].$append", "@language": "en")
+  add_hash("@context[].$append", "@language": "en")
 else
   copy_field("inLanguage[].1", "@context[].$append.@language")
 end
 # resources without inLanguage-Values set default to de
 unless exists("inLanguage[].1")
-  set_hash("@context[].$append", "@language": "de")
+  add_hash("@context[].$append", "@language": "de")
 end
 
 # ---------audience----------------
 copy_field("audience[]", "@tempAudience[]")
-set_array("audience[]")
+add_array("audience[]")
 
 do list(path:"@tempAudience[]", "var": "$i")
   # Replace ID with mappings and delete values not known

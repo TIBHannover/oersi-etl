@@ -41,7 +41,7 @@ end
 
 # ------------ sourceOrganization -------------
 
-set_array("sourceOrganization[]")
+add_array("sourceOrganization[]")
 do list(path:"creator[]|contributor[]","var":"$i")
   unless in("$i.affiliation.name","sourceOrganization[].*.name")
     copy_field("$i.affiliation.name", "sourceOrganization[].$append.name")
@@ -65,7 +65,7 @@ add_field("conditionsOfAccess.id","http://w3id.org/kim/conditionsOfAccess/no_log
 
 
 # ---------mainEntityOfPage----------------
-set_array("mainEntityOfPage[]")
+add_array("mainEntityOfPage[]")
 copy_field("id", "mainEntityOfPage[].$append.id")
 add_field("mainEntityOfPage[].$last.provider.id","$[service_id]")
 add_field("mainEntityOfPage[].$last.provider.type","Service")
@@ -74,25 +74,25 @@ add_field("mainEntityOfPage[].$last.provider.name","$[service_name]")
 # ------------ inLanguage -------------
 # needs to be patched
 remove_field("inLanguage[]")
-set_array("inLanguage[]", "de")
+add_array("inLanguage[]", "de")
 
 # ------ type --- 
-set_array("type[]", "LearningResource")
+add_array("type[]", "LearningResource")
 
 # ---------------@context ----------------------------------
 
-set_array("@context[]", "https://w3id.org/kim/amb/context.jsonld")
+add_array("@context[]", "https://w3id.org/kim/amb/context.jsonld")
 # resource is german therefore prefer de if multiple or no inLanguage are available
 if any_equal("inLanguage[]","de")
-  set_hash("@context[].$append", "@language": "de")
+  add_hash("@context[].$append", "@language": "de")
 elsif any_equal("inLanguage[]","en")
-  set_hash("@context[].$append", "@language": "en")
+  add_hash("@context[].$append", "@language": "en")
 else
   copy_field("inLanguage[].1", "@context[].$append.@language")
 end
 # resources without inLanguage-Values set default to de
 unless exists("inLanguage[].1")
-  set_hash("@context[].$append", "@language": "de")
+  add_hash("@context[].$append", "@language": "de")
 end
 
 # --- retain needs the exact name as it enters, so creator[]

@@ -27,7 +27,7 @@ end
 
 # -----  encoding ----
 
-set_array("encoding[]")
+add_array("encoding[]")
 copy_field("id", "encoding[].$append.downloadUrl")
 /*
 append("encoding[].$end.id", "/data")

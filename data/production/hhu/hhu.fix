@@ -24,7 +24,7 @@ copy_field("html.head.meta.*.og:image","image")
 
 
 # ---------------dateCreated----------------------------------
-set_array("@dateCreated")
+add_array("@dateCreated")
 copy_field("html.body.form.div.div.*.div.div.div.div.*.div.div.*.div.*.div.div.*.span.*.watch-information-date produced", "@dateCreated.$append")
 do list(path:"@dateCreated", "var": "$i")
  if any_match("$i", "- recorded at \\d{1,2}}/\\d{1,2}}/\\d{4}")
@@ -43,11 +43,11 @@ end
 
 # # ---------------creator----------------------------------
 
-set_array("@creator[]")
+add_array("@creator[]")
 copy_field("html.body.form.div.div.*.div.div.div.div.*.div.div.*.div.*.div.*.div.*.p.watch-speaker","@creator[].$append")
 
 
-set_array("creator[]")
+add_array("creator[]")
 do list(path:"@creator[]","var":"$i")
   unless any_equal("$i","no speaker")
     copy_field("$i","creator[].$append.name")
@@ -57,19 +57,19 @@ add_field("creator[].*.type", "Person")
 call_macro("deleteAcademicTitles", field: "creator[].*.name")
 
 # ---------------sourceOrganization----------------------------------
-set_array("sourceOrganization[]")
+add_array("sourceOrganization[]")
 add_field("sourceOrganization[].$append.type", "Organization")
 add_field("sourceOrganization[].$last.name", "Heinrich-Heine-Universität Düsseldorf")
 add_field("sourceOrganization[].$last.id", "https://ror.org/024z2rq82")
 
 # ------ type --- 
 
-set_array("type[]", "LearningResource")
+add_array("type[]", "LearningResource")
 
 # ------ learningResourceType --- 
 # only video
 
-set_array("learningResourceType[]")
+add_array("learningResourceType[]")
 add_field("learningResourceType[].$append.id","https://w3id.org/kim/hcrt/video")
 add_field("learningResourceType[].$last.prefLabel.de","Video")
 add_field("learningResourceType[].$last.prefLabel.en","Video")
@@ -81,8 +81,8 @@ add_field("conditionsOfAccess.id","http://w3id.org/kim/conditionsOfAccess/no_log
 # ------ encoding --- 
 /* encoding: So far only embedUrl */
 
-set_array("@embedUrl")
-set_array("encoding[]")
+add_array("@embedUrl")
+add_array("encoding[]")
 copy_field("html.body.form.div.div.*.div.div.div.div.*.div.div.*.div.*.div.*.div.textarea.value","@embedUrl.$append")
 
 do list(path:"@embedUrl", "var":"$i")
@@ -95,14 +95,14 @@ end
 
 # ------ keywords --- 
 
-set_array("keywords[]")
+add_array("keywords[]")
 do list(path:"html.body.form.div.div.*.div.div.div.div.*.div.div.*.div.*.div.*.div.ul.li.*.a.value","var":"$i")
   copy_field("$i","keywords[].$append")
 end
 
 # ----- about -----
 
-set_array("about[]")
+add_array("about[]")
 do list(path:"html.body.form.div.div.*.div.div.div.div.*.div.div.*.div.*.div.div.*.span.*.a", "var":"$prov")
   if exists("$prov.author")
     lookup("$prov.author", "hhuUploadResource2Destatis", delete: "true")
@@ -122,7 +122,7 @@ uniq("about[]")
 
 # ---------mainEntityOfPage----------------
 
-set_array("mainEntityOfPage[]")
+add_array("mainEntityOfPage[]")
 copy_field("id", "mainEntityOfPage[].$append.id")
 add_field("mainEntityOfPage[].$last.provider.id","$[service_id]")
 add_field("mainEntityOfPage[].$last.provider.type","Service")
@@ -130,18 +130,18 @@ add_field("mainEntityOfPage[].$last.provider.name","$[service_name]")
 
 # ---------------@context ----------------------------------
 
-set_array("@context[]", "https://w3id.org/kim/amb/context.jsonld")
+add_array("@context[]", "https://w3id.org/kim/amb/context.jsonld")
 # resource is german therefore prefer de if multiple or no inLanguage are available
 if any_equal("inLanguage[]","de")
-  set_hash("@context[].$append", "@language": "de")
+  add_hash("@context[].$append", "@language": "de")
 elsif any_equal("inLanguage[]","en")
-  set_hash("@context[].$append", "@language": "en")
+  add_hash("@context[].$append", "@language": "en")
 else
   copy_field("inLanguage[].1", "@context[].$append.@language")
 end
 # resources without inLanguage-Values set default to de
 unless exists("inLanguage[].1")
-  set_hash("@context[].$append", "@language": "de")
+  add_hash("@context[].$append", "@language": "de")
 end
 
 

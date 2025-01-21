@@ -48,7 +48,7 @@ copy_field("properties.ccm:published_dateISO8601[].1", "datePublished")
 # ---------------learningResourceType----------------------------------
 
 # Youtube Videos seem to have the labels instead of the id. 
-set_array("learningResourceType[]")  # set_array is desctructive and deletes existing learningResourceType-element
+add_array("learningResourceType[]")  # add_array is desctructive and deletes existing learningResourceType-element
 do list(path:"properties.ccm:educationallearningresourcetype[]", "var": "$i")
   unless any_equal("$i", "null null")
     if all_equal("$i", "Video")

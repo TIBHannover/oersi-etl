@@ -19,12 +19,12 @@ replace_all("description",'<a[^>]*?href=\\"(.*?)\\">', "")
 replace_all("description","<\\w*>|</\\w*>", "")
 #  ---------------creator----------------------------------
 # source data is not consistent, can be a single author or multiple separated by comma or "&amp;". API estimates one object per instructor. Also there is no type even though there are persons and organisations.*/
-set_array("@creator")
+add_array("@creator")
 copy_field("attributes.instructors[].*.name", "@creator.$append")
 call_macro("deleteAcademicTitles", field: "@creator.*")
 
 
-set_array("creator[]")
+add_array("creator[]")
 do list(path:"@creator", "var": "$i")
   copy_field("$i","creator[].$append.name")
   add_field("creator[].$last.type", "Person")
@@ -32,7 +32,7 @@ end
 
 # ------ sourceOrganization --- 
 
-set_array("sourceOrganization[]")
+add_array("sourceOrganization[]")
 do list(path:"attributes.partnerInstitute[]", "var": "$i")
   copy_field("$i.name", "sourceOrganization[].$append.name")
   add_field("sourceOrganization[].$last.type", "Organization")
@@ -44,7 +44,7 @@ end
 
 
 # ------ about --- 
-set_array("about[]")
+add_array("about[]")
 add_field("about[].$append.id", "https://w3id.org/kim/hochschulfaechersystematik/n172")
 add_field("about[].$last.prefLabel.de", "Verwaltungswissenschaft/-wesen")
 
