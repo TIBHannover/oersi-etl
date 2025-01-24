@@ -128,7 +128,13 @@ lookup("license.id","licenseMap")
 
 # ------ type --- 
 
-add_array("type[]", "LearningResource")
+add_array("type[]", "LearningResource", "Book")
+
+# ----ISBN----
+add_array("isbn[]")
+if any_match("ISBN13", "^97[89][0-9]{10}$]")
+  copy_field("ISBN13","isbn[].$append")
+end
 
 # ------ keywords ---
 add_array("keywords[]")
