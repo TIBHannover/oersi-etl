@@ -15,7 +15,7 @@ end
 replace_all("id", '(.*?)/lernangebot', "https://open.ruhr-uni-bochum.de/lernangebot")
 
 #  ------------inLanguage------------------------------------
-set_array("inLanguage[]")
+add_array("inLanguage[]")
 move_field("inLanguage","inLanguage[].$append")
 
 # --------------licenses-------------
@@ -24,7 +24,7 @@ move_field("license-orig", "license.id")
 
 # ---------------type ----------------------------------
 remove_field("type")
-set_array("type[]", "LearningResource")
+add_array("type[]", "LearningResource")
 
 # ---------description---------
 # delete all HTML tags
@@ -36,7 +36,7 @@ replace_all("description", '  ', " ")
 trim("description")
 
 # ---------sourceOrganization---------
-set_array("sourceOrganization[]")
+add_array("sourceOrganization[]")
 add_field("sourceOrganization[].$append.name", "Ruhr-Universität Bochum")
 add_field("sourceOrganization[].$last.type","Organization")
 add_field("sourceOrganization[].$last.id","https://ror.org/04tsk2644")
@@ -47,7 +47,7 @@ add_field("sourceOrganization[].$last.id","https://ror.org/04tsk2644")
 lookup("learningResourceType", "openRubLearningResourceTypes", delete:"true")
 lookup("learningResourceType", "hcrt-deLabel2Uri", delete:"true")
 
-set_array("learningResourceType[]")
+add_array("learningResourceType[]")
 copy_field("learningResourceType", "learningResourceType[].$append.id")
 do list(path:"learningResourceType[]")
   copy_field("id", "prefLabel.de")
@@ -59,9 +59,9 @@ end
 
 # ------about----
 # sometimes the "fields"-element is not an array and therefore has no brackets "[]". The transformation mechanism handles this:
-set_array("about[]")
+add_array("about[]")
 unless exists("fields[]")
-  set_array("fields[]")
+  add_array("fields[]")
   move_field("fields", "fields[].$append")
 end
 lookup("fields[].*", "openRubFields2Destatis", delete:"true")
@@ -77,7 +77,7 @@ remove_field('fields[]')
 add_field("conditionsOfAccess.id","http://w3id.org/kim/conditionsOfAccess/no_login")
 
 # ---------mainEntityOfPage----------------
-set_array("mainEntityOfPage[]")
+add_array("mainEntityOfPage[]")
 copy_field("id", "mainEntityOfPage[].$append.id")
 add_field("mainEntityOfPage[].$last.provider.id","$[service_id]")
 add_field("mainEntityOfPage[].$last.provider.type","Service")
@@ -85,18 +85,18 @@ add_field("mainEntityOfPage[].$last.provider.name","$[service_name]")
 
 # ---------------@context ----------------------------------
 
-set_array("@context[]", "https://w3id.org/kim/amb/context.jsonld")
+add_array("@context[]", "https://w3id.org/kim/amb/context.jsonld")
 # resource is german therefore prefer de if multiple or no inLanguage are available
 if any_equal("inLanguage[]","de")
-  set_hash("@context[].$append", "@language": "de")
+  add_hash("@context[].$append", "@language": "de")
 elsif any_equal("inLanguage[]","en")
-  set_hash("@context[].$append", "@language": "en")
+  add_hash("@context[].$append", "@language": "en")
 else
   copy_field("inLanguage[].1", "@context[].$append.@language")
 end
 # resources without inLanguage-Values set default to de
 unless exists("inLanguage[].1")
-  set_hash("@context[].$append", "@language": "de")
+  add_hash("@context[].$append", "@language": "de")
 end
 
 

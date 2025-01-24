@@ -29,24 +29,24 @@ dependencies {
     // This dependency is used internally, and not exposed to consumers on their own compile classpath.
     implementation 'com.google.guava:guava:26.0-jre'
     implementation 'org.jooq:joox-java-6:1.6.0'
-    implementation 'org.metafacture:metafacture-io:6.1.2'
-    implementation 'org.metafacture:metafacture-plumbing:6.1.2'
-    implementation 'org.metafacture:metafacture-strings:6.1.2'
-    implementation 'org.metafacture:metafacture-triples:6.1.2'
-    implementation 'org.metafacture:metafacture-formatting:6.1.2'
-    implementation 'org.metafacture:metafacture-monitoring:6.1.2'
-    implementation ('org.metafacture:metafacture-runner:6.1.2'){
+    implementation 'org.metafacture:metafacture-io:6.2.0'
+    implementation 'org.metafacture:metafacture-plumbing:6.2.0'
+    implementation 'org.metafacture:metafacture-strings:6.2.0'
+    implementation 'org.metafacture:metafacture-triples:6.2.0'
+    implementation 'org.metafacture:metafacture-formatting:6.2.0'
+    implementation 'org.metafacture:metafacture-monitoring:6.2.0'
+    implementation ('org.metafacture:metafacture-runner:6.2.0'){
         exclude group: 'org.antlr', module: 'antlr'
     }
-    implementation 'org.metafacture:metafacture-json:6.1.2'
-    implementation 'org.metafacture:metafacture-html:6.1.2'
-    implementation 'org.metafacture:metafacture-elasticsearch:6.1.2'
-    implementation 'org.metafacture:metafacture-xml:6.1.2'
-    implementation 'org.metafacture:metafix:1.1.2'
-    implementation('org.metafacture:metafacture-biblio:6.1.2') {
+    implementation 'org.metafacture:metafacture-json:6.2.0'
+    implementation 'org.metafacture:metafacture-html:6.2.0'
+    implementation 'org.metafacture:metafacture-elasticsearch:6.2.0'
+    implementation 'org.metafacture:metafacture-xml:6.2.0'
+    implementation 'org.metafacture:metafix:1.2.0'
+    implementation('org.metafacture:metafacture-biblio:6.2.0') {
         exclude group: 'xml-apis', module: 'xml-apis'
     }
-    implementation 'org.metafacture:metafacture-csv:6.1.2'
+    implementation 'org.metafacture:metafacture-csv:6.2.0'
     // Required after upgrade to Gradle 7.2 in metafacture-fix:
     // (TODO: avoid RecognitionException/Flux.main in ETL.java)
     implementation "org.antlr:antlr-runtime:3.2"

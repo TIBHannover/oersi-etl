@@ -14,7 +14,7 @@ prepend("id_csv","https://langsci-press.org/catalog/book/")
 copy_field("id_csv", "_id")
 
 # ------ inLanguage------
-set_array("inLanguage[]")
+add_array("inLanguage[]")
 copy_field("metalanguage", "inLanguage[].$append")
 
 do once("languageMap")
@@ -32,18 +32,18 @@ lookup("inLanguage[].*","languageMap")
 
 # ---------------@context ----------------------------------
 
-set_array("@context[]", "https://w3id.org/kim/amb/context.jsonld")
+add_array("@context[]", "https://w3id.org/kim/amb/context.jsonld")
 # resource is german therefore prefer de if multiple or no inLanguage are available
 if any_equal("inLanguage[]","de")
-  set_hash("@context[].$append", "@language": "de")
+  add_hash("@context[].$append", "@language": "de")
 elsif any_equal("inLanguage[]","en")
-  set_hash("@context[].$append", "@language": "en")
+  add_hash("@context[].$append", "@language": "en")
 else
   copy_field("inLanguage[].1", "@context[].$append.@language")
 end
 # resources without inLanguage-Values set default to de
 unless exists("inLanguage[].1")
-  set_hash("@context[].$append", "@language": "de")
+  add_hash("@context[].$append", "@language": "de")
 end
 
 retain("inLanguage[]", "_id", "@context[]")

@@ -14,13 +14,13 @@ include ("../../sharedFixes/eduSharingDefault.fix")
 #  ---------------about----------------------------------
 # add instance specific subject mapping
  
-set_array("@hochschulfaechersystematik[]")
+add_array("@hochschulfaechersystematik[]")
 copy_field("properties.ccm:taxonid[].*", "@hochschulfaechersystematik[].$append")
 replace_all("@hochschulfaechersystematik[].*", "https://w3id.org/oerbase/vocabs/oefos2012/", "https://vocabs.acdh.oeaw.ac.at/oefosdisciplines/")
 lookup("@hochschulfaechersystematik[].*", "oefos2destatis", delete:"true")
 uniq("@hochschulfaechersystematik[]")
 
-set_array("about[]")
+add_array("about[]")
 do list(path:"@hochschulfaechersystematik[]", "var":"$i")
   copy_field("$i", "about[].$append.id")
   copy_field("$i", "about[].$last.prefLabel.de")
@@ -30,7 +30,7 @@ lookup("about[].*.prefLabel.de", "destatis-deLabel2Uri", delete:"true")
 # ----- SourceOrganization -----
 
 unless exists("properties.ccm:university_DISPLAYNAME[]")
-  set_array("sourceOrganization[]")
+  add_array("sourceOrganization[]")
   add_field("sourceOrganization[].$append.name", "Universität Innsbruck")
   add_field("sourceOrganization[].$last.type","Organization")
   add_field("sourceOrganization[].$last.id","https://ror.org/054pv6659")

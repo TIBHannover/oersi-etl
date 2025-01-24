@@ -1,6 +1,6 @@
 # ---------mainEntityOfPage----------------
 unless exists("mainEntityOfPage[]")
-	set_array("mainEntityOfPage[]")
+	add_array("mainEntityOfPage[]")
 end
 copy_field("id", "mainEntityOfPage[].$append.id")
 add_field("mainEntityOfPage[].$last.provider.id","$[service_id]")

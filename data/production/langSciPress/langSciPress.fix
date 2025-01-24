@@ -32,7 +32,7 @@ do list(path:"html.head.meta","var":"$i")
 end
 
 # ------ creator --- 
-  set_array("creator[]")
+  add_array("creator[]")
 do list(path:"html.head.meta.DC_Creator_PersonalName","var":"$i")
 
   copy_field("$i", "creator[].$append.name")
@@ -40,7 +40,7 @@ end
 add_field("creator[].*.type", "Person")
 
 # ------ keywords------
-  set_array("keywords[]")
+  add_array("keywords[]")
 do list(path:"html.head.meta.citation_keywords","var":"$i")
   copy_field("$i", "keywords[].$append")
 end
@@ -52,7 +52,7 @@ do list(path:"html.head.meta.citation_publication_date","var":"$i")
 end
 
   # ------ publisher------
-  set_array("publisher[]")
+  add_array("publisher[]")
 do list(path:"html.head.meta.citation_publisher","var":"$i")
 
   copy_field("$i", "publisher[].$append.name")
@@ -62,7 +62,7 @@ add_field("publisher[].*.type", "Organization")
 
 # ------ encoding --- 
 
-set_array("encoding[]")
+add_array("encoding[]")
 do list(path:"html.head.meta.citation_pdf_url","var":"$i")
   copy_field("$i", "encoding[].$append.contentUrl")
   add_field("encoding[].$last.encodingFormat","application/pdf")    
@@ -73,17 +73,17 @@ end
 add_field("conditionsOfAccess.id","http://w3id.org/kim/conditionsOfAccess/no_login") 
 
 # ------ learningResourceType --- 
-set_array("learningResourceType[]")
+add_array("learningResourceType[]")
 
 add_field("learningResourceType[].$append.id","https://w3id.org/kim/hcrt/textbook")
 add_field("learningResourceType[].$last.prefLabel.de","Lehrbuch")
 add_field("learningResourceType[].$last.prefLabel.en","Textbook")
 
 # ------ type --- 
-set_array("type[]", "LearningResource")
+add_array("type[]", "LearningResource")
 
 # ------ about --- 
-set_array("about[]")
+add_array("about[]")
 add_field("about[].$append.id", "https://w3id.org/kim/hochschulfaechersystematik/n07")
 add_field("about[].$last.prefLabel.de", "Allgemeine und vergleichende Literatur- und Sprachwissenschaft")
 
@@ -93,7 +93,7 @@ add_field("about[].$last.prefLabel.de", "Allgemeine und vergleichende Literatur-
 # ---------mainEntityOfPage----------------
 
 if exists("id")
-  set_array("mainEntityOfPage[]")
+  add_array("mainEntityOfPage[]")
   copy_field("id", "mainEntityOfPage[].$append.id")
   add_field("mainEntityOfPage[].$last.provider.id","$[service_id]")
   add_field("mainEntityOfPage[].$last.provider.type","Service")

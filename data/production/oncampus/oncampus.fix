@@ -29,14 +29,14 @@ uniq("image")
 copy_field("html.body.div.div.div.div.section.section.section.div.section.p.a.license", "license.id")
 
 # -------------creator--------------
-set_array("creator[]")
+add_array("creator[]")
 # Most of the times the author is listed here, sometimes contains language, maybe skip creator
 copy_field("html.body.div.2.div.2.div.div.section.1.div.4.div.div.1.div.div.1.div.2.span.2.value", "creator[].$append.name")
 add_field("creator[].$last.type", "Person")
 replace_all("creator[].$last.name","Apl\\. |\\(apl\\.\\) |Dr\\. med |Dr\\. |Dr\\.'in |Dr |Dr\\.med\\.|Dres\\. |Dr\\.|Prof\\. |Prof\\.'in |Prof\\.|Prof |Jun\\.-|PD |PD\\. |med\\. |rer\\. |pol\\.|nat\\. |dent\\. |em\\. |Ao\\.-|o\\. Univ\\.|Uni\\.-|Univ\\.-|Univ\\. |DI |RA |Dipl\\.|-Ing\\. |-Inform\\. |-Psych\\. |h\\.c\\. |mult\\. |Mag\\. |, MME|; MME|, MScN|M\\. Sc\\. |, MSc| MSc\\.|, M\\.A\\.| M\\.A\\.|, M\\.D\\.|, B\\.A\\.|, MMZ|, Psychoanalytiker|, L\\.L\\.M\\.|, LL\\.M\\.| \\(M\\.A\\.\\)", "")
 
 # -------------inLanguage--------------
-set_array("inLanguage[]")
+add_array("inLanguage[]")
 do list("path": "html.body.div.*.div.*.div.div.section.*.div.*.div.div.*.div.div.*.div.*.span.*.value", "var": "$lang")
   if all_match("$lang", "German|Deutsch|English|Englisch")
     copy_field("$lang", "inLanguage[].$append")
@@ -46,22 +46,22 @@ do list("path": "html.body.div.*.div.*.div.div.section.*.div.*.div.div.*.div.div
 end
 
 # -------------keywords--------------
-set_array("keywords[]")
+add_array("keywords[]")
 copy_field("html.body.div.2.div.2.div.div.section.4.section.3.div.a.*.product_tag", "keywords[].$append")
 flatten("keywords[]")
 
 # -------------type--------------
-set_array("type[]", "LearningResource")
+add_array("type[]", "LearningResource")
 
 # -------------learningResourceType--------------
-set_array("learningResourceType[]")
+add_array("learningResourceType[]")
 add_field("learningResourceType[].$append.id","https://w3id.org/kim/hcrt/course")
 add_field("learningResourceType[].$last.prefLabel.de","Kurs")
 add_field("learningResourceType[].$last.prefLabel.en","Course")
 
 
 # -------------mainEntityOfPage--------------
-set_array("mainEntityOfPage[]")
+add_array("mainEntityOfPage[]")
 copy_field("id", "mainEntityOfPage[].$append.id")
 add_field("mainEntityOfPage[].$last.provider.id","$[service_id]")
 add_field("mainEntityOfPage[].$last.provider.type","Service")
@@ -72,18 +72,18 @@ add_field("conditionsOfAccess.id","http://w3id.org/kim/conditionsOfAccess/login"
 
 # ---------------@context ----------------------------------
 
-set_array("@context[]", "https://w3id.org/kim/amb/context.jsonld")
+add_array("@context[]", "https://w3id.org/kim/amb/context.jsonld")
 # resource is german therefore prefer de if multiple or no inLanguage are available
 if any_equal("inLanguage[]","de")
-  set_hash("@context[].$append", "@language": "de")
+  add_hash("@context[].$append", "@language": "de")
 elsif any_equal("inLanguage[]","en")
-  set_hash("@context[].$append", "@language": "en")
+  add_hash("@context[].$append", "@language": "en")
 else
   copy_field("inLanguage[].1", "@context[].$append.@language")
 end
 # resources without inLanguage-Values set default to de
 unless exists("inLanguage[].1")
-  set_hash("@context[].$append", "@language": "de")
+  add_hash("@context[].$append", "@language": "de")
 end
 
 
