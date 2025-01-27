@@ -45,7 +45,7 @@ else
 end
 
 #  ---------mainEntityOfPage----------------
-set_array("mainEntityOfPage[]")
+add_array("mainEntityOfPage[]")
 copy_field("@internal_id", "mainEntityOfPage[].$append.id")
 copy_field("node.modifiedAt", "mainEntityOfPage[].$last.dateModified")
 replace_all("mainEntityOfPage[].*.dateModified","T.+Z","")
@@ -65,7 +65,7 @@ lookup("node.properties.ccm:taxonid_DISPLAYNAME[].*","foerdeSubjects","sep_char"
 copy_field("node.properties.ccm:taxonid_DISPLAYNAME[]", "@hochschulfaechersystematik[]")
 
  
-set_array("about[]")
+add_array("about[]")
 do list(path:"@hochschulfaechersystematik[]", "var":"$i")
   copy_field("$i", "about[].$append.id")
   copy_field("$i", "about[].$last.prefLabel.de")
@@ -73,7 +73,7 @@ end
 lookup("about[].*.prefLabel.de", "destatis-deLabel2Uri", delete:"true")
 
 #  ---------------creator----------------------------------
-set_array("creator[]")
+add_array("creator[]")
 do list(path:"node.properties.ccm:lifecyclecontributer_author[]", "var": "$i")
   if any_match("$i", "^BEGIN:VCARD[\\s\\S]*FN:(.+)\n[\\s\\S]*\nEND:VCARD$")
     copy_field("$i", "creator[].$append.name")
@@ -95,7 +95,7 @@ end
 
 /*
 #  ---------------contributor----------------------------------
-set_array("contributor[]")
+add_array("contributor[]")
 do list(path:"node.properties.ccm:lifecyclecontributer_author[]", "var": "$i")
   if any_match("$i", "^BEGIN:VCARD[\\s\\S]*FN:(.+)\n[\\s\\S]*\nEND:VCARD$")
     copy_field("$i", "contributor[].$append.name")
@@ -117,7 +117,7 @@ end
 */
 
 #  ---------------sourceOrganization----------------------------------      
-set_array("sourceOrganization[]")
+add_array("sourceOrganization[]")
 do list(path:"node.properties.ccm:university_DISPLAYNAME[]", "var": "$i")
   unless any_match("$i", "null null|- Alle -")
     copy_field("$i", "sourceOrganization[].$append.name")
@@ -131,7 +131,7 @@ filter("license.id","^http[s]?:\\/\\/creativecommons.org\\/(licenses|licences|pu
  
  
 # ---------------inLanguage----------------------------------
-set_array("inLanguage[]")
+add_array("inLanguage[]")
 copy_field("node.properties.cclom:general_language[].*", "inLanguage[].$append")
 
 replace_all("inLanguage[].*","_..$", "") /* remove country suffixes eg. _DE */
@@ -139,7 +139,7 @@ replace_all("inLanguage[].*","^$", "de") /* empty strings default to 'de' */
 replace_all("inLanguage[].*","unknown", "de")
 
 # ---------------type----------------------------------
-set_array("type[]", "LearningResource")
+add_array("type[]", "LearningResource")
  
 # ---------------learningResourceType----------------------------------
 
@@ -147,7 +147,7 @@ lookup("node.properties.ccm:educationallearningresourcetype_DISPLAYNAME[].*","fo
 copy_field("node.properties.ccm:educationallearningresourcetype_DISPLAYNAME[]", "@learningResourceType[]")
 
 
-set_array("learningResourceType[]")
+add_array("learningResourceType[]")
 do list(path:"@learningResourceType[]", "var": "$i")
   unless any_equal("$i", "null null")
     copy_field("$i", "learningResourceType[].$append.id")
@@ -164,7 +164,7 @@ copy_field("node.properties.cclom:general_keyword[]", "keywords[]")
 
 # ---------------encoding----------------------------------
 unless exists('node.properties.ccm:wwwurl[].1')
-  set_array("encoding[]")
+  add_array("encoding[]")
   add_field("encoding[].$append.type", "MediaObject")
   copy_field("node.downloadUrl", "encoding[].$last.contentUrl")
   copy_field("node.mimetype", "encoding[].$last.encodingFormat")
@@ -173,7 +173,7 @@ end
 
 # ------ sourceOrganization --- 
 
-set_array("sourceOrganization[]")
+add_array("sourceOrganization[]")
 
 add_field("sourceOrganization[].$append.name", "Christian-Albrechts-Universität zu Kiel")
 add_field("sourceOrganization[].$last.type", "Organization")
@@ -181,18 +181,18 @@ add_field("sourceOrganization[].$last.id", "https://ror.org/04v76ef78")
 
 # ---------------@context ----------------------------------
 
-set_array("@context[]", "https://w3id.org/kim/amb/context.jsonld")
+add_array("@context[]", "https://w3id.org/kim/amb/context.jsonld")
 # resource is german therefore prefer de if multiple or no inLanguage are available
 if any_equal("inLanguage[]","de")
-  set_hash("@context[].$append", "@language": "de")
+  add_hash("@context[].$append", "@language": "de")
 elsif any_equal("inLanguage[]","en")
-  set_hash("@context[].$append", "@language": "en")
+  add_hash("@context[].$append", "@language": "en")
 else
   copy_field("inLanguage[].1", "@context[].$append.@language")
 end
 # resources without inLanguage-Values set default to de
 unless exists("inLanguage[].1")
-  set_hash("@context[].$append", "@language": "de")
+  add_hash("@context[].$append", "@language": "de")
 end
 
 

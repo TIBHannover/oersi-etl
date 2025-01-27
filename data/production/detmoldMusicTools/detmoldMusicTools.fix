@@ -25,7 +25,7 @@ end
 
 # ------ sourceOrganization --- 
 
-set_array("sourceOrganization[]")
+add_array("sourceOrganization[]")
 add_field("sourceOrganization[].$append.name", "Hochschule für Musik Detmold")
 add_field("sourceOrganization[].$last.type", "Organization")
 
@@ -37,7 +37,7 @@ add_field("image", "https://detmoldmusictools.de/files/coursemanager/course/3/co
 add_field("conditionsOfAccess.id","http://w3id.org/kim/conditionsOfAccess/no_login") 
 
 # ---------mainEntityOfPage----------------
-set_array("mainEntityOfPage[]")
+add_array("mainEntityOfPage[]")
 copy_field("id", "mainEntityOfPage[].$append.id")
 add_field("mainEntityOfPage[].$last.provider.id","$[service_id]")
 add_field("mainEntityOfPage[].$last.provider.type","Service")

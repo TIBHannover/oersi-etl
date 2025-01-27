@@ -38,7 +38,7 @@ end
 
 
 #  ------------encoding ------------------------------------
-set_array("encoding[]")
+add_array("encoding[]")
 do list("path": "metadata.mods:mods.mods:location.mods:url", "var": "$i")
   if all_match("$i.value","^https://duepublico2.uni-due.de/servlets/.*")
     copy_field("$i.value","encoding[].$append.contentUrl")
@@ -54,7 +54,7 @@ do list(path: "metadata.mods:mods.mods:titleInfo", "var":"$i")
 end
 
 #  ------------creator------------------------------------
-set_array("creator[]")
+add_array("creator[]")
 do list("path":"metadata.mods:mods.mods:name","var":"$i")
   if any_match("$i.mods:role.mods:roleTerm.*.value","aut|cre")
     copy_field("$i.mods:displayForm.value","creator[].$append.name")
@@ -79,7 +79,7 @@ do list("path": "creator[]")
 end
 
 #  ------------contributor------------------------------------
-set_array("contributor[]")
+add_array("contributor[]")
 do list("path":"metadata.mods:mods.mods:name","var":"$i")
   if any_match("$i.type","corporate|personal")
     unless any_match("$i.mods:role.mods:roleTerm.*.value","aut|cre|his")
@@ -95,7 +95,7 @@ do list("path":"metadata.mods:mods.mods:name","var":"$i")
 end
 
 #  ------------sourceOrganization------------------------------------
-set_array("sourceOrganization[]")
+add_array("sourceOrganization[]")
 do list(path:"metadata.mods:mods.mods:name","var":"$i")
   if any_match("$i.mods:role.mods:roleTerm.*.value","his")
     unless exists("$i.mods:displayForm.value")
@@ -127,15 +127,15 @@ lookup("license.id","duepublico-licenses", delete:"true")
 copy_field("metadata.mods:mods.mods:originInfo.mods:dateIssued.value","dataCreated")
 
 #  ------------inLanguage------------------------------------
-set_array("inLanguage[]")
+add_array("inLanguage[]")
 copy_field("metadata.mods:mods.mods:language.mods:languageTerm.value","inLanguage[].$append")
 
 # ---------------type ----------------------------------
-set_array("type[]", "LearningResource")
+add_array("type[]", "LearningResource")
 
 # ---------------learningResourceType ----------------------------------
-set_array("learningResourceType[]")
-set_array("@lRT")
+add_array("learningResourceType[]")
+add_array("@lRT")
 do list(path:"metadata.mods:mods.mods:genre","var":"$i") 
   if any_match("$i.authorityURI","https://duepublico.uni-due.de/api/v1/classifications/mir_genres")
     lookup("$i.valueURI", "duepublico-hcrt", delete:"true")
@@ -158,12 +158,12 @@ lookup("learningResourceType[].*.prefLabel.de", "hcrt-deLabel2Uri", delete:"true
 lookup("learningResourceType[].*.prefLabel.en", "hcrt-enLabel2Uri", delete:"true")
 
 # ---------------keywords----------------------------------
-set_array("keywords[]")
+add_array("keywords[]")
 # TODO: Keywords seem to be tokenized in the data mostly, but some are concatinated. Need to split and add to the array.
 copy_field("metadata.mods:mods.mods:subject.mods:topic.*.value","keywords[].$append")
 
 #  ------------about------------------------------------
-set_array("about[]")
+add_array("about[]")
 do list(path:"metadata.mods:mods.mods:classification","var":"$i")
   if any_equal("$i.authorityURI","https://duepublico.uni-due.de/api/v1/classifications/destatis")
     lookup("$i.valueURI", "destatisPersonal2destatisStudierende", delete:"true")
@@ -176,7 +176,7 @@ lookup("about[].*.prefLabel.de", "destatis-deLabel2Uri", delete:"true")
 
 
 # -------isPartOf---------
-set_array("isPartOf[]")
+add_array("isPartOf[]")
 do list(path: "metadata.mods:mods.mods:relatedItem", "var": "$i")
   if any_equal("$i.type","host")
     copy_field("$i.xlink:href", "isPartOf[].$append.id")
@@ -191,7 +191,7 @@ add_field("conditionsOfAccess.id","http://w3id.org/kim/conditionsOfAccess/no_log
 
 
 # ---------mainEntityOfPage----------------
-set_array("mainEntityOfPage[]")
+add_array("mainEntityOfPage[]")
 copy_field("id", "mainEntityOfPage[].$append.id")
 add_field("mainEntityOfPage[].$last.provider.id","$[service_id]")
 add_field("mainEntityOfPage[].$last.provider.type","Service")
@@ -199,18 +199,18 @@ add_field("mainEntityOfPage[].$last.provider.name","$[service_name]")
 
 # ---------------@context ----------------------------------
 
-set_array("@context[]", "https://w3id.org/kim/amb/context.jsonld")
+add_array("@context[]", "https://w3id.org/kim/amb/context.jsonld")
 # resource is german therefore prefer de if multiple or no inLanguage are available
 if any_equal("inLanguage[]","de")
-  set_hash("@context[].$append", "@language": "de")
+  add_hash("@context[].$append", "@language": "de")
 elsif any_equal("inLanguage[]","en")
-  set_hash("@context[].$append", "@language": "en")
+  add_hash("@context[].$append", "@language": "en")
 else
   copy_field("inLanguage[].1", "@context[].$append.@language")
 end
 # resources without inLanguage-Values set default to de
 unless exists("inLanguage[].1")
-  set_hash("@context[].$append", "@language": "de")
+  add_hash("@context[].$append", "@language": "de")
 end
 
 # ---------tidy up!----------------

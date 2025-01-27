@@ -124,7 +124,7 @@ do list(path:"learningResourceType[]","var":"$i")
 end
 
 # --------------- publisher ---------------
-set_array("publisher[]")
+add_array("publisher[]")
 do list(path:"properties.ccm:lifecyclecontributer_publisher[]", "var": "$i")
   if any_match("$i", "^BEGIN:VCARD[\\s\\S]*FN:(.+)\n[\\s\\S]*\nEND:VCARD$")
     copy_field("$i", "publisher[].$append.name")
@@ -145,7 +145,7 @@ do list(path:"publisher[]")
 end
 
 # --------------- educationalLevel ---------------
-set_array("educationalLevel[]")
+add_array("educationalLevel[]")
 
 do list(path:"properties.ccm:educationalcontext[]", "var": "$i")
   # Replace ID with mappings and delete values not known
@@ -181,7 +181,7 @@ lookup("educationalLevel[].*.prefLabel.de", "educationalLevelMapDe")
 lookup("educationalLevel[].*.prefLabel.en", "educationalLevelMapEn")
 
 # --------------- audience ---------------
-set_array("audience[]")
+add_array("audience[]")
 
 do list(path:"properties.ccm:educationalintendedenduserrole[]", "var": "$i")
   lookup("$i", "audienceMappingOEH","sep_char":"\t", delete:"true")
@@ -197,7 +197,7 @@ lookup("audience[].*.prefLabel.de", "audienceDeLabel", delete:"true")
 lookup("audience[].*.prefLabel.en", "audienceEnLabel", delete:"true")
 
 # --------------- teaches ---------------
-set_array("teaches[]")
+add_array("teaches[]")
 
 do list_as(compId: "properties.ccm:competence[]", compLabel: "properties.ccm:competence_DISPLAYNAME[]")
   copy_field(compId, "teaches[].$append.id")
@@ -214,7 +214,7 @@ end
 #
 
 # Gather competencies from keywords and convert to concepts
-set_array("@teachesFromKeywords")
+add_array("@teachesFromKeywords")
 do list(path: "properties.cclom:general_keyword[]","var":"$i")
   copy_field("$i", "@teachesFromKeywords.$append")
 end
@@ -235,7 +235,7 @@ end
 
 # --------------- competencyRequired ---------------
 
-set_array("competencyRequired[]")
+add_array("competencyRequired[]")
 
 do list_as(compId: "properties.ccm:oeh_competence_requirements[]", compLabel: "properties.ccm:oeh_competence_requirements_DISPLAYNAME[]")
   add_field("competencyRequired[].$append.test","")
@@ -250,7 +250,7 @@ do list_as(compId: "properties.ccm:oeh_languageLevel[]", compLabel: "properties.
 end
 
 # --------------- assesses ---------------
-set_array("assesses[]")
+add_array("assesses[]")
 
 do list_as(compId: "properties.ccm:oeh_competence_check[]", compLabel: "properties.ccm:oeh_competence_check_DISPLAYNAME[]")
   add_field("assesses[].$append.test","")
@@ -287,7 +287,7 @@ unless exists("properties.ccm:wwwurl[].1")
   # if downloadUrl exists, default fix handles encoding already
   unless exists("downloadUrl")
     if exists("content.url")
-      set_array("encoding[]")
+      add_array("encoding[]")
       add_field("encoding[].$append.type", "MediaObject")
       copy_field("content.url", "encoding[].$last.contentUrl")
       copy_field("content.url", "encoding[].$last.embedUrl")

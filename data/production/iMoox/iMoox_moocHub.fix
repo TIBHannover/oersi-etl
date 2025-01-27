@@ -40,7 +40,7 @@ paste("description", "attributes.description","attributes.learningobjectives[].*
 
 #  ---------------creator----------------------------------
 # source data is not consistent, can be a single author or multiple separated by comma or "&amp;". API estimates one object per instructor. Also there is no type even though there are persons and organisations.*/
-set_array("@creator")
+add_array("@creator")
 do list(path: "attributes.creator[]", "var":"$i")
   split_field("$i.name", ", | &amp; | / ")
   do list(path:"$i.name", "var":"$j")
@@ -51,7 +51,7 @@ trim("@creator.*")
 call_macro("deleteAcademicTitles", field: "@creator.*")
 
 
-set_array("creator[]")
+add_array("creator[]")
 do list(path:"@creator", "var": "$i")
   copy_field("$i","creator[].$append.name")
   add_field("creator[].$last.type", "Person")
@@ -60,8 +60,8 @@ end
 # ----- contributor / sourceOrganization -----
 # if contributors of type "Organization", use SourceOrganization
 
-set_array("contributor[]")
-set_array("sourceOrganization[]")
+add_array("contributor[]")
+add_array("sourceOrganization[]")
 do list_as("$contributorName":"attributes.contributor[].name", "$contributorType":"attributes.contributor[].type")
   if all_equal("$contributorType","Organization")
     copy_field("$contributorName","sourceOrganization[].$append.name")
@@ -73,7 +73,7 @@ do list_as("$contributorName":"attributes.contributor[].name", "$contributorType
 end
 
 #----- publisher -----
-set_array("publisher[]")
+add_array("publisher[]")
 do list_as("$publisherName":"attributes.publisher.name", "$publisherId": "attributes.publisher.url", "$publisherType":"attributes.publisher.type")
   copy_field("$publisherType", "publisher[].$append.type")
   copy_field("$publisherId", "publisher[].$last.url")
@@ -92,7 +92,7 @@ add_field("conditionsOfAccess.id","http://w3id.org/kim/conditionsOfAccess/login"
 
 # ------inLanguage-----
 unless exists("inlanguage[]")
-  set_array("inLanguage[]")
+  add_array("inLanguage[]")
   copy_field("attributes.inLanguage[].*", "inLanguage[].$append")
 end
 

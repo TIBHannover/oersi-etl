@@ -53,7 +53,7 @@ do list(path: "metadata.resource.dc:description", "var":"$i")
 end
 
 # ---------------creator----------------------------------
-set_array("creator[]")
+add_array("creator[]")
 do list(path: "metadata.resource.datacite:creators.datacite:creator", "var": "$i")
   unless all_equal("$i.contributorType","Other")
     add_field("creator[].$append.test", "")
@@ -79,7 +79,7 @@ trim("creator[].*.id")
 
 
 # ---------------contributors----------------------------------
-set_array("contributor[]")
+add_array("contributor[]")
 do list(path: "metadata.resource.datacite:contributors.datacite:contributor", "var": "$i")
   unless all_equal("$i.contributorType","Other")
     add_field("contributor[].$append.test", "")
@@ -110,11 +110,11 @@ end
 
 # ------ type --- 
 
-set_array("type[]", "LearningResource")
+add_array("type[]", "LearningResource")
 
 # ------------learningResourceType-----
 
-set_array("learningResourceType[]")
+add_array("learningResourceType[]")
 
 do list(path:"metadata.resource.resourceType","var":"$i")
   copy_field("$i.uri", "learningResourceType[].$append.id")
@@ -130,7 +130,7 @@ end
 # ---------mainEntityOfPage----------------
 
 if exists("id")
-  set_array("mainEntityOfPage[]")
+  add_array("mainEntityOfPage[]")
   copy_field("id", "mainEntityOfPage[].$append.id")
   add_field("mainEntityOfPage[].$last.provider.id","$[service_id]")
   add_field("mainEntityOfPage[].$last.provider.type","Service")
@@ -139,7 +139,7 @@ end
 
 # ---------inLanguage----------------
 
-set_array("inLanguage[]")
+add_array("inLanguage[]")
 do list(path: "metadata.resource.dc:language", "var":"$i")
   copy_field("$i.value","inLanguage[].$append")
 end  
@@ -151,9 +151,9 @@ lookup("inLanguage[].*",
 
 # ---------keywords & about----------------
 
-set_array("keywords[]")
-set_array("@about")
-set_array("about[]")
+add_array("keywords[]")
+add_array("@about")
+add_array("about[]")
 do list(path:"metadata.resource.datacite:subjects.datacite:subject", "var":"$i")
   if any_contain("$i.value","ÖFOS")
     copy_field("$i.value", "@about.$append")
@@ -194,7 +194,7 @@ uniq("keywords[]")
 
 # ------ encoding --- 
 
-set_array("encoding[]")
+add_array("encoding[]")
 if exists("metadata.resource.file")
   copy_field("metadata.resource.file.value","encoding[].$append.contentUrl")
   copy_field("metadata.resource.file.mimeType","encoding[].$last.mimeType")
@@ -210,8 +210,8 @@ end
 replace_all("encoding[].*.embedUrl",".*(o:.*)","https://services.phaidra.univie.ac.at/api/object/$1/preview")
 
 # -------isPartOf/hasPart---------
-set_array("isPartOf[]")
-set_array("hasPart[]")
+add_array("isPartOf[]")
+add_array("hasPart[]")
 do list(path: "metadata.resource.datacite:relatedIdentifiers.datacite:relatedIdentifier", "var": "$i")
   if any_equal("$i.relationType","IsPartOf")
     copy_field("$i.value", "isPartOf[].$append.id")
@@ -226,18 +226,18 @@ add_field("conditionsOfAccess.id","http://w3id.org/kim/conditionsOfAccess/no_log
 
 # ---------------@context ----------------------------------
 
-set_array("@context[]", "https://w3id.org/kim/amb/context.jsonld")
+add_array("@context[]", "https://w3id.org/kim/amb/context.jsonld")
 # resource is german therefore prefer de if multiple or no inLanguage are available
 if any_equal("inLanguage[]","de")
-  set_hash("@context[].$append", "@language": "de")
+  add_hash("@context[].$append", "@language": "de")
 elsif any_equal("inLanguage[]","en")
-  set_hash("@context[].$append", "@language": "en")
+  add_hash("@context[].$append", "@language": "en")
 else
   copy_field("inLanguage[].1", "@context[].$append.@language")
 end
 # resources without inLanguage-Values set default to de
 unless exists("inLanguage[].1")
-  set_hash("@context[].$append", "@language": "de")
+  add_hash("@context[].$append", "@language": "de")
 end
 
 # ------ tidy up --- 

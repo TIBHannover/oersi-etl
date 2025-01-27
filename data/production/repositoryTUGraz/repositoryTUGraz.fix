@@ -71,7 +71,7 @@ end
 
 
 #  ------------creator------------------------------------
-set_array("creator[]")
+add_array("creator[]")
 do list(path:"metadata.lom:lom.lom:lifecycle.lom:contribute","var":"$i")
     do list(path:"$i.lom:centity","var":"$j")
       if any_match("$j.lom:vcard.value","^.+VCARD.+?FN:(?! ).+?$")
@@ -96,7 +96,7 @@ end
 call_macro("deleteAcademicTitles", field: "creator[].*.name")
 
 #  ------------contributor------------------------------------
-set_array("@contributor[]")
+add_array("@contributor[]")
 do list(path:"metadata.lom:lom.lom:lifecycle.lom:contribute","var":"$i")
   unless any_match("$i.lom:role.lom:value.lom:langstring.value","Author")
     if any_match("$i.lom:centity.lom:vcard.value","^.+VCARD.+?FN:(?! ).+?$")
@@ -105,7 +105,7 @@ do list(path:"metadata.lom:lom.lom:lifecycle.lom:contribute","var":"$i")
     end
   end
 end
-set_array("contributor[]")
+add_array("contributor[]")
 do list(path:"@contributor[]","var":"$i")
   unless in("$i.name", "creator[].*.name")
     copy_field("$i.name","contributor[].$append.name")
@@ -114,7 +114,7 @@ end
 
 # ----- Publisher -----
 
-set_array("publisher[]")
+add_array("publisher[]")
 do list(path:"metadata.lom:lom.lom:lifecycle.lom:contribute","var":"$i")
   if any_match("$i.lom:role.lom:value.lom:langstring.value","Publisher")
     if any_match("$i.lom:centity.lom:vcard.value","^.+VCARD.+?FN:(?! ).+?$")  
@@ -130,13 +130,13 @@ end
 # No specifics about contributor type. Set type=Organization as default.
 add_field("contributor[].*.type", "Organization")
 
-set_array("sourceOrganization[]")
+add_array("sourceOrganization[]")
 add_field("sourceOrganization[].$append.name", "Technische Universität Graz")
 add_field("sourceOrganization[].$last.type", "Organization")
 add_field("sourceOrganization[].$last.id", "https://ror.org/00d7xrm67")
 
 #  ------------description------------------------------------
-set_array("description")
+add_array("description")
 do list("path": "metadata.lom:lom.lom:general.lom:description", "var": "$i")
   copy_field("$i.lom:langstring.value","description.$append")
 end
@@ -156,7 +156,7 @@ join_field("description")
 
 #------------keywords---------
 
-set_array("keywords[]")
+add_array("keywords[]")
 do list("path": "metadata.lom:lom.lom:general.lom:keyword", "var": "$i")
   copy_field("$i.lom:langstring.value","keywords[].$append")
 end
@@ -170,7 +170,7 @@ copy_field("metadata.lom:lom.lom:lifecycle.lom:datetime.value","dateCreated")
 replace_all("dateCreated","^(\\d{4})$","$1-01-01")
 
 #  ------------inLanguage------------------------------------
-set_array("inLanguage[]")
+add_array("inLanguage[]")
 do list("path": "metadata.lom:lom.lom:general.lom:language", "var": "$i")
   if all_match("$i.value", "(^..)_.+")
     replace_all("$i.value", "(^..)_.+", "$1")
@@ -181,10 +181,10 @@ do list("path": "metadata.lom:lom.lom:general.lom:language", "var": "$i")
 end
 
 # ---------------type ----------------------------------
-set_array("type[]", "LearningResource")
+add_array("type[]", "LearningResource")
 
 # ---------------learningResourceType ----------------------------------
-set_array("learningResourceType[]")
+add_array("learningResourceType[]")
 
 do list(path: "metadata.lom:lom.lom:educational.lom:learningresourcetype", "var":"$i")
   unless all_contain("$i.lom:id.value", "N/A")
@@ -204,7 +204,7 @@ if any_contain("@externalId","moox") # Add Course if it is a iMoox course.
 end
 
 #  ------------about------------------------------------
-set_array("about[]")
+add_array("about[]")
 do list(path:"metadata.lom:lom.lom:classification.lom:taxonpath","var":"$i")
     do list(path: "$i.lom:taxon", "var":"$j")
         copy_field("$j.lom:id.value","about[].$append.id")
@@ -223,7 +223,7 @@ add_field("conditionsOfAccess.id","http://w3id.org/kim/conditionsOfAccess/no_log
 
 
 # ---------mainEntityOfPage----------------
-set_array("mainEntityOfPage[]")
+add_array("mainEntityOfPage[]")
 copy_field("@internalId", "mainEntityOfPage[].$append.id")
 add_field("mainEntityOfPage[].$last.provider.id","$[service_id]")
 add_field("mainEntityOfPage[].$last.provider.type","Service")
@@ -231,18 +231,18 @@ add_field("mainEntityOfPage[].$last.provider.name","$[service_name]")
 
 # ---------------@context ----------------------------------
 
-set_array("@context[]", "https://w3id.org/kim/amb/context.jsonld")
+add_array("@context[]", "https://w3id.org/kim/amb/context.jsonld")
 # resource is german therefore prefer de if multiple or no inLanguage are available
 if any_equal("inLanguage[]","de")
-  set_hash("@context[].$append", "@language": "de")
+  add_hash("@context[].$append", "@language": "de")
 elsif any_equal("inLanguage[]","en")
-  set_hash("@context[].$append", "@language": "en")
+  add_hash("@context[].$append", "@language": "en")
 else
   copy_field("inLanguage[].1", "@context[].$append.@language")
 end
 # resources without inLanguage-Values set default to de
 unless exists("inLanguage[].1")
-  set_hash("@context[].$append", "@language": "de")
+  add_hash("@context[].$append", "@language": "de")
 end
 
 # ---------tidy up!----------------

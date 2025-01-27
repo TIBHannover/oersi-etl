@@ -32,7 +32,7 @@ copy_field("PubDatum", "dateCreated")
 copy_field("Lizenz", "license.id")
 
 # ------ creator --- 
-set_array("creator[]")
+add_array("creator[]")
 do put_macro("Urheber")
   copy_field("Urheber$[position]_Name", "creator[].$append.name")
   copy_field("Urheber$[position]_Typ", "creator[].$[position].type")
@@ -52,7 +52,7 @@ call_macro("Urheber", position:"8")
 call_macro("Urheber", position:"9")
 call_macro("Urheber", position:"10")
 
-set_array("@sourceOrga")
+add_array("@sourceOrga")
 do list(path:"creator[]", "var":"$i")
   copy_field("$i.@affiliation", "$i.affiliation.id")
   copy_field("$i.@affiliation", "$i.affiliation.name")
@@ -62,7 +62,7 @@ do list(path:"creator[]", "var":"$i")
 end
 
 /* Contributor */
-set_array("contributor[]")
+add_array("contributor[]")
 do put_macro("Beitragende")
   copy_field("Beitragende$[position]_Name", "contributor[].$append.name")
   copy_field("Beitragende$[position]_Typ", "contributor[].$[position].type")
@@ -92,7 +92,7 @@ end
 
 
 # ------ sourceOrganization ----
-set_array("sourceOrganization[]")
+add_array("sourceOrganization[]")
 uniq("@sourceOrga")
 
 do list(path:"@sourceOrga", "var": "$i")
@@ -104,10 +104,10 @@ end
 lookup("sourceOrganization[].*.name", "orcaUni", delete:"true")
 
 # ------ type --- 
-set_array("type[]", "LearningResource")
+add_array("type[]", "LearningResource")
 
 # ------ learningResourceType */
-set_array("learningResourceType[]")
+add_array("learningResourceType[]")
 
 copy_field("Medientyp", "@hcrt")
 split_field("@hcrt", ";")
@@ -135,7 +135,7 @@ uniq("@hochschulfaechersystematik")
 lookup("@hochschulfaechersystematik.*","destatis-deLabel2Uri", delete:"true")
 
 
-set_array("about[]")
+add_array("about[]")
 copy_field("@hochschulfaechersystematik.*","about[].$append.id")
 
 do list(path: "about[]","var":"$i")
@@ -144,7 +144,7 @@ do list(path: "about[]","var":"$i")
 end
 
 # ------ inLanguage------
-set_array("inLanguage[]")
+add_array("inLanguage[]")
 split_field("Sprache",";")
 do list(path:"Sprache", "var":"$i")
   copy_field("$i", "inLanguage[].$append")
@@ -161,7 +161,7 @@ trim("keywords[].*")
 add_field("conditionsOfAccess.id","http://w3id.org/kim/conditionsOfAccess/no_login") 
 
 # ---------mainEntityOfPage----------------
-set_array("mainEntityOfPage[]")
+add_array("mainEntityOfPage[]")
 copy_field("id", "mainEntityOfPage[].$append.id")
 add_field("mainEntityOfPage[].$last.provider.id","$[service_id]")
 add_field("mainEntityOfPage[].$last.provider.type","Service")
@@ -169,18 +169,18 @@ add_field("mainEntityOfPage[].$last.provider.name","$[service_name]")
 
 # ---------------@context ----------------------------------
 
-set_array("@context[]", "https://w3id.org/kim/amb/context.jsonld")
+add_array("@context[]", "https://w3id.org/kim/amb/context.jsonld")
 # resource is german therefore prefer de if multiple or no inLanguage are available
 if any_equal("inLanguage[]","de")
-  set_hash("@context[].$append", "@language": "de")
+  add_hash("@context[].$append", "@language": "de")
 elsif any_equal("inLanguage[]","en")
-  set_hash("@context[].$append", "@language": "en")
+  add_hash("@context[].$append", "@language": "en")
 else
   copy_field("inLanguage[].1", "@context[].$append.@language")
 end
 # resources without inLanguage-Values set default to de
 unless exists("inLanguage[].1")
-  set_hash("@context[].$append", "@language": "de")
+  add_hash("@context[].$append", "@language": "de")
 end
 
 

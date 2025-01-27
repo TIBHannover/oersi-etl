@@ -65,7 +65,7 @@ replace_all("dateCreated", "^(\\d*).*", "$1-01-01")
 # provides editors and authors which I transform both to creators
 
 
-set_array("creator[]")
+add_array("creator[]")
 do list(path:"contributors[]", "var": "$i")
   paste("creator[].$append.name", "$i.first_name", "$i.last_name")
   if all_equal("$i.corporate", "true")
@@ -83,7 +83,7 @@ end
 
 
 # ------ publisher --- 
-set_array("publisher[]")
+add_array("publisher[]")
 add_field("publisher[].$append.name", "University of Minnesota’s College of Education and Human Development")
 add_field("publisher[].$last.type", "Organization")
 
@@ -105,7 +105,7 @@ unless exists("creator.1.name")
 end
 
 # ------ learningResourceType --- 
-set_array("learningResourceType[]")
+add_array("learningResourceType[]")
 
 add_field("learningResourceType[].$append.id","https://w3id.org/kim/hcrt/textbook")
 add_field("learningResourceType[].$last.prefLabel.de","Lehrbuch")
@@ -113,7 +113,7 @@ add_field("learningResourceType[].$last.prefLabel.en","Textbook")
 
 # ------ inLanguage --- 
 /* inLanguage: The value Mehrsprachig does not represent the estimated language labels. */
-set_array("inLanguage[]")
+add_array("inLanguage[]")
 copy_field("language", "inLanguage[].$append")
 
 
@@ -128,10 +128,10 @@ lookup("license.id","licenseMap")
 
 # ------ type --- 
 
-set_array("type[]", "LearningResource")
+add_array("type[]", "LearningResource")
 
 # ------ keywords ---
-set_array("keywords[]")
+add_array("keywords[]")
 do list(path:"subjects[]","var":"$i")
     move_field("$i.name", "keywords[].$append")
 end
@@ -139,14 +139,14 @@ uniq("keywords[]")
 
 # ------ about --- 
 
-set_array("@hochschulfaechersystematik")
+add_array("@hochschulfaechersystematik")
 do list(path:"keywords[]","var":"$i")
     copy_field("$i", "@hochschulfaechersystematik.$append")
 end
 
 lookup("@hochschulfaechersystematik.*","subjectMappingOpenTextbooks", delete:"true")
 
-set_array("about[]")
+add_array("about[]")
 copy_field("@hochschulfaechersystematik.*","about[].$append.id")
 
 do list(path: "about[]")
@@ -159,7 +159,7 @@ add_field("conditionsOfAccess.id","http://w3id.org/kim/conditionsOfAccess/no_log
 
 # ---------mainEntityOfPage----------------
 
-set_array("mainEntityOfPage[]")
+add_array("mainEntityOfPage[]")
 copy_field("id", "mainEntityOfPage[].$append.id")
 add_field("mainEntityOfPage[].$last.provider.id","$[service_id]")
 add_field("mainEntityOfPage[].$last.provider.type","Service")
@@ -167,18 +167,18 @@ add_field("mainEntityOfPage[].$last.provider.name","$[service_name]")
 
 # ---------------@context ----------------------------------
 
-set_array("@context[]", "https://w3id.org/kim/amb/context.jsonld")
+add_array("@context[]", "https://w3id.org/kim/amb/context.jsonld")
 # resource is german therefore prefer de if multiple or no inLanguage are available
 if any_equal("inLanguage[]","de")
-  set_hash("@context[].$append", "@language": "de")
+  add_hash("@context[].$append", "@language": "de")
 elsif any_equal("inLanguage[]","en")
-  set_hash("@context[].$append", "@language": "en")
+  add_hash("@context[].$append", "@language": "en")
 else
   copy_field("inLanguage[].1", "@context[].$append.@language")
 end
 # resources without inLanguage-Values set default to de
 unless exists("inLanguage[].1")
-  set_hash("@context[].$append", "@language": "de")
+  add_hash("@context[].$append", "@language": "de")
 end
 
 # ------ tidy up --- 

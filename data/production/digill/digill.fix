@@ -20,15 +20,15 @@ replace_all("dateCreated", 'T.*', '')
 
 
 # ---------------inLanguage ----------------------------------
-set_array("inLanguage[]")
+add_array("inLanguage[]")
 copy_field("@graph[].1.inLanguage", "inLanguage[].$append")
 replace_all("inLanguage[].*", '-.*', '')
 
 # ------ type --- 
-set_array("type[]", "LearningResource")
+add_array("type[]", "LearningResource")
 
 # --- publisher ----
-set_array("publisher[]")
+add_array("publisher[]")
 copy_field("@graph[].4.@id","publisher[].$append.id")
 copy_field("@graph[].4.name", "publisher[].$last.name")
 add_field("publisher[].$last.type", "Organization")
@@ -44,7 +44,7 @@ add_field("license.id","https://creativecommons.org/licenses/by-sa/4.0/")
 add_field("@hcrt","https://w3id.org/kim/hcrt/course")
 # only course
 
-set_array("learningResourceType[]")
+add_array("learningResourceType[]")
 add_field("learningResourceType[].$append.id","https://w3id.org/kim/hcrt/course")
 add_field("learningResourceType[].$last.prefLabel.de","Kurs")
 add_field("learningResourceType[].$last.prefLabel.en","Course")
@@ -52,7 +52,7 @@ add_field("learningResourceType[].$last.prefLabel.en","Course")
 
 # ---------mainEntityOfPage----------------
 
-set_array("mainEntityOfPage[]")
+add_array("mainEntityOfPage[]")
 copy_field("id", "mainEntityOfPage[].$append.id")
 add_field("mainEntityOfPage[].$last.provider.id","$[service_id]")
 add_field("mainEntityOfPage[].$last.provider.type","Service")
@@ -69,18 +69,18 @@ add_field("conditionsOfAccess.id","http://w3id.org/kim/conditionsOfAccess/no_log
 
 # ---------------@context ----------------------------------
 
-set_array("@context[]", "https://w3id.org/kim/amb/context.jsonld")
+add_array("@context[]", "https://w3id.org/kim/amb/context.jsonld")
 # resource is german therefore prefer de if multiple or no inLanguage are available
 if any_equal("inLanguage[]","de")
-  set_hash("@context[].$append", "@language": "de")
+  add_hash("@context[].$append", "@language": "de")
 elsif any_equal("inLanguage[]","en")
-  set_hash("@context[].$append", "@language": "en")
+  add_hash("@context[].$append", "@language": "en")
 else
   copy_field("inLanguage[].1", "@context[].$append.@language")
 end
 # resources without inLanguage-Values set default to de
 unless exists("inLanguage[].1")
-  set_hash("@context[].$append", "@language": "de")
+  add_hash("@context[].$append", "@language": "de")
 end
 
 # ------ tidy up --- 
