@@ -14,6 +14,11 @@ remove_field("id")
 
 copy_field("meta.html_url","id")
 
+#  ---------------isbn----------------------------------
+add_array("isbn[]")
+copy_field("digital_isbn_13","isbn[].$append")
+replace_all("isbn[].*","-","")
+
 #  ---------------name----------------------------------
 copy_field("title", "name")
 
@@ -73,7 +78,7 @@ copy_field("license_url","license.id")
 
 # ------ type --- 
 
-add_array("type[]", "LearningResource")
+add_array("type[]", "LearningResource","Book")
 
 # ------ keywords ---
 add_array("keywords[]")
