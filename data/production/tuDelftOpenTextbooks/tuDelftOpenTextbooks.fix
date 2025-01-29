@@ -108,7 +108,7 @@ add_field("learningResourceType[].$last.prefLabel.de","Lehrbuch")
 add_field("learningResourceType[].$last.prefLabel.en","Textbook")
 
 # ------ type --- 
-add_array("type[]", "LearningResource")
+add_array("type[]", "LearningResource","Book")
 
 # ------ about --- 
 
@@ -159,6 +159,12 @@ unless exists("inLanguage[].1")
 end
 
 copy_field("id","_id")
+
+# ---isbn---
+if exists("html.head.meta.citation_isbn")
+  copy_field("html.head.meta.citation_isbn","isbn[].$append")
+end
+replace_all("isbn[].*","-","")
 
 # ------ tidy up --- 
 include ("../../sharedFixes/cleanUp.fix")
