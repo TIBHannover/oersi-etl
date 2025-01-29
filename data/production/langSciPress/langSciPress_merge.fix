@@ -1,2 +1,6 @@
+if exists("DOI")
+	paste("id","~https://doi.org/","DOI", join_char:"")
+end
+
 # ------ tidy up --- 
 include ("../../sharedFixes/cleanUp.fix")
