@@ -166,5 +166,10 @@ if exists("html.head.meta.citation_isbn")
 end
 replace_all("isbn[].*","-","")
 
+# --- doi as id ---
+if exists("html.head.meta.citation_doi")
+  paste("id","~https://doi.org/","html.head.meta.citation_doi", join_char:"")
+end
+
 # ------ tidy up --- 
 include ("../../sharedFixes/cleanUp.fix")
