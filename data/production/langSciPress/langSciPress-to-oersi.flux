@@ -24,7 +24,7 @@ service_name = "langSci Press";
 | match(pattern="(name=\"DC)\\.(\\w*?)(\")", replacement="$1_$2$3")
 | read-string
 | decode-html
-| fix(FLUX_DIR + "langSciPress.fix", *)
+| fix(FLUX_DIR + "langSciPress_html.fix", *)
 | stream-to-triples(redirect="true")
 | @X
 ;
@@ -33,7 +33,7 @@ service_name = "langSci Press";
 | wait-for-inputs("2")
 | sort-triples
 | collect-triples
-| fix("data/sharedFixes/cleanUp.fix")
+| fix(FLUX_DIR + "langSciPress_merge.fix", *)
 | encode-json
 | validate-json(output_schema, writeValid=metadata_valid, writeInvalid=metadata_invalid)
 | oersi.OersiWriter(backend_api, user=backend_user, pass=backend_pass, log=metadata_responses)

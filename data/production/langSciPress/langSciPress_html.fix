@@ -80,7 +80,7 @@ add_field("learningResourceType[].$last.prefLabel.de","Lehrbuch")
 add_field("learningResourceType[].$last.prefLabel.en","Textbook")
 
 # ------ type --- 
-add_array("type[]", "LearningResource")
+add_array("type[]", "LearningResource","Book")
 
 # ------ about --- 
 add_array("about[]")
