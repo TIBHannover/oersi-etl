@@ -46,4 +46,6 @@ unless exists("inLanguage[].1")
   add_hash("@context[].$append", "@language": "de")
 end
 
-retain("inLanguage[]", "_id", "@context[]","DOI")
+move_field("isbn","isbn[].$append")
+
+retain("inLanguage[]", "_id", "@context[]","DOI", "isbn[]")
