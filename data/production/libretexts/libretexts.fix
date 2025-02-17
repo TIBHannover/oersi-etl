@@ -1,0 +1,154 @@
+# --------Delete all emtpy values-------
+vacuum()
+
+do once("macrosAndMaps")
+  include ("../../sharedFixes/macros.fix")
+  include ("../../sharedFixes/maps.fix")
+  # workflow specific maps
+  put_filemap("data/maps/libretexts2destatis.tsv","libretexts2Destatis","sep_char":"\t")
+  put_map("libretextslicense",
+    "ccbyncsa": "https://creativecommons.org/licenses/by-nc-sa/4.0/",
+    "ccby": "https://creativecommons.org/licenses/by/4.0/",
+    "ccbync": "https://creativecommons.org/licenses/by-nc/4.0/",
+    "ccbysa": "https://creativecommons.org/licenses/by-sa/4.0/",
+    "ccbyncnd": "https://creativecommons.org/licenses/by-nc-nd/4.0/",
+    "publicdomain":  "https://creativecommons.org/publicdomain/zero/1.0/",
+    "gnufdl": "https://www.gnu.org/licenses/fdl-1.3.html",
+    "ccbynd": "https://creativecommons.org/licenses/by-nd/4.0/",
+    "gnu": "https://www.gnu.org/licenses/gpl-3.0.html"
+  )
+  do put_macro("dateFormater")
+    replace_all("$[date]","^[A-za-z]{3} ([A-za-z]{3}) (\\d{2}) (\\d{4}).*$","$3-$1-$2")
+    replace_all("$[date]","(.*?)-Jan-(.*?)","$1-01-$2")
+    replace_all("$[date]","(.*?)-Feb-(.*?)","$1-02-$2")
+    replace_all("$[date]","(.*?)-Mar-(.*?)","$1-03-$2")
+    replace_all("$[date]","(.*?)-Apr-(.*?)","$1-04-$2")
+    replace_all("$[date]","(.*?)-May-(.*?)","$1-05-$2")
+    replace_all("$[date]","(.*?)-Jun-(.*?)","$1-06-$2")
+    replace_all("$[date]","(.*?)-Jul-(.*?)","$1-07-$2")
+    replace_all("$[date]","(.*?)-Aug-(.*?)","$1-08-$2")
+    replace_all("$[date]","(.*?)-Sep-(.*?)","$1-09-$2")
+    replace_all("$[date]","(.*?)-Oct-(.*?)","$1-10-$2")
+    replace_all("$[date]","(.*?)-Nov-(.*?)","$1-11-$2")
+    replace_all("$[date]","(.*?)-Dec-(.*?)","$1-12-$2")
+  end
+end
+
+#  ---------------id----------------------------------
+copy_field("title_url","id")
+
+#  ---------------name----------------------------------
+copy_field("publication_title", "name")
+
+#  ---------------image----------------------------------
+copy_field("thumbnail_url","image")
+
+#  ---------------datePublished----------------------------------
+copy_field("date_monograph_published_online","datePublished")
+call_macro("dateFormater",date:"datePublished")
+
+#  ---------------dateModified----------------------------------
+copy_field("date_last_updated","dateModified")
+call_macro("dateFormater",date:"dateModified")
+
+
+#  ---------------description----------------------------------
+move_field("description", "@description")
+move_field("@description", "description")
+
+#  ---------------creator----------------------------------
+# provides editors and authors which I transform both to creators
+
+
+add_array("creator[]")
+do list(path:"authors[]", "var": "$i")
+  copy_field("$i","creator[].$append.name")
+  add_field("creator[].$last.type","Person")
+end
+  
+
+
+# ------ publisher --- 
+add_array("publisher[]")
+copy_field("publisher_name", "publisher[].$append.name")
+add_field("publisher[].$last.type", "Organization")
+
+
+# ------ learningResourceType --- 
+add_array("learningResourceType[]")
+
+add_field("learningResourceType[].$append.id","https://w3id.org/kim/hcrt/textbook")
+add_field("learningResourceType[].$last.prefLabel.de","Lehrbuch")
+add_field("learningResourceType[].$last.prefLabel.en","Textbook")
+
+# ------ inLanguage --- 
+
+add_array('inLanguage[]')
+if any_match("language","english")
+  add_field('inLanguage[].$append',"en")
+end
+if any_match("language","spanish")
+  add_field('inLanguage[].$append',"es")
+end
+
+# ------ license ---
+move_field("license","@license")
+lookup("@license","libretextslicense",delete:"true")
+copy_field("@license","license.id")
+
+
+
+# ------ type --- 
+
+add_array("type[]", "LearningResource","Book")
+
+
+
+# ------ about ---  # no keywords, so added subject classification, use url node for about
+
+
+copy_field("id", "@hochschulfaechersystematik")
+replace_all("@hochschulfaechersystematik", "^https://(.*?)\\.libretexts.*$","$1")
+
+lookup("@hochschulfaechersystematik","libretexts2Destatis")
+
+add_array("about[]")
+copy_field("@hochschulfaechersystematik","about[].$append.id")
+
+do list(path: "about[]", "var": "$i")
+  copy_field("$i.id", "$i.prefLabel.de")
+  lookup("$i.prefLabel.de","destatis-deLabel2Uri", delete:"true")
+end
+
+uniq("about[]")
+
+# ---------------conditionsOfAccess----------------------------------
+add_field("conditionsOfAccess.id","http://w3id.org/kim/conditionsOfAccess/no_login") 
+
+# ---------mainEntityOfPage----------------
+
+add_array("mainEntityOfPage[]")
+copy_field("id", "mainEntityOfPage[].$append.id")
+add_field("mainEntityOfPage[].$last.provider.id","$[service_id]")
+add_field("mainEntityOfPage[].$last.provider.type","Service")
+add_field("mainEntityOfPage[].$last.provider.name","$[service_name]")
+
+# ---------------@context ----------------------------------
+
+add_array("@context[]", "https://w3id.org/kim/amb/context.jsonld")
+# resource is german therefore prefer de if multiple or no inLanguage are available
+if any_equal("inLanguage[]","de")
+  add_hash("@context[].$append", "@language": "de")
+elsif any_equal("inLanguage[]","en")
+  add_hash("@context[].$append", "@language": "en")
+else
+  copy_field("inLanguage[].1", "@context[].$append.@language")
+end
+# resources without inLanguage-Values set default to de
+unless exists("inLanguage[].1")
+  add_hash("@context[].$append", "@language": "de")
+end
+
+# ------ tidy up --- 
+include ("../../sharedFixes/cleanUp.fix")
+
