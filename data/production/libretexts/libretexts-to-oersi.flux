@@ -1,6 +1,6 @@
 service_domain = "https://commons.libretexts.org";
 service_id = "https://commons.libretexts.org";
-service_name = "libretexts";
+service_name = "LibreTexts";
 
 default input_limit = "-1"; // 'default': is overridden by command-line/properties value
 default input_wait = "50";
