@@ -139,7 +139,7 @@ do list(path:"html.head.meta","var":"$i")
     add_field("mainEntityOfPage[].$last.provider.type","Service")
     add_field("mainEntityOfPage[].$last.provider.name","$[service_name]")
   else
-    print_record(destination:"data/production/langSciPress/missing_ids.json",pretty:"true")
+    print_record(destination:"data/production/tuDelftOpenTextbooks/missing_ids.json",pretty:"true")
   end
 
   # ---------------@context ----------------------------------
