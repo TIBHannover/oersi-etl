@@ -34,141 +34,142 @@ do list(path:"html.head.meta","var":"$i")
     copy_field("$i.DC_Rights", "license.id")
   end
 
-end
 
-# ------ creator --- 
-add_array("creator[]")
-do list(path:"html.head.meta.DC_Creator_PersonalName","var":"$i")
-  trim("$i")
-  copy_field("$i", "creator[].$append.name")
-end
-add_field("creator[].*.type", "Person")
 
-do list(path:"creator[]","var":"$i")
-  do list(path:"html.body.div.div.1.div.div.div.div.div.1.div.1.div","var":"$x")
-    if in("$i.name","$x.div.1.label")
-      copy_field("$x.div.2.value", "$i.affiliation.name")
-      copy_field("$x.span.orcid", "$i.id")
+  # ------ creator --- 
+  add_array("creator[]")
+  do list(path:"$i.DC_Creator_PersonalName","var":"$j")
+    trim("$j")
+    copy_field("$j", "creator[].$append.name")
+  end
+  add_field("creator[].*.type", "Person")
+
+  do list(path:"creator[]","var":"$j")
+    do list(path:"html.body.div.div.1.div.div.div.div.div.1.div.1.div","var":"$x")
+      if in("$j.name","$x.div.1.label")
+        copy_field("$x.div.2.value", "$j.affiliation.name")
+        copy_field("$x.span.orcid", "$j.id")
+      end
     end
   end
-end
 
-do list(path:"creator[]","var":"$i")
-  if exists("$i.affiliation")
-    replace_all("$i.affiliation.name","^(.*)[ ]?[,\\|] Faculty.*","$1")    
-    add_field("$i.affiliation.type", "Organization")
+  do list(path:"creator[]","var":"$j")
+    if exists("$j.affiliation")
+      replace_all("$j.affiliation.name","^(.*)[ ]?[,\\|] Faculty.*","$1")    
+      add_field("$j.affiliation.type", "Organization")
+    end
   end
-end
 
-# ------ keywords------
+  # ------ keywords------
   add_array("keywords[]")
-do list(path:"html.head.meta.citation_keywords","var":"$i")
-  copy_field("$i", "keywords[].$append")
-end
+  do list(path:"$i.citation_keywords","var":"$j")
+    copy_field("$j", "keywords[].$append")
+  end
 
-do list(path:"keywords[]","var":"$i")
-  trim("$i")
-  split_field("$i"," ")
-  capitalize("$i.*")
-  join_field("$i"," ")
-end
+  do list(path:"keywords[]","var":"$j")
+    trim("$j")
+    split_field("$j"," ")
+    capitalize("$j.*")
+    join_field("$j"," ")
+  end
 
-# ------ datePublished------
-do list(path:"html.head.meta.citation_publication_date","var":"$i")
+  # ------ datePublished------
+  do list(path:"$i.citation_publication_date","var":"$j")
+    copy_field("$j", "datePublished")
+  end
 
-  copy_field("$i", "datePublished")
-end
-
-  # ------ publisher------
+    # ------ publisher------
   add_array("publisher[]")
-do list(path:"html.head.meta.citation_publisher","var":"$i")
+  do list(path:"$i.citation_publisher","var":"$j")
 
-  copy_field("$i", "publisher[].$append.name")
-end
+    copy_field("$j", "publisher[].$append.name")
+  end
 
-add_field("publisher[].*.type", "Organization")
+  add_field("publisher[].*.type", "Organization")
 
-# ------ encoding --- 
+  # ------ encoding --- 
 
-add_array("encoding[]")
-do list(path:"html.head.meta.citation_pdf_url","var":"$i")
-  copy_field("$i", "encoding[].$append.contentUrl")
-  add_field("encoding[].$last.encodingFormat","application/pdf")    
-  add_field("encoding[].$last.type", "MediaObject")
-end
+  add_array("encoding[]")
+  do list(path:"$i.citation_pdf_url","var":"$j")
+    copy_field("$j", "encoding[].$append.contentUrl")
+    add_field("encoding[].$last.encodingFormat","application/pdf")    
+    add_field("encoding[].$last.type", "MediaObject")
+  end
 
-# ---------------conditionsOfAccess----------------------------------
-add_field("conditionsOfAccess.id","http://w3id.org/kim/conditionsOfAccess/no_login") 
+  # ---------------conditionsOfAccess----------------------------------
+  add_field("conditionsOfAccess.id","http://w3id.org/kim/conditionsOfAccess/no_login") 
 
-# ------ learningResourceType --- 
-add_array("learningResourceType[]")
+  # ------ learningResourceType --- 
+  add_array("learningResourceType[]")
 
-add_field("learningResourceType[].$append.id","https://w3id.org/kim/hcrt/textbook")
-add_field("learningResourceType[].$last.prefLabel.de","Lehrbuch")
-add_field("learningResourceType[].$last.prefLabel.en","Textbook")
+  add_field("learningResourceType[].$append.id","https://w3id.org/kim/hcrt/textbook")
+  add_field("learningResourceType[].$last.prefLabel.de","Lehrbuch")
+  add_field("learningResourceType[].$last.prefLabel.en","Textbook")
 
-# ------ type --- 
-add_array("type[]", "LearningResource","Book")
+  # ------ type --- 
+  add_array("type[]", "LearningResource","Book")
 
-# ------ about --- 
+  # ------ about --- 
 
-add_array("@hochschulfaechersystematik")
-do list(path:"keywords[]","var":"$i")
-  copy_field("$i", "@hochschulfaechersystematik.$append")
-end
+  add_array("@hochschulfaechersystematik")
+  do list(path:"keywords[]","var":"$j")
+    copy_field("$j", "@hochschulfaechersystematik.$append")
+  end
 
-lookup("@hochschulfaechersystematik.*","tuDelftSubjects2destatis", delete:"true")
+  lookup("@hochschulfaechersystematik.*","tuDelftSubjects2destatis", delete:"true")
 
-add_array("about[]")
-copy_field("@hochschulfaechersystematik.*","about[].$append.id")
+  add_array("about[]")
+  copy_field("@hochschulfaechersystematik.*","about[].$append.id")
 
-do list(path: "about[]")
-  copy_field("id", "prefLabel.de")
-  lookup("prefLabel.de","destatis-deLabel2Uri", delete:"true")
-end
+  do list(path: "about[]")
+    copy_field("id", "prefLabel.de")
+    lookup("prefLabel.de","destatis-deLabel2Uri", delete:"true")
+  end
 
 
-# -----image-----
-copy_field("html.body.div.div.1.div.div.div.div.div.2.div.1.img.src","image")
+  # -----image-----
+  copy_field("html.body.div.div.1.div.div.div.div.div.2.div.1.img.src","image")
 
-# ---------mainEntityOfPage----------------
+  # ---------mainEntityOfPage----------------
 
-if exists("id")
-  add_array("mainEntityOfPage[]")
-  copy_field("id", "mainEntityOfPage[].$append.id")
-  add_field("mainEntityOfPage[].$last.provider.id","$[service_id]")
-  add_field("mainEntityOfPage[].$last.provider.type","Service")
-  add_field("mainEntityOfPage[].$last.provider.name","$[service_name]")
-else
-  print_record(destination:"data/production/langSciPress/missing_ids.json",pretty:"true")
-end
-# ---------------@context ----------------------------------
+  if exists("id")
+    add_array("mainEntityOfPage[]")
+    copy_field("id", "mainEntityOfPage[].$append.id")
+    add_field("mainEntityOfPage[].$last.provider.id","$[service_id]")
+    add_field("mainEntityOfPage[].$last.provider.type","Service")
+    add_field("mainEntityOfPage[].$last.provider.name","$[service_name]")
+  else
+    print_record(destination:"data/production/langSciPress/missing_ids.json",pretty:"true")
+  end
 
-add_array("@context[]", "https://w3id.org/kim/amb/context.jsonld")
-# resource is german therefore prefer de if multiple or no inLanguage are available
-if any_equal("inLanguage[]","de")
-  add_hash("@context[].$append", "@language": "de")
-elsif any_equal("inLanguage[]","en")
-  add_hash("@context[].$append", "@language": "en")
-else
-  copy_field("inLanguage[].1", "@context[].$append.@language")
-end
-# resources without inLanguage-Values set default to de
-unless exists("inLanguage[].1")
-  add_hash("@context[].$append", "@language": "de")
-end
+  # ---------------@context ----------------------------------
 
-copy_field("id","_id")
+  add_array("@context[]", "https://w3id.org/kim/amb/context.jsonld")
+  # resource is german therefore prefer de if multiple or no inLanguage are available
+  if any_equal("inLanguage[]","de")
+    add_hash("@context[].$append", "@language": "de")
+  elsif any_equal("inLanguage[]","en")
+    add_hash("@context[].$append", "@language": "en")
+  else
+    copy_field("inLanguage[].1", "@context[].$append.@language")
+  end
+  # resources without inLanguage-Values set default to de
+  unless exists("inLanguage[].1")
+    add_hash("@context[].$append", "@language": "de")
+  end
 
-# ---isbn---
-if exists("html.head.meta.citation_isbn")
-  copy_field("html.head.meta.citation_isbn","isbn[].$append")
-end
-replace_all("isbn[].*","-","")
+  copy_field("id","_id")
 
-# --- doi as id ---
-if exists("html.head.meta.citation_doi")
-  paste("id","~https://doi.org/","html.head.meta.citation_doi", join_char:"")
+  # ---isbn---
+  if exists("$i.citation_isbn")
+    copy_field("$i.citation_isbn","isbn[].$append")
+  end
+  replace_all("isbn[].*","-","")
+
+  # --- doi as id ---
+  if exists("$i.citation_doi")
+    paste("id","~https://doi.org/","$i.citation_doi", join_char:"")
+  end
 end
 
 # ------ tidy up --- 
