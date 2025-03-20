@@ -2,8 +2,13 @@ package oersi;
 
 import java.io.IOException;
 import java.net.URL;
+import java.net.URLConnection;
+import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Scanner;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 import org.joox.JOOX;
@@ -30,6 +35,8 @@ public final class SitemapReader extends DefaultObjectPipe<String, ObjectReceive
 
     private String findAndReplace;
 
+    private final Map<String, String> headers = new HashMap<>();
+
     public void setUrlPattern(final String urlPattern) {
         this.urlPattern = urlPattern;
     }
@@ -46,11 +53,24 @@ public final class SitemapReader extends DefaultObjectPipe<String, ObjectReceive
         this.wait = wait;
     }
 
+    public void setHeader(final String header) {
+        Arrays.stream(Pattern.compile("\n").split(header)).forEach(h -> {
+            final String[] parts = Pattern.compile(":").split(h, 2);
+            if (parts.length == 2) {
+                headers.put(parts[0].toLowerCase(), parts[1].trim());
+            } else {
+                throw new IllegalArgumentException("Invalid header: " + h);
+            }
+        });
+    }
+
     @Override
     public void process(final String sitemap) {
         LOG.debug("Processing sitemap URL {}", sitemap);
         try {
-            Match siteMapXml = JOOX.$(new URL(sitemap));
+            URLConnection urlConnection = new URL(sitemap).openConnection();
+            headers.forEach(urlConnection::addRequestProperty);
+            Match siteMapXml = JOOX.$(urlConnection.getInputStream());
             List<String> texts = siteMapXml.find("loc")
                     .map(m -> m.element().getTextContent().trim()).stream()
                     .filter(s -> s.matches(urlPattern)).collect(Collectors.toList());

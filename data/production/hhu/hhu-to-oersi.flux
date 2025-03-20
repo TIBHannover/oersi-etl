@@ -6,7 +6,7 @@ default input_limit = "-1"; // 'default': is overridden by command-line/properti
 default input_wait = "50";
 
 "https://mediathek.hhu.de/sitemap?list=videos" // FLUX_DIR + "hhu-sitemap.xml"
-| oersi.SitemapReader(wait=input_wait, limit=input_limit)
+| oersi.SitemapReader(header=user_agent_header, wait=input_wait, limit=input_limit)
 | open-http(header=user_agent_header)
 | decode-html(attrValsAsSubfields="&p.class&a.class&div.class&span.class")
 // useful for debugging and seeing full flattened input field names:

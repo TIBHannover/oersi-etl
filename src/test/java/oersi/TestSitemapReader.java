@@ -1,11 +1,26 @@
 package oersi;
 
+import static com.github.tomakehurst.wiremock.client.WireMock.equalTo;
+import static com.github.tomakehurst.wiremock.client.WireMock.getRequestedFor;
+import static com.github.tomakehurst.wiremock.client.WireMock.ok;
+import static com.github.tomakehurst.wiremock.client.WireMock.request;
+import static com.github.tomakehurst.wiremock.client.WireMock.stubFor;
+import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
+import static com.github.tomakehurst.wiremock.client.WireMock.verify;
+
+import java.io.IOException;
+import java.net.URISyntaxException;
+import java.nio.charset.Charset;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
@@ -15,6 +30,9 @@ import org.mockito.InOrder;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
+
+import com.github.tomakehurst.wiremock.core.WireMockConfiguration;
+import com.github.tomakehurst.wiremock.junit.WireMockRule;
 
 /**
  * Tests for {@link SitemapReader}.
@@ -61,9 +79,16 @@ public final class TestSitemapReader {
     private ObjectReceiver<String> receiver;
     private InOrder inOrder;
 
+    @Rule
+    public WireMockRule wireMockRule = new WireMockRule(WireMockConfiguration.wireMockConfig()
+            .jettyAcceptors(Runtime.getRuntime().availableProcessors()).dynamicPort());
+
     @Before
-    public void setup() {
+    public void setup() throws IOException, URISyntaxException {
         MockitoAnnotations.initMocks(this);
+        Path sitemapPath = Paths.get(getClass().getResource(sitemap).toURI());
+        String sitemapContent = Files.readString(sitemapPath, Charset.forName("utf-8"));
+        stubFor(request("GET", urlEqualTo(sitemap)).willReturn(ok().withBody(sitemapContent)));
         sitemapReader = new SitemapReader();
         sitemapReader.setLimit(-1);
         sitemapReader.setWait(0);
@@ -73,8 +98,20 @@ public final class TestSitemapReader {
     }
 
     @Test
-    public void testShouldProcess() {
+    public void testShouldProcessAsHttpUrl() {
+        sitemapReader.setHeader("User-Agent: OersiTest");
+        sitemapReader.process(wireMockRule.baseUrl() + sitemap);
+        verify(getRequestedFor(urlEqualTo(sitemap)).withHeader("User-Agent", equalTo("OersiTest")));
+        verifySitemapContent();
+    }
+
+    @Test
+    public void testShouldProcessAsLocalUrl() {
         sitemapReader.process(getClass().getResource(sitemap).toString());
+        verifySitemapContent();
+    }
+
+    private void verifySitemapContent() {
         for (String url : urls) {
             inOrder.verify(receiver, Mockito.calls(1)).process(url);
         }

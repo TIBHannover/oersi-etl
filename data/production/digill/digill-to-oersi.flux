@@ -6,7 +6,7 @@ default input_limit = "-1"; // 'default': is overridden by command-line/properti
 default input_wait = "50";
 
 "https://digill.de/course-sitemap.xml" // FLUX_DIR + "digiLL-sitemap.xml"
-| oersi.SitemapReader(wait=input_wait, limit=input_limit, urlPattern=".*/course/.*")
+| oersi.SitemapReader(header=user_agent_header, wait=input_wait, limit=input_limit, urlPattern=".*/course/.*")
 | open-http(header=user_agent_header)
 | extract-element("script[class=yoast-schema-graph]")
 | decode-json

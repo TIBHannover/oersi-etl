@@ -7,7 +7,7 @@ default input_wait = "50";
 
 
 "https://textbooks.open.tudelft.nl/textbooks/sitemap" // for local testing: "file://" + FLUX_DIR + "hoou-sitemap.xml"
-| oersi.SitemapReader(wait=input_wait, limit=input_limit, urlPattern=".*/textbooks/catalog/book/([0-9]+)")
+| oersi.SitemapReader(header=user_agent_header, wait=input_wait, limit=input_limit, urlPattern=".*/textbooks/catalog/book/([0-9]+)")
 | oersi.ErrorCatcher(file_errors)
 | open-http(header=user_agent_header)
 | as-records
