@@ -6,7 +6,7 @@ default input_wait = "50";
 
 "PROVIDER SITEMAP"
 // Set options for sitemap, url pattern is a filter that only keeps the matching urls.
-| oersi.SitemapReader(wait=input_wait, limit=input_limit, urlPattern="(?!.*/en).*/(lernangebot)/.*")
+| oersi.SitemapReader(header=user_agent_header, wait=input_wait, limit=input_limit, urlPattern="(?!.*/en).*/(lernangebot)/.*")
 | open-http(header=user_agent_header)
 // The following part can change depending where the metadata is provided.
 | extract-element("script[type=application/ld+json]")
