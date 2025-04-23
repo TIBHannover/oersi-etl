@@ -4,7 +4,7 @@ service_id = "https://www.canal-u.tv";
 service_name = "CANAL U";
 
 "https://www.canal-u.tv/oai/"
-| open-oaipmh(metadataPrefix="lom",dateFrom="2025-04-01")
+| open-oaipmh(metadataPrefix="oai_dc",dateFrom="2025-04-01")
 | decode-xml
 | handle-generic-xml(emitNamespace="true")
 | fix(FLUX_DIR + "canalU.fix", *)
