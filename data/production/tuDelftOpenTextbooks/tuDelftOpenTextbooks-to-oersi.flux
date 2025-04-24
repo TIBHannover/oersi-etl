@@ -21,7 +21,8 @@ default input_wait = "50";
 		reject()
 	end")
 
-| literal-to-object
+| list-fix-values("url", count="false")
+| oersi.ErrorCatcher(file_errors)
 | open-http(header=user_agent_header)
 | as-records
 | match(pattern="(name=\"DC)\\.(\\w*?)\\.(\\w*?)(\")", replacement="$1_$2_$3$4")
