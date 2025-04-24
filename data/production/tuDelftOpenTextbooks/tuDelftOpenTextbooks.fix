@@ -8,14 +8,21 @@ do once("macrosAndMaps")
   put_filemap("data/maps/tuDelftSubjects2destatis.tsv","tuDelftSubjects2destatis","sep_char":"\t",key_column:"0",value_column:"1",expected_columns:"-1")
 end
 
+
+# Filter out any books that are not textbooks
+unless any_match("html.body.div.div.1.div.div.div.div.div.*.div.*.div.ul.li.*.a.href",".*textbooks")
+  reject()
+end
+
+add_array("creator[]")
 add_array("inLanguage[]")
+add_array("keywords[]")
+add_array("publisher[]")
+add_array("about[]")
+add_array("encoding[]")
+add_array("@hochschulfaechersystematik")
 do list(path:"html.head.meta","var":"$i")
 
-  # Filter out any books that are not textbooks
-
-  unless any_match("$i.DC_Type","Text.Book")
-    reject()
-  end
 
   # /* Map some of the data we have to the oersi model: */
   # ---------------id --------
@@ -39,85 +46,38 @@ do list(path:"html.head.meta","var":"$i")
   end
 
   # ------ creator --- 
-  add_array("creator[]")
   do list(path:"$i.DC_Creator_PersonalName","var":"$j")
     trim("$j")
     copy_field("$j", "creator[].$append.name")
   end
-  add_field("creator[].*.type", "Person")
 
-  do list(path:"creator[]","var":"$j")
-    do list(path:"html.body.div.div.1.div.div.div.div.div.1.div.1.div","var":"$x")
-      if in("$j.name","$x.div.1.label")
-        copy_field("$x.div.2.value", "$j.affiliation.name")
-        copy_field("$x.span.orcid", "$j.id")
-      end
-    end
-  end
-
-  do list(path:"creator[]","var":"$j")
-    if exists("$j.affiliation")
-      replace_all("$j.affiliation.name","^(.*)[ ]?[,\\|] Faculty.*","$1")    
-      add_field("$j.affiliation.type", "Organization")
-    end
-  end
 
   # ------ keywords------
-  add_array("keywords[]")
-  do list(path:"$i.citation_keywords","var":"$j")
-    copy_field("$j", "keywords[].$append")
+  trim("$i.citation_keywords")
+  replace_all("$i.citation_keywords","  +", " ")
+  if any_contain("$i.citation_keywords", " ")
+    split_field("$i.citation_keywords"," ")
+    capitalize("$i.citation_keywords.*")
+    join_field("$i.citation_keywords"," ")
   end
-
-  do list(path:"keywords[]","var":"$j")
-    trim("$j")
-    split_field("$j"," ")
-    # capitalize("$j.*")
-    # join_field("$j"," ")
-  end
+  copy_field("$i.citation_keywords", "keywords[].$append")
 
   # ------ datePublished------
-  do list(path:"$i.citation_publication_date","var":"$j")
-    copy_field("$j", "datePublished")
-  end
+  copy_field("$i.citation_publication_date", "datePublished")
 
     # ------ publisher------
-  add_array("publisher[]")
-  do list(path:"$i.citation_publisher","var":"$j")
-
-    copy_field("$j", "publisher[].$append.name")
-  end
+  copy_field("$i.citation_publisher", "publisher[].$append.name")
 
   add_field("publisher[].*.type", "Organization")
 
   # ------ encoding --- 
 
-  add_array("encoding[]")
   do list(path:"$i.citation_pdf_url","var":"$j")
     copy_field("$j", "encoding[].$append.contentUrl")
     add_field("encoding[].$last.encodingFormat","application/pdf")    
     add_field("encoding[].$last.type", "MediaObject")
   end
 
-  # ------ about --- 
-
-  add_array("@hochschulfaechersystematik")
-  do list(path:"keywords[]","var":"$j")
-    copy_field("$j", "@hochschulfaechersystematik.$append")
-  end
-
-  lookup("@hochschulfaechersystematik.*","tuDelftSubjects2destatis", delete:"true")
-
-  add_array("about[]")
-  copy_field("@hochschulfaechersystematik.*","about[].$append.id")
-
-  do list(path: "about[]")
-    copy_field("id", "prefLabel.de")
-    lookup("prefLabel.de","destatis-deLabel2Uri", delete:"true")
-  end
-
-
-  # -----image-----
-  copy_field("html.body.div.div.1.div.div.div.div.div.2.div.1.img.src","image")
 
   # ---isbn---
   if exists("$i.citation_isbn")
@@ -130,6 +90,47 @@ do list(path:"html.head.meta","var":"$i")
     paste("id","~https://doi.org/","$i.citation_doi", join_char:"")
   end
 end
+
+# Adjustments for creator
+
+add_field("creator[].*.type", "Person")
+
+do list(path:"creator[]","var":"$j")
+  do list(path:"html.body.div.div.1.div.div.div.div.div.1.div.1.div","var":"$x")
+    if in("$j.name","$x.div.1.label")
+      copy_field("$x.div.2.value", "$j.affiliation.name")
+      copy_field("$x.span.orcid", "$j.id")
+    end
+  end
+end
+
+do list(path:"creator[]","var":"$j")
+  if exists("$j.affiliation")
+    replace_all("$j.affiliation.name","^(.*)[ ]?[,\\|] Faculty.*","$1")    
+    add_field("$j.affiliation.type", "Organization")
+  end
+end
+
+  # ------ about --- 
+
+  
+do list(path:"keywords[]","var":"$j")
+  copy_field("$j", "@hochschulfaechersystematik.$append")
+end
+
+lookup("@hochschulfaechersystematik.*","tuDelftSubjects2destatis", delete:"true")
+
+
+copy_field("@hochschulfaechersystematik.*","about[].$append.id")
+
+do list(path: "about[]")
+  copy_field("id", "prefLabel.de")
+  lookup("prefLabel.de","destatis-deLabel2Uri", delete:"true")
+end
+
+
+# -----image-----
+copy_field("html.body.div.div.1.div.div.div.div.div.2.div.1.img.src","image")
 
 # ---------mainEntityOfPage----------------
 
