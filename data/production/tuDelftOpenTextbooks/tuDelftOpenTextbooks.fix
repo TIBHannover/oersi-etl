@@ -11,7 +11,13 @@ end
 add_array("inLanguage[]")
 do list(path:"html.head.meta","var":"$i")
 
-  /* Map some of the data we have to the oersi model: */
+  # Filter out any books that are not textbooks
+
+  unless any_match("$i.DC_Type","Text.Book")
+    reject()
+  end
+
+  # /* Map some of the data we have to the oersi model: */
   # ---------------id --------
   copy_field("$i.DC_Identifier_URI", "id")
 
@@ -65,8 +71,8 @@ do list(path:"html.head.meta","var":"$i")
   do list(path:"keywords[]","var":"$j")
     trim("$j")
     split_field("$j"," ")
-    capitalize("$j.*")
-    join_field("$j"," ")
+    # capitalize("$j.*")
+    # join_field("$j"," ")
   end
 
   # ------ datePublished------

@@ -6,9 +6,22 @@ default input_limit = "-1"; // 'default': is overridden by command-line/properti
 default input_wait = "50";
 
 
-"https://textbooks.open.tudelft.nl/textbooks/sitemap" // for local testing: "file://" + FLUX_DIR + "hoou-sitemap.xml"
-| oersi.SitemapReader(header=user_agent_header, wait=input_wait, limit=input_limit, urlPattern=".*/textbooks/catalog/book/([0-9]+)")
-| oersi.ErrorCatcher(file_errors)
+"https://books.open.tudelft.nl/home/oai" // for local testing: "file://" + FLUX_DIR + "hoou-sitemap.xml"
+| open-oaipmh(metadataPrefix="oai_dc")
+| decode-xml
+| handle-generic-xml(emitNamespace="true")
+| fix("
+	do list(path:'metadata.oai_dc:dc.dc:identifier','var':'$i')
+		if any_contain('$i.value', 'books.open.tudelft.nl')
+			copy_field('$i.value','url')
+		end
+	end
+	retain('url')
+	unless exists('url')
+		reject()
+	end")
+
+| literal-to-object
 | open-http(header=user_agent_header)
 | as-records
 | match(pattern="(name=\"DC)\\.(\\w*?)\\.(\\w*?)(\")", replacement="$1_$2_$3$4")
