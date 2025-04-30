@@ -16,6 +16,7 @@
 - [ ] Configure ETL process (see [Checklist](#Checklist))
 - [ ] Publish blog post
 - [ ] Inform provider
+- [ ] Publish Mastodon post
 
 ### Checklist
 
