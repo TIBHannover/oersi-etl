@@ -1,0 +1,440 @@
+discipline	Toutes les disciplines
+discipline:1043	Sciences fondamentales et appliquées	https://w3id.org/kim/hochschulfaechersystematik/n4
+discipline:1043:1005	Sciences de la Terre	https://w3id.org/kim/hochschulfaechersystematik/n43
+discipline:1043:1005:1007	Atmosphère, climatologie, météorologie	https://w3id.org/kim/hochschulfaechersystematik/n110
+discipline:1043:1005:1089	Géographie, cartographie	https://w3id.org/kim/hochschulfaechersystematik/n44
+discipline:1043:1005:1091	Géologie	https://w3id.org/kim/hochschulfaechersystematik/n065
+discipline:1043:1005:1095	Géophysique, géochimie (structure, composition, évolution)	https://w3id.org/kim/hochschulfaechersystematik/n066
+discipline:1043:1005:1097	Glaciologie, étude de la neige et des avalanches	https://w3id.org/kim/hochschulfaechersystematik/n039
+discipline:1043:1005:1141	Origine et histoire de la Terre et de la vie (paléontologie, palynologie)	https://w3id.org/kim/hochschulfaechersystematik/n065
+discipline:1043:1005:1185	Sciences des sols, pédologie	https://w3id.org/kim/hochschulfaechersystematik/n065
+discipline:1043:1005:237194	Océanologie, océanographie	https://w3id.org/kim/hochschulfaechersystematik/n124
+discipline:1043:1009	Physique	https://w3id.org/kim/hochschulfaechersystematik/n0128
+discipline:1043:1009:1011	Atomes, noyaux et particules	https://w3id.org/kim/hochschulfaechersystematik/n0128
+discipline:1043:1009:1071	Electricité et électrotechnique	https://w3id.org/kim/hochschulfaechersystematik/n0128
+discipline:1043:1009:1073	Electronique	https://w3id.org/kim/hochschulfaechersystematik/n0128
+discipline:1043:1009:1085	Génie civil, génie urbain, aménagement	https://w3id.org/kim/hochschulfaechersystematik/n0128
+discipline:1043:1009:1111	Magnétisme, électromagnétisme	https://w3id.org/kim/hochschulfaechersystematik/n0128
+discipline:1043:1009:1113	Matériaux	https://w3id.org/kim/hochschulfaechersystematik/n0128
+discipline:1043:1009:1117	Mécanique appliquée	https://w3id.org/kim/hochschulfaechersystematik/n0128
+discipline:1043:1009:1119	Mécanique des fluides	https://w3id.org/kim/hochschulfaechersystematik/n0128
+discipline:1043:1009:1121	Mécanique des solides	https://w3id.org/kim/hochschulfaechersystematik/n0128
+discipline:1043:1009:1129	Modélisation et simulation	https://w3id.org/kim/hochschulfaechersystematik/n0128
+discipline:1043:1009:1139	Optique	https://w3id.org/kim/hochschulfaechersystematik/n0128
+discipline:1043:1009:1143	Oscillations, ondes, acoustique	https://w3id.org/kim/hochschulfaechersystematik/n0128
+discipline:1043:1009:1159	Physique classique	https://w3id.org/kim/hochschulfaechersystematik/n0128
+discipline:1043:1009:1165	Physique moderne	https://w3id.org/kim/hochschulfaechersystematik/n0128
+discipline:1043:1009:1167	Physique théorique	https://w3id.org/kim/hochschulfaechersystematik/n0128
+discipline:1043:1009:1191	Théories quantique et relativiste	https://w3id.org/kim/hochschulfaechersystematik/n0128
+discipline:1043:1009:1193	Thermodynamique, énergétique	https://w3id.org/kim/hochschulfaechersystematik/n0128
+discipline:1043:1009:1197	Traitement du signal et des images, télécommunications	https://w3id.org/kim/hochschulfaechersystematik/n0128
+discipline:1043:1017	Chimie	https://w3id.org/kim/hochschulfaechersystematik/n40
+discipline:1043:1017:1019	Biochimie	https://w3id.org/kim/hochschulfaechersystematik/n025
+discipline:1043:1017:1045	Chimie analytique, catalyse	https://w3id.org/kim/hochschulfaechersystematik/n032
+discipline:1043:1017:1047	Chimie durable, chimie verte	https://w3id.org/kim/hochschulfaechersystematik/n032
+discipline:1043:1017:1049	Chimie et société	https://w3id.org/kim/hochschulfaechersystematik/n032
+discipline:1043:1017:1051	Chimie industrielle, génie des procédés	https://w3id.org/kim/hochschulfaechersystematik/n032
+discipline:1043:1017:1053	Chimie minérale et inorganique	https://w3id.org/kim/hochschulfaechersystematik/n032
+discipline:1043:1017:1055	Chimie moléculaire et organique	https://w3id.org/kim/hochschulfaechersystematik/n032
+discipline:1043:1017:1057	Chimie physique	https://w3id.org/kim/hochschulfaechersystematik/n032
+discipline:1043:1017:1059	Chimie théorique	https://w3id.org/kim/hochschulfaechersystematik/n032
+discipline:1043:1017:1065	Cristallographie	https://w3id.org/kim/hochschulfaechersystematik/n032
+discipline:1043:1017:1169	Polymères	https://w3id.org/kim/hochschulfaechersystematik/n032
+discipline:1043:1125	Métiers et formations en sciences fondamentales	https://w3id.org/kim/hochschulfaechersystematik/n4
+discipline:1043:1183	Science et science-fiction	https://w3id.org/kim/hochschulfaechersystematik/n4
+discipline:1043:977	Sciences de la vie
+discipline:1043:977:1025	Biologie animale	https://w3id.org/kim/hochschulfaechersystematik/n026
+discipline:1043:977:1027	Biologie cellulaire	https://w3id.org/kim/hochschulfaechersystematik/n026
+discipline:1043:977:1029	Biologie moléculaire	https://w3id.org/kim/hochschulfaechersystematik/n026
+discipline:1043:977:1031	Biochimie	https://w3id.org/kim/hochschulfaechersystematik/n025
+discipline:1043:977:1033	Biologie végétale	https://w3id.org/kim/hochschulfaechersystematik/n026
+discipline:1043:977:1035	Biotechnologies	https://w3id.org/kim/hochschulfaechersystematik/n282
+discipline:1043:977:1067	Développement de l'organisme	https://w3id.org/kim/hochschulfaechersystematik/n026
+discipline:1043:977:1075	Evolution	https://w3id.org/kim/hochschulfaechersystematik/n026
+discipline:1043:977:1083	Génétique	https://w3id.org/kim/hochschulfaechersystematik/n026
+discipline:1043:977:1127	Microbiologie	https://w3id.org/kim/hochschulfaechersystematik/n026
+discipline:1043:977:1135	Neurosciences	https://w3id.org/kim/hochschulfaechersystematik/n026
+discipline:1043:977:1137	Nutrition	https://w3id.org/kim/hochschulfaechersystematik/n009
+discipline:1043:977:1179	Reproduction	https://w3id.org/kim/hochschulfaechersystematik/n009
+discipline:1043:977:1199	Virologie	https://w3id.org/kim/hochschulfaechersystematik/n300
+discipline:1043:977:979	Agronomie, agriculture, élevage	https://w3id.org/kim/hochschulfaechersystematik/n138
+discipline:1043:981:1081	Généralités	https://w3id.org/kim/hochschulfaechersystematik/n37
+discipline:1043:981:1093	Géométrie	https://w3id.org/kim/hochschulfaechersystematik/n37
+discipline:1043:981:1109	Logique et raisonnements	https://w3id.org/kim/hochschulfaechersystematik/n37
+discipline:1043:981:1115	Mathématiques et informatique	https://w3id.org/kim/hochschulfaechersystematik/n37
+discipline:1043:981:1171	Probabilités et statistiques	https://w3id.org/kim/hochschulfaechersystematik/n37
+discipline:1043:981:1195	Topologie	https://w3id.org/kim/hochschulfaechersystematik/n37
+discipline:1043:981:983	Algèbre	https://w3id.org/kim/hochschulfaechersystematik/n37
+discipline:1043:981:985	Analyse	https://w3id.org/kim/hochschulfaechersystematik/n37
+discipline:1043:981:995	Arithmétique	https://w3id.org/kim/hochschulfaechersystematik/n37
+discipline:1043:991	Informatique	https://w3id.org/kim/hochschulfaechersystematik/n71
+discipline:1043:991:1013	Bases de données	https://w3id.org/kim/hochschulfaechersystematik/n079
+discipline:1043:991:1015	Bio-informatique	https://w3id.org/kim/hochschulfaechersystematik/n221
+discipline:1043:991:1037	Bureautique	https://w3id.org/kim/hochschulfaechersystematik/n277
+discipline:1043:991:1079	Formation et apprentissage en ligne	https://w3id.org/kim/hochschulfaechersystematik/n079
+discipline:1043:991:1087	Génie logiciel	https://w3id.org/kim/hochschulfaechersystematik/n079
+discipline:1043:991:1103	Informatique documentaire	https://w3id.org/kim/hochschulfaechersystematik/n079
+discipline:1043:991:1105	Informatique théorique	https://w3id.org/kim/hochschulfaechersystematik/n079
+discipline:1043:991:1107	Intelligence artificielle	https://w3id.org/kim/hochschulfaechersystematik/n079
+discipline:1043:991:1131	Multimédia (infographie, outils et techniques de programmation, synthèse vocale)	https://w3id.org/kim/hochschulfaechersystematik/n121
+discipline:1043:991:1173	Programmation et modélisation	https://w3id.org/kim/hochschulfaechersystematik/n079
+discipline:1043:991:1177	Réalité virtuelle, retour d'effort (haptique)	https://w3id.org/kim/hochschulfaechersystematik/n079
+discipline:1043:991:1181	Réseaux, transports et sécurité des données	https://w3id.org/kim/hochschulfaechersystematik/n123
+discipline:1043:991:1187	Systèmes d'information	https://w3id.org/kim/hochschulfaechersystematik/n079
+discipline:1043:991:1201	Web (technologie, données, sémantique)	https://w3id.org/kim/hochschulfaechersystematik/n079
+discipline:1043:991:993	Architecture des ordinateurs	https://w3id.org/kim/hochschulfaechersystematik/n079
+discipline:1043:997	Sciences de l'univers	https://w3id.org/kim/hochschulfaechersystematik/n014
+discipline:1043:997:1001	Astronomie	https://w3id.org/kim/hochschulfaechersystematik/n014
+discipline:1043:997:1003	Astrophysique, cosmologie, univers lointain	https://w3id.org/kim/hochschulfaechersystematik/n014
+discipline:1043:997:1077	Exobiologie	https://w3id.org/kim/hochschulfaechersystematik/n014
+discipline:1043:997:1145	Outils, méthodes, techniques et observations	https://w3id.org/kim/hochschulfaechersystematik/n014
+discipline:1043:997:999	Astres, planétologie	https://w3id.org/kim/hochschulfaechersystematik/n014
+discipline:1061	Sciences de la santé et du sport
+discipline:1061:1039	Clinique médicale	https://w3id.org/kim/hochschulfaechersystematik/n49
+discipline:1061:1039:1041	Cancérologie	https://w3id.org/kim/hochschulfaechersystematik/n49
+discipline:1061:1039:1123	Médecine générale	https://w3id.org/kim/hochschulfaechersystematik/n49
+discipline:1061:1039:1133	Neurologie	https://w3id.org/kim/hochschulfaechersystematik/n49
+discipline:1061:1039:1175	Psychologie médicale	https://w3id.org/kim/hochschulfaechersystematik/n49
+discipline:1061:1039:1355	Allergie et immunologie	https://w3id.org/kim/hochschulfaechersystematik/n49
+discipline:1061:1039:1361	Anesthésiologie	https://w3id.org/kim/hochschulfaechersystematik/n49
+discipline:1061:1039:1363	Angéiologie	https://w3id.org/kim/hochschulfaechersystematik/n49
+discipline:1061:1039:1373	Cardiologie	https://w3id.org/kim/hochschulfaechersystematik/n49
+discipline:1061:1039:1393	Dermatologie	https://w3id.org/kim/hochschulfaechersystematik/n49
+discipline:1061:1039:1395	Diabétologie	https://w3id.org/kim/hochschulfaechersystematik/n49
+discipline:1061:1039:1403	Douleur, soins palliatifs	https://w3id.org/kim/hochschulfaechersystematik/n49
+discipline:1061:1039:1411	Endocrinologie	https://w3id.org/kim/hochschulfaechersystematik/n49
+discipline:1061:1039:1413	Génétique médicale	https://w3id.org/kim/hochschulfaechersystematik/n49
+discipline:1061:1039:1415	Gériatrie	https://w3id.org/kim/hochschulfaechersystematik/n49
+discipline:1061:1039:1417	Gynécologie, grossesses, néonatologie	https://w3id.org/kim/hochschulfaechersystematik/n49
+discipline:1061:1039:1419	Hématologie	https://w3id.org/kim/hochschulfaechersystematik/n49
+discipline:1061:1039:1421	Hépatologie, gastro-entérologie	https://w3id.org/kim/hochschulfaechersystematik/n49
+discipline:1061:1039:1431	Maladies infectieuses, parasitaires et fongiques	https://w3id.org/kim/hochschulfaechersystematik/n49
+discipline:1061:1039:1433	Médecine d'urgence	https://w3id.org/kim/hochschulfaechersystematik/n107
+discipline:1061:1039:1435	Médecine du sport	https://w3id.org/kim/hochschulfaechersystematik/n107
+discipline:1061:1039:1437	Médecine du travail	https://w3id.org/kim/hochschulfaechersystematik/n107
+discipline:1061:1039:1439	Médecine interne	https://w3id.org/kim/hochschulfaechersystematik/n107
+discipline:1061:1039:1441	Médecine légale	https://w3id.org/kim/hochschulfaechersystematik/n107
+discipline:1061:1039:1443	Médecine militaire	https://w3id.org/kim/hochschulfaechersystematik/n107
+discipline:1061:1039:1445	Médecine nucléaire	https://w3id.org/kim/hochschulfaechersystematik/n107
+discipline:1061:1039:1447	Médecine préventive	https://w3id.org/kim/hochschulfaechersystematik/n107
+discipline:1061:1039:1451	Néphrologie	https://w3id.org/kim/hochschulfaechersystematik/n107
+discipline:1061:1039:1453	Neuroanatomie	https://w3id.org/kim/hochschulfaechersystematik/n107
+discipline:1061:1039:1457	Nutrition	https://w3id.org/kim/hochschulfaechersystematik/n107
+discipline:1061:1039:1461	Oncologie médicale	https://w3id.org/kim/hochschulfaechersystematik/n107
+discipline:1061:1039:1469	Pédiatrie	https://w3id.org/kim/hochschulfaechersystematik/n107
+discipline:1061:1039:1473	Pneumologie	https://w3id.org/kim/hochschulfaechersystematik/n107
+discipline:1061:1039:1477	Psychiatrie	https://w3id.org/kim/hochschulfaechersystematik/n107
+discipline:1061:1039:1479	Psychomotricité	https://w3id.org/kim/hochschulfaechersystematik/n107
+discipline:1061:1039:1481	Radiologie	https://w3id.org/kim/hochschulfaechersystematik/n107
+discipline:1061:1039:1483	Radiothérapie	https://w3id.org/kim/hochschulfaechersystematik/n107
+discipline:1061:1039:1485	Réanimation	https://w3id.org/kim/hochschulfaechersystematik/n107
+discipline:1061:1039:1487	Rééducation et réadaptation	https://w3id.org/kim/hochschulfaechersystematik/n107
+discipline:1061:1039:1489	Rhumatologie	https://w3id.org/kim/hochschulfaechersystematik/n107
+discipline:1061:1063	Clinique chirurgicale	https://w3id.org/kim/hochschulfaechersystematik/n107
+discipline:1061:1063:1377	Chirurgie cardiaque	https://w3id.org/kim/hochschulfaechersystematik/n107
+discipline:1061:1063:1379	Chirurgie digestive	https://w3id.org/kim/hochschulfaechersystematik/n107
+discipline:1061:1063:1381	Chirurgie générale	https://w3id.org/kim/hochschulfaechersystematik/n107
+discipline:1061:1063:1383	Chirurgie orthopédique et traumatologique	https://w3id.org/kim/hochschulfaechersystematik/n107
+discipline:1061:1063:1385	Chirurgie réparatrice ou esthétique	https://w3id.org/kim/hochschulfaechersystematik/n107
+discipline:1061:1063:1387	Chirurgie thoracique	https://w3id.org/kim/hochschulfaechersystematik/n107
+discipline:1061:1063:1389	Chirurgie urologique	https://w3id.org/kim/hochschulfaechersystematik/n107
+discipline:1061:1063:1391	Chirurgie vasculaire	https://w3id.org/kim/hochschulfaechersystematik/n107
+discipline:1061:1063:1455	Neurochirurgie	https://w3id.org/kim/hochschulfaechersystematik/n107
+discipline:1061:1063:1459	Odontologie	https://w3id.org/kim/hochschulfaechersystematik/n107
+discipline:1061:1063:1463	Ophtalmologie	https://w3id.org/kim/hochschulfaechersystematik/n107
+discipline:1061:1063:1465	Oto-rhino-laryngologie	https://w3id.org/kim/hochschulfaechersystematik/n107
+discipline:1061:1063:1491	Robotique en chirurgie	https://w3id.org/kim/hochschulfaechersystematik/n107
+discipline:1061:1063:1503	Stomatologie	https://w3id.org/kim/hochschulfaechersystematik/n107
+discipline:1061:1063:1511	Traumatologie	https://w3id.org/kim/hochschulfaechersystematik/n107
+discipline:1061:1151	Pharmacie, pharmacologie	https://w3id.org/kim/hochschulfaechersystematik/n126
+discipline:1061:1151:1153	Pharmacie	https://w3id.org/kim/hochschulfaechersystematik/n126
+discipline:1061:1151:1493	Science du médicament	https://w3id.org/kim/hochschulfaechersystematik/n126
+discipline:1061:1151:1505	Thérapeutique	https://w3id.org/kim/hochschulfaechersystematik/n126
+discipline:1061:1151:1509	Toxicologie	https://w3id.org/kim/hochschulfaechersystematik/n126
+discipline:1061:1161	Fondamentaux en médecine	https://w3id.org/kim/hochschulfaechersystematik/n49
+discipline:1061:1161:1163	Physique en sciences de la santé et du sport	https://w3id.org/kim/hochschulfaechersystematik/n49
+discipline:1061:1161:1357	Anatomie	https://w3id.org/kim/hochschulfaechersystematik/n49
+discipline:1061:1161:1359	Anatomie pathologique	https://w3id.org/kim/hochschulfaechersystematik/n49
+discipline:1061:1161:1369	Biochimie en médecine	https://w3id.org/kim/hochschulfaechersystematik/n49
+discipline:1061:1161:1371	Biologie en médecine	https://w3id.org/kim/hochschulfaechersystematik/n49
+discipline:1061:1161:1375	Chimie en médecine	https://w3id.org/kim/hochschulfaechersystematik/n49
+discipline:1061:1161:1407	Santé publique, environnement et société	https://w3id.org/kim/hochschulfaechersystematik/n49
+discipline:1061:1161:1427	Histologie, embryologie, cytogénétique	https://w3id.org/kim/hochschulfaechersystematik/n49
+discipline:1061:1161:1429	Immunologie fondamentale	https://w3id.org/kim/hochschulfaechersystematik/n49
+discipline:1061:1161:1449	Microbiologie	https://w3id.org/kim/hochschulfaechersystematik/n49
+discipline:1061:1161:1471	Physiologie	https://w3id.org/kim/hochschulfaechersystematik/n49
+discipline:1061:1365	Pédagogie, formations et métiers en médecine	https://w3id.org/kim/hochschulfaechersystematik/n49
+discipline:1061:1365:1367	Apprentissage en médecine	https://w3id.org/kim/hochschulfaechersystematik/n49	
+discipline:1061:1365:1397	Didactique médicale	https://w3id.org/kim/hochschulfaechersystematik/n49
+discipline:1061:1365:1507	TICE en médecine	https://w3id.org/kim/hochschulfaechersystematik/n49
+discipline:1061:1399	Sciences du sport	https://w3id.org/kim/hochschulfaechersystematik/n22
+discipline:1061:1399:1401	Disciplines sportives	https://w3id.org/kim/hochschulfaechersystematik/n29
+discipline:1061:1399:1409	Economie du sport	https://w3id.org/kim/hochschulfaechersystematik/n29
+discipline:1061:1399:1425	Histoire du sport	https://w3id.org/kim/hochschulfaechersystematik/n29
+discipline:1061:1399:1467	Pédagogie, éducation physique et sportive	https://w3id.org/kim/hochschulfaechersystematik/n098
+discipline:1061:1399:1475	Pratique du sport	https://w3id.org/kim/hochschulfaechersystematik/n29
+discipline:1061:1399:1501	Sociologie du sport	https://w3id.org/kim/hochschulfaechersystematik/n029
+discipline:1061:1495	Sémiologie
+discipline:1061:1495:1497	Sémiologie de l'imagerie médicale
+discipline:1061:1495:1499	Sémiologie quantitative
+discipline:1069	Environnement et développement durable	hhttps://w3id.org/kim/hochschulfaechersystematik/n385
+discipline:1069:1021	Ecologie, écosystèmes et biodiversité	https://w3id.org/kim/hochschulfaechersystematik/n385
+discipline:1069:1021:1023	Biodiversité	https://w3id.org/kim/hochschulfaechersystematik/n385
+discipline:1069:1021:1809	Dynamique des milieux naturels	https://w3id.org/kim/hochschulfaechersystematik/n385
+discipline:1069:1021:1817	Ecosystèmes aquatiques continentaux	https://w3id.org/kim/hochschulfaechersystematik/n385
+discipline:1069:1021:1819	Ecosystèmes marins	https://w3id.org/kim/hochschulfaechersystematik/n385
+discipline:1069:1021:1821	Ecosystèmes terrestres	hhttps://w3id.org/kim/hochschulfaechersystematik/n385
+discipline:1069:1189	Technologies environnementales	https://w3id.org/kim/hochschulfaechersystematik/n457
+discipline:1069:1189:1811	Eco-conception	https://w3id.org/kim/hochschulfaechersystematik/n457
+discipline:1069:1189:1813	Eco-construction et énergie renouvelable	https://w3id.org/kim/hochschulfaechersystematik/n457
+discipline:1069:1189:1815	Eco-technologie	https://w3id.org/kim/hochschulfaechersystematik/n457
+discipline:1069:1189:1839	Ingénierie de l’environnement	https://w3id.org/kim/hochschulfaechersystematik/n457
+discipline:1069:1329	Protection de l'environnement	https://w3id.org/kim/hochschulfaechersystematik/n458
+discipline:1069:1329:1831	Gestion des ressources naturelles et des déchets	https://w3id.org/kim/hochschulfaechersystematik/n458
+discipline:1069:1329:1833	Gestion et aménagement des territoires	https://w3id.org/kim/hochschulfaechersystematik/n458
+discipline:1069:1329:1845	Protection des milieux et des espèces	https://w3id.org/kim/hochschulfaechersystematik/n458
+discipline:1069:1787	Politiques et actions pour l'environnement	https://w3id.org/kim/hochschulfaechersystematik/n458
+discipline:1069:1787:1789	Actions locales	https://w3id.org/kim/hochschulfaechersystematik/n458
+discipline:1069:1787:1791	Actions nationales	https://w3id.org/kim/hochschulfaechersystematik/n458
+discipline:1069:1787:1805	Développement durable	https://w3id.org/kim/hochschulfaechersystematik/n458
+discipline:1069:1787:1823	Education à l'EDD	https://w3id.org/kim/hochschulfaechersystematik/n458
+discipline:1069:1787:1829	Ethique et responsabilité environnementale	https://w3id.org/kim/hochschulfaechersystematik/n458
+discipline:1069:1793	Agro-alimentaire	https://w3id.org/kim/hochschulfaechersystematik/n097
+discipline:1069:1793:1795	Aliments et activités agroalimentaires associées	https://w3id.org/kim/hochschulfaechersystematik/n097
+discipline:1069:1793:1835	Hygiène et sécurité alimentaire	https://w3id.org/kim/hochschulfaechersystematik/n097
+discipline:1069:1793:1847	Techniques agroalimentaires	https://w3id.org/kim/hochschulfaechersystematik/n097
+discipline:1069:1797	Evaluation et gestion des risques	https://w3id.org/kim/hochschulfaechersystematik/n458
+discipline:1069:1797:1799	Catastrophes naturelles	https://w3id.org/kim/hochschulfaechersystematik/n458
+discipline:1069:1797:1825	Environnement et santé	https://w3id.org/kim/hochschulfaechersystematik/n458
+discipline:1069:1797:1843	Pollution, catastrophe écologiques	https://w3id.org/kim/hochschulfaechersystematik/n458
+discipline:1069:1801	Changement global	https://w3id.org/kim/hochschulfaechersystematik/n385
+discipline:1069:1801:1803	Dégradation des milieux naturels	https://w3id.org/kim/hochschulfaechersystematik/n385
+discipline:1069:1801:1827	Erosion de la biodiversité	https://w3id.org/kim/hochschulfaechersystematik/n385
+discipline:1069:1801:1837	Impacts de l'homme sur l'environnement (démographie, économie, commerce)	https://w3id.org/kim/hochschulfaechersystematik/n385
+discipline:1069:1801:1841	Introduction d'espèces et invasions biologiques	https://w3id.org/kim/hochschulfaechersystematik/n385
+discipline:1069:1807	Droit et économie de l'environnement	https://w3id.org/kim/hochschulfaechersystematik/n458
+discipline:1233	Economie et Gestion	https://w3id.org/kim/hochschulfaechersystematik/n30
+discipline:1233:1203	Comptabilité et gestion	hhttps://w3id.org/kim/hochschulfaechersystematik/n021
+discipline:1233:1203:1205	Analyse financière	https://w3id.org/kim/hochschulfaechersystematik/n021
+discipline:1233:1203:1211	Audit	https://w3id.org/kim/hochschulfaechersystematik/n021
+discipline:1233:1203:1231	Comptabilité des opérations financières	https://w3id.org/kim/hochschulfaechersystematik/n021
+discipline:1233:1203:1235	Comptabilité générale	https://w3id.org/kim/hochschulfaechersystematik/n021
+discipline:1233:1203:1237	Comptabilité privée	https://w3id.org/kim/hochschulfaechersystematik/n021
+discipline:1233:1203:1239	Concentrations et clusters d'entreprise	https://w3id.org/kim/hochschulfaechersystematik/n021
+discipline:1233:1203:1245	Contrôle de gestion	https://w3id.org/kim/hochschulfaechersystematik/n021
+discipline:1233:1203:1281	Etats financiers	https://w3id.org/kim/hochschulfaechersystematik/n021
+discipline:1233:1203:1283	Finances publiques	https://w3id.org/kim/hochschulfaechersystematik/n021
+discipline:1233:1203:1285	Fiscalité	https://w3id.org/kim/hochschulfaechersystematik/n021
+discipline:1233:1203:1297	Gestion financière	https://w3id.org/kim/hochschulfaechersystematik/n021
+discipline:1233:1203:1323	Organisation des entreprises, entrepreneuriat	https://w3id.org/kim/hochschulfaechersystematik/n021
+discipline:1233:1203:1347	Théorie des organisations	https://w3id.org/kim/hochschulfaechersystematik/n021
+discipline:1233:1207	Management et ressources humaines	https://w3id.org/kim/hochschulfaechersystematik/n021
+discipline:1233:1207:1209	Animation des équipes	https://w3id.org/kim/hochschulfaechersystematik/n021
+discipline:1233:1207:1241	Conditions de travail	https://w3id.org/kim/hochschulfaechersystematik/n021
+discipline:1233:1207:1287	Gestion de l'information et informatique	https://w3id.org/kim/hochschulfaechersystematik/n021
+discipline:1233:1207:1291	Gestion de la qualité	https://w3id.org/kim/hochschulfaechersystematik/n021
+discipline:1233:1207:1295	Gestion du personnel	https://w3id.org/kim/hochschulfaechersystematik/n021
+discipline:1233:1207:1305	Management public	https://w3id.org/kim/hochschulfaechersystematik/n021
+discipline:1233:1207:1307	Marketing	https://w3id.org/kim/hochschulfaechersystematik/n021
+discipline:1233:1207:1319	Négociation, gestion des conflits	https://w3id.org/kim/hochschulfaechersystematik/n021
+discipline:1233:1207:1327	Prise de décision	https://w3id.org/kim/hochschulfaechersystematik/n021
+discipline:1233:1207:1333	Recrutement et emploi	https://w3id.org/kim/hochschulfaechersystematik/n021
+discipline:1233:1207:1335	Relation professionnelles	https://w3id.org/kim/hochschulfaechersystematik/n021
+discipline:1233:1213	Economie financière	https://w3id.org/kim/hochschulfaechersystematik/n175
+discipline:1233:1213:1215	Banques	https://w3id.org/kim/hochschulfaechersystematik/n175
+discipline:1233:1213:1249	Crédit	https://w3id.org/kim/hochschulfaechersystematik/n175
+discipline:1233:1213:1301	Investissements et marchés financiers	https://w3id.org/kim/hochschulfaechersystematik/n175
+discipline:1233:1213:1317	Monnaie	https://w3id.org/kim/hochschulfaechersystematik/n175
+discipline:1233:1217	Méthodes en économie	https://w3id.org/kim/hochschulfaechersystematik/n184
+discipline:1233:1217:1219	Calcul économique	https://w3id.org/kim/hochschulfaechersystematik/n184
+discipline:1233:1217:1277	Enquêtes et sondages	https://w3id.org/kim/hochschulfaechersystematik/n184
+discipline:1233:1217:1309	Méthodes mathématiques	https://w3id.org/kim/hochschulfaechersystematik/n184
+discipline:1233:1217:1311	Méthodes statistiques	https://w3id.org/kim/hochschulfaechersystematik/n184
+discipline:1233:1217:1313	Modélisation économique	https://w3id.org/kim/hochschulfaechersystematik/n184
+discipline:1233:1217:1345	Théorie des jeux	https://w3id.org/kim/hochschulfaechersystematik/n184
+discipline:1233:1221	Micro et macroéconomie	https://w3id.org/kim/hochschulfaechersystematik/n184
+discipline:1233:1221:1223	Calcul et répartition du revenu et de la richesse	https://w3id.org/kim/hochschulfaechersystematik/n184
+discipline:1233:1221:1225	Commerce	https://w3id.org/kim/hochschulfaechersystematik/n184
+discipline:1233:1221:1243	Consommation, épargne, pouvoir d'achat	https://w3id.org/kim/hochschulfaechersystematik/n184
+discipline:1233:1221:1251	Croissance économique	https://w3id.org/kim/hochschulfaechersystematik/n184
+discipline:1233:1221:1269	Economie de l'innovation	https://w3id.org/kim/hochschulfaechersystematik/n184
+discipline:1233:1221:1279	Entreprises	https://w3id.org/kim/hochschulfaechersystematik/n184
+discipline:1233:1221:1337	Secteur primaire	https://w3id.org/kim/hochschulfaechersystematik/n184
+discipline:1233:1221:1339	Secteur secondaire et services	https://w3id.org/kim/hochschulfaechersystematik/n184
+discipline:1233:1221:1349	Théories et politiques macroéconomiques	https://w3id.org/kim/hochschulfaechersystematik/n184
+discipline:1233:1221:1351	Théories microéconomiques	https://w3id.org/kim/hochschulfaechersystematik/n184
+discipline:1233:1227	Economie internationale	https://w3id.org/kim/hochschulfaechersystematik/n182
+discipline:1233:1227:1229	Commerce international	https://w3id.org/kim/hochschulfaechersystematik/n182
+discipline:1233:1227:1247	Coopération économique	https://w3id.org/kim/hochschulfaechersystematik/n182
+discipline:1233:1227:1315	Mondialisation	https://w3id.org/kim/hochschulfaechersystematik/n182
+discipline:1233:1227:1325	Politiques économiques étrangères	https://w3id.org/kim/hochschulfaechersystematik/n182
+discipline:1233:1227:1353	Union européenne	https://w3id.org/kim/hochschulfaechersystematik/n167
+discipline:1233:1265	Sociologie et comportements économiques	https://w3id.org/kim/hochschulfaechersystematik/n184
+discipline:1233:1265:1267	Economie comportementale	https://w3id.org/kim/hochschulfaechersystematik/n184
+discipline:1233:1265:1341	Sociologie et démographie économiques	https://w3id.org/kim/hochschulfaechersystematik/n184
+discipline:1233:1271	Economie du travail	https://w3id.org/kim/hochschulfaechersystematik/n011
+discipline:1233:1273	Economie générale	https://w3id.org/kim/hochschulfaechersystematik/n011
+discipline:1233:1273:1299	Histoire et conjoncture économiques	https://w3id.org/kim/hochschulfaechersystematik/n011
+discipline:1233:1273:1343	Systèmes et théories	https://w3id.org/kim/hochschulfaechersystematik/n011
+discipline:1233:1275	Economie sociale	https://w3id.org/kim/hochschulfaechersystematik/n184
+discipline:1233:1289	Gestion de la production	https://w3id.org/kim/hochschulfaechersystematik/n184
+discipline:1233:1289:1293	Gestion des bâtiments	https://w3id.org/kim/hochschulfaechersystematik/n184
+discipline:1233:1289:1303	Logistique	https://w3id.org/kim/hochschulfaechersystematik/n184
+discipline:1233:1289:1321	Organisation de la production	https://w3id.org/kim/hochschulfaechersystematik/n184
+discipline:1233:1289:1331	Recherche et développement	https://w3id.org/kim/hochschulfaechersystematik/n184
+discipline:1261	Sciences juridiques et politiques	https://w3id.org/kim/hochschulfaechersystematik/n3
+discipline:1261:1253	Droit privé	https://w3id.org/kim/hochschulfaechersystematik/n135
+discipline:1261:1253:1255	Droit de la propriété intellectuelle	https://w3id.org/kim/hochschulfaechersystematik/n135
+discipline:1261:1253:1257	Droit des sociétés	https://w3id.org/kim/hochschulfaechersystematik/n135
+discipline:1261:1253:1259	Droit du travail	https://w3id.org/kim/hochschulfaechersystematik/n042
+discipline:1261:1253:1405	Droit de la santé	https://w3id.org/kim/hochschulfaechersystematik/n135
+discipline:1261:1253:1523	Droit de la consommation	https://w3id.org/kim/hochschulfaechersystematik/n135
+discipline:1261:1253:1525	Droit de la famille	https://w3id.org/kim/hochschulfaechersystematik/n135
+discipline:1261:1253:1527	Droit de la responsabilité civile	https://w3id.org/kim/hochschulfaechersystematik/n135
+discipline:1261:1253:1533	Droit des personnes	https://w3id.org/kim/hochschulfaechersystematik/n135
+discipline:1261:1253:1535	Droit des sûretés	https://w3id.org/kim/hochschulfaechersystematik/n135
+discipline:1261:1253:1537	Droit du commerce international	https://w3id.org/kim/hochschulfaechersystematik/n135
+discipline:1261:1253:1543	Droit judiciaire privé	https://w3id.org/kim/hochschulfaechersystematik/n135
+discipline:1261:1253:1545	Droit pénal	https://w3id.org/kim/hochschulfaechersystematik/n135
+discipline:1261:1253:1547	Droit social	https://w3id.org/kim/hochschulfaechersystematik/n135
+discipline:1261:1253:1557	Libertés individuelles et fondamentales	https://w3id.org/kim/hochschulfaechersystematik/n135
+discipline:1261:1263	Droit public	https://w3id.org/kim/hochschulfaechersystematik/n135
+discipline:1261:1263:1517	Droit constitutionnel	https://w3id.org/kim/hochschulfaechersystematik/n135
+discipline:1261:1263:1519	Droit de l'environnement	https://w3id.org/kim/hochschulfaechersystematik/n135
+discipline:1261:1263:1521	Droit de l'urbanisme	https://w3id.org/kim/hochschulfaechersystematik/n135
+discipline:1261:1263:1529	Droit des collectivités territoriales	https://w3id.org/kim/hochschulfaechersystematik/n135
+discipline:1261:1263:1531	Droit des libertés publiques	https://w3id.org/kim/hochschulfaechersystematik/n135
+discipline:1261:1263:1539	Droit européen	https://w3id.org/kim/hochschulfaechersystematik/n135
+discipline:1261:1263:1541	Droit international public	https://w3id.org/kim/hochschulfaechersystematik/n135
+discipline:1261:1513	Sciences politiques	https://w3id.org/kim/hochschulfaechersystematik/n25
+discipline:1261:1513:1515	Aires régionales	https://w3id.org/kim/hochschulfaechersystematik/n129
+discipline:1261:1513:1549	Economie politique	https://w3id.org/kim/hochschulfaechersystematik/n129
+discipline:1261:1513:1555	Institutions et organisations politiques	https://w3id.org/kim/hochschulfaechersystematik/n129
+discipline:1261:1513:1561	Politique comparée	https://w3id.org/kim/hochschulfaechersystematik/n129
+discipline:1261:1513:1563	Politiques publiques	https://w3id.org/kim/hochschulfaechersystematik/n129
+discipline:1261:1513:1565	Relations internationales	https://w3id.org/kim/hochschulfaechersystematik/n129
+discipline:1261:1513:1567	Sociologie politique	https://w3id.org/kim/hochschulfaechersystematik/n129
+discipline:1261:1513:1569	Théorie politique	https://w3id.org/kim/hochschulfaechersystematik/n129
+discipline:1261:1551	Etudes juridiques	https://w3id.org/kim/hochschulfaechersystematik/n135
+discipline:1261:1553	Histoire du droit	https://w3id.org/kim/hochschulfaechersystematik/n135
+discipline:1261:1559	Métiers et formations	https://w3id.org/kim/hochschulfaechersystematik/n135
+discipline:1597	Lettres, arts, langues et civilisations
+discipline:1597:1571	Langues, littératures et civilisations étrangères	https://w3id.org/kim/hochschulfaechersystematik/n07
+discipline:1597:1571:1573	Allemand	https://w3id.org/kim/hochschulfaechersystematik/n067
+discipline:1597:1571:1575	Amazighe	https://w3id.org/kim/hochschulfaechersystematik/n002
+discipline:1597:1571:1577	Anglais	https://w3id.org/kim/hochschulfaechersystematik/n008
+discipline:1597:1571:1579	Arabe	https://w3id.org/kim/hochschulfaechersystematik/n010
+discipline:1597:1571:1609	Chinois	https://w3id.org/kim/hochschulfaechersystematik/n145
+discipline:1597:1571:1613	Espagnol	https://w3id.org/kim/hochschulfaechersystematik/n150
+discipline:1597:1571:1615	Grec	https://w3id.org/kim/hochschulfaechersystematik/n070
+discipline:1597:1571:1617	Hébreu	https://w3id.org/kim/hochschulfaechersystematik/n073
+discipline:1597:1571:1619	Islandais	https://w3id.org/kim/hochschulfaechersystematik/n024
+discipline:1597:1571:1621	Italien	https://w3id.org/kim/hochschulfaechersystematik/n11
+discipline:1597:1571:1623	Japonais	https://w3id.org/kim/hochschulfaechersystematik/n085
+discipline:1597:1571:1645	Polonais	https://w3id.org/kim/hochschulfaechersystematik/n206
+discipline:1597:1571:1647	Portugais	https://w3id.org/kim/hochschulfaechersystematik/n131
+discipline:1597:1571:1649	Roumain et rhéto-roman	https://w3id.org/kim/hochschulfaechersystematik/n137
+discipline:1597:1571:1651	Russe	https://w3id.org/kim/hochschulfaechersystematik/n139
+discipline:1597:1571:1659	Syriaque	https://w3id.org/kim/hochschulfaechersystematik/n002
+discipline:1597:1581	Arts	https://w3id.org/kim/hochschulfaechersystematik/n9
+discipline:1597:1581:1583	Architecture, art du paysage	https://w3id.org/kim/hochschulfaechersystematik/n013
+discipline:1597:1581:1599	Arts : critique et théorie	https://w3id.org/kim/hochschulfaechersystematik/n013
+discipline:1597:1581:1601	Arts du spectacle (théâtre, danse...)	https://w3id.org/kim/hochschulfaechersystematik/n035
+discipline:1597:1581:1607	Arts visuels et plastiques	https://w3id.org/kim/hochschulfaechersystematik/n75
+discipline:1597:1581:1611	Cinéma et audiovisuel	https://w3id.org/kim/hochschulfaechersystematik/n054
+discipline:1597:1581:1639	Musique	https://w3id.org/kim/hochschulfaechersystematik/n78
+discipline:1597:1585	Histoire de l'art	https://w3id.org/kim/hochschulfaechersystematik/n78
+discipline:1597:1585:1587	Art classique	https://w3id.org/kim/hochschulfaechersystematik/n78
+discipline:1597:1585:1589	Art de la Renaissance	https://w3id.org/kim/hochschulfaechersystematik/n78
+discipline:1597:1585:1591	Art du XIXe s.	https://w3id.org/kim/hochschulfaechersystematik/n78
+discipline:1597:1585:1593	Art du XXe s. et du XXIe s.	https://w3id.org/kim/hochschulfaechersystematik/n78
+discipline:1597:1585:1595	Art médiéval	https://w3id.org/kim/hochschulfaechersystematik/n78
+discipline:1597:1585:1603	Arts préhistoriques et de l'Antiquité	https://w3id.org/kim/hochschulfaechersystematik/n78
+discipline:1597:1585:1605	Arts premiers	https://w3id.org/kim/hochschulfaechersystematik/n78
+discipline:1597:1625	Langue et littérature française, lettres classiques	https://w3id.org/kim/hochschulfaechersystematik/n059
+discipline:1597:1625:1627	Langues et cultures des régions françaises	https://w3id.org/kim/hochschulfaechersystematik/n059
+discipline:1597:1625:1629	Lettres classiques	https://w3id.org/kim/hochschulfaechersystematik/n059
+discipline:1597:1625:1637	Littérature moderne et contemporaine	https://w3id.org/kim/hochschulfaechersystematik/n059
+discipline:1597:1631	Sciences du langage	https://w3id.org/kim/hochschulfaechersystematik/n07
+discipline:1597:1631:1633	Lexicologie	https://w3id.org/kim/hochschulfaechersystematik/n07
+discipline:1597:1631:1635	Linguistique	https://w3id.org/kim/hochschulfaechersystematik/n07
+discipline:1597:1631:1643	Phonétique et phonologie	https://w3id.org/kim/hochschulfaechersystematik/n07
+discipline:1597:1631:1653	Sémantique	https://w3id.org/kim/hochschulfaechersystematik/n07
+discipline:1597:1631:1655	Sémiologie	https://w3id.org/kim/hochschulfaechersystematik/n07
+discipline:1597:1631:1657	Sociolinguistique	https://w3id.org/kim/hochschulfaechersystematik/n07
+discipline:1597:1631:1849	Psychologie du langage ou psycholinguistique	https://w3id.org/kim/hochschulfaechersystematik/n07
+discipline:1597:1641	Non classé	https://w3id.org/kim/hochschulfaechersystematik/n74
+discipline:1597:1851	Formations et metiers des arts et des lettres	https://w3id.org/kim/hochschulfaechersystematik/n74
+discipline:987	Sciences humaines, sociales, de l’éducation et de l’information	https://w3id.org/kim/hochschulfaechersystematik/n3
+discipline:987:1099	Histoire des sciences	https://w3id.org/kim/hochschulfaechersystematik/n030
+discipline:987:1099:1101	Histoire de la physique et des mathématiques	https://w3id.org/kim/hochschulfaechersystematik/n030
+discipline:987:1099:1423	Histoire de la médecine	https://w3id.org/kim/hochschulfaechersystematik/n030
+discipline:987:1099:1669	Histoire de l'astronomie	https://w3id.org/kim/hochschulfaechersystematik/n030
+discipline:987:1099:1681	Histoire de la chimie	https://w3id.org/kim/hochschulfaechersystematik/n030
+discipline:987:1099:1723	Histoire de l'informatique	https://w3id.org/kim/hochschulfaechersystematik/n030
+discipline:987:1099:1757	Histoire des sciences humaines et sociales	https://w3id.org/kim/hochschulfaechersystematik/n030
+discipline:987:1099:1781	Histoire des sciences de la vie et de la Terre	https://w3id.org/kim/hochschulfaechersystematik/n030
+discipline:987:1147	Sciences de l'éducation	https://w3id.org/kim/hochschulfaechersystematik/n33	
+discipline:987:1147:1149	Pédagogie et didactique	https://w3id.org/kim/hochschulfaechersystematik/n052
+discipline:987:1147:1695	Formation continue	https://w3id.org/kim/hochschulfaechersystematik/n321
+discipline:987:1147:1703	Enseignement à distance	https://w3id.org/kim/hochschulfaechersystematik/n33
+discipline:987:1147:1743	Politique éducative	https://w3id.org/kim/hochschulfaechersystematik/n33
+discipline:987:1147:1749	Enseignement primaire	https://w3id.org/kim/hochschulfaechersystematik/n115
+discipline:987:1147:1753	Enseignement secondaire	https://w3id.org/kim/hochschulfaechersystematik/n361
+discipline:987:1147:1763	Enseignement supérieur	https://w3id.org/kim/hochschulfaechersystematik/n321	
+discipline:987:1147:1775	Technologie de l'information et de la communication pour l'enseignement (TICE)	https://w3id.org/kim/hochschulfaechersystematik/n33
+discipline:987:1155	Philosophie	https://w3id.org/kim/hochschulfaechersystematik/n127
+discipline:987:1155:1157	Philosophie des sciences et des techniques, épistémologie	https://w3id.org/kim/hochschulfaechersystematik/n127
+discipline:987:1155:1665	Philosophie ancienne et médiévale	https://w3id.org/kim/hochschulfaechersystematik/n127
+discipline:987:1155:1693	Philosophie contemporaine	https://w3id.org/kim/hochschulfaechersystematik/n127
+discipline:987:1155:1707	Philosophie du droit	https://w3id.org/kim/hochschulfaechersystematik/n127
+discipline:987:1155:1735	Morale (éthique)	https://w3id.org/kim/hochschulfaechersystematik/n127
+discipline:987:1155:1737	Philosophie générale par notions	https://w3id.org/kim/hochschulfaechersystematik/n127
+discipline:987:1155:1739	Philosophie orientale	https://w3id.org/kim/hochschulfaechersystematik/n127
+discipline:987:1155:1745	Philosophie politique	https://w3id.org/kim/hochschulfaechersystematik/n127
+discipline:987:1661	Histoire et archéologie	https://w3id.org/kim/hochschulfaechersystematik/n05
+discipline:987:1661:1663	Histoire ancienne et médiévale	https://w3id.org/kim/hochschulfaechersystematik/n272
+discipline:987:1661:1715	Archéologie funéraire	https://w3id.org/kim/hochschulfaechersystematik/n012
+discipline:987:1661:1717	Histoire générale	https://w3id.org/kim/hochschulfaechersystematik/n068
+discipline:987:1661:1719	Archéologie industrielle	https://w3id.org/kim/hochschulfaechersystematik/n012
+discipline:987:1661:1729	Archéologie médiévale	https://w3id.org/kim/hochschulfaechersystematik/n012
+discipline:987:1661:1733	Histoire moderne et contemporaine	https://w3id.org/kim/hochschulfaechersystematik/n273
+discipline:987:1661:1741	Archéologie du paysage et du littoral	https://w3id.org/kim/hochschulfaechersystematik/n012
+discipline:987:1661:1747	Archéologie préhistorique	https://w3id.org/kim/hochschulfaechersystematik/n012
+discipline:987:1661:1761	Archéologie subaquatique	https://w3id.org/kim/hochschulfaechersystematik/n012
+discipline:987:1661:1765	Archéologie technique et théorie	https://w3id.org/kim/hochschulfaechersystematik/n012
+discipline:987:1661:1779	Archéologie urbaine	https://w3id.org/kim/hochschulfaechersystematik/n012
+discipline:987:1667	Anthropologie et ethnologie	https://w3id.org/kim/hochschulfaechersystematik/n548
+discipline:987:1671	Sciences des religions	https://w3id.org/kim/hochschulfaechersystematik/n136
+discipline:987:1671:1673	Autres religions	https://w3id.org/kim/hochschulfaechersystematik/n136
+discipline:987:1671:1679	Bouddhisme	https://w3id.org/kim/hochschulfaechersystematik/n136
+discipline:987:1671:1683	Christianisme	https://w3id.org/kim/hochschulfaechersystematik/n136
+discipline:987:1671:1725	Islam	https://w3id.org/kim/hochschulfaechersystematik/n083
+discipline:987:1671:1727	Judaïsme	https://w3id.org/kim/hochschulfaechersystematik/n073
+discipline:987:1671:1771	Théorie des religions	https://w3id.org/kim/hochschulfaechersystematik/n136
+discipline:987:1675	Sciences de l'information et de la communication	https://w3id.org/kim/hochschulfaechersystematik/n06
+discipline:987:1675:1677	Sciences des bibliothèques	https://w3id.org/kim/hochschulfaechersystematik/n022
+discipline:987:1675:1691	Théorie de la communication	https://w3id.org/kim/hochschulfaechersystematik/n303
+discipline:987:1675:1705	Aspects juridiques	https://w3id.org/kim/hochschulfaechersystematik/n303
+discipline:987:1675:1713	Edition, édition électronique et multimédia	https://w3id.org/kim/hochschulfaechersystematik/n302
+discipline:987:1675:1721	Infographie	https://w3id.org/kim/hochschulfaechersystematik/n022
+discipline:987:1675:1767	Technologies de l'information et de la communication	https://w3id.org/kim/hochschulfaechersystematik/n302
+discipline:987:1675:1777	Traitement de l'information	https://w3id.org/kim/hochschulfaechersystematik/n022
+discipline:987:1675:1783	Médias	https://w3id.org/kim/hochschulfaechersystematik/n302
+discipline:987:1685	Psychologie	https://w3id.org/kim/hochschulfaechersystematik/n132
+discipline:987:1685:1687	Psychologie clinique, neurosciences	https://w3id.org/kim/hochschulfaechersystematik/n132
+discipline:987:1685:1689	Psychologie cognitive	https://w3id.org/kim/hochschulfaechersystematik/n132
+discipline:987:1685:1701	Psychologie du développement	https://w3id.org/kim/hochschulfaechersystematik/n132
+discipline:987:1685:1759	Psychologie sociale, appliquée et comparée	https://w3id.org/kim/hochschulfaechersystematik/n132
+discipline:987:1685:1773	Théories psychologiques	https://w3id.org/kim/hochschulfaechersystematik/n132
+discipline:987:1697	Sociologie	https://w3id.org/kim/hochschulfaechersystematik/n149
+discipline:987:1697:1699	Sociologie des cultures	https://w3id.org/kim/hochschulfaechersystematik/n149
+discipline:987:1697:1751	Processus sociaux, changements sociaux	https://w3id.org/kim/hochschulfaechersystematik/n149
+discipline:987:1697:1755	Services et problèmes sociaux	https://w3id.org/kim/hochschulfaechersystematik/n149
+discipline:987:1709	Géographie, aménagement, démographie	https://w3id.org/kim/hochschulfaechersystematik/n44
+discipline:987:1709:1711	Géographie physique, humaine, économique et régionale	https://w3id.org/kim/hochschulfaechersystematik/n178
+discipline:987:1709:1769	Aménagement du territoire, urbanisme	https://w3id.org/kim/hochschulfaechersystematik/n178
+discipline:987:1709:235951	Démographie	https://w3id.org/kim/hochschulfaechersystematik/n178
+discipline:987:1731	Métiers et formations en SHS	https://w3id.org/kim/hochschulfaechersystematik/n26
+discipline:987:1785	Non classé	https://w3id.org/kim/hochschulfaechersystematik/n26
+discipline:987:989	Méthodes en SHS	https://w3id.org/kim/hochschulfaechersystematik/n26
