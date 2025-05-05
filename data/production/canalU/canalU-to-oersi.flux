@@ -5,6 +5,7 @@ service_name = "CANAL U";
 
 "https://www.canal-u.tv/oai/"
 | open-oaipmh(metadataPrefix="oai_dc")
+| oersi.ErrorCatcher(file_errors)
 | decode-xml
 | handle-generic-xml(emitNamespace="true")
 | fix(FLUX_DIR + "canalU.fix", *)
