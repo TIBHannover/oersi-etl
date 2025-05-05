@@ -97,8 +97,11 @@ do list("path": "metadata.oai_dc:dc.dc:subject", "var": "$i")
 end
 
 # -----------license----------
-copy_field("metadata.oai_dc:dc.dc:license.value","license.id")
-
+do list(path:"metadata.oai_dc:dc.dc:license","var":"$i")
+  unless exists("license")
+    copy_field("$i.value","license.id")
+  end
+end
 
 #  ------------dataCreated------------------------------------
 copy_field("metadata.oai_dc:dc.dc:created.value","dateCreated")
@@ -144,8 +147,10 @@ lookup("learningResourceType[].*.prefLabel.en", "hcrt-enLabel2Uri", delete:"true
 add_array("about[]")
 do list(path:"header.setSpec","var":"$i")
     do list(path: "$i.value", "var":"$j")
+      if any_contain("$j","discipline")
         copy_field("$j","about[].$append.id")
         lookup("about[].$last.id", "canalUDiscipline2Destatis")
+      end
     end
 end
 
