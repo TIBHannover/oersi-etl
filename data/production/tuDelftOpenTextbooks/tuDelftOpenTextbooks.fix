@@ -107,7 +107,11 @@ end
 do list(path:"creator[]","var":"$j")
   if exists("$j.affiliation")
     replace_all("$j.affiliation.name","^(.*)[ ]?[,\\|] Faculty.*","$1")    
-    add_field("$j.affiliation.type", "Organization")
+#    if any_match("$j.affiliation.name", ".*([Dd]epartment|[iI]nstitute|[fF]acult).*") TODO
+#      remove_field("$j.affiliation.name")
+#    else
+      add_field("$j.affiliation.type", "Organization")
+#    end
   end
 end
 
@@ -117,6 +121,8 @@ end
 do list(path:"keywords[]","var":"$j")
   copy_field("$j", "@hochschulfaechersystematik.$append")
 end
+
+copy_field("html.body.div.div.1.div.div.div.div.div.*.div.*.div.ul.li.*.value","@hochschulfaechersystematik.$append")
 
 lookup("@hochschulfaechersystematik.*","tuDelftSubjects2destatis", delete:"true")
 
