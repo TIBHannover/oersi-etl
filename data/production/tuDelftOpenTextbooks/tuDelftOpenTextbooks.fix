@@ -106,14 +106,20 @@ end
 
 do list(path:"creator[]","var":"$j")
   if exists("$j.affiliation")
-    replace_all("$j.affiliation.name","^(.*)[ ]?[,\\|] Faculty.*","$1")    
-#    if any_match("$j.affiliation.name", ".*([Dd]epartment|[iI]nstitute|[fF]acult).*") TODO
-#      remove_field("$j.affiliation.name")
-#    else
-      add_field("$j.affiliation.type", "Organization")
-#    end
+    replace_all("$j.affiliation.name","^.*(Delft University of Technology).*$","$1")
+    add_field("$j.affiliation.type", "Organization")
+    if any_equal("$j.affiliation.name","Delft University of Technology")
+      add_field("$j.affiliation.id", "https://ror.org/02e2c7k09")
+    end
   end
 end
+
+# ---sourceOrganization----
+
+add_array("sourceOrganization[]")
+add_field("sourceOrganization[].$append.name", "Delft University of Technology")
+add_field("sourceOrganization[].$last.type", "Organization")
+add_field("sourceOrganization[].$last.id", "https://ror.org/02e2c7k09")
 
   # ------ about --- 
 
