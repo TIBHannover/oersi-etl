@@ -41,7 +41,7 @@ dependencies {
     implementation 'org.metafacture:metafacture-elasticsearch:7.0.0'
     implementation 'org.metafacture:metafacture-xml:7.0.0'
     implementation ('org.metafacture:metafix:7.0.0') {
-        exclude group: 'org.slf4j', module: 'slf4j-api'
+        exclude group: 'org.slf4j', module: 'slf4j-simple'
     }
     implementation('org.metafacture:metafacture-biblio:7.0.0') {
         exclude group: 'xml-apis', module: 'xml-apis'
