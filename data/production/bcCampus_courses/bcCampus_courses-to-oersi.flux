@@ -5,7 +5,7 @@ service_name = "BC Campus";
 default input_limit = "-1"; // 'default': is overridden by command-line/properties value
 default input_wait = "50";
 
-"https://api.collection.bccampus.ca/api/sitemap/index.xml" // for local testing: "file://" + FLUX_DIR + "hoou-sitemap.xml"
+"https://collection.bccampus.ca/sitemap.xml" // for local testing: "file://" + FLUX_DIR + "hoou-sitemap.xml"
 | oersi.SitemapReader(header=user_agent_header, wait=input_wait, limit=input_limit, urlPattern=".*/(course-packs)/.*")
 | oersi.ErrorCatcher(file_errors)
 | open-http(header=user_agent_header)
