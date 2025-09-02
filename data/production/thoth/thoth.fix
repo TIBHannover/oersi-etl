@@ -1,6 +1,11 @@
 # Delete all empty values
 vacuum()
 
+# Only keep active pulications
+unless any_equal("workStatus","ACTIVE")
+  reject()
+end
+
 # Check if any element is already (almost) correct provided:
 # if so document them here.
 
@@ -10,7 +15,18 @@ do once("macrosAndMaps")
   include ("../../sharedFixes/macros.fix")
   include ("../../sharedFixes/maps.fix")
   # workflow specific map:
-
+  put_map("languageMap",
+    "ENG": "en",
+    "SPA": "es",
+    "LAT": "lt",
+    "FRE": "fr",
+    "GER": "de"
+  )
+  put_map("mimeTypeMap",
+  "PDF":"application/pdf",
+  "XML":"application/xml",
+  "HTML":"text/html"
+  )
 end
 
 # Transform the metadata and document if any specifics are noteworthy.
@@ -31,6 +47,14 @@ move_field("@license","license.id")
 # -----------image------
 copy_field("coverUrl","image")
 
+# isbn
+do list(path:"publications[]","var":"$i")
+  unless any_match("$i.publicationType","(PAPERBACK|HARDBACK)")
+    copy_field("$i.isbn","isbn[].$append")
+  end
+end
+replace_all("isbn[].*","-","")
+
 # ---------------dateCreated----------------------------------
 
 # ---------------datePublished----------------------------------
@@ -38,8 +62,29 @@ copy_field("publicationDate","datePublished")
 
 # ---------------dateModified ----------------------------------
 
-
 # ---------------creator ----------------------------------
+# ---------------contributor ----------------------------------
+do list(path:"contributions[]","var":"$i")
+  if any_equal("$i.contributionType","AUTHOR")
+    copy_field("$i.fullName","creator[].$append.name")
+    add_field("creator[].$last.type","Person")
+    copy_field("$i.contributor.orcid","creator[].$last.id")
+    do list(path:"$i.affiliations[]","var":"$j")
+      copy_field("$j.institution.institutionName","creator[].$last.affiliation.name")
+      add_field("creator[].$last.affiliation.type","Organization")
+      copy_field("$j.institution.ror","creator[].$last.affiliation.id")
+    end
+  else
+    copy_field("$i.fullName","contributor[].$append.name")
+    add_field("contributor[].$last.type","Person")
+    copy_field("$i.contributor.orcid","contributor[].$last.id")
+    do list(path:"$i.affiliations[]","var":"$j")
+      copy_field("$j.institution.institutionName","contributor[].$last.affiliation.name")
+      add_field("contributor[].$last.affiliation.type","Organization")
+      copy_field("$j.institution.ror","contributor[].$last.affiliation.id")
+    end
+  end
+end
 
 # ---------------sourceOrganization ----------------------------------
 
@@ -47,15 +92,19 @@ copy_field("publicationDate","datePublished")
 copy_field("subjects[].subjectCode","keywords[].$append")
 
 # ---------------about ----------------------------------
+# TODO: Create mapping from keywords, maybe talk to TU Delft about disciplin classification
 
 # ---------------type----------------------------------
 add_array("type[]", "LearningResource","Book")
 
 # ---------------inLanguage----------------------------------
+copy_field("languages[].*.languageCode","inLanguage[].$append")
+lookup("inLanguage[].*","languageMap")
 
 # ---------------publisher----------------------------------
 copy_field("imprint.publisher.publisherName","publisher[].$append.name")
 copy_field("imprint.publisher.publisherUrl","publisher[].$last.id")
+add_field("publisher[].*.type","Organization")
 
 # ---------------learningResourceType----------------------------------
 add_field("learningResourceType[].$append.id","https://w3id.org/kim/hcrt/textbook")
@@ -63,7 +112,24 @@ add_field("learningResourceType[].$last.prefLabel.de","Lehrbuch")
 add_field("learningResourceType[].$last.prefLabel.en","Textbook")
 
 # ---------------conditionsOfAccess----------------------------------
+add_field("conditionsOfAccess.id","http://w3id.org/kim/conditionsOfAccess/no_login")
 
+# -----encoding-----
+do list(path:"publications[]","var":"$i")
+  unless any_match("$i.publicationType","(PAPERBACK|HARDBACK|EPUB|MOBI|AZW3)")
+    do list(path:"$i.locations[]","var":"$j")
+      if exists("$j.fullTextUrl")
+        add_field("encoding[].$append.type", "MediaObject")
+        copy_field("$j.fullTextUrl", "encoding[].$last.contentUrl")
+        copy_field("$i.publicationType", "encoding[].$last.encodingFormat")
+      end
+    end
+  end
+end
+
+do list(path:"encoding[]","var":"$i")
+  lookup("$i.encodingFormat","mimeTypeMap")
+end
 
 # ---------mainEntityOfPage----------------
 add_array("mainEntityOfPage[]")
