@@ -1,4 +1,4 @@
-service_id = "https:/https://thoth.pub";
+service_id = "https://thoth.pub";
 service_name = "Thoth";
 
 default input_limit = "-1"; // 'default': is overridden by command-line/properties value
