@@ -207,7 +207,7 @@ if exists("metadata.resource.file")
   end
 end
 
-replace_all("encoding[].*.embedUrl",".*(o:.*)","https://services.phaidra.univie.ac.at/api/object/$1/preview")
+replace_all("encoding[].*.embedUrl",".*(o:.*)","$[service_id]api/object/$1/preview")
 
 # -------isPartOf/hasPart---------
 add_array("isPartOf[]")
