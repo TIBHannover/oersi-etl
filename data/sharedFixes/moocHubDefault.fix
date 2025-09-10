@@ -34,11 +34,15 @@ do list(path:"inLanguage[]","var":"$i")
 end
 
 # ------ license ---
+copy_field("attributes.keywords[].*", "keywords[].$append")
+
+# ------ license ---
 copy_field("attributes.courseLicenses[].*.url","license.id")
 
 # ------ type --- 
 
 add_array("type[]", "LearningResource")
+
 
 # ------ trailer --- 
 copy_field("attributes.video.url","trailer.embedUrl")
