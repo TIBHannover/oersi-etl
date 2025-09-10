@@ -21,12 +21,12 @@ add_array("publisher[]")
 add_array("about[]")
 add_array("encoding[]")
 add_array("@hochschulfaechersystematik")
-do list(path:"html.head.meta","var":"$i")
+do list(path:"html.head.meta","var":"$i") # Remember that each meta tag is its own object in the array of objects.
 
 
   # /* Map some of the data we have to the oersi model: */
   # ---------------id --------
-  copy_field("$i.DC_Identifier_URI", "id")
+  copy_field("$i.DC_Identifier_URI", "@id_internal")
 
   # ---------------name --------
   copy_field("$i.citation_title", "name")
@@ -87,8 +87,16 @@ do list(path:"html.head.meta","var":"$i")
 
   # --- doi as id ---
   if exists("$i.citation_doi")
-    paste("id","~https://doi.org/","$i.citation_doi", join_char:"")
+    paste("@id_doi","~https://doi.org/","$i.citation_doi", join_char:"")
   end
+end
+
+# select id
+
+if exists("@id_doi")
+  copy_field("@id_doi","id")
+else
+  copy_field("@id_internal","id")
 end
 
 # Adjustments for creator
@@ -148,9 +156,9 @@ copy_field("html.body.div.div.1.div.div.div.div.div.2.div.1.img.src","image")
 
 # ---------mainEntityOfPage----------------
 
-if exists("id")
+if exists("@id_internal")
   add_array("mainEntityOfPage[]")
-  copy_field("id", "mainEntityOfPage[].$append.id")
+  copy_field("@id_internal", "mainEntityOfPage[].$append.id")
   add_field("mainEntityOfPage[].$last.provider.id","$[service_id]")
   add_field("mainEntityOfPage[].$last.provider.type","Service")
   add_field("mainEntityOfPage[].$last.provider.name","$[service_name]")

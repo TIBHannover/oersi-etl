@@ -27,6 +27,7 @@ do once("macrosAndMaps")
   "XML":"application/xml",
   "HTML":"text/html"
   )
+  put_filemap("data/maps/tuDelftSubjects2destatis.tsv","tuDelftSubjects2destatis","sep_char":"\t",key_column:"0",value_column:"1",expected_columns:"-1")
 end
 
 # Transform the metadata and document if any specifics are noteworthy.
@@ -92,7 +93,18 @@ end
 copy_field("subjects[].subjectCode","keywords[].$append")
 
 # ---------------about ----------------------------------
-# TODO: Create mapping from keywords, maybe talk to TU Delft about disciplin classification
+# TODO: Create mapping from keywords. First reuse TU Delft mapping.
+
+copy_field("subjects[].subjectCode","@about_TUDelft.$append")
+
+lookup("@about_TUDelft.*","tuDelftSubjects2destatis", delete:"true")
+
+copy_field("@about_TUDelft.*","about[].$append.id")
+
+do list(path: "about[]")
+  copy_field("id", "prefLabel.de")
+  lookup("prefLabel.de","destatis-deLabel2Uri", delete:"true")
+end
 
 # ---------------type----------------------------------
 add_array("type[]", "LearningResource","Book")
