@@ -7,10 +7,14 @@ copy_field("attributes.name", "name")
 
 #  ---------------image----------------------------------
 copy_field("attributes.image.url", "image")
+copy_field("attributes.image.contentUrl", "image")
 
 #  ---------------dateCreated----------------------------------
 copy_field("attributes.startDate", "dateCreated")
 replace_all("dateCreated", "T.*", "")
+
+#  ---------------dateCreated----------------------------------
+copy_field("attributes.duration", "duration")
 
 
 # ------ learningResourceType --- 
@@ -34,11 +38,12 @@ do list(path:"inLanguage[]","var":"$i")
   end
 end
 
-# ------ license ---
+# ------ keywords ---
 copy_field("attributes.keywords[].*", "keywords[].$append")
 
 # ------ license ---
 copy_field("attributes.courseLicenses[].*.url","license.id")
+copy_field("attributes.license[].*.id","license.id")
 
 # ------ type --- 
 
