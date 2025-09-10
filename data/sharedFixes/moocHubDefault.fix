@@ -26,6 +26,7 @@ add_field("learningResourceType[].$last.prefLabel.en","Course")
 /* inLanguage: The value Mehrsprachig does not represent the estimated language labels. */
 add_array("inLanguage[]")
 copy_field("attributes.inLanguage[].*", "inLanguage[].$append")
+copy_field("languages[].*", "inLanguage[].$append")
 
 do list(path:"inLanguage[]","var":"$i")
   if any_equal("$i", "Mehrsprachig")
