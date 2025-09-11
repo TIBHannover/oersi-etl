@@ -7,10 +7,14 @@ copy_field("attributes.name", "name")
 
 #  ---------------image----------------------------------
 copy_field("attributes.image.url", "image")
+copy_field("attributes.image.contentUrl", "image")
 
 #  ---------------dateCreated----------------------------------
 copy_field("attributes.startDate", "dateCreated")
 replace_all("dateCreated", "T.*", "")
+
+#  ---------------dateCreated----------------------------------
+copy_field("attributes.duration", "duration")
 
 
 # ------ learningResourceType --- 
@@ -25,7 +29,8 @@ add_field("learningResourceType[].$last.prefLabel.en","Course")
 # ------ inLanguage --- 
 /* inLanguage: The value Mehrsprachig does not represent the estimated language labels. */
 add_array("inLanguage[]")
-copy_field("attributes.languages[].*", "inLanguage[].$append")
+copy_field("attributes.inLanguage[].*", "inLanguage[].$append")
+copy_field("languages[].*", "inLanguage[].$append")
 
 do list(path:"inLanguage[]","var":"$i")
   if any_equal("$i", "Mehrsprachig")
@@ -33,12 +38,17 @@ do list(path:"inLanguage[]","var":"$i")
   end
 end
 
+# ------ keywords ---
+copy_field("attributes.keywords[].*", "keywords[].$append")
+
 # ------ license ---
 copy_field("attributes.courseLicenses[].*.url","license.id")
+copy_field("attributes.license[].*.id","license.id")
 
 # ------ type --- 
 
 add_array("type[]", "LearningResource")
+
 
 # ------ trailer --- 
 copy_field("attributes.video.url","trailer.embedUrl")

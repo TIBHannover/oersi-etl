@@ -1,18 +1,29 @@
-put_map("licensemap",
-    "CC BY 4.0": "https://creativecommons.org/licenses/by/4.0/",
-    "CC BY-NC 4.0": "https://creativecommons.org/licenses/by-nc/4.0/",
-    "CC BY-NC-ND 4.0": "https://creativecommons.org/licenses/by-nc-nd/4.0/",
-    "CC BY-NC-SA 4.0": "https://creativecommons.org/licenses/by-nc-sa/4.0/",
-    "CC BY-ND 4.0": "https://creativecommons.org/licenses/by-nd/4.0/",
-    "CC BY-SA 4.0": "https://creativecommons.org/licenses/by-sa/4.0/", 
-    "CC-BY-4.0": "https://creativecommons.org/licenses/by/4.0/",
-    "CC-BY-NC-4.0": "https://creativecommons.org/licenses/by-nc/4.0/",
-    "CC-BY-NC-ND-4.0": "https://creativecommons.org/licenses/by-nc-nd/4.0/",
-    "CC-BY-NC-SA-4.0": "https://creativecommons.org/licenses/by-nc-sa/4.0/",
-    "CC-BY-ND-4.0": "https://creativecommons.org/licenses/by-nd/4.0/",
-    "CC-BY-SA-4.0": "https://creativecommons.org/licenses/by-sa/4.0/", 
-    "CC0-1.0": "https://creativecommons.org/publicdomain/zero/1.0/"
-  )
+do once("macrosAndMaps")
+  include ("../../sharedFixes/macros.fix")
+  include ("../../sharedFixes/maps.fix")
+
+  # workflow specific map:
+  put_map("licensemap",
+      "CC BY 4.0": "https://creativecommons.org/licenses/by/4.0/",
+      "CC BY-NC 4.0": "https://creativecommons.org/licenses/by-nc/4.0/",
+      "CC BY-NC-ND 4.0": "https://creativecommons.org/licenses/by-nc-nd/4.0/",
+      "CC BY-NC-SA 4.0": "https://creativecommons.org/licenses/by-nc-sa/4.0/",
+      "CC BY-ND 4.0": "https://creativecommons.org/licenses/by-nd/4.0/",
+      "CC BY-SA 4.0": "https://creativecommons.org/licenses/by-sa/4.0/", 
+      "CC-BY-4.0": "https://creativecommons.org/licenses/by/4.0/",
+      "CC-BY-NC-4.0": "https://creativecommons.org/licenses/by-nc/4.0/",
+      "CC-BY-NC-ND-4.0": "https://creativecommons.org/licenses/by-nc-nd/4.0/",
+      "CC-BY-NC-SA-4.0": "https://creativecommons.org/licenses/by-nc-sa/4.0/",
+      "CC-BY-ND-4.0": "https://creativecommons.org/licenses/by-nd/4.0/",
+      "CC-BY-SA-4.0": "https://creativecommons.org/licenses/by-sa/4.0/", 
+      "CC0-1.0": "https://creativecommons.org/publicdomain/zero/1.0/"
+    )
+  put_filemap("data/maps/oefos2destatis.tsv","oefos2destatis","sep_char":"\t")
+
+end
+
+  #moochub specific fixes
+  include ("../../sharedFixes/moocHubDefault.fix")
 
 # Filter out all resources that are not free
 
@@ -23,13 +34,15 @@ end
 # Delete all empty values
 vacuum()
 
-include ("../../sharedFixes/macros.fix")
-include ("../../sharedFixes/moocHubDefault.fix")
+# ---id---
+trim("id")
+
 
 
 #  ---------------description----------------------------------
-paste("description", "attributes.description","attributes.learningobjectives[].*")
-
+copy_field("attributes.description", "description")
+replace_all("description",'<a[^>]*?href=\\"(.*?)\\">', "")
+replace_all("description","<\\w*>|</\\w*>", "")
 
 # /* creator: source data is not consistent, can be a single author or multiple separated by comma or "&amp;". API estimates one object per instructor. Also there is no type even though there are persons and organisations.*/
 # do map("attributes.instructors[].*.name", "@creator")
@@ -104,6 +117,17 @@ end
 
 # ----- image -----
 copy_field("attributes.image.contentUrl", "image")
+
+#----about-----
+do list(path:"attributes.educationalAlignment[]","var":"$i")
+  paste("about[].$append.id","~https://vocabs.acdh.oeaw.ac.at/oefosdisciplines/","$i.shortCode",join_char:"")
+  lookup("about[].$last.id", "oefos2destatis")
+end
+
+do list(path: "about[]", "var":"$i")
+  copy_field("$i.id", "$i.prefLabel.de")
+  lookup("$i.prefLabel.de", "destatis-deLabel2Uri", delete:"true")
+end
 
 # ------ tidy up --- 
 include ("../../sharedFixes/cleanUp.fix")
