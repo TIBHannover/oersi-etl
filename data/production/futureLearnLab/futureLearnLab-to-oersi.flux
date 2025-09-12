@@ -1,4 +1,4 @@
-service_domain = "https://www.https://futurelearnlab.de/hub/";
+service_domain = "https://futurelearnlab.de/hub/";
 service_id = "https://oerworldmap.org/resource/urn:uuid:4acc8053-05a4-4890-9e99-81af4a831933";
 service_name = "Future Learn Lab Lübeck";
 
