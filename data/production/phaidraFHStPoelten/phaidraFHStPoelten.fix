@@ -9,7 +9,11 @@ end
 # --- reuse phaidra default workflow -------- 
 include ("../../sharedFixes/phaidraDefault.fix")
 
-# --- space for provider specific transformations
+# --- space for provider specific t ransformations
+
+if any_contain("description", "Flipchart-Visualisierung")
+  reject()
+end
 
 
 # ------ tidy up --- 
