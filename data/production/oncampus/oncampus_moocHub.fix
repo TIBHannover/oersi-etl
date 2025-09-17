@@ -28,9 +28,7 @@ include ("../../sharedFixes/moocHubDefault.fix")
 #  ---------------description----------------------------------
 
 #  ---------------description----------------------------------
-copy_field("attributes.description", "description")
-replace_all("description",'<a[^>]*?href=\\"(.*?)\\">', "")
-replace_all("description","<\\w*>|</\\w*>", "")
+paste("description","attributes.abstract", "attributes.description", join_char:"\\n")
 
 
 #  ---------------creator----------------------------------
