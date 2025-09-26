@@ -20,12 +20,12 @@ import org.metafacture.metafix.Value;
 public final class TestHtmlToText {
 
     private static final Object[][] PARAMS = new Object[][] { //
-            { "<b>Hello World.</b><br/><p><i>Is there anyone out there?</i><p>", "Hello World. Is there anyone out there?" }, //
-            { "<br/>Grundwissen<br/>Basisfunktionen<br/>Fortgeschrittene Funktionen<br/>Zus&auml;tzliche Tipps<br/>", "\nGrundwissen Basisfunktionen\nFortgeschrittene Funktionen\nZusätzliche Tipps" }, //
+            { "<b>Hello World.</b><br/><p><i>Is there anyone out there?</i><p>", "Hello World.\nIs there anyone out there?" }, //
+            { "<br/>Grundwissen<br/>Basisfunktionen<br/>Fortgeschrittene Funktionen<br/>Zus&auml;tzliche Tipps<br/>", "\nGrundwissen\nBasisfunktionen\nFortgeschrittene Funktionen\nZusätzliche Tipps\n" }, //
     };
 
     @Parameterized.Parameters(name = "{0} -> {1}")
-    public static Collection<Object[]> siteMaps() {
+    public static Collection<Object[]> testCases() {
         return Arrays.asList(PARAMS);
     }
 
