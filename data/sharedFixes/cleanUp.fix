@@ -24,6 +24,9 @@ uniq("encoding[]")
 uniq("publisher[]")
 uniq("isPartOf[]")
 
+# Turn description text with html to plain text
+oersi.HtmlToText("description")
+
 # Keep only defined elements
 retain("@context[]",
 	"id",

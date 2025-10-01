@@ -23,7 +23,7 @@ include ("../../sharedFixes/moocHubDefault.fix")
 # Default elements: id, name, image, dateCreated, learningResourceType, inLanguage, license, type, trailer, mainEntityOfPage, context
 
 # -------------------------------------------
-# Add here provider specific transformation for elements that deviate from the default edusharing transfromation and additional ones:
+# Add here provider specific transformation for elements that deviate from the default moocHub transformation and additional ones:
 
 #  ---------------description----------------------------------
 
