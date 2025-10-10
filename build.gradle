@@ -73,7 +73,7 @@ apply plugin: "maven-publish"
 sourceCompatibility = JavaVersion.VERSION_17
 
 group = "org.oersi"
-version = "1.0.0"
+version = "1.1.0-SNAPSHOT"
 
 ext {
    javaMainClass = "oersi.ETL"
