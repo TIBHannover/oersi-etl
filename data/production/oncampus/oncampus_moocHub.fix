@@ -60,9 +60,6 @@ do list(path:"@creator", "var": "$i")
 end
 
 
-
-# ------ sourceOrganization ------
-
 # -------------conditionsOfAccess--------------
 add_field("conditionsOfAccess.id","http://w3id.org/kim/conditionsOfAccess/login")
 
