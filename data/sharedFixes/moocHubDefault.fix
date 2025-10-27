@@ -30,7 +30,7 @@ add_field("learningResourceType[].$last.prefLabel.en","Course")
 /* inLanguage: The value Mehrsprachig does not represent the estimated language labels. */
 add_array("inLanguage[]")
 copy_field("attributes.inLanguage[].*", "inLanguage[].$append")
-copy_field("languages[].*", "inLanguage[].$append")
+copy_field("attributes.languages[].*", "inLanguage[].$append")
 
 do list(path:"inLanguage[]","var":"$i")
   if any_equal("$i", "Mehrsprachig")
@@ -38,12 +38,26 @@ do list(path:"inLanguage[]","var":"$i")
   end
 end
 
+#------publisher-----
+
+copy_field("attributes.publisher.name","publisher[].$append.name")
+copy_field("attributes.publisher.url","publisher[].$last.id")
+copy_field("attributes.publisher.type","publisher[].$last.type")
+
+#------publisher-----
+do list(path:"attributes.partnerInstitute[]","var":"$i")
+  copy_field("$i.name","sourceOrganization[].$append.name")
+  copy_field("$i.url","sourceOrganization[].$last.id")
+  add_field("sourceOrganization[].$last.type","Organization")
+end
+
 # ------ keywords ---
 copy_field("attributes.keywords[].*", "keywords[].$append")
 
 # ------ license ---
 copy_field("attributes.courseLicenses[].*.url","license.id")
-copy_field("attributes.license[].*.id","license.id")
+copy_field("attributes.license[].*.url","license.id")
+
 
 # ------ type --- 
 
