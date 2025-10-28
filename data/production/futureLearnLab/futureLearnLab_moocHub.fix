@@ -12,7 +12,7 @@ do once("macrosAndMaps")
   include ("../../sharedFixes/macros.fix")
   include ("../../sharedFixes/maps.fix")
   # Add here workflow specific maps
-  
+  put_filemap("data/maps/licenseSpdxUri.tsv","licenseSpdxUri","sep_char":"\t")
 end
 
 
@@ -26,14 +26,10 @@ include ("../../sharedFixes/moocHubDefault.fix")
 # Add here provider specific transformation for elements that deviate from the default edusharing transfromation and additional ones:
 
 #  ---------------description----------------------------------
-
-#  ---------------description----------------------------------
 copy_field("attributes.description", "description")
 replace_all("description",'<a[^>]*?href=\\"(.*?)\\">', "")
 replace_all("description","<\\w*>|</\\w*>", "")
 
-
-#  ---------------creator----------------------------------
 
 #  ---------------creator----------------------------------
 # source data is not consistent, can be a single author or multiple separated by comma or "&amp;". API estimates one object per instructor. Also there is no type even though there are persons and organisations.*/
@@ -68,6 +64,9 @@ end
 # -------------conditionsOfAccess--------------
 add_field("conditionsOfAccess.id","http://w3id.org/kim/conditionsOfAccess/login")
 
+# ---license cleanup ---
+
+lookup("license.id","licenseSpdxUri")
 
 # ------ tidy up --- 
 include ("../../sharedFixes/cleanUp.fix")
