@@ -1,0 +1,51 @@
+# Moochub specific filter to kick out all resources that are not free
+
+unless any_match("attributes.access[].","free")
+  reject()
+end
+
+# Delete all empty values
+vacuum()
+
+# Include general macros and general and specific maps for reuse
+do once("macrosAndMaps")
+  include ("../../sharedFixes/macros.fix")
+  include ("../../sharedFixes/maps.fix")
+  # Add here workflow specific maps
+  
+end
+
+
+# -------------------------------------------
+# Reuse edu-sharing default template
+include ("../../sharedFixes/moocHubDefault.fix")
+
+# Default elements: id, name, image, dateCreated, learningResourceType, inLanguage, license, type, trailer, mainEntityOfPage, context
+
+# -------------------------------------------
+# Add here provider specific transformation for elements that deviate from the default edusharing transfromation and additional ones:
+
+#  ---------------description----------------------------------
+paste("description","attributes.abstract", "attributes.description", join_char:"\\n")
+
+
+#  ---------------creator----------------------------------
+# source data is not consistent, can be a single author or multiple separated by comma or "&amp;". API estimates one object per instructor. Also there is no type even though there are persons and organisations.*/
+# add_array("@creator")
+copy_field("attribute.creator[]","creator[]")
+do list(path:"creator[]","var":"$i")
+  move_field("$i.url","$i.id")
+end
+
+
+# -------------conditionsOfAccess--------------
+add_field("conditionsOfAccess.id","http://w3id.org/kim/conditionsOfAccess/login")
+
+if any_contain("name","Bugtopia")
+  add_field("conditionsOfAccess.id","http://w3id.org/kim/conditionsOfAccess/no_login")
+end
+
+# ------ tidy up --- 
+include ("../../sharedFixes/cleanUp.fix")
+
+# missing:
