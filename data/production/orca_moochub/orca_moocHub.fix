@@ -43,7 +43,41 @@ add_field("conditionsOfAccess.id","http://w3id.org/kim/conditionsOfAccess/login"
 
 if any_contain("name","Bugtopia")
   add_field("conditionsOfAccess.id","http://w3id.org/kim/conditionsOfAccess/no_login")
+  add_field("learningResourceType[].$append.id","https://w3id.org/kim/hcrt/educational_game")
+  add_field("learningResourceType[].$last.prefLabel.de","Lernspiel")
+  add_field("learningResourceType[].$last.prefLabel.en","Game")
 end
+
+# ---about---
+if any_match("keywords[]",".*[Mm]athe.*")
+  add_field("about[].$append.id","https://w3id.org/kim/hochschulfaechersystematik/n37")
+  add_field("about[].$last.prefLabel.de","https://w3id.org/kim/hochschulfaechersystematik/n37")
+end
+
+if any_match("keywords[]",".*[Pp]hysik.*")
+  add_field("about[].$append.id","https://w3id.org/kim/hochschulfaechersystematik/n37")
+  add_field("about[].$last.prefLabel.de","https://w3id.org/kim/hochschulfaechersystematik/n37")
+end
+
+if any_match("keywords[]",".*WINT.*")
+  add_field("about[].$append.id","https://w3id.org/kim/hochschulfaechersystematik/n30")
+  add_field("about[].$last.prefLabel.de","https://w3id.org/kim/hochschulfaechersystematik/n30")
+  add_field("about[].$append.id","https://w3id.org/kim/hochschulfaechersystematik/n8")
+  add_field("about[].$last.prefLabel.de","https://w3id.org/kim/hochschulfaechersystematik/n8")
+  add_field("about[].$append.id","https://w3id.org/kim/hochschulfaechersystematik/n71")
+  add_field("about[].$last.prefLabel.de","https://w3id.org/kim/hochschulfaechersystematik/n71")
+  add_field("about[].$append.id","https://w3id.org/kim/hochschulfaechersystematik/n4")
+  add_field("about[].$last.prefLabel.de","https://w3id.org/kim/hochschulfaechersystematik/n4")
+  add_field("about[].$append.id","https://w3id.org/kim/hochschulfaechersystematik/n0")
+  add_field("about[].$last.prefLabel.de","https://w3id.org/kim/hochschulfaechersystematik/n0")
+end
+
+unless exists("about[]")
+  add_field("about[].$append.id","https://w3id.org/kim/hochschulfaechersystematik/n0")
+  add_field("about[].$last.prefLabel.de","https://w3id.org/kim/hochschulfaechersystematik/n0")
+end
+
+lookup("about[].*.prefLabel.de", "destatis-deLabel2Uri", delete:"true")
 
 # ------ tidy up --- 
 include ("../../sharedFixes/cleanUp.fix")
