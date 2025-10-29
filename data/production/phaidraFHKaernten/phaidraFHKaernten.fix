@@ -10,6 +10,10 @@ end
 include ("../../sharedFixes/phaidraDefault.fix")
 
 # --- space for provider specific transformations
+add_array("sourceOrganization[]")
+add_field("sourceOrganization[].$append.name", "FH Kärnten")
+add_field("sourceOrganization[].$last.type", "Organization")
+add_field("sourceOrganization[].$last.id", "https://ror.org/036w00e23")
 
 
 # ------ tidy up --- 

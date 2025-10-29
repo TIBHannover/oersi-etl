@@ -15,6 +15,11 @@ if any_contain("description", "Flipchart-Visualisierung")
   reject()
 end
 
+add_array("sourceOrganization[]")
+add_field("sourceOrganization[].$append.name", "FH St. Pölten")
+add_field("sourceOrganization[].$last.type", "Organization")
+add_field("sourceOrganization[].$last.id", "https://ror.org/039a2re55")
+
 
 # ------ tidy up --- 
 include ("../../sharedFixes/cleanUp.fix")

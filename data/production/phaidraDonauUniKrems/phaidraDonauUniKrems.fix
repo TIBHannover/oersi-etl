@@ -11,6 +11,11 @@ include ("../../sharedFixes/phaidraDefault.fix")
 
 # --- space for provider specific transformations
 
+add_array("sourceOrganization[]")
+add_field("sourceOrganization[].$append.name", "Universität für Weiterbildung Krems")
+add_field("sourceOrganization[].$last.type", "Organization")
+add_field("sourceOrganization[].$last.id", "https://ror.org/03ef4a036") 
+
 
 # ------ tidy up --- 
 include ("../../sharedFixes/cleanUp.fix")
