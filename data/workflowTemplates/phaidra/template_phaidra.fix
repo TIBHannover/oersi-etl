@@ -1,0 +1,16 @@
+# ----- Delete all empty values -----
+vacuum()
+
+do once("macrosAndMaps")
+  include ("../../sharedFixes/macros.fix")
+  include ("../../sharedFixes/maps.fix")
+end
+
+# --- reuse phaidra default workflow -------- 
+include ("../../sharedFixes/phaidraDefault.fix")
+
+# --- space for provider specific transformations
+
+
+# ------ tidy up --- 
+include ("../../sharedFixes/cleanUp.fix")
