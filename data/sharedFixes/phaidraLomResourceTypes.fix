@@ -1,0 +1,9 @@
+copy_field("metadata.lom:lom.lom:technical.lom:location.value","id")
+
+do list(path:"metadata.lom:lom.lom:educational.lom:learningresourcetype", "var":"$i")
+	copy_field("$i.lom:id.value","hcrt.$append")
+end
+
+join_field("hcrt",";")
+
+retain("id","hcrt")
