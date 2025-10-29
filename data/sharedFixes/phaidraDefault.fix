@@ -153,7 +153,9 @@ end
 lookup("inLanguage[].*",
   "fra": "fr",
   "deu":"de",
-  "eng": "en"
+  "eng": "en",
+  "spa": "es",
+  "glg": "gl"
   )
 
 # ---------keywords & about----------------
