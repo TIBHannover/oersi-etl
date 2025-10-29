@@ -12,6 +12,7 @@ do once("phaidraMaps")
   # phaidra specific maps
   put_filemap("data/maps/coarResource2hcrt.tsv","coarResource2hcrt","sep_char":"\t")
   put_filemap("data/maps/oefos2destatis.tsv","oefos2destatis","sep_char":"\t")
+  put_filemap("$[FLUX_DIR]lomResourceTypes.tsv","lomResourceTypes","sep_char":"\t") # Dynamic map for hcrt from previous OAI-PMH run.
 end
 
 # ---------------id----------------------------------
@@ -116,6 +117,13 @@ add_array("learningResourceType[]")
 do list(path:"metadata.resource.resourceType","var":"$i")
   copy_field("$i.uri", "learningResourceType[].$append.id")
 end
+
+copy_field("id","@hcrt")
+lookup("@hcrt","lomResourceTypes")
+split_field("@hcrt",";")
+
+copy_field("@hcrt.*", "learningResourceType[].$append.id")
+
 do list(path:"learningResourceType[]","var":"$i")
   lookup("$i.id", "coarResource2hcrt", delete:"true")  
   copy_field("$i.id", "$i.prefLabel.de")
@@ -123,6 +131,8 @@ do list(path:"learningResourceType[]","var":"$i")
   copy_field("$i.id", "$i.prefLabel.en")
   lookup("$i.prefLabel.en", "hcrt-enLabel2Uri", delete:"true")
 end
+
+uniq("learningResourceType[]")
 
 # ---------mainEntityOfPage----------------
 
@@ -143,7 +153,9 @@ end
 lookup("inLanguage[].*",
   "fra": "fr",
   "deu":"de",
-  "eng": "en"
+  "eng": "en",
+  "spa": "es",
+  "glg": "gl"
   )
 
 # ---------keywords & about----------------

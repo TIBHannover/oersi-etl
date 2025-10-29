@@ -4,6 +4,17 @@ service_id = "https://phaidra.fh-kaernten.at/";
 service_name = "Phaidra FH Kärnten";
 XML_FILE = FLUX_DIR + "phaidraFHKaernten-metafacture.xml";
 
+
+"https://phaidra.fh-kaernten.at/api/oai"
+| open-oaipmh(metadataPrefix="lom", setSpec="oer")
+| decode-xml
+| handle-generic-xml(emitNamespace="true")
+| fix(FLUX_DIR + "../../sharedFixes/phaidraLomResourceTypes.fix")
+| encode-csv(noquotes="true",separator="\t")
+| write(FLUX_DIR + "lomResourceTypes.tsv")
+;
+
+
 "https://phaidra.fh-kaernten.at/api/oai"
 | open-oaipmh(metadataPrefix="oai_openaire", setSpec="oer")
 | as-lines

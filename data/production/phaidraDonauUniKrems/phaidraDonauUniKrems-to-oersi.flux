@@ -5,6 +5,16 @@ service_name = "Phaidra Universität für Weiterbildung Krems";
 XML_FILE = FLUX_DIR + "phaidraDonauUniKrems-metafacture.xml";
 
 "https://door.donau-uni.ac.at/api/oai"
+| open-oaipmh(metadataPrefix="lom", setSpec="oer")
+| decode-xml
+| handle-generic-xml(emitNamespace="true")
+| fix(FLUX_DIR + "../../sharedFixes/phaidraLomResourceTypes.fix")
+| encode-csv(noquotes="true",separator="\t")
+| write(FLUX_DIR + "lomResourceTypes.tsv")
+;
+
+
+"https://door.donau-uni.ac.at/api/oai"
 | open-oaipmh(metadataPrefix="oai_openaire", setSpec="oer")
 | as-lines
 | write(XML_FILE);
