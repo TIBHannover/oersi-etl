@@ -32,9 +32,12 @@ paste("description","attributes.abstract", "attributes.description", join_char:"
 #  ---------------creator----------------------------------
 # source data is not consistent, can be a single author or multiple separated by comma or "&amp;". API estimates one object per instructor. Also there is no type even though there are persons and organisations.*/
 # add_array("@creator")
-copy_field("attribute.creator[]","creator[]")
-do list(path:"creator[]","var":"$i")
-  move_field("$i.url","$i.id")
+
+do list(path:"attributes.creator[]","var":"$i")
+  copy_field("$i.name","creator[].$append.name")
+  copy_field("$i.url","creator[].$last.id")
+  copy_field("$i.type","creator[].$last.type")
+  copy_field("$i.honorificPrefix","creator[].$last.honorificPrefix")
 end
 
 
