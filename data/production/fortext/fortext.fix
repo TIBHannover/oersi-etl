@@ -1,0 +1,171 @@
+# --------Delete all emtpy values-------
+vacuum()
+
+do once("macrosAndMaps")
+  include ("../../sharedFixes/macros.fix")
+  include ("../../sharedFixes/maps.fix")
+  # workflow specific maps
+
+end
+
+
+add_array("creator[]")
+add_array("inLanguage[]")
+add_array("keywords[]")
+add_array("publisher[]")
+add_array("about[]")
+add_array("encoding[]")
+add_array("@hochschulfaechersystematik")
+do list(path:"html.head.meta","var":"$i") # Remember that each meta tag is its own object in the array of objects.
+
+
+  # /* Map some of the data we have to the oersi model: */
+  # ---------------id --------
+  copy_field("$i.DC_Identifier_URI", "@id_internal")
+
+  # ---------------name --------
+  copy_field("$i.citation_title", "name")
+
+  # ---------------description --------
+  copy_field("$i.DC_Description", "description")
+
+  # ---------------dateCreated --------
+  copy_field("$i.DC_Date_created", "dateCreated")
+
+  # ----------------inLanguage------------
+    if any_match("$i.citation_language", "deu")
+      add_field("inLanguage[].$append","de")
+    end
+
+  # ---------------license --------
+  if any_match("$i.DC_Rights","https://creativecommons.org/.*")
+    copy_field("$i.DC_Rights", "license.id")
+  end
+
+  # ------ creator --- 
+  do list(path:"$i.DC_Creator_PersonalName","var":"$j")
+    trim("$j")
+    copy_field("$j", "creator[].$append.name")
+  end
+
+
+  # ------ keywords------
+  trim("$i.citation_keywords")
+  replace_all("$i.citation_keywords","  +", " ")
+  if any_contain("$i.citation_keywords", " ")
+    split_field("$i.citation_keywords"," ")
+    capitalize("$i.citation_keywords.*")
+    join_field("$i.citation_keywords"," ")
+  end
+  copy_field("$i.citation_keywords", "keywords[].$append")
+
+  # ------ datePublished------
+  copy_field("$i.citation_publication_date", "datePublished")
+
+    # ------ publisher------
+  copy_field("$i.citation_publisher", "publisher[].$append.name")
+
+  add_field("publisher[].*.type", "Organization")
+
+  # ------ encoding --- 
+
+  do list(path:"$i.citation_pdf_url","var":"$j")
+    copy_field("$j", "encoding[].$append.contentUrl")
+    add_field("encoding[].$last.encodingFormat","application/pdf")    
+    add_field("encoding[].$last.type", "MediaObject")
+  end
+
+
+  # ---isbn---
+  if exists("$i.citation_isbn")
+    copy_field("$i.citation_isbn","isbn[].$append")
+  end
+  replace_all("isbn[].*","-","")
+
+  # --- doi as id ---
+  if exists("$i.citation_doi")
+    paste("@id_doi","~https://doi.org/","$i.citation_doi", join_char:"")
+  end
+end
+
+# select id
+
+if exists("@id_doi")
+  copy_field("@id_doi","id")
+else
+  copy_field("@id_internal","id")
+end
+
+# ---learningResourceType
+
+add_field("learningResourceType[].$append.id", "https://w3id.org/kim/hcrt/text")
+
+  # ------ about --- 
+
+add_field("about[].$append.id", "https://w3id.org/kim/hochschulfaechersystematik/n1")
+  
+
+do list(path: "about[]")
+  copy_field("id", "prefLabel.de")
+  lookup("prefLabel.de","destatis-deLabel2Uri", delete:"true")
+end
+
+# --- description ---
+do list(path:"html.body.div","var":"$i")
+  do list(path:"$i.main.article.section.div.div.div.div.article.div.div","var":"$j")
+    if any_equal("$j.h2.value","Abstract")
+      copy_field("$j.p.value","description")
+    end
+  end
+end
+
+# --- add Digital Humanities as keyword ---
+
+add_field("keywords[].$append","Digital Humanities")
+add_field("keywords[].$append","DH")
+
+# ---------mainEntityOfPage----------------
+
+if exists("@id_internal")
+  add_array("mainEntityOfPage[]")
+  copy_field("@id_internal", "mainEntityOfPage[].$append.id")
+  add_field("mainEntityOfPage[].$last.provider.id","$[service_id]")
+  add_field("mainEntityOfPage[].$last.provider.type","Service")
+  add_field("mainEntityOfPage[].$last.provider.name","$[service_name]")
+else
+  print_record(destination:"data/production/tuDelftOpenTextbooks/missing_ids.json",pretty:"true")
+end
+
+copy_field("id","_id")
+
+# ---------------conditionsOfAccess----------------------------------
+add_field("conditionsOfAccess.id","http://w3id.org/kim/conditionsOfAccess/no_login") 
+
+# ------ learningResourceType --- 
+add_array("learningResourceType[]")
+
+add_field("learningResourceType[].$append.id","https://w3id.org/kim/hcrt/textbook")
+add_field("learningResourceType[].$last.prefLabel.de","Lehrbuch")
+add_field("learningResourceType[].$last.prefLabel.en","Textbook")
+
+# ------ type --- 
+add_array("type[]", "LearningResource","Book")
+
+# ---------------@context ----------------------------------
+
+add_array("@context[]", "https://w3id.org/kim/amb/context.jsonld")
+# resource is german therefore prefer de if multiple or no inLanguage are available
+if any_equal("inLanguage[]","de")
+  add_hash("@context[].$append", "@language": "de")
+elsif any_equal("inLanguage[]","en")
+  add_hash("@context[].$append", "@language": "en")
+else
+  copy_field("inLanguage[].1", "@context[].$append.@language")
+end
+# resources without inLanguage-Values set default to de
+unless exists("inLanguage[].1")
+  add_hash("@context[].$append", "@language": "de")
+end
+
+# ------ tidy up --- 
+include ("../../sharedFixes/cleanUp.fix")
