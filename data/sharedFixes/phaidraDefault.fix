@@ -116,6 +116,7 @@ add_array("learningResourceType[]")
 
 do list(path:"metadata.resource.resourceType","var":"$i")
   copy_field("$i.uri", "learningResourceType[].$append.id")
+  lookup("learningResourceType[].$last.id", "coarResource2hcrt", delete:"true")  
 end
 
 copy_field("id","@hcrt")
@@ -125,7 +126,6 @@ split_field("@hcrt",";")
 copy_field("@hcrt.*", "learningResourceType[].$append.id")
 
 do list(path:"learningResourceType[]","var":"$i")
-  lookup("$i.id", "coarResource2hcrt", delete:"true")  
   copy_field("$i.id", "$i.prefLabel.de")
   lookup("$i.prefLabel.de", "hcrt-deLabel2Uri", delete:"true")
   copy_field("$i.id", "$i.prefLabel.en")
