@@ -56,7 +56,7 @@ replace_all("description","<\\w*>|</\\w*>", "")
 add_array("@creator")
 
 # As iMoox reported instructors are the creators, creators are only the metadata uploader.
-do list(path: "attributes.instructors[]", "var":"$i")
+do list(path: "attributes.instructor[]", "var":"$i")
   split_field("$i.name", ", | &amp; | / ")
   do list(path:"$i.name", "var":"$j")
     copy_field("$j", "@creator.$append")
