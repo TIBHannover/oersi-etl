@@ -11,6 +11,8 @@ include ("../../sharedFixes/phaidraDefault.fix")
 
 # --- space for provider specific transformations
 
+replace_all("datePublished","^(\\d{4}-\\d{2})$","$1-01")
+
 add_array("sourceOrganization[]")
 add_field("sourceOrganization[].$append.name", "Universität für Weiterbildung Krems")
 add_field("sourceOrganization[].$last.type", "Organization")
