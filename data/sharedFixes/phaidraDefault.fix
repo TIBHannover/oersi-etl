@@ -201,7 +201,7 @@ trim("keywords[].*")
 uniq("about[]")
 uniq("keywords[]")
 
-# ------ encoding --- 
+# ------ encoding / image   --- 
 
 add_array("encoding[]")
 if exists("metadata.resource.file")
@@ -212,11 +212,12 @@ if exists("metadata.resource.file")
   add_field("encoding[].$last.type", "MediaObject")
   if any_contain("id","o:")
     add_field("encoding[].$append.type", "MediaObject")
-    copy_field("id", "encoding[].$last.embedUrl")
+    copy_field("metadata.resource.file.value", "encoding[].$last.embedUrl")
+    replace_all("encoding[].$last.embedUrl","download","preview")
+    copy_field("metadata.resource.file.value", "image")
+    replace_all("image","download","thumbnail")
   end
 end
-
-replace_all("encoding[].*.embedUrl",".*(o:.*)","$[service_id]api/object/$1/preview")
 
 # -------isPartOf/hasPart---------
 add_array("isPartOf[]")
