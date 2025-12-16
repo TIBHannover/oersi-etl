@@ -215,7 +215,7 @@ if exists("metadata.resource.file")
     copy_field("metadata.resource.file.value", "encoding[].$last.embedUrl")
     replace_all("encoding[].$last.embedUrl","download","preview")
     copy_field("metadata.resource.file.value", "image")
-    replace_all("encoding[].$last.embedUrl","download","thumbnail")
+    replace_all("image","download","thumbnail")
   end
 end
 
