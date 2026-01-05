@@ -8,7 +8,6 @@ if any_equal ("header.status", "deleted")
   reject()
 end
 
-
 # Delete all empty values
 vacuum()
 
@@ -16,111 +15,71 @@ do once("macrosAndMaps")
   include ("../../sharedFixes/macros.fix")
   include ("../../sharedFixes/maps.fix")
   # workflow specific map
-  put_filemap("data/maps/oefos2destatis.tsv","oefos2destatis","sep_char":"\t")
+  put_filemap("data/maps/canalUDiscipline2Destatis.tsv","canalUDiscipline2Destatis","sep_char":"\t",key_column:"0",value_column:"2",expected_columns:"-1")
 end
 
 # --------------id ----------------------------------------
 
-do list(path: "metadata.lom:lom.lom:general.lom:identifier", "var": "$i")
-  if any_equal("$i.lom:catalog.value","DOI")
-    copy_field("$i.lom:entry.lom:langstring.value","@doi")
+do list(path: "metadata.oai_dc:dc.dc:source", "var": "$i")
+  if any_contain("$i.value","doi.org")
+    copy_field("$i.value","@doi")
   end
 end
-prepend("@doi","https://www.doi.org/")
 
-do list(path: "metadata.lom:lom.lom:general.lom:identifier", "var": "$i")
-  if any_equal("$i.lom:catalog.value","repository.tugraz.at")
-    copy_field("$i.lom:entry.lom:langstring.value","@internalId")
+
+
+
+do list(path: "metadata.oai_dc:dc.dc:identifier", "var": "$i")
+  if any_contain("$i.value","https://www.canal-u.tv")
+    copy_field("$i.value","@internalId")
   end
 end
-prepend("@internalId","https://repository.tugraz.at/oer/")
 
-do list(path: "metadata.lom:lom.lom:technical.lom:location", "var": "$i")
-  copy_field("$i.value","@externalId")
-end
 
 if exists("@doi")
   copy_field("@doi","id")
-elsif exists("@externalId")
-  copy_field("@externalId","id")
 else
   copy_field("@internalId","id")
 end
 
 #  ------------image ------------------------------------
-do list(path: "metadata.lom:lom.lom:technical.lom:thumbnail.lom:url", "var": "$i")
-  copy_field("$i.value","image")
-end
-
 unless exists("image")
-  add_field("image","https://repository.tugraz.at/static/images/library_logo.png")
+  add_field("image","https://www.canal-u.tv/themes/custom/canalu/logo.svg")
 end
 
 #  ------------name ------------------------------------
-do list(path: "metadata.lom:lom.lom:general.lom:title.lom:langstring", "var": "$i")
-  copy_field("$i.value","name")
-end
+copy_field("metadata.oai_dc:dc.dc:title.value","name")
+
 
 
 #  ------------creator------------------------------------
 add_array("creator[]")
-do list(path:"metadata.lom:lom.lom:lifecycle.lom:contribute","var":"$i")
-    do list(path:"$i.lom:centity","var":"$j")
-      if any_match("$j.lom:vcard.value","^.+VCARD.+?FN:(?! ).+?$")
-        unless any_match("$i.lom:centity.lom:vcard.value",".*(HTWG|Academy|Forum|Wien|INTER|TU|FH|PH|Institut|Virtuelle PH|TU Graz|[Ss]tiftung|[uU]niversit|Stadt Graz|[hH]ochschul|Verband|Digital|iMoo[xX]).*")
-          copy_field("$j.lom:vcard.value","creator[].$append.name")
-          replace_all("creator[].$last.name", "(BEGIN:VCARD VERSION:4.0 FN:)(.+)( ROLE.+ END:VCARD)", "$2")
-          replace_all("creator[].$last.name", "\\\\.+", "")
-          add_field("creator[].$last.type","Person")
-        end
-        if any_match("$j.lom:vcard.value",".*(Institut|Virtuelle PH|TU Graz|Universit|[hH]ochschul).*")
-          copy_field("$j.lom:vcard.value","creator[].$append.name")
-          replace_all("creator[].$last.name", "(BEGIN:VCARD VERSION:4.0 FN:)(.+)( ROLE.+ END:VCARD)", "$2")
-          replace_all("creator[].$last.name", "\\\\.+", "")
-          add_field("creator[].$last.type","Organization")
-        end
-      end
-    end
+do list(path:"metadata.oai_dc:dc.dc:creator","var":"$i")
+  copy_field("$i.value","creator[].$append.name")
+  add_field("creator[].$last.type","Person")
 end
+
+replace_all("creator[].*.name","(.+), (.+)", "$2 $1")
 
 # No specifics about creator type. Set type=Person as default.
 # add_field("creator[].*.type", "Person")
 call_macro("deleteAcademicTitles", field: "creator[].*.name")
 
 #  ------------contributor------------------------------------
-add_array("@contributor[]")
-do list(path:"metadata.lom:lom.lom:lifecycle.lom:contribute","var":"$i")
-  unless any_match("$i.lom:role.lom:value.lom:langstring.value","Author")
-    if any_match("$i.lom:centity.lom:vcard.value","^.+VCARD.+?FN:(?! ).+?$")
-        copy_field("$i.lom:centity.lom:vcard.value","@contributor[].$append.name")
-        replace_all("@contributor[].$last.name", "(BEGIN:VCARD VERSION:4.0 FN:)(.+)( ROLE.+ END:VCARD)", "$2")
-    end
-  end
-end
 add_array("contributor[]")
-do list(path:"@contributor[]","var":"$i")
-  unless in("$i.name", "creator[].*.name")
-    copy_field("$i.name","contributor[].$append.name")
-  end
+do list(path:"metadata.oai_dc:dc.dc:contributor","var":"$i")
+  copy_field("$i.value","contributor[].$append.name")
+  add_field("contributor[].$last.type","Person")
 end
+
+replace_all("contributor[].*.name","(.+), (.+)", "$2 $1")
 
 # ----- Publisher -----
 
 add_array("publisher[]")
-do list(path:"metadata.lom:lom.lom:lifecycle.lom:contribute","var":"$i")
-  if any_match("$i.lom:role.lom:value.lom:langstring.value","Publisher")
-    if any_match("$i.lom:centity.lom:vcard.value","^.+VCARD.+?FN:(?! ).+?$")  
-      copy_field("$i.lom:centity.lom:vcard.value","publisher[].$append.name")
-      replace_all("publisher[].$last.name", "(BEGIN:VCARD VERSION:4.0 FN:)(.+)( ROLE.+ END:VCARD)", "$2")
-      replace_all("publisher[].$last.name", "\\\\.+", "")
-      add_field("publisher[].$last.type","Organization")
-    end
-  end
-end
+copy_field("metadata.oai_dc:dc.dc:publisher.value","publisher[].$append.name")
+add_field("publisher[].*.type", "Organization")
 
-
-# No specifics about contributor type. Set type=Organization as default.
-add_field("contributor[].*.type", "Organization")
 
 add_array("sourceOrganization[]")
 add_field("sourceOrganization[].$append.name", "Technische Universität Graz")
@@ -128,48 +87,38 @@ add_field("sourceOrganization[].$last.type", "Organization")
 add_field("sourceOrganization[].$last.id", "https://ror.org/00d7xrm67")
 
 #  ------------description------------------------------------
-add_array("description")
-do list("path": "metadata.lom:lom.lom:general.lom:description", "var": "$i")
-  copy_field("$i.lom:langstring.value","description.$append")
-end
-
-do list("path": "metadata.lom:lom.lom:educational.lom:description", "var": "$i")
-  copy_field("$i.lom:langstring.value","description.$append")
-end
-unless exists("description.1")
-  do list(path:'metadata.lom:lom.lom:courses', 'var': '$i')
-    do list(path: '$i.lom:course.lom:description', 'var' : '$j')
-      copy_field('$j.lom:langstring.value', 'description.$append')
-    end
-  end
-end
-uniq("description")
-join_field("description")
+copy_field("metadata.oai_dc:dc.dc:description.value","description")
 
 #------------keywords---------
 
 add_array("keywords[]")
-do list("path": "metadata.lom:lom.lom:general.lom:keyword", "var": "$i")
-  copy_field("$i.lom:langstring.value","keywords[].$append")
+do list("path": "metadata.oai_dc:dc.dc:subject", "var": "$i")
+  copy_field("$i.value","keywords[].$append")
 end
 
 # -----------license----------
-copy_field("metadata.lom:lom.lom:rights.lom:description.lom:langstring.value","license.id")
-
+do list(path:"metadata.oai_dc:dc.dc:license","var":"$i")
+  unless exists("license")
+    copy_field("$i.value","license.id")
+  end
+end
 
 #  ------------dataCreated------------------------------------
-copy_field("metadata.lom:lom.lom:lifecycle.lom:datetime.value","dateCreated")
+copy_field("metadata.oai_dc:dc.dc:created.value","dateCreated")
 replace_all("dateCreated","^(\\d{4})$","$1-01-01")
+
+#  ------------datePublished------------------------------------
+copy_field("metadata.oai_dc:dc.dc:issued.value","datePublished")
+replace_all("datePublished","^(\\d{4})$","$1-01-01")
+
+#  ------------dateModified------------------------------------
+copy_field("metadata.oai_dc:dc.dc:modified.value","dateModified")
+replace_all("dateModified","^(\\d{4})$","$1-01-01")
 
 #  ------------inLanguage------------------------------------
 add_array("inLanguage[]")
-do list("path": "metadata.lom:lom.lom:general.lom:language", "var": "$i")
-  if all_match("$i.value", "(^..)_.+")
-    replace_all("$i.value", "(^..)_.+", "$1")
-  end
-  unless any_match("$i.value","0|N/A")
-    copy_field("$i.value","inLanguage[].$append")
-  end
+do list("path": "metadata.oai_dc:dc.dc:language", "var": "$i")
+  copy_field("$i.value", "inLanguage[].$append")
 end
 
 # ---------------type ----------------------------------
@@ -178,30 +127,30 @@ add_array("type[]", "LearningResource")
 # ---------------learningResourceType ----------------------------------
 add_array("learningResourceType[]")
 
-do list(path: "metadata.lom:lom.lom:educational.lom:learningresourcetype", "var":"$i")
-  unless all_contain("$i.lom:id.value", "N/A")
-    copy_field("$i.lom:id.value","learningResourceType[].$append.id")
-    copy_field("$i.lom:id.value","learningResourceType[].$last.prefLabel.de")
-    copy_field("$i.lom:id.value","learningResourceType[].$last.prefLabel.en")
-  end
+lookup("metadata.oai_dc:dc.dc:type.value", 
+"MovingImage":"https://w3id.org/kim/hcrt/video",
+"Sound":"https://w3id.org/kim/hcrt/audio",
+"Event":"https://w3id.org/kim/hcrt/other",
+"InteractiveResource":"https://w3id.org/kim/hcrt/other")
+
+do list(path: "metadata.oai_dc:dc.dc:type", "var":"$i")
+  copy_field("$i.value","learningResourceType[].$append.id")
+  copy_field("$i.value","learningResourceType[].$last.prefLabel.de")
+  copy_field("$i.value","learningResourceType[].$last.prefLabel.en")
 end
 
 lookup("learningResourceType[].*.prefLabel.de", "hcrt-deLabel2Uri", delete:"true")
 lookup("learningResourceType[].*.prefLabel.en", "hcrt-enLabel2Uri", delete:"true")
 
-if any_contain("@externalId","moox") # Add Course if it is a iMoox course.
-  add_field("learningResourceType[].$append.id","https://w3id.org/kim/hcrt/course")
-  add_field("learningResourceType[].$last.prefLabel.de","Kurs")
-  add_field("learningResourceType[].$last.prefLabel.en","Course")
-end
 
 #  ------------about------------------------------------
 add_array("about[]")
-do list(path:"metadata.lom:lom.lom:classification.lom:taxonpath","var":"$i")
-    do list(path: "$i.lom:taxon", "var":"$j")
-        copy_field("$j.lom:id.value","about[].$append.id")
-        replace_all("about[].$last.id", "https://w3id.org/oerbase/vocabs/oefos2012/", "https://vocabs.acdh.oeaw.ac.at/oefosdisciplines/")
-        lookup("about[].$last.id", "oefos2destatis")
+do list(path:"header.setSpec","var":"$i")
+    do list(path: "$i.value", "var":"$j")
+      if any_contain("$j","discipline")
+        copy_field("$j","about[].$append.id")
+        lookup("about[].$last.id", "canalUDiscipline2Destatis")
+      end
     end
 end
 
@@ -209,6 +158,23 @@ do list(path: "about[]", "var":"$i")
   copy_field("$i.id", "$i.prefLabel.de")
   lookup("$i.prefLabel.de", "destatis-deLabel2Uri", delete:"true")
 end
+
+# ----duration---
+copy_field("metadata.oai_dc:dc.dc:extent.value","duration")
+
+
+# -------isPartOf/hasPart---------
+add_array("isPartOf[]")
+add_array("hasPart[]")
+
+do list("path": "metadata.oai_dc:dc.dc:isPartOf", "var": "$i")
+  copy_field("$i.value", "isPartOf[].$append.id")
+end
+
+do list("path": "metadata.oai_dc:dc.dc:hasPart", "var": "$i")
+  copy_field("$i.value", "hasPart[].$append.id")
+end
+
 
 # ---------------conditionsOfAccess----------------------------------
 add_field("conditionsOfAccess.id","http://w3id.org/kim/conditionsOfAccess/no_login") 
