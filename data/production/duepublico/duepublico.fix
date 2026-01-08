@@ -117,7 +117,8 @@ add_field("sourceOrganization[].$last.type", "Organization")
 add_field("sourceOrganization[].$last.id", "https://ror.org/04mz5ra38")
 
 #  ------------description------------------------------------
-copy_field("metadata.mods:mods.mods:abstract.*.value","description")
+copy_field("metadata.mods:mods.mods:abstract.*.value","description.$append")
+join_field("description","\n")
 
 # -----------license----------
 copy_field("metadata.mods:mods.mods:accessCondition.xlink:href","license.id")
