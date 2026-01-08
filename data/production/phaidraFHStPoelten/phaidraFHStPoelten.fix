@@ -9,9 +9,14 @@ end
 # --- reuse phaidra default workflow -------- 
 include ("../../sharedFixes/phaidraDefault.fix")
 
-# --- space for provider specific t ransformations
+# --- space for provider specific transformations
 
+# Filter out Flipchart graphics
 if any_contain("description", "Flipchart-Visualisierung")
+  reject()
+end
+
+if any_contain("description", "Flipchart Visualisierung")
   reject()
 end
 
