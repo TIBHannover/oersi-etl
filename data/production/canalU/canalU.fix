@@ -44,7 +44,7 @@ end
 
 #  ------------image ------------------------------------
 unless exists("image")
-  add_field("image","https://www.canal-u.tv/themes/custom/canalu/logo.svg")
+  add_field("image","https://www.canal-u.tv/themes/custom/canalu/logo-v2.svg")
 end
 
 #  ------------name ------------------------------------
