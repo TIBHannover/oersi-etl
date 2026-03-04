@@ -1,0 +1,152 @@
+
+# --------Delete all emtpy values-------
+vacuum()
+
+do once("macrosAndMaps")
+  include ("../../sharedFixes/macros.fix")
+  include ("../../sharedFixes/maps.fix")
+  # workflow specific maps
+  put_filemap("data/maps/hhuUploadResource2Destatis.tsv","hhuUploadResource2Destatis","sep_char":"\t")
+  put_filemap("data/maps/hhuKeywords2Destatis.tsv","hhuKeywords2Destatis","sep_char":"\t")
+end
+
+# ---------------id ----------------------------------
+copy_field("html.head.meta.*.og:url", "id")
+
+# ---------------name----------------------------------
+copy_field("html.head.meta.*.og:title", "name")
+
+# ---------------description----------------------------------
+copy_field("html.head.meta.*.og:description", "description")
+
+# ---------------image----------------------------------
+copy_field("html.head.meta.*.og:image","image")
+
+
+# ---------------dateCreated----------------------------------
+add_array("@dateCreated")
+copy_field("html.body.form.div.div.*.div.div.div.div.*.div.div.*.div.*.div.div.*.span.*.watch-information-date produced", "@dateCreated.$append")
+do list(path:"@dateCreated", "var": "$i")
+ if any_match("$i", "- recorded at \\d{1,2}}/\\d{1,2}}/\\d{4}")
+    replace_all("$i", "(\\d)/(\\d+)/(\\d\\d\\d\\d)", "0$1/$2/$3")
+    replace_all("$i", "(\\d+)/(\\d)/(\\d\\d\\d\\d)", "$1/0$2/$3")
+    replace_all("$i", "- recorded at (\\d\\d)/(\\d\\d)/(\\d\\d\\d\\d)", with: "$3-$1-$2")
+    copy_field("$i", "dateCreated")
+ end
+end
+
+# ---------------license----------------------------------
+if any_match("html.body.form.div.div.*.div.div.div.div.*.div.div.*.div.*.div.*.div.*.div.p.a.*.license", '^http[s]?:\\/\\/creativecommons.org\\/(licenses|licences|publicdomain)\\/.*|^http[s]?:\\/\\/www.gnu.org\\/licenses\\/.*|^http[s]?:\\/\\/www.apache.org\\/licenses\\/.*|http[s]?://opensource.org/licenses/MIT|^http[s]?:\\/\\/www.opensource.org\\/licenses\\/BSD.*')
+  copy_field("html.body.form.div.div.*.div.div.div.div.*.div.div.*.div.*.div.*.div.*.div.p.a.*.license", "license.id")
+end
+
+
+# # ---------------creator----------------------------------
+
+add_array("@creator[]")
+copy_field("html.body.form.div.div.*.div.div.div.div.*.div.div.*.div.*.div.*.div.*.p.watch-speaker","@creator[].$append")
+
+
+add_array("creator[]")
+do list(path:"@creator[]","var":"$i")
+  unless any_equal("$i","no speaker")
+    copy_field("$i","creator[].$append.name")
+  end
+end
+add_field("creator[].*.type", "Person")
+call_macro("deleteAcademicTitles", field: "creator[].*.name")
+
+# ---------------sourceOrganization----------------------------------
+add_array("sourceOrganization[]")
+add_field("sourceOrganization[].$append.type", "Organization")
+add_field("sourceOrganization[].$last.name", "Heinrich-Heine-Universität Düsseldorf")
+add_field("sourceOrganization[].$last.id", "https://ror.org/024z2rq82")
+
+# ------ type --- 
+
+add_array("type[]", "LearningResource")
+
+# ------ learningResourceType --- 
+# only video
+
+add_array("learningResourceType[]")
+add_field("learningResourceType[].$append.id","https://w3id.org/kim/hcrt/video")
+add_field("learningResourceType[].$last.prefLabel.de","Video")
+add_field("learningResourceType[].$last.prefLabel.en","Video")
+
+# ------------conditionsOfAccess---------------
+add_field("conditionsOfAccess.id","http://w3id.org/kim/conditionsOfAccess/no_login")
+
+
+# ------ encoding --- 
+/* encoding: So far only embedUrl */
+
+add_array("@embedUrl")
+add_array("encoding[]")
+copy_field("html.body.form.div.div.*.div.div.div.div.*.div.div.*.div.*.div.*.div.textarea.value","@embedUrl.$append")
+
+do list(path:"@embedUrl", "var":"$i")
+  if any_match("$i", "^<iframe.*src='(https:\\/\\/mediathek\\.hhu\\.de\\/embed\\/.*)(' frameborder='0' allowfullscreen><\\/iframe>)$")
+    replace_all("$i","^<iframe.*src='(https:\\/\\/mediathek\\.hhu\\.de\\/embed\\/.*)(' frameborder='0' allowfullscreen><\\/iframe>)$",'$1')
+    copy_field("$i", "encoding[].$append.embedUrl")
+    add_field("encoding[].$last.type", "MediaObject")
+  end
+end
+
+# ------ keywords --- 
+
+add_array("keywords[]")
+do list(path:"html.body.form.div.div.*.div.div.div.div.*.div.div.*.div.*.div.*.div.ul.li.*.a.value","var":"$i")
+  copy_field("$i","keywords[].$append")
+end
+
+# ----- about -----
+
+add_array("about[]")
+do list(path:"html.body.form.div.div.*.div.div.div.div.*.div.div.*.div.*.div.div.*.span.*.a", "var":"$prov")
+  if exists("$prov.author")
+    lookup("$prov.author", "hhuUploadResource2Destatis", delete: "true")
+    copy_field("$prov.author", "about[].$append.id")
+    copy_field("$prov.author", "about[].$last.prefLabel.de")
+  end
+end
+unless exists("about.id")
+    do list(path:"keywords[]","var":"$tag")
+    lookup("$tag", "hhuKeywords2Destatis", delete: "true")
+      copy_field("$tag", "about[].$append.id")
+      copy_field("$tag", "about[].$last.prefLabel.de")
+    end
+end
+
+lookup("about[].*.prefLabel.de", "destatis-deLabel2Uri", delete:"true")
+
+uniq("about[]")
+
+# ---------mainEntityOfPage----------------
+
+add_array("mainEntityOfPage[]")
+copy_field("id", "mainEntityOfPage[].$append.id")
+add_field("mainEntityOfPage[].$last.provider.id","$[service_id]")
+add_field("mainEntityOfPage[].$last.provider.type","Service")
+add_field("mainEntityOfPage[].$last.provider.name","$[service_name]")
+
+# ---------------@context ----------------------------------
+
+add_array("@context[]", "https://w3id.org/kim/amb/context.jsonld")
+# resource is german therefore prefer de if multiple or no inLanguage are available
+if any_equal("inLanguage[]","de")
+  add_hash("@context[].$append", "@language": "de")
+elsif any_equal("inLanguage[]","en")
+  add_hash("@context[].$append", "@language": "en")
+else
+  copy_field("inLanguage[].1", "@context[].$append.@language")
+end
+# resources without inLanguage-Values set default to de
+unless exists("inLanguage[].1")
+  add_hash("@context[].$append", "@language": "de")
+end
+
+
+
+# ------ tidy up --- 
+include ("../../sharedFixes/cleanUp.fix")

@@ -29,6 +29,7 @@ public final class SitemapReader extends DefaultObjectPipe<String, ObjectReceive
 
     private static final Logger LOG = LoggerFactory.getLogger(SitemapReader.class);
 
+    private String tag = "loc";
     private String urlPattern = ".*";
     private int limit = Integer.MAX_VALUE;
     private int wait = 1000;
@@ -36,6 +37,10 @@ public final class SitemapReader extends DefaultObjectPipe<String, ObjectReceive
     private String findAndReplace;
 
     private final Map<String, String> headers = new HashMap<>();
+
+    public void setTag(final String tag) {
+        this.tag = tag;
+    }
 
     public void setUrlPattern(final String urlPattern) {
         this.urlPattern = urlPattern;
@@ -71,7 +76,7 @@ public final class SitemapReader extends DefaultObjectPipe<String, ObjectReceive
             URLConnection urlConnection = new URL(sitemap).openConnection();
             headers.forEach(urlConnection::addRequestProperty);
             Match siteMapXml = JOOX.$(urlConnection.getInputStream());
-            List<String> texts = siteMapXml.find("loc")
+            List<String> texts = siteMapXml.find(tag)
                     .map(m -> m.element().getTextContent().trim()).stream()
                     .filter(s -> s.matches(urlPattern)).collect(Collectors.toList());
             for (String url : texts.subList(0, Math.min(limit, texts.size()))) {
