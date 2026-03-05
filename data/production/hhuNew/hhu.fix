@@ -1,0 +1,184 @@
+
+# --------Delete all emtpy values-------
+vacuum()
+
+do once("macrosAndMaps")
+  include ("../../sharedFixes/macros.fix")
+  include ("../../sharedFixes/maps.fix")
+  # workflow specific maps
+  put_filemap("data/maps/hhuUploadResource2Destatis.tsv","hhuUploadResource2Destatis","sep_char":"\t")
+  put_filemap("data/maps/hhuKeywords2Destatis.tsv","hhuKeywords2Destatis","sep_char":"\t")
+
+  put_map("licenseMap",
+    "CC BY-ND 4.0":"https://creativecommons.org/licenses/by-nd/4.0/",
+    "CC0 1.0 Universell":"https://creativecommons.org/publicdomain/zero/1.0/",
+    "CC BY-NC-SA 4.0":"https://creativecommons.org/licenses/by-nc-sa/4.0/",
+    "CC BY 4.0":"https://creativecommons.org/licenses/by/4.0/",
+    "CC BY-NC 4.0":"https://creativecommons.org/licenses/by-nc/4.0/",
+    "CC BY-SA 4.0":"https://creativecommons.org/licenses/by-sa/4.0/",
+    "CC BY-NC-ND 4.0":"https://creativecommons.org/licenses/by-nc-nd/4.0/",
+    "CC BY-ND 3.0 DE":"https://creativecommons.org/licenses/by-nd/3.0/de/deed.de",
+    "CC BY-NC-SA 3.0 DE":"https://creativecommons.org/licenses/by-nc-sa/3.0/de/deed.de",
+    "CC BY 3.0 DE":"https://creativecommons.org/licenses/by/3.0/de/deed.de",
+    "CC BY-NC 3.0 DE":"https://creativecommons.org/licenses/by-nc/3.0/de/deed.de",
+    "CC BY-SA 3.0 DE":"https://creativecommons.org/licenses/by-sa/3.0/de/deed.de",
+    "CC BY-NC-ND 3.0 DE":"https://creativecommons.org/licenses/by-nc-nd/3.0/de/deed.de"
+  )
+end
+
+do list(path: "html.body.div.2.div.article.ul.li","var":"$i")
+  if any_match("$i.name","Imagefilme|Veranstaltungen")
+    reject()
+  end
+end
+
+# ---------------id ----------------------------------
+copy_field("html.head.meta.*.og:url", "id")
+
+# ---------------name----------------------------------
+copy_field("html.head.meta.*.og:title", "name")
+
+# ---------------description----------------------------------
+copy_field("html.head.meta.*.og:description", "description")
+
+# ---------------image----------------------------------
+copy_field("html.head.meta.*.og:image","image")
+
+
+# ---------------datePublished----------------------------------
+copy_field("html.body.div.3.div.2.article.div.section.1.div.2.ul.li.value", "datePublished")
+if any_match("datePublished", "hochgeladen (\\d{1,2}\\. .+ 20\\d{2})")
+    replace_all("datePublished", " Januar ", "01.")
+    replace_all("datePublished", " Februar ", "02.")
+    replace_all("datePublished", " März ", "03.")
+    replace_all("datePublished", " April ", "04.")
+    replace_all("datePublished", " Mai ", "05.")
+    replace_all("datePublished", " Juni ", "06.")
+    replace_all("datePublished", " Juli ", "07.")
+    replace_all("datePublished", " August ", "08.")
+    replace_all("datePublished", " September ", "09.")
+    replace_all("datePublished", " Oktober ", "10.")
+    replace_all("datePublished", " November ", "11.")
+    replace_all("datePublished", " Dezember ", "12.")
+    replace_all("datePublished", " (\\d)\\.(\\d+)\\.(\\d\\d\\d\\d)", " 0$1.$2.$3")
+    replace_all("datePublished", "hochgeladen (\\d\\d)\\.(\\d\\d)\\.(\\d\\d\\d\\d)", "$3-$2-$1")
+else
+    remove_field("datePublished")
+end
+
+# ---------------license----------------------------------
+copy_field("html.body.div.3.div.2.article.div.section.1.div.3.section.2.div.div.3.customFields","license.id")
+
+if any_match("license.id",".*Lizenz.*\\((CC.+)\\)")
+  replace_all("license.id",".*Lizenz.*\\((CC.+)\\)","$1")
+elsif any_match("license.id",".*Ohne Lizenz.*")
+  remove_field("license.id")
+else 
+  replace_all("license.id",".*Lizenz : (.*)","$1")
+end
+
+lookup("license.id","licenseMap")
+
+# -> only string
+# html.body.div.3.div.2.article.div.section.1.div.3.section.2.div.div.3.value
+
+# # ---------------creator----------------------------------
+
+# not sure how to handle multiple creator
+
+add_array("@creator[]")
+copy_field("html.body.div.3.div.2.article.div.section.1.div.3.section.2.div.div.3.p.value","@creator[].$append")
+
+add_array("creator[]")
+do list(path:"@creator[]","var":"$i")
+  unless any_equal("$i","no speaker")
+    copy_field("$i","creator[].$append.name")
+  end
+end
+add_field("creator[].*.type", "Person")
+call_macro("deleteAcademicTitles", field: "creator[].*.name")
+
+# ---------------sourceOrganization----------------------------------
+add_array("sourceOrganization[]")
+add_field("sourceOrganization[].$append.type", "Organization")
+add_field("sourceOrganization[].$last.name", "Heinrich-Heine-Universität Düsseldorf")
+add_field("sourceOrganization[].$last.id", "https://ror.org/024z2rq82")
+
+# ------ type --- 
+
+add_array("type[]", "LearningResource")
+
+# ------ learningResourceType --- 
+# only video
+
+add_array("learningResourceType[]")
+add_field("learningResourceType[].$append.id","https://w3id.org/kim/hcrt/video")
+add_field("learningResourceType[].$last.prefLabel.de","Video")
+add_field("learningResourceType[].$last.prefLabel.en","Video")
+
+# ------------conditionsOfAccess---------------
+add_field("conditionsOfAccess.id","http://w3id.org/kim/conditionsOfAccess/no_login")
+
+
+# ------ encoding --- 
+
+# no obvious embedding url
+
+
+# ------ keywords --- 
+
+add_array("keywords[]")
+do list(path:"html.body.div.3.div.2.article.div.section.1.div.3.section.2.div.div.1.form","var":"$i")
+  copy_field("$i.value","keywords[].$append")
+end
+
+# ----- about -----
+
+add_array("about[]")
+do list(path:"html.body.form.div.div.*.div.div.div.div.*.div.div.*.div.*.div.div.*.span.*.a", "var":"$prov")
+  if exists("$prov.author")
+    lookup("$prov.author", "hhuUploadResource2Destatis", delete: "true")
+    copy_field("$prov.author", "about[].$append.id")
+    copy_field("$prov.author", "about[].$last.prefLabel.de")
+  end
+end
+unless exists("about.id")
+    do list(path:"keywords[]","var":"$tag")
+    lookup("$tag", "hhuKeywords2Destatis", delete: "true")
+      copy_field("$tag", "about[].$append.id")
+      copy_field("$tag", "about[].$last.prefLabel.de")
+    end
+end
+
+lookup("about[].*.prefLabel.de", "destatis-deLabel2Uri", delete:"true")
+
+uniq("about[]")
+
+# ---------mainEntityOfPage----------------
+
+add_array("mainEntityOfPage[]")
+copy_field("id", "mainEntityOfPage[].$append.id")
+add_field("mainEntityOfPage[].$last.provider.id","$[service_id]")
+add_field("mainEntityOfPage[].$last.provider.type","Service")
+add_field("mainEntityOfPage[].$last.provider.name","$[service_name]")
+
+# ---------------@context ----------------------------------
+
+add_array("@context[]", "https://w3id.org/kim/amb/context.jsonld")
+# resource is german therefore prefer de if multiple or no inLanguage are available
+if any_equal("inLanguage[]","de")
+  add_hash("@context[].$append", "@language": "de")
+elsif any_equal("inLanguage[]","en")
+  add_hash("@context[].$append", "@language": "en")
+else
+  copy_field("inLanguage[].1", "@context[].$append.@language")
+end
+# resources without inLanguage-Values set default to de
+unless exists("inLanguage[].1")
+  add_hash("@context[].$append", "@language": "de")
+end
+
+
+
+# ------ tidy up --- 
+include ("../../sharedFixes/cleanUp.fix")
