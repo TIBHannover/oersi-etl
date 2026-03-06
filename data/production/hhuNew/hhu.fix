@@ -22,7 +22,13 @@ do once("macrosAndMaps")
     "CC BY 3.0 DE":"https://creativecommons.org/licenses/by/3.0/de/deed.de",
     "CC BY-NC 3.0 DE":"https://creativecommons.org/licenses/by-nc/3.0/de/deed.de",
     "CC BY-SA 3.0 DE":"https://creativecommons.org/licenses/by-sa/3.0/de/deed.de",
-    "CC BY-NC-ND 3.0 DE":"https://creativecommons.org/licenses/by-nc-nd/3.0/de/deed.de"
+    "CC BY-NC-ND 3.0":"https://creativecommons.org/licenses/by-nc-nd/3.0/",
+    "CC BY-ND 3.0":"https://creativecommons.org/licenses/by-nd/3.0/",
+    "CC BY-NC-SA 3.0":"https://creativecommons.org/licenses/by-nc-sa/3.0/",
+    "CC BY 3.0":"https://creativecommons.org/licenses/by/3.0/",
+    "CC BY-NC 3.0":"https://creativecommons.org/licenses/by-nc/3.0/",
+    "CC BY-SA 3.0":"https://creativecommons.org/licenses/by-sa/3.0/",
+    "CC BY-NC-ND 3.0":"https://creativecommons.org/licenses/by-nc-nd/3.0/"
   )
 end
 
@@ -67,7 +73,11 @@ else
 end
 
 # ---------------license----------------------------------
-copy_field("html.body.div.3.div.2.article.div.section.1.div.3.section.2.div.div.3.customFields","license.id")
+if exists("html.head.meta.*.copyright")
+  copy_field("html.head.meta.*.copyright","license.id")
+else
+  copy_field("html.body.div.3.div.2.article.div.section.1.div.3.section.2.div.div.3.customFields","license.id")
+end
 
 if any_match("license.id",".*Lizenz.*\\((CC.+)\\)")
   replace_all("license.id",".*Lizenz.*\\((CC.+)\\)","$1")
@@ -87,6 +97,9 @@ lookup("license.id","licenseMap")
 # not sure how to handle multiple creator
 
 add_array("@creator[]")
+unless any_equal("html.head.meta.*.author","")
+  copy_field("html.head.meta.*.creator","@creator[].$append")
+end
 copy_field("html.body.div.3.div.2.article.div.section.1.div.3.section.2.div.div.3.p.value","@creator[].$append")
 
 add_array("creator[]")
@@ -124,31 +137,38 @@ add_field("conditionsOfAccess.id","http://w3id.org/kim/conditionsOfAccess/no_log
 
 # no obvious embedding url
 
+# does this help? <meta property="og:video:url" content="https://media.hhu.de/getMedium/d43c8c4ccc20d61c514eddc9ca4a1a2c.mp4" />
 
 # ------ keywords --- 
 
 add_array("keywords[]")
-do list(path:"html.body.div.3.div.2.article.div.section.1.div.3.section.2.div.div.1.form","var":"$i")
-  copy_field("$i.value","keywords[].$append")
+if exists("html.head.meta.*.keywords")
+  copy_field("html.head.meta.*.keywords","@keywords[]")
+  split_field("@keywords[]",", ")
+  copy_field("@keywords[].*","keywords[].$append")
+else
+  do list(path:"html.body.div.3.div.2.article.div.section.1.div.3.section.2.div.div.1.form","var":"$i")
+    copy_field("$i.value","keywords[].$append")
+  end
 end
 
 # ----- about -----
 
 add_array("about[]")
-do list(path:"html.body.form.div.div.*.div.div.div.div.*.div.div.*.div.*.div.div.*.span.*.a", "var":"$prov")
-  if exists("$prov.author")
-    lookup("$prov.author", "hhuUploadResource2Destatis", delete: "true")
-    copy_field("$prov.author", "about[].$append.id")
-    copy_field("$prov.author", "about[].$last.prefLabel.de")
+do list(path:"@creator[]", "var":"$author")
+  if exists("$author")
+    lookup("$author", "hhuUploadResource2Destatis", delete: "true")
+    copy_field("$author", "about[].$append.id")
+    copy_field("$author", "about[].$last.prefLabel.de")
   end
 end
-unless exists("about.id")
-    do list(path:"keywords[]","var":"$tag")
-    lookup("$tag", "hhuKeywords2Destatis", delete: "true")
-      copy_field("$tag", "about[].$append.id")
-      copy_field("$tag", "about[].$last.prefLabel.de")
-    end
+copy_field("keywords[]","@keywords[]")
+do list(path:"@keywords[]","var":"$tag")
+lookup("$tag", "hhuKeywords2Destatis", delete: "true")
+  copy_field("$tag", "about[].$append.id")
+  copy_field("$tag", "about[].$last.prefLabel.de")
 end
+
 
 lookup("about[].*.prefLabel.de", "destatis-deLabel2Uri", delete:"true")
 
