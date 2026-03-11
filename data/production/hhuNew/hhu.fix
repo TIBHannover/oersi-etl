@@ -130,6 +130,7 @@ add_array("type[]", "LearningResource")
 
 # ------ learningResourceType --- 
 # only video
+# TODO: CHECKOUT THE AUDIO SECTION.
 
 add_array("learningResourceType[]")
 add_field("learningResourceType[].$append.id","https://w3id.org/kim/hcrt/video")
@@ -143,21 +144,29 @@ add_field("conditionsOfAccess.id","http://w3id.org/kim/conditionsOfAccess/no_log
 # ------ encoding --- 
 
 # no obvious embedding url
+# VIMP supports video embedding but you need an api key for it
 
 # does this help? <meta property="og:video:url" content="https://media.hhu.de/getMedium/d43c8c4ccc20d61c514eddc9ca4a1a2c.mp4" />
 
 # ------ keywords --- 
 
 add_array("keywords[]")
-if exists("html.head.meta.*.keywords")
-  copy_field("html.head.meta.*.keywords","@keywords[]")
-  split_field("@keywords[]",", ")
-  copy_field("@keywords[].*","keywords[].$append")
-else
-  do list(path:"html.body.div.3.div.2.article.div.section.1.div.3.section.2.div.div.1.form","var":"$i")
-    copy_field("$i.value","keywords[].$append")
-  end
+
+do list(path:"html.body.div.3.div.2.article.div.section.1.div.3.section.2.div.div.1.form","var":"$i")
+  copy_field("$i.button.name","keywords[].$append")
 end
+
+unless exists("keywords[].2")
+  if any_contain("keywords[].1",",")
+    split_field("keywords[].1", ",")
+    trim("keywords[].1.*")
+  elsif any_contain("keywords[].1"," ")
+    split_field("keywords[].1", " ")
+  end
+  flatten("keywords[]")
+end
+
+capitalize("keywords[].*")
 
 # ----- about -----
 
