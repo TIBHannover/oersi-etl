@@ -32,7 +32,7 @@ do once("macrosAndMaps")
   )
 end
 
-do list(path: "html.body.div.2.div.article.ul.li","var":"$i")
+do list(path: "html.body.div.3.div.2.article.div.section.1.div.3.section.2.div.div.2.a","var":"$i")
   if any_match("$i.name","Imagefilme|Veranstaltungen")
     reject()
   end
