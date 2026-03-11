@@ -10,8 +10,8 @@ do once("macrosAndMaps")
   put_filemap("data/maps/hhuKeywords2Destatis.tsv","hhuKeywords2Destatis","sep_char":"\t")
 
   put_map("licenseMap",
-    "CC BY-ND 4.0":"https://creativecommons.org/licenses/by-nd/4.0/",
     "CC0 1.0 Universell":"https://creativecommons.org/publicdomain/zero/1.0/",
+    "CC BY-ND 4.0":"https://creativecommons.org/licenses/by-nd/4.0/",
     "CC BY-NC-SA 4.0":"https://creativecommons.org/licenses/by-nc-sa/4.0/",
     "CC BY 4.0":"https://creativecommons.org/licenses/by/4.0/",
     "CC BY-NC 4.0":"https://creativecommons.org/licenses/by-nc/4.0/",
@@ -22,7 +22,7 @@ do once("macrosAndMaps")
     "CC BY 3.0 DE":"https://creativecommons.org/licenses/by/3.0/de/deed.de",
     "CC BY-NC 3.0 DE":"https://creativecommons.org/licenses/by-nc/3.0/de/deed.de",
     "CC BY-SA 3.0 DE":"https://creativecommons.org/licenses/by-sa/3.0/de/deed.de",
-    "CC BY-NC-ND 3.0":"https://creativecommons.org/licenses/by-nc-nd/3.0/",
+    "CC BY-NC-ND 3.0 DE":"https://creativecommons.org/licenses/by-nc-nd/3.0/de/deed.de",
     "CC BY-ND 3.0":"https://creativecommons.org/licenses/by-nd/3.0/",
     "CC BY-NC-SA 3.0":"https://creativecommons.org/licenses/by-nc-sa/3.0/",
     "CC BY 3.0":"https://creativecommons.org/licenses/by/3.0/",
@@ -73,7 +73,7 @@ else
 end
 
 # ---------------license----------------------------------
-if exists("html.head.meta.*.copyright")
+if any_match("html.head.meta.*.copyright","\\((CC.+)\\)")
   copy_field("html.head.meta.*.copyright","license.id")
 else
   copy_field("html.body.div.3.div.2.article.div.section.1.div.3.section.2.div.div.3.customFields","license.id")
@@ -86,6 +86,13 @@ elsif any_match("license.id",".*Ohne Lizenz.*")
 else 
   replace_all("license.id",".*Lizenz : (.*)","$1")
 end
+
+# Add missing hyphens for the mapping
+replace_all("license.id","BY NC ND","BY-NC-ND")
+replace_all("license.id","BY NC SA","BY-NC-SA")
+replace_all("license.id","BY ND","BY-ND")
+replace_all("license.id","BY NC","BY-NC")
+replace_all("license.id","BY SA","BY-SA")
 
 lookup("license.id","licenseMap")
 
