@@ -78,7 +78,7 @@ public final class SitemapReader extends DefaultObjectPipe<String, ObjectReceive
             Match siteMapXml = JOOX.$(urlConnection.getInputStream());
             List<String> texts = siteMapXml.find(tag)
                     .map(m -> m.element().getTextContent().trim()).stream()
-                    .filter(s -> s.matches(urlPattern)).collect(Collectors.toList());
+                    .filter(s -> s.matches(urlPattern)).distinct().collect(Collectors.toList());
             for (String url : texts.subList(0, Math.min(limit, texts.size()))) {
                 LOG.trace("Processing resource URL {}", url);
                 getReceiver().process(findAndReplace(url));
