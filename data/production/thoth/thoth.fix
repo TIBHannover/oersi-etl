@@ -20,7 +20,11 @@ do once("macrosAndMaps")
     "SPA": "es",
     "LAT": "lt",
     "FRE": "fr",
-    "GER": "de"
+    "GER": "de",
+    "HUN": "hu",
+    "DUT": "nl",
+    "ITA": "it",
+    "CHI": "zh"
   )
   put_map("mimeTypeMap",
   "PDF":"application/pdf",
@@ -36,10 +40,19 @@ end
 copy_field("doi","id")
 
 # ---------------name--------------------------------
-copy_field("fullTitle","name")
+do list(path:"titles[]", "var":"$i")
+  if any_match("$i.canonical","true")
+    copy_field("$i.fullTitle","name")
+  end
+end
 
 # -------description-----
-copy_field("longAbstract","description")
+
+do list(path:"abstracts[]", "var":"$i")
+  if any_match("$i.canonical","true")
+    copy_field("$i.content","description")
+  end
+end
 
 # ---------------license ----------------------------------
 move_field("license","@license")
@@ -168,6 +181,10 @@ end
 # resources without inLanguage-Values set default to de
 unless exists("inLanguage[].1")
   add_hash("@context[].$append", "@language": "en") #english as default
+end
+
+unless exists("id")
+  reject()
 end
 
 # ------ tidy up --- 
