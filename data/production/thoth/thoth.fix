@@ -20,7 +20,11 @@ do once("macrosAndMaps")
     "SPA": "es",
     "LAT": "lt",
     "FRE": "fr",
-    "GER": "de"
+    "GER": "de",
+    "HUN": "hu",
+    "DUT": "nl",
+    "ITA": "it",
+    "CHI": "zh"
   )
   put_map("mimeTypeMap",
   "PDF":"application/pdf",
@@ -177,6 +181,10 @@ end
 # resources without inLanguage-Values set default to de
 unless exists("inLanguage[].1")
   add_hash("@context[].$append", "@language": "en") #english as default
+end
+
+unless exists("id")
+  reject()
 end
 
 # ------ tidy up --- 
