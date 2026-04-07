@@ -36,10 +36,19 @@ end
 copy_field("doi","id")
 
 # ---------------name--------------------------------
-copy_field("fullTitle","name")
+do list(path:"titles[]", "var":"$i")
+  if any_match("$i.canonical","true")
+    copy_field("$i.fullTitle","name")
+  end
+end
 
 # -------description-----
-copy_field("longAbstract","description")
+
+do list(path:"abstracts[]", "var":"$i")
+  if any_match("$i.canonical","true")
+    copy_field("$i.content","description")
+  end
+end
 
 # ---------------license ----------------------------------
 move_field("license","@license")
