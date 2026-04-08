@@ -106,9 +106,16 @@ lookup("license.id","licenseMap")
 
 add_array("@creator[]")
 unless any_equal("html.head.meta.*.author","")
-  copy_field("html.head.meta.*.creator","@creator[].$append")
+  copy_field("html.head.meta.*.author","@creator[].$append")
 end
-copy_field("html.body.div.3.div.2.article.div.section.1.div.3.section.2.div.div.3.p.value","@creator[].$append")
+
+if exists("html.body.div.3.div.2.article.div.section.1.div.3.section.2.div.div.3.p.value")
+  copy_field("html.head.meta.*.author","@creator[].$append")
+else
+  copy_field("html.body.div.3.div.2.article.div.section.1.div.3.section.2.div.div.3.customFields","@creator[].$append")
+  replace_all("@creator[].*","Vortragende:r/Redner:in :(.*)Lizenz.*","$1")
+  trim("@creator[].*")
+end
 
 add_array("creator[]")
 do list(path:"@creator[]","var":"$i")
