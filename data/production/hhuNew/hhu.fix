@@ -55,7 +55,7 @@ copy_field("html.head.meta.*.og:image","image")
 copy_field("html.head.meta.*.og:video:url", "encoding[].$append.contentUrl")
 add_field("encoding[].$last.type", "MediaObject")
 copy_field("html.head.meta.*.og:video:type", "encoding[].$last.encodingFormat")
-copy_field("html.head.meta.*.twitter:player", "encoding[].$append.embedUrl")
+copy_field("html.head.meta.*.twitter:player", "encoding[].$last.embedUrl")
 
 
 # ---------------datePublished----------------------------------
