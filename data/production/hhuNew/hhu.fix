@@ -182,7 +182,7 @@ end
 
 do list(path:"@keywords[]", "var":"$i")
   unless any_equal("$i","")
-    unless any_match("$i","importiert|Imported|Guid.*")
+    unless any_match("$i","[Ii]mportiert|[Ii]mported|[Gg]uid.*")
       capitalize("$i")
       copy_field("$i","keywords[].$append")
     end
