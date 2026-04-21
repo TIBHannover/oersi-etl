@@ -4,7 +4,7 @@ service_id = "https://oerworldmap.org/resource/urn:uuid:c9d74da8-bf88-4f3e-b601-
 service_name = "DuEPublico";
 XML_FILE = FLUX_DIR + "duepub-metafacture.xml";
 
-"https://duepublico2.uni-due.de/servlets/OAIDataProvider"
+"https://duepublico2.uni-due.de/oer/oai"
 | open-oaipmh(metadataPrefix="mods")
 | as-lines
 | write(XML_FILE);
