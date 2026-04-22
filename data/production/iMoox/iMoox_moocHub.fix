@@ -18,7 +18,7 @@ do once("macrosAndMaps")
       "CC-BY-SA-4.0": "https://creativecommons.org/licenses/by-sa/4.0/", 
       "CC0-1.0": "https://creativecommons.org/publicdomain/zero/1.0/"
     )
-  put_filemap("data/maps/oefos2destatis.tsv","oefos2destatis","sep_char":"\t")
+  put_filemap("$[shared_maps_directory]/oefos2destatis.tsv","oefos2destatis","sep_char":"\t")
 
 end
 
