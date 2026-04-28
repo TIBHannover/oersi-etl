@@ -1,0 +1,23 @@
+# ----- Delete all empty values -----
+vacuum()
+
+do once("macrosAndMaps")
+  include ("../../sharedFixes/macros.fix")
+  include ("../../sharedFixes/maps.fix")
+end
+
+# --- reuse phaidra default workflow -------- 
+include ("../../sharedFixes/phaidraDefault.fix")
+
+# --- space for provider specific transformations
+
+replace_all("datePublished","^(\\d{4}-\\d{2})$","$1-01")
+
+add_array("sourceOrganization[]")
+add_field("sourceOrganization[].$append.name", "FH Salzburg")
+add_field("sourceOrganization[].$last.type", "Organization")
+add_field("sourceOrganization[].$last.id", "https://ror.org/0072dxg89") 
+
+
+# ------ tidy up --- 
+include ("../../sharedFixes/cleanUp.fix")
