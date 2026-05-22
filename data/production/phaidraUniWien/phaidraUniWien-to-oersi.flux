@@ -4,7 +4,7 @@ service_id = "https://phaidra.univie.ac.at/";
 service_name = "Phaidra Uni Wien";
 XML_FILE = FLUX_DIR + "phaidraUniWien-metafacture.xml";
 
-"https://services.phaidra.univie.ac.at/api/oai"
+"https://phaidra.univie.ac.at/api/oai"
 | open-oaipmh(metadataPrefix="lom", setSpec="oer")
 | decode-xml
 | handle-generic-xml(emitNamespace="true")
@@ -14,7 +14,7 @@ XML_FILE = FLUX_DIR + "phaidraUniWien-metafacture.xml";
 ;
 
 
-"https://services.phaidra.univie.ac.at/api/oai"
+"https://phaidra.univie.ac.at/api/oai"
 | open-oaipmh(metadataPrefix="oai_openaire", setSpec="oer")
 | as-lines
 | write(XML_FILE);
