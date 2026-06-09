@@ -184,10 +184,12 @@ trim("@about.*")
 
 do list(path: "@about", "var":"$i")
   unless any_equal("$i","ÖFOS 2012")
-    copy_field("$i", "keywords[].$append")
-    copy_field("$i", "about[].$append.id")
-    replace_all("about[].$last.id",".*\\((\\d*)\\)","https://vocabs.acdh.oeaw.ac.at/oefosdisciplines/$1")
-    lookup("about[].$last.id", "oefos2destatis")
+    unless any_match("$i",".*\\((\\d)\\)")
+      copy_field("$i", "keywords[].$append")
+      copy_field("$i", "about[].$append.id")
+      replace_all("about[].$last.id",".*\\((\\d*)\\)","https://vocabs.acdh.oeaw.ac.at/oefosdisciplines/$1")
+      lookup("about[].$last.id", "oefos2destatis")
+    end
   end
 end
 
