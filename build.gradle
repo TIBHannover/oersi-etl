@@ -27,26 +27,24 @@ dependencies {
     // This dependency is used internally, and not exposed to consumers on their own compile classpath.
     implementation 'com.google.guava:guava:26.0-jre'
     implementation 'org.jooq:joox-java-6:1.6.0'
-    implementation 'org.metafacture:metafacture-io:7.0.0'
-    implementation 'org.metafacture:metafacture-plumbing:7.0.0'
-    implementation 'org.metafacture:metafacture-strings:7.0.0'
-    implementation 'org.metafacture:metafacture-triples:7.0.0'
-    implementation 'org.metafacture:metafacture-formatting:7.0.0'
-    implementation 'org.metafacture:metafacture-monitoring:7.0.0'
-    implementation ('org.metafacture:metafacture-runner:7.0.0'){
+    implementation 'org.metafacture:metafacture-io:765-raiseJavaVersionTo21-SNAPSHOT'
+    implementation 'org.metafacture:metafacture-plumbing:765-raiseJavaVersionTo21-SNAPSHOT'
+    implementation 'org.metafacture:metafacture-strings:765-raiseJavaVersionTo21-SNAPSHOT'
+    implementation 'org.metafacture:metafacture-triples:765-raiseJavaVersionTo21-SNAPSHOT'
+    implementation 'org.metafacture:metafacture-formatting:765-raiseJavaVersionTo21-SNAPSHOT'
+    implementation 'org.metafacture:metafacture-monitoring:765-raiseJavaVersionTo21-SNAPSHOT'
+    implementation ('org.metafacture:metafacture-runner:765-raiseJavaVersionTo21-SNAPSHOT'){
         exclude group: 'org.antlr', module: 'antlr'
     }
-    implementation 'org.metafacture:metafacture-json:7.0.0'
-    implementation 'org.metafacture:metafacture-html:7.0.0'
-    implementation 'org.metafacture:metafacture-elasticsearch:7.0.0'
-    implementation 'org.metafacture:metafacture-xml:7.0.0'
-    implementation ('org.metafacture:metafix:7.0.0') {
-        exclude group: 'org.slf4j', module: 'slf4j-simple'
-    }
-    implementation('org.metafacture:metafacture-biblio:7.0.0') {
+    implementation 'org.metafacture:metafacture-json:765-raiseJavaVersionTo21-SNAPSHOT'
+    implementation 'org.metafacture:metafacture-html:765-raiseJavaVersionTo21-SNAPSHOT'
+    implementation 'org.metafacture:metafacture-elasticsearch:765-raiseJavaVersionTo21-SNAPSHOT'
+    implementation 'org.metafacture:metafacture-xml:765-raiseJavaVersionTo21-SNAPSHOT'
+    implementation 'org.metafacture:metafix:765-raiseJavaVersionTo21-SNAPSHOT'
+    implementation('org.metafacture:metafacture-biblio:765-raiseJavaVersionTo21-SNAPSHOT') {
         exclude group: 'xml-apis', module: 'xml-apis'
     }
-    implementation 'org.metafacture:metafacture-csv:7.0.0'
+    implementation 'org.metafacture:metafacture-csv:765-raiseJavaVersionTo21-SNAPSHOT'
     // Required after upgrade to Gradle 7.2 in metafacture-fix:
     // (TODO: avoid RecognitionException/Flux.main in ETL.java)
     implementation "org.antlr:antlr-runtime:3.2"
@@ -70,7 +68,7 @@ dependencies {
 apply plugin : "java"
 apply plugin: "maven-publish"
 
-sourceCompatibility = JavaVersion.VERSION_17
+sourceCompatibility = JavaVersion.VERSION_21
 
 group = "org.oersi"
 version = "1.1.0-SNAPSHOT"
@@ -92,7 +90,7 @@ sonarqube {
 
 jacocoTestReport {
   reports {
-    xml.enabled true
+    xml.required = false
   }
 }
 

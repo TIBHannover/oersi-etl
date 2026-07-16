@@ -25,7 +25,7 @@ uniq("publisher[]")
 uniq("isPartOf[]")
 
 # Turn description text with html to plain text
-oersi.HtmlToText("description")
+html_to_text("description")
 
 # Keep only defined elements
 retain("@context[]",
