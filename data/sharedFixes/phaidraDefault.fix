@@ -11,7 +11,7 @@ end
 do once("phaidraMaps")
   # phaidra specific maps
   put_filemap("data/maps/coarResource2hcrt.tsv","coarResource2hcrt","sep_char":"\t")
-  put_filemap("data/maps/oefos2destatis.tsv","oefos2destatis","sep_char":"\t")
+  put_filemap("$[oer_search_index_lookup_tables]oefos2destatis.tsv","oefos2destatis","sep_char":"\t")
   put_filemap("$[FLUX_DIR]lomResourceTypes.tsv","lomResourceTypes","sep_char":"\t") # Dynamic map for hcrt from previous OAI-PMH run.
 end
 

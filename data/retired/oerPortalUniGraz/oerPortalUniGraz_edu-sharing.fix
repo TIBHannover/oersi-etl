@@ -5,7 +5,7 @@ do once("macrosAndMaps")
   include ("../../sharedFixes/macros.fix")
   include ("../../sharedFixes/maps.fix")
   #workflow specific map
-  put_filemap("data/maps/oefos2destatis.tsv","oefos2destatis","sep_char":"\t")
+  put_filemap("$[oer_search_index_lookup_tables]oefos2destatis.tsv","oefos2destatis","sep_char":"\t")
 end
 
 # --- reuse edu-sharing default template -------- 

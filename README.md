@@ -5,6 +5,8 @@ Set up project
 
 `git clone https://gitlab.com/oersi/oersi-etl.git`
 
+`git clone https://gitlab.com/oersi/oersi-lookup-tables.git` (Needed for shared lookups)
+
 `cd oersi-etl`
 
 User documentation
