@@ -55,6 +55,10 @@ else
   copy_field("@internalId","id")
 end
 
+unless exists("id")
+  reject()
+end
+
 #  ------------image ------------------------------------
 do list(path: "metadata.lom:lom.lom:technical.lom:thumbnail.lom:url", "var": "$i")
   copy_field("$i.value","image")
@@ -226,7 +230,8 @@ add_field("conditionsOfAccess.id","http://w3id.org/kim/conditionsOfAccess/no_log
 
 # ---------mainEntityOfPage----------------
 add_array("mainEntityOfPage[]")
-copy_field("@internalId", "mainEntityOfPage[].$append.id")
+add_hash("mainEntityOfPage[].$append")
+copy_field("@internalId", "mainEntityOfPage[].$last.id")
 add_field("mainEntityOfPage[].$last.provider.id","$[service_id]")
 add_field("mainEntityOfPage[].$last.provider.type","Service")
 add_field("mainEntityOfPage[].$last.provider.name","$[service_name]")
