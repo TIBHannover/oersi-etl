@@ -44,7 +44,7 @@ deploy:
     - tags
 
 sonar:
-  image: gradle:jdk17
+  image: gradle:alpine
   cache:
     key: "${CI_JOB_NAME}"
     paths:
