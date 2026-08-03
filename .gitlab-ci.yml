@@ -51,6 +51,8 @@ sonar:
       - .sonar/cache
   script:
     - ./gradlew check jacocoTestReport sonarqube --info
+  # allow failures as long as java 21 is not supported. As soon as it is supported, remove the allow_failure property
+  allow_failure: true
   only:
     - merge_requests
     - develop
