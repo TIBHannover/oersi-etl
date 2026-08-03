@@ -65,5 +65,7 @@ deploy release:
     - BUILDNUMBER=$(grep "BUILDNUMBER=" build.info | cut -d'=' -f2)
     - 'wget -O etl.zip ${CI_PROJECT_URL}/-/jobs/${BUILDNUMBER}/artifacts/download'
     - 'curl --header "JOB-TOKEN: $CI_JOB_TOKEN" --upload-file etl.zip "${CI_API_V4_URL}/projects/${CI_PROJECT_ID}/packages/generic/etl/${CI_COMMIT_TAG}/etl.zip"'
+  # allow failures as long as java 21 is not supported. As soon as it is supported, remove the allow_failure property
+  allow_failure: true
   only:
     - tags
