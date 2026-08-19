@@ -5,8 +5,8 @@ default input_limit = "-1"; // 'default': is overridden by command-line/properti
 default input_wait = "50";
 
 "https://open.ruhr-uni-bochum.de/wp-sitemap.xml" // for local testing: "file://" + FLUX_DIR + "hoou-sitemap.xml"
-| oersi.SitemapReader(header=user_agent_header, wait=input_wait, limit="-1", urlPattern=".*lernangebot.*")
-| oersi.SitemapReader(header=user_agent_header, wait=input_wait, limit="-1", urlPattern=".*/(lernangebot)/.*")
+| oersi.SitemapReader(header=user_agent_header, wait=input_wait, limit=input_limit, urlPattern=".*lernangebot.*")
+| oersi.SitemapReader(header=user_agent_header, wait=input_wait, limit=input_limit, urlPattern=".*/(lernangebot)/.*")
 | open-http(header=user_agent_header)
 | extract-element("script[type=application/ld+json]")
 | match(pattern="@(type|id)", replacement="$1")
