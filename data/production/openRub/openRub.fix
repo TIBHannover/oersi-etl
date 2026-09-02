@@ -14,6 +14,12 @@ end
 #  ------------id------------------------------------
 replace_all("id", '(.*?)/lernangebot', "https://open.ruhr-uni-bochum.de/lernangebot")
 
+# ---- creator---
+# Delete academic titles
+
+call_macro("deleteAcademicTitles", field: "creator[].*.name")
+
+
 #  ------------inLanguage------------------------------------
 add_array("inLanguage[]")
 move_field("inLanguage","inLanguage[].$append")
