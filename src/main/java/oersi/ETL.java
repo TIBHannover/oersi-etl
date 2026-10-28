@@ -101,7 +101,7 @@ public class ETL {
                 fileResponses);
         long start = System.currentTimeMillis();
         try {
-            Flux.main(fullVars.toArray(new String[] {}));
+            new Flux().run(fullVars.toArray(new String[] {}));
             logSummary(flux, fileProcessErrors, fileInvalid, fileResponses,
                     System.currentTimeMillis() - start);
         } catch (Exception e) {
