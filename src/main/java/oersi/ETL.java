@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+import java.util.ListIterator;
 import java.util.Properties;
 import java.util.TimeZone;
 import java.util.stream.Collectors;
@@ -126,6 +127,12 @@ public class ETL {
         args.addAll(debuggingOutputLocations);
         LOG.info("Running {} with {} arguments (configure output details in log4j.properties)",
                 flux, args.size());
+                args.add(0, "--file"); // the first argument is the file path
+        final ListIterator<String> it = args.listIterator(2); // the remaining arguments are variables
+        while (it.hasNext()) {
+            it.add("--var");
+            it.next();
+        }
         LOG.debug("Full arguments: {}", maskCredentials(args));
         return args;
     }
