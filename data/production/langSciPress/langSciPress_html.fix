@@ -31,6 +31,10 @@ do list(path:"html.head.meta","var":"$i")
 
 end
 
+# Clean id
+replace_all("id","index.php/LangSci-Press/","")
+
+
 # ------ creator --- 
   add_array("creator[]")
 do list(path:"html.head.meta.DC_Creator_PersonalName","var":"$i")
