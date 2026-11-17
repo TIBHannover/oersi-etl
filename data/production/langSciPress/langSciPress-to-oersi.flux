@@ -18,7 +18,8 @@ service_name = "langSci Press";
 | decode-csv(hasHeader="true", separator="\t")
 | fix(FLUX_DIR + "langSciPress_csv_id.fix", *)
 | literal-to-object
-| open-http(header=user_agent_header)
+| sleep(sleepTime="250", timeUnit="MILLISECONDS")
+| open-http(header="User-Agent: OERSIDevMetadataImportHarvester/0.1 (https://oersi.org/resources/services/contact) OERSI-Import/0.1")
 | as-records
 | match(pattern="(name=\"DC)\\.(\\w*?)\\.(\\w*?)(\")", replacement="$1_$2_$3$4")
 | match(pattern="(name=\"DC)\\.(\\w*?)(\")", replacement="$1_$2$3")
