@@ -33,7 +33,7 @@ end
 
 # Clean id
 replace_all("id","index.php/LangSci-Press/","")
-
+replace_all("id","LangSci-Press/","")
 
 # ------ creator --- 
   add_array("creator[]")
