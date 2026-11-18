@@ -8,25 +8,75 @@ do once("macrosAndMaps")
   # workflow specific maps
 end
 
+
+# ----- id ----
 copy_field("link", "id")
+
+# ----name----
 copy_field("title.rendered","name")
+
+# -----description
 copy_field("meta.oer_abstract","description")
+
+#-----creator----
 copy_field("meta.oer_author","@author")
 split_field("@author",", ")
 do list(path:"@author","var":"$i")
   copy_field("$i","creator[].$append.name")
   add_field("creator[].$last.type","Person")
 end
+
+#----image-----
 copy_field("acf.oer_thumbnail.url","image")
+
+
+#----type----
 add_array("type[]", "LearningResource")
 
-# only course
 
+#----sourceOrganization----
+do list(path: "class_list[]", "var":"$i")
+  if any_contain("$i","oer_partner-")
+    copy_field("$i","sourceOrganization[].$append.name")
+    add_field("sourceOrganization[].$last.type","Organization")
+  end
+end
+
+replace_all("sourceOrganization[].*.name","oer_partner-","")
+
+# TODO names need mapping
+
+#---- license ----always CC By 4.0
+
+add_field("license.id", "https://creativecommons.org/licenses/by/4.0/")
+
+# ----datePublished----
+copy_field("meta.oer_pubdate","datePublished")
+
+#---- inLanguage---- always en
+add_field("inLaguage[].$append","en")
+
+
+# ---encoding----# only text
+add_array("encoding[]")
+copy_field("acf.oer_file.url", "encoding[].$append.contentUrl")
+add_field("encoding[].$last.encodingFormat","application/pdf")    
+add_field("encoding[].$last.type", "MediaObject")
+
+
+# ---learningResourceType---
 add_array("learningResourceType[]")
 add_field("learningResourceType[].$append.id","https://w3id.org/kim/hcrt/text")
 add_field("learningResourceType[].$last.prefLabel.de","Text")
 add_field("learningResourceType[].$last.prefLabel.en","Text")
 
+# ---------------conditionsOfAccess----------------------------------
+add_field("conditionsOfAccess.id","http://w3id.org/kim/conditionsOfAccess/no_login") 
+
+
+#----about---
+
+## TODO: seems to be relevant for teacher education
 
 # ---------mainEntityOfPage----------------
 
