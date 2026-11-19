@@ -76,7 +76,12 @@ add_field("conditionsOfAccess.id","http://w3id.org/kim/conditionsOfAccess/no_log
 
 #----about---
 
-## TODO: seems to be relevant for teacher education
+# ------ about --- 
+add_array("about[]")
+add_field("about[].$append.id", "https://w3id.org/kim/hochschulfaechersystematik/n33")
+add_field("about[].$last.prefLabel.de", "Erziehungswissenschaften")
+
+
 
 # ---------mainEntityOfPage----------------
 
