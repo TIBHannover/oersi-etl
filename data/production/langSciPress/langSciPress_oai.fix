@@ -11,59 +11,125 @@ end
 # --------Delete all emtpy values-------
 vacuum()
 
-# #header.datestamp.value
-# header.identifier.value
-# header.setSpec.value
-# header.status
-# metadata.oai_dc:dc.dc:coverage.*.xml:lang
-# metadata.oai_dc:dc.dc:coverage.value
-# metadata.oai_dc:dc.dc:coverage.xml:lang
-# metadata.oai_dc:dc.dc:creator.*.value
-# metadata.oai_dc:dc.dc:creator.*.xml:lang
-# metadata.oai_dc:dc.dc:creator.value
-# metadata.oai_dc:dc.dc:creator.xml:lang
-# metadata.oai_dc:dc.dc:date.value
-# metadata.oai_dc:dc.dc:description.*.value
-# metadata.oai_dc:dc.dc:description.*.xml:lang
-# metadata.oai_dc:dc.dc:description.value
-# metadata.oai_dc:dc.dc:description.xml:lang
-# metadata.oai_dc:dc.dc:format.value
-# metadata.oai_dc:dc.dc:identifier.*.value
-# metadata.oai_dc:dc.dc:identifier.value
-# metadata.oai_dc:dc.dc:language.value
-# metadata.oai_dc:dc.dc:publisher.value
-# metadata.oai_dc:dc.dc:publisher.xml:lang
-# metadata.oai_dc:dc.dc:relation.*.value
-# metadata.oai_dc:dc.dc:relation.value
-# metadata.oai_dc:dc.dc:source.value
-# metadata.oai_dc:dc.dc:source.xml:lang
-# metadata.oai_dc:dc.dc:subject.*.value
-# metadata.oai_dc:dc.dc:subject.*.xml:lang
-# metadata.oai_dc:dc.dc:title.*.value
-# metadata.oai_dc:dc.dc:title.*.xml:lang
-# metadata.oai_dc:dc.dc:title.value
-# metadata.oai_dc:dc.dc:title.xml:lang
-# metadata.oai_dc:dc.dc:type.*.value
-# metadata.oai_dc:dc.dc:type.*.xml:lang
-# metadata.oai_dc:dc.dc:type.value
-# metadata.oai_dc:dc.dc:type.xml:lang
-# metadata.oai_dc:dc.xsi:schemaLocation
+do once("macrosAndMaps")
+  include ("../../sharedFixes/macros.fix")
+  include ("../../sharedFixes/maps.fix")
+  # workflow specific maps
+  put_filemap("./catalog.csv","license","sep_char":"\t",key_column:"0",value_column:"5",expected_columns:"-1")
+  put_filemap("./catalog.csv","isbnTest","sep_char":"\t",key_column:"0",value_column:"13",expected_columns:"-1")
+  put_filemap("./catalog.csv","doiTest","sep_char":"\t",key_column:"0",value_column:"1",expected_columns:"-1")
+  put_filemap("./catalog.csv","forthComingTest","sep_char":"\t",key_column:"0",value_column:"12",expected_columns:"-1")
+  put_filemap("./catalog.csv","supersededTest","sep_char":"\t",key_column:"0",value_column:"6",expected_columns:"-1")
+  put_filemap("./catalog.csv","metalanguage","sep_char":"\t",key_column:"0",value_column:"3",expected_columns:"-1")  
+  put_map("licensemap",
+      "CC BY 4.0": "https://creativecommons.org/licenses/by/4.0/",
+      "CC BY-NC 4.0": "https://creativecommons.org/licenses/by-nc/4.0/",
+      "CC BY-NC-ND 4.0": "https://creativecommons.org/licenses/by-nc-nd/4.0/",
+      "CC BY-NC-SA 4.0": "https://creativecommons.org/licenses/by-nc-sa/4.0/",
+      "CC BY-ND 4.0": "https://creativecommons.org/licenses/by-nd/4.0/",
+      "CC BY-SA 4.0": "https://creativecommons.org/licenses/by-sa/4.0/", 
+      "CC-BY-4.0": "https://creativecommons.org/licenses/by/4.0/",
+      "CC-BY-NC-4.0": "https://creativecommons.org/licenses/by-nc/4.0/",
+      "CC-BY-NC-ND-4.0": "https://creativecommons.org/licenses/by-nc-nd/4.0/",
+      "CC-BY-NC-SA-4.0": "https://creativecommons.org/licenses/by-nc-sa/4.0/",
+      "CC-BY-ND-4.0": "https://creativecommons.org/licenses/by-nd/4.0/",
+      "CC-BY-SA-4.0": "https://creativecommons.org/licenses/by-sa/4.0/", 
+      "CC0-1.0": "https://creativecommons.org/publicdomain/zero/1.0/",
+      "CC-BY 4.0": "https://creativecommons.org/licenses/by/4.0/",
+      "CC-BY-NC 4.0": "https://creativecommons.org/licenses/by-nc/4.0/",
+      "CC-BY-NC-ND 4.0": "https://creativecommons.org/licenses/by-nc-nd/4.0/",
+      "CC-BY-NC-SA 4.0": "https://creativecommons.org/licenses/by-nc-sa/4.0/",
+      "CC-BY-ND 4.0": "https://creativecommons.org/licenses/by-nd/4.0/",
+      "CC-BY-SA 4.0": "https://creativecommons.org/licenses/by-sa/4.0/", 
+      "CC0 1.0": "https://creativecommons.org/publicdomain/zero/1.0/"
+    )
+  put_map("languageMap",
+    "eng": "en",
+    "fra": "fr",
+    "deu": "de",
+    "por": "pt",
+    "spa": "es",
+    "cmn": "zh"
+  )
+end
 
+# Fetch identifiers
 
 do list(path: "metadata.oai_dc:dc.dc:identifier", "var":"$i")
   if any_contain("$i.value","https://langsci-press.org/LangSci-Press/")
     copy_field("$i.value","id")
   elsif any_contain("$i.value","978-3-")
-    copy_field("$i.value","isbn")
-  elsif any_contain("$i.value","10.17169/")
+    copy_field("$i.value","isbn[].$append")
+  elsif any_contain("$i.value","10.")
     copy_field("$i.value","@doi")
   end
 end
 
-# Clean id
+# Fetch backup doi
+
+do list(path: "metadata.oai_dc:dc.dc:relation", "var":"$i")
+  if any_contain("$i.value","10.")
+    copy_field("$i.value","@doiRel")
+  end
+end
+
+unless exists("@doi")
+  copy_field("@doiRel","@doi")
+end
+
+# Clean ids
+
+replace_all("isbn[].*","-","")
+
+replace_all("@doi","10.5281/10.5281/","10.5281/")
+
 replace_all("id","index.php/LangSci-Press/","")
 replace_all("id","LangSci-Press/","")
 
+
+# Prepare filtermechanism and filter all not matching records
+# the oaipmh from langsci provides multiple records per publication
+# only those with matching doi or isbn in the csv data, and thos that are current publication should be kept
+
+copy_field("id","csv_id")
+replace_all("csv_id","https://langsci-press.org/catalog/book/","")
+
+copy_field("csv_id","license.id")
+lookup("license.id","license")
+replace_all("license.id","  "," ")
+lookup("license.id","licensemap")
+
+copy_field("csv_id","@isbnTest")
+lookup("@isbnTest","isbnTest")
+
+copy_field("csv_id","@doiTest")
+lookup("@doiTest","doiTest")
+
+copy_field("csv_id","@forthcomingTest")
+lookup("@forthcomingTest","forthComingTest")
+
+copy_field("csv_id","@supersededTest")
+lookup("@supersededTest","supersededTest")
+
+if in("@doiTest","@doi")
+  nothing()
+elsif in("@isbnTest","isbn[]")
+  nothing()
+else
+  reject()
+end
+
+if any_equal("@supersededTest","True")
+  reject()
+end
+
+if any_equal("@forthcomingTest","Forthcoming")
+  reject()
+end
+
+# -- adjust doi
+
+prepend("@doi","https://doi.org/")
 
 # ---------------name --------
 do list(path: "metadata.oai_dc:dc.dc:title","var":"$i")
@@ -90,8 +156,11 @@ copy_field("metadata.oai_dc:dc.dc:date.value", "datePublished")
 
 
 # ---- inLanguage ----
+# take from the csv because the oai only lists eng
 
-copy_field("metadata.oai_dc:dc.dc:language.value", "inLanguage.id")
+copy_field("csv_id","inLanguage[].$append")
+lookup("inLanguage[].*","metalanguage")
+lookup("inLanguage[].*","languageMap")
 
 # ------ creator --- 
 
@@ -115,7 +184,7 @@ add_field("publisher[].*.type", "Organization")
 
 # ------ encoding --- 
 
-## TODO: if info is provided
+## TODO: if info is provided, but there seems to be no static link
 
 # ---------------conditionsOfAccess----------------------------------
 add_field("conditionsOfAccess.id","http://w3id.org/kim/conditionsOfAccess/no_login") 
@@ -150,7 +219,23 @@ else
   print_record(destination:"data/production/langSciPress/missing_ids.json",pretty:"true")
 end
 
+copy_field("@doi","id")
 
+# ---------------@context ----------------------------------
+
+add_array("@context[]", "https://w3id.org/kim/amb/context.jsonld")
+# resource is german therefore prefer de if multiple or no inLanguage are available
+if any_equal("inLanguage[]","de")
+  add_hash("@context[].$append", "@language": "de")
+elsif any_equal("inLanguage[]","en")
+  add_hash("@context[].$append", "@language": "en")
+else
+  copy_field("inLanguage[].1", "@context[].$append.@language")
+end
+# resources without inLanguage-Values set default to de
+unless exists("inLanguage[].1")
+  add_hash("@context[].$append", "@language": "de")
+end
 
 # ------ tidy up --- 
 include ("../../sharedFixes/cleanUp.fix")

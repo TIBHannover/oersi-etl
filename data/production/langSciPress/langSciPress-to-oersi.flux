@@ -1,6 +1,7 @@
 service_domain = "langsci-press.org/index";
 service_id = "https://langsci-press.org/";
 service_name = "langSci Press";
+XML_FILE = FLUX_DIR + "langSci-metafacture.xml";
 
 
 // Use as lookup file for missing metadata
@@ -13,7 +14,14 @@ service_name = "langSci Press";
 
 // Harvest oai
 "https://langsci-press.org/oai"
-| open-oaipmh(metadataPrefix="oai_dc")
+| open-oaipmh(metadataPrefix="oai_dc",setSpec="LangSci-Press")
+| as-lines
+| write(XML_FILE);
+
+// Use local file for transformation (un-comment lines above to re-fetch data):
+
+XML_FILE
+| open-file
 | decode-xml
 | handle-generic-xml(emitNamespace="true")
 | fix(FLUX_DIR + "langSciPress_oai.fix",*)
