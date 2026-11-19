@@ -1,0 +1,36 @@
+
+# --------Delete all emtpy values-------
+vacuum()
+
+# ---Dilter out all breadcrumb jsons
+
+unless any_match("type[].*", "LearningResource")
+  reject()
+end
+
+do once("macrosAndMaps")
+  include ("../../sharedFixes/macros.fix")
+  include ("../../sharedFixes/maps.fix")
+  # workflow specific maps
+
+end
+
+
+# ------ type --- 
+add_array("type[]", "LearningResource")
+
+
+# ---------------conditionsOfAccess----------------------------------
+add_field("conditionsOfAccess.id","http://w3id.org/kim/conditionsOfAccess/no_login")
+
+# ---------mainEntityOfPage----------------
+add_hash("mainEntityOfPage[].$append")
+copy_field("id", "mainEntityOfPage[].$last.id")
+add_field("mainEntityOfPage[].$last.provider.id","$[service_id]")
+add_field("mainEntityOfPage[].$last.provider.type","Service")
+add_field("mainEntityOfPage[].$last.provider.name","$[service_name]")
+
+
+
+# ------ tidy up --- 
+include ("../../sharedFixes/cleanUp.fix")
