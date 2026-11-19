@@ -16,6 +16,7 @@ service_name = "langSci Press";
 | open-oaipmh(metadataPrefix="oai_dc")
 | decode-xml
 | handle-generic-xml(emitNamespace="true")
+| fix(FLUX_DIR + "langSciPress_oai.fix",*)
 | encode-json
 | validate-json(output_schema, writeValid=metadata_valid, writeInvalid=metadata_invalid)
 | oersi.OersiWriter(backend_api, user=backend_user, pass=backend_pass, log=metadata_responses)

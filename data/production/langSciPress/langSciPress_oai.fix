@@ -1,0 +1,167 @@
+# Reject deleted, broken, unsufficient records
+
+if exists ("metadata.error")
+  reject()
+end
+
+if any_equal ("header.status", "deleted")
+  reject()
+end
+
+# --------Delete all emtpy values-------
+vacuum()
+
+# #header.datestamp.value
+# header.identifier.value
+# header.setSpec.value
+# header.status
+# metadata.oai_dc:dc.dc:coverage.*.xml:lang
+# metadata.oai_dc:dc.dc:coverage.value
+# metadata.oai_dc:dc.dc:coverage.xml:lang
+# metadata.oai_dc:dc.dc:creator.*.value
+# metadata.oai_dc:dc.dc:creator.*.xml:lang
+# metadata.oai_dc:dc.dc:creator.value
+# metadata.oai_dc:dc.dc:creator.xml:lang
+# metadata.oai_dc:dc.dc:date.value
+# metadata.oai_dc:dc.dc:description.*.value
+# metadata.oai_dc:dc.dc:description.*.xml:lang
+# metadata.oai_dc:dc.dc:description.value
+# metadata.oai_dc:dc.dc:description.xml:lang
+# metadata.oai_dc:dc.dc:format.value
+# metadata.oai_dc:dc.dc:identifier.*.value
+# metadata.oai_dc:dc.dc:identifier.value
+# metadata.oai_dc:dc.dc:language.value
+# metadata.oai_dc:dc.dc:publisher.value
+# metadata.oai_dc:dc.dc:publisher.xml:lang
+# metadata.oai_dc:dc.dc:relation.*.value
+# metadata.oai_dc:dc.dc:relation.value
+# metadata.oai_dc:dc.dc:source.value
+# metadata.oai_dc:dc.dc:source.xml:lang
+# metadata.oai_dc:dc.dc:subject.*.value
+# metadata.oai_dc:dc.dc:subject.*.xml:lang
+# metadata.oai_dc:dc.dc:title.*.value
+# metadata.oai_dc:dc.dc:title.*.xml:lang
+# metadata.oai_dc:dc.dc:title.value
+# metadata.oai_dc:dc.dc:title.xml:lang
+# metadata.oai_dc:dc.dc:type.*.value
+# metadata.oai_dc:dc.dc:type.*.xml:lang
+# metadata.oai_dc:dc.dc:type.value
+# metadata.oai_dc:dc.dc:type.xml:lang
+# metadata.oai_dc:dc.xsi:schemaLocation
+
+
+do list(path: "metadata.oai_dc:dc.dc:identifier", "var":"$i")
+  if any_contain("$i.value","https://langsci-press.org/LangSci-Press/")
+    copy_field("$i.value","id")
+  elsif any_contain("$i.value","978-3-")
+    copy_field("$i.value","isbn")
+  elsif any_contain("$i.value","10.17169/")
+    copy_field("$i.value","@doi")
+  end
+end
+
+do list(path: )
+....
+
+  # ---------------name --------
+  copy_field("$i.citation_title", "name")
+
+
+  # ---------------description --------
+  copy_field("$i.DC_Description", "description")
+
+
+  # ---------------dateCreated --------
+  copy_field("$i.DC_Date_created", "dateCreated")
+
+  # ---------------license --------
+  if any_match("$i.DC_Rights","https://creativecommons.org/.*")
+    copy_field("$i.DC_Rights", "license.id")
+  end
+
+end
+
+# Clean id
+replace_all("id","index.php/LangSci-Press/","")
+replace_all("id","LangSci-Press/","")
+
+# ------ creator --- 
+  add_array("creator[]")
+do list(path:"html.head.meta.DC_Creator_PersonalName","var":"$i")
+
+  copy_field("$i", "creator[].$append.name")
+end
+add_field("creator[].*.type", "Person")
+
+# ------ keywords------
+  add_array("keywords[]")
+do list(path:"html.head.meta.citation_keywords","var":"$i")
+  copy_field("$i", "keywords[].$append")
+end
+
+# ------ datePublished------
+do list(path:"html.head.meta.citation_publication_date","var":"$i")
+
+  copy_field("$i", "datePublished")
+end
+
+  # ------ publisher------
+  add_array("publisher[]")
+do list(path:"html.head.meta.citation_publisher","var":"$i")
+
+  copy_field("$i", "publisher[].$append.name")
+end
+
+add_field("publisher[].*.type", "Organization")
+
+# ------ encoding --- 
+
+add_array("encoding[]")
+do list(path:"html.head.meta.citation_pdf_url","var":"$i")
+  copy_field("$i", "encoding[].$append.contentUrl")
+  add_field("encoding[].$last.encodingFormat","application/pdf")    
+  add_field("encoding[].$last.type", "MediaObject")
+end
+
+# ---------------conditionsOfAccess----------------------------------
+add_field("conditionsOfAccess.id","http://w3id.org/kim/conditionsOfAccess/no_login") 
+
+# ------ learningResourceType --- 
+add_array("learningResourceType[]")
+
+add_field("learningResourceType[].$append.id","https://w3id.org/kim/hcrt/textbook")
+add_field("learningResourceType[].$last.prefLabel.de","Lehrbuch")
+add_field("learningResourceType[].$last.prefLabel.en","Textbook")
+
+# ------ type --- 
+add_array("type[]", "LearningResource","Book")
+
+# ------ about --- 
+add_array("about[]")
+add_field("about[].$append.id", "https://w3id.org/kim/hochschulfaechersystematik/n07")
+add_field("about[].$last.prefLabel.de", "Allgemeine und vergleichende Literatur- und Sprachwissenschaft")
+
+
+
+
+# ---------mainEntityOfPage----------------
+
+if exists("id")
+  add_array("mainEntityOfPage[]")
+  copy_field("id", "mainEntityOfPage[].$append.id")
+  add_field("mainEntityOfPage[].$last.provider.id","$[service_id]")
+  add_field("mainEntityOfPage[].$last.provider.type","Service")
+  add_field("mainEntityOfPage[].$last.provider.name","$[service_name]")
+else
+  print_record(destination:"data/production/langSciPress/missing_ids.json",pretty:"true")
+end
+
+copy_field("id","_id")
+
+# ------ tidy up ---
+
+if exists("id")
+  reject()
+  retain("_id","id","image","name","creator[]","contributor[]","sourceOrganization[]", "license","description","datePublished","dateCreated","dateModified","inLanguage[]","type[]","learningResourceType[]","keywords[]","about[]","teaches[]","assesses[]","competencyRequired[]","educationalLevel[]", "encoding[]", "publisher[]", "isPartOf[]", "mainEntityOfPage[]","conditionsOfAccess","duration")
+end
+vacuum()
