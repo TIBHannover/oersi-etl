@@ -6,8 +6,8 @@ do once("macrosAndMaps")
   include ("../../sharedFixes/macros.fix")
   include ("../../sharedFixes/maps.fix")
   # workflow specific maps
+  put_filemap("data/maps/digisetOrgs.tsv","digisetOrgs","sep_char":"\t",key_column:"0",value_column:"1",expected_columns:"-1")
 end
-
 
 # ----- id ----
 copy_field("link", "id")
@@ -44,7 +44,7 @@ end
 
 replace_all("sourceOrganization[].*.name","oer_partner-","")
 
-# TODO names need mapping
+lookup("sourceOrganization[].*.name","digisetOrgs")
 
 #---- license ----always CC By 4.0
 
@@ -76,7 +76,12 @@ add_field("conditionsOfAccess.id","http://w3id.org/kim/conditionsOfAccess/no_log
 
 #----about---
 
-## TODO: seems to be relevant for teacher education
+# ------ about --- 
+add_array("about[]")
+add_field("about[].$append.id", "https://w3id.org/kim/hochschulfaechersystematik/n33")
+add_field("about[].$last.prefLabel.de", "Erziehungswissenschaften")
+
+
 
 # ---------mainEntityOfPage----------------
 
