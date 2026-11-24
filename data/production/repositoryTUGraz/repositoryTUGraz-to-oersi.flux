@@ -8,7 +8,7 @@ XML_FILE = FLUX_DIR + "repositoryTUGraz-metafacture.xml";
 | open-oaipmh(metadataPrefix="lom")
 | as-lines
 // Clean up invalid xml sign.
-| match(pattern="&#\\d{5}", replacement=" ")
+| match(pattern="&#0*(?:[0-8]|1[124-9]|2\\d|3[01]|5529[6-9]|55[3-9]\\d{2}|56\\d{3}|57[0-2]\\d{2}|573[0-3]\\d|5734[0-3]|6553[45])", replacement=" ")
 | write(XML_FILE);
 
 // Use local file for transformation (un-comment lines above to re-fetch data):
