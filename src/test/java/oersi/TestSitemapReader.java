@@ -81,7 +81,7 @@ public final class TestSitemapReader {
 
     @Rule
     public WireMockRule wireMockRule = new WireMockRule(WireMockConfiguration.wireMockConfig()
-            .jettyAcceptors(Runtime.getRuntime().availableProcessors()).dynamicPort());
+            .jettyAcceptors(1).dynamicPort());
 
     @Before
     public void setup() throws IOException, URISyntaxException {
